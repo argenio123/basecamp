@@ -20,8 +20,9 @@
 # production
 /build
 
-# local source media (production-ready assets belong in /public)
-/media/
+# large source media kept locally
+/media/*.psb
+/media/*.mp4
 
 # misc
 .DS_Store
