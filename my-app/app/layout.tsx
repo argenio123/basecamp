@@ -16,22 +16,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Basecamp — Guided Mountain Adventures",
-    template: "%s | Basecamp",
+    default: "Basecamp CamSur — Train. Transform. Thrive.",
+    template: "%s | Basecamp CamSur",
   },
-  description:
-    "Small-group hiking and climbing trips led by certified mountain guides.",
+  description: "A new home for movement, performance, recovery, and community in Camarines Sur.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-full flex flex-col">
+      <body>
         <Header />
-        <main className="flex-1">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

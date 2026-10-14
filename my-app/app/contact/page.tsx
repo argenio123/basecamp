@@ -1,19 +1,8 @@
 import type { Metadata } from "next";
-import ContactForm from "./ContactForm";
+import InterestForm from "../components/InterestForm";
 
-export const metadata: Metadata = {
-  title: "Contact",
-};
+export const metadata: Metadata = { title: "Contact & Early Access", description: "Contact Basecamp CamSur and register for opening updates." };
 
 export default function ContactPage() {
-  return (
-    <section className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <h1 className="text-4xl font-bold tracking-tight">Get in touch</h1>
-      <p className="mt-4 text-lg leading-8 text-muted">
-        Questions about a trip, or want help picking one? Send us a note and a
-        guide will get back to you within two days.
-      </p>
-      <ContactForm />
-    </section>
-  );
+  return <section className="contact-page"><div className="shell contact-grid"><div className="contact-intro"><p className="eyebrow">Contact · Early access</p><h1>Be there<br />from the start.</h1><p className="lead">Tell us what you&apos;re interested in and be among the first to receive confirmed membership, program, tour, and opening information.</p><div className="contact-note"><span>BASECAMP CAMSUR</span><p>Camarines Sur, Philippines<br />Opening details to be announced</p></div></div><div className="form-card"><p className="eyebrow">Register your interest</p><InterestForm /></div></div></section>;
 }

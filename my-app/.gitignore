@@ -20,6 +20,9 @@
 # production
 /build
 
+# local source media (production-ready assets belong in /public)
+/media/
+
 # misc
 .DS_Store
 *.pem
