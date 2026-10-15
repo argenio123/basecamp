@@ -6,10 +6,11 @@ export default function CtaBand({
   body = "Register your interest for opening updates, previews, and membership information.",
   label = "Join early access",
   href = "/contact",
-}: { eyebrow?: string; title?: string; body?: string; label?: string; href?: string }) {
+  revealOnScroll = false,
+}: { eyebrow?: string; title?: string; body?: string; label?: string; href?: string; revealOnScroll?: boolean }) {
   return (
     <section className="cta-band">
-      <div className="shell cta-band-inner">
+      <div className="shell cta-band-inner" data-home-reveal={revealOnScroll ? "" : undefined}>
         <div><p className="eyebrow eyebrow-light">{eyebrow}</p><h2>{title}</h2><p>{body}</p></div>
         <Link href={href} className="button button-light">{label} <span>↗</span></Link>
       </div>

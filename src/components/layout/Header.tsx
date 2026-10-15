@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import ScrollTopLink from "@/components/ui/ScrollTopLink";
 
 const links = [
   { href: "/programs", label: "Programs" },
@@ -40,7 +40,29 @@ export default function Header() {
       className={`site-header${isLandingPage ? " site-header--home" : ""} ${isSolid ? "site-header--solid" : "site-header--transparent"}`}
     >
       <div className="header-shell">
-        <Link href="/" className="brand header-brand" aria-label="Basecamp CamSur home">
+        <ScrollTopLink
+          href="/"
+          className="brand header-brand"
+          aria-label="Basecamp CamSur home"
+          onClick={(event) => {
+            if (
+              !isLandingPage ||
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            ) {
+              return;
+            }
+
+            event.preventDefault();
+            window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+            window.requestAnimationFrame(() => {
+              window.dispatchEvent(new Event("basecamp:reset-home-animations"));
+            });
+          }}
+        >
           <Image
             src="/images/brand/basecamp-white-logo.png"
             alt=""
@@ -49,25 +71,25 @@ export default function Header() {
             priority
             className="header-brand-logo"
           />
-        </Link>
+        </ScrollTopLink>
         <nav className="desktop-nav" aria-label="Primary navigation">
           <div className="desktop-nav-group desktop-nav-group--left">
-            {links.slice(0, 3).map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
+            {links.slice(0, 3).map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
           </div>
           <span className="desktop-nav-logo-slot" aria-hidden="true" />
           <div className="desktop-nav-group desktop-nav-group--right">
-            {links.slice(3).map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
+            {links.slice(3).map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
           </div>
         </nav>
-        <Link className="button button-small header-cta" href="/contact">
+        <ScrollTopLink className="button button-small header-cta" href="/contact">
           <span className="header-cta-label">Join early access</span>
           <span className="header-cta-arrow" aria-hidden="true">↗</span>
-        </Link>
+        </ScrollTopLink>
         <details className="mobile-menu">
           <summary aria-label="Open navigation"><span /><span /></summary>
           <div className="mobile-panel">
-            {links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
-            <Link href="/contact">Join early access</Link>
+            {links.map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
+            <ScrollTopLink href="/contact">Join early access</ScrollTopLink>
           </div>
         </details>
       </div>
