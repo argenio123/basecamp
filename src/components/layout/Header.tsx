@@ -17,10 +17,12 @@ const links = [
 export default function Header() {
   const pathname = usePathname();
   const isLandingPage = pathname === "/";
+  // Pages that open with a full-bleed image hero get the transparent overlay header
+  const hasHeroOverlay = isLandingPage || links.some((link) => pathname.startsWith(link.href));
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
-    if (!isLandingPage) return;
+    if (!hasHeroOverlay) return;
 
     const updateHeader = () => setHasScrolled(window.scrollY > 12);
     const frame = window.requestAnimationFrame(updateHeader);
@@ -31,13 +33,13 @@ export default function Header() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateHeader);
     };
-  }, [isLandingPage]);
+  }, [hasHeroOverlay, pathname]);
 
-  const isSolid = !isLandingPage || hasScrolled;
+  const isSolid = !hasHeroOverlay || hasScrolled;
 
   return (
     <header
-      className={`site-header${isLandingPage ? " site-header--home" : ""} ${isSolid ? "site-header--solid" : "site-header--transparent"}`}
+      className={`site-header${hasHeroOverlay ? " site-header--home" : ""} ${isSolid ? "site-header--solid" : "site-header--transparent"}`}
     >
       <div className="header-shell">
         <ScrollTopLink

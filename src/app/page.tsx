@@ -1,51 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import localFont from "next/font/local";
 import HomeScrollReveal from "@/components/HomeScrollReveal";
+import ProgramCoverflow from "@/components/ProgramCoverflow";
+import SocialGallery from "@/components/SocialGallery";
 import CtaBand from "@/components/sections/CtaBand";
 import { programs } from "@/data/site";
 
-const programAudiences = [
-  {
-    title: "Strength & Conditioning",
-    description: "Purposeful training that builds capacity, confidence, and durable strength.",
-  },
-  {
-    title: "Functional Training",
-    description: "Coach-led sessions designed around movement quality and real-world performance.",
-  },
-  {
-    title: "Personal Coaching",
-    description: "Focused guidance shaped around your goals, experience, and training rhythm.",
-  },
-  {
-    title: "Endurance",
-    description: "Conditioning that develops pace, resilience, and an engine built to go further.",
-  },
-];
-
-const homepageUpdates = [
-  {
-    category: "Facility",
-    title: "Facility progress",
-    description: "Follow design, build, and amenity updates as Basecamp CamSur takes shape.",
-    href: "/facilities",
-    linkLabel: "Explore the facility",
-  },
-  {
-    category: "Membership",
-    title: "Membership releases",
-    description: "Be first to receive confirmed membership options, inclusions, and preview access.",
-    href: "/membership",
-    linkLabel: "View membership",
-  },
-  {
-    category: "Opening",
-    title: "Opening announcements",
-    description: "Get confirmed opening details, tour invitations, and the first schedule release.",
-    href: "/contact",
-    linkLabel: "Register for updates",
-  },
-];
+const gretaros = localFont({
+  src: "./fonts/Gretaros-Regular.otf",
+  display: "swap",
+  weight: "400",
+  style: "normal",
+});
 
 const destinationPillars = [
   {
@@ -96,7 +63,11 @@ export default function Home() {
 
         <section className="destination-intro section">
           <div className="shell">
-            <h2 data-home-reveal>The Philippines&apos; first integrated sports,<br />fitness &amp; wellness destination</h2>
+            <h2 className={gretaros.className} data-home-reveal>
+              The Philippines&apos; first<br />
+              integrated sports, fitness<br />
+              &amp; wellness destination
+            </h2>
             <p className="destination-summary" data-home-reveal data-home-reveal-delay="short">Basecamp CamSur represents a bold new category in sports tourism: an integrated destination where elite performance training, evidence-based recovery, and authentic lifestyle converge to create transformative experiences.</p>
             <div className="destination-pillars">
               {destinationPillars.map(({ title, description, image, imagePosition }, index) => (
@@ -120,7 +91,7 @@ export default function Home() {
                   </span>
                   <span className="destination-pillar-content">
                     <span className="destination-pillar-copy">{description}</span>
-                    <span className="destination-pillar-title">{title}</span>
+                    <span className={`${gretaros.className} destination-pillar-title`}>{title}</span>
                   </span>
                 </button>
               ))}
@@ -131,30 +102,7 @@ export default function Home() {
 
       <section id="ways-to-move" className="section section-dark">
         <div className="shell section-heading split-heading" data-home-reveal><div><h2>Find your<br />training rhythm.</h2></div><p>From focused coaching to high-energy sessions and recovery-led movement, Basecamp is designed to meet you where you are.</p></div>
-        <div className="program-scroll shell" data-home-reveal data-home-reveal-delay="short">
-          {programs.slice(0,4).map((program, index) => {
-            const audience = programAudiences[index];
-
-            return (
-              <Link href="/programs" className="program-card" key={program.title}>
-                <div className="program-image">
-                  <Image
-                    src="/images/brand/basecamp-logo.png"
-                    alt=""
-                    fill
-                    sizes="(max-width: 800px) 78vw, 25vw"
-                    className="program-card-logo"
-                  />
-                  <span className="program-card-scrim" aria-hidden="true" />
-                  <span className="program-card-overlay">
-                    <span className="program-audience-label">{audience.title}</span>
-                    <span className="program-audience-description">{audience.description}</span>
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <ProgramCoverflow programs={programs} />
         <div className="shell section-link" data-home-reveal><Link href="/programs" className="text-link light">Explore all programs <span>↗</span></Link></div>
       </section>
 
@@ -166,24 +114,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-updates section">
-        <div className="shell">
-          <div className="section-heading split-heading light-split" data-home-reveal>
-            <div><p className="eyebrow">Latest updates</p><h2>Follow the build.</h2></div>
-            <p>Stay close to Basecamp CamSur as the destination, programs, and opening experience come together.</p>
-          </div>
-          <div className="feature-grid updates-grid" data-home-reveal data-home-reveal-delay="short">
-            {homepageUpdates.map((update, index) => (
-              <article key={update.title}>
-                <span>0{index + 1} / {update.category}</span>
-                <h3>{update.title}</h3>
-                <p>{update.description}</p>
-                <Link href={update.href} className="text-link">{update.linkLabel} <span>↗</span></Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SocialGallery />
       <CtaBand revealOnScroll />
     </>
   );
