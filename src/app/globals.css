@@ -252,6 +252,21 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
 .page-hero-content > h1 { animation-delay: .25s; }
 .page-hero-content > p:last-child { animation-delay: .42s; }
 .page-hero { overflow: clip; }
+/* Optional full-screen hero and background video (PageHero `fullHeight` / `video`); the hero photo stays underneath as the poster. */
+.page-hero.page-hero--full { min-height: 100vh; min-height: 100svh; }
+.page-hero--video { background: var(--ink); }
+.page-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+/* PageHero fitVideo: the hero takes the video's 16:9 shape, so the whole frame shows uncropped. On phones a 16:9 hero
+   is too short for the copy, so the video sits on top at 16:9 (below the header) and the text follows on the dark background. */
+.page-hero.page-hero--ratio { min-height: 0; aspect-ratio: 16 / 9; padding-top: var(--header-height); }
+@media (max-width: 760px) {
+  .page-hero.page-hero--ratio { display: block; aspect-ratio: auto; min-height: 0; padding-top: var(--header-height); }
+  .page-hero.page-hero--ratio .page-hero-video { position: relative; inset: auto; display: block; height: auto; aspect-ratio: 16 / 9; }
+  .page-hero.page-hero--ratio .hero-shade { display: none; }
+  .page-hero.page-hero--ratio .page-hero-content { padding-top: 28px; }
+}
+/* PageHero animate={false} (Facilities): no entrance animation. */
+.page-hero.page-hero--static .page-hero-content > *, .page-hero.page-hero--static > .cover-image { animation: none; }
 .page-hero > .cover-image { animation: page-hero-image-in 1.6s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes page-hero-image-in { from { transform: scale(1.06); } to { transform: scale(1); } }
 

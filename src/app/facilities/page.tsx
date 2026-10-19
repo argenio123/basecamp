@@ -22,6 +22,15 @@ const zoneNo = (i: number) => String(i + 1).padStart(2, "0");
 // Static rule (spec §0.17): only awaits the cached getSiteContent() ('use cache' + cacheTag, see
 // node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-cache.md), so the page prerenders.
 // Legacy #anchors (e.g. /facilities#recovery) are forwarded by the root layout's <HashForwarder />.
+// Compressed H.264 copies of the 86 MB, 1920×1080 source (Sequence_75_1): ~5.6 MB desktop, ~3.3 MB mobile.
+// Both width AND height are pinned (c_scale) because a width-only resize came back 4:3, stretching the picture;
+// fixed 16:9 sizes keep the original proportions, and the hero box (fitVideo) is 16:9 too, so nothing is cropped.
+const FACILITIES_VIDEO_BASE = "https://res.cloudinary.com/nkk9rbc7/video/upload";
+const FACILITIES_HERO_VIDEO = {
+  src: `${FACILITIES_VIDEO_BASE}/q_auto,w_1920,h_1080,c_scale,vc_h264/Sequence_75_1.mp4`,
+  mobileSrc: `${FACILITIES_VIDEO_BASE}/q_auto,w_1280,h_720,c_scale,vc_h264/Sequence_75_1.mp4`,
+};
+
 export default async function FacilitiesPage() {
   const c = await getSiteContent();
   const stats = c.home.stats.items;
@@ -29,7 +38,7 @@ export default async function FacilitiesPage() {
   return (
     <OverviewTemplate
       path="/facilities"
-      hero={<PageHero {...FACILITIES_HERO} />}
+      hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} fitVideo animate={false} />}
       glance={{
         summary: "Training zones, a recovery-forward wellness level and spaces to stay longer, designed around climate, light and landscape in Camarines Sur.",
         facts: [statFact(stats, "sqm"), statFact(stats, "zones"), statFact(stats, "floor"), statFact(stats, "modalities")],

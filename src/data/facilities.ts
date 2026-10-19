@@ -10,7 +10,7 @@ export type FacilityItem = { title: string; body?: string; availability?: Availa
 export type FacilityHero = { eyebrow: string; title: string; intro: string; image: string; imageAlt: string };
 
 export const FACILITIES_HERO: FacilityHero = {
-  eyebrow: "Transform",
+  eyebrow: "",
   title: "Every promise is infrastructure.",
   intro: "Every brand claim is architectural reality. Train. Transform. Thrive. isn't marketing language: it's the physical environment we're building.",
   image: "/images/facilities/facility-aerial.jpg",

@@ -6,6 +6,7 @@ export const IMAGE_LIBRARY: readonly string[] = [
   "/images/destination/thrive.png",
   "/images/destination/train.png",
   "/images/destination/transform.png",
+  "/images/facilities/facility-aerial-render.jpg",
   "/images/facilities/facility-aerial.jpg",
   "/images/facilities/facility-background-a1-5-b.jpg",
   "/images/facilities/facility-detail.jpg",

@@ -139,7 +139,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     ],
     menu: {
       text: "Outdoor training, a dedicated recovery level and spaces to stay longer.",
-      image: "/images/facilities/facility-aerial.jpg", imageAlt: "Aerial view of the BaseCamp CamSur site",
+      image: "/images/facilities/facility-aerial-render.jpg", imageAlt: "Aerial render of the BaseCamp CamSur building and grounds",
       highlights: [
         { href: "/facilities/training#training-zones", label: "Training zones" },
         { href: "/facilities/training#running-loop", label: "Running loop" },
