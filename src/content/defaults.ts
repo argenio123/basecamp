@@ -244,16 +244,16 @@ export const DEFAULT_CONTENT: SiteContent = {
       { platform: "YouTube", url: "", handle: "" },
     ],
     founding: {
-      enabled: true, title: "Founding member offer",
+      enabled: true, title: "Early member offer",
       summary: "Limited to the first 100 members. Lock in about 30% off your first 6 months, or secure lifetime alumni rates.",
       example: "Example: Athlete tier at ₱3,200/month (regular ₱4,500).",
       benefits: [
-        "Founding rates locked in: about 30% off your first 6 months, or lifetime alumni rates",
+        "Early rates locked in: about 30% off your first 6 months, or lifetime alumni rates",
         "Priority booking: first access to camps, workshops and special events",
         "Community status: recognized as the original believers who made BaseCamp possible",
-        "An exclusive founding-member launch event",
+        "An exclusive early-member launch event",
       ],
-      cap: 100, claimed: 0, showCounter: false, expiresOn: "", ctaLabel: "Become a founding member",
+      cap: 100, claimed: 0, showCounter: false, expiresOn: "", ctaLabel: "Become an early member",
     },
     exchangeRate: 58,
     bookingWidgetUrl: "",
@@ -332,7 +332,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     },
     pricingTeaser: {
       enabled: true, eyebrow: "Membership", title: "Transparent from day one.",
-      intro: "No hidden information. Founding members lock in launch rates.",
+      intro: "No hidden information. Early members lock in launch rates.",
       itemIds: ["local-basic", "athlete", "premium", "day-pass-standard", "drop-in-standard", "camp-day-workshop", "camp-week-immersive"],
       cta: { label: "See full pricing", href: "/membership" },
     },
@@ -357,8 +357,8 @@ export const DEFAULT_CONTENT: SiteContent = {
     testimonials: { enabled: true, title: "From the community." },
     earlyAccess: {
       eyebrow: "Early access", title: "Train. Transform. Thrive.",
-      body: "Join the founding list: founding-member rates, exclusive updates and priority access.",
-      benefits: ["Founding-member rates", "Exclusive build and opening updates", "Priority access to camps and events"],
+      body: "Join the early access list: early-member rates, exclusive updates and priority access.",
+      benefits: ["Early-member rates", "Exclusive build and opening updates", "Priority access to camps and events"],
       image: `${F}/facility-exterior.jpg`,
     },
   },
@@ -461,7 +461,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "freeze", question: "Can I freeze my membership?", answer: "Freeze policies will be published before opening." },
       { id: "cancel", question: "How do cancellations work?", answer: "Cancellation procedures will be published before opening." },
       { id: "peak", question: "Why do some visitor rates vary?", answer: "Drop-in and day-pass rates can be higher on weekends, long weekends and peak travel periods." },
-      { id: "founding", question: "What is the founding member offer?", answer: "Limited to the first 100 members: about 30% off your first 6 months, or lifetime alumni rates." },
+      { id: "founding", question: "What is the early member offer?", answer: "Limited to the first 100 members: about 30% off your first 6 months, or lifetime alumni rates." },
     ],
   },
 
@@ -482,7 +482,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "team-challenges", title: "3-Hour Team Challenges", cadence: "Quarterly", night: false, availability: planned, description: "Endurance relays of running, rowing, lifting and skills, fundraising for local community projects." },
     ],
     events: [
-      { id: "founders-workout", title: "Founders Workout", kind: "launch", date: "", dateLabel: "Opening day: date to be announced", availability: planned, description: "The first workout at BaseCamp, for founding members.", ctaHref: "/membership#founding" },
+      { id: "founders-workout", title: "Founders Workout", kind: "launch", date: "", dateLabel: "Opening day: date to be announced", availability: planned, description: "The first workout at BaseCamp, for early members.", ctaHref: "/membership#founding" },
       { id: "community-dinner", title: "Community Dinner", kind: "launch", date: "", dateLabel: "Opening day: date to be announced", availability: planned, description: "Celebrate opening with the BaseCamp community.", ctaHref: "/contact" },
       { id: "skill-clinics", title: "Skill Clinics", kind: "workshop", date: "", dateLabel: "Regular: dates to be announced", availability: "phase-2", description: "Technique workshops and HYROX-style clinics.", ctaHref: "/contact?interest=day-clinic" },
       { id: "nutrition-seminars", title: "Nutrition Seminars", kind: "workshop", date: "", dateLabel: "Regular: dates to be announced", availability: planned, description: "Performance nutrition, Filipino-food style.", ctaHref: "/contact?interest=events" },

@@ -101,8 +101,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
 
 .sticky-hero-curtain { position: relative; }
 .home-hero { position: sticky; z-index: 0; top: 0; height: 100vh; height: 100svh; min-height: 650px; color: white; background: var(--ink); display: flex; align-items: flex-end; overflow: hidden; }
-.home-hero-poster, .home-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center 60%; }
-.home-hero-video { z-index: .5; }
+.home-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center 60%; }
 .home-hero-shade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(9,12,7,.72) 0%, rgba(9,12,7,.2) 58%, rgba(9,12,7,.12)), linear-gradient(0deg, rgba(9,12,7,.62), transparent 50%); }
 .home-hero-content { position: absolute; z-index: 2; right: clamp(20px, 3vw, 60px); bottom: clamp(112px, 11vh, 132px); left: clamp(20px, 3vw, 60px); display: flex; justify-content: center; animation: hero-copy-in .9s .25s cubic-bezier(.22, 1, .36, 1) both; }
 .home-hero-content--animation-reset { animation: none; }
@@ -381,7 +380,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
   .header-cta { display: none; }
   .site-header--transparent .header-brand { width: 142px; }
   .site-header--transparent .header-brand-logo { width: 142px !important; height: 125px !important; max-width: 142px; max-height: 125px; }
-  .home-hero-poster, .home-hero-video { object-position: 25% center; }
+  .home-hero-video { object-position: 25% center; }
 }
 
 @media (max-width: 760px) {
@@ -389,7 +388,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
   .section { padding-block: 76px; }
   .header-cta { display: none; }
   .home-hero { min-height: 620px; }
-  .home-hero-poster, .home-hero-video { object-position: 20% center; }
+  .home-hero-video { object-position: 20% center; }
   .home-hero-content { right: 18px; bottom: clamp(112px, 18vh, 152px); left: 18px; }
   .button-row { align-items: stretch; flex-direction: column; width: min(310px, 100%); }
   .hero-index span { min-width: 0; padding: 18px 4px; font-size: 8px; letter-spacing: .14em; }
@@ -449,7 +448,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
   .site-header--solid .header-brand { width: 100px; }
   .site-header--solid .header-brand-logo { width: 100px !important; height: 88px !important; max-width: 100px; max-height: 88px; transform: translateY(0); }
   .home-hero { min-height: 580px; }
-  .home-hero-poster, .home-hero-video { object-position: 18% center; }
+  .home-hero-video { object-position: 18% center; }
   .home-hero-content { right: 14px; bottom: 108px; left: 14px; }
   .button-row { gap: 9px; }
   .button-row .button { width: 100%; min-height: 48px; padding-inline: 16px; }
@@ -483,7 +482,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
 
 @media (max-height: 700px) and (min-width: 761px) {
   .home-hero { min-height: 600px; }
-  .home-hero-poster, .home-hero-video { object-position: center 58%; }
+  .home-hero-video { object-position: center 58%; }
   .home-hero-content { bottom: 86px; }
   .hero-index span { padding-block: 16px; }
 }
@@ -499,7 +498,5 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
-  .home-hero { background: var(--ink) url("/images/hero/hero-training.png") center / cover no-repeat; }
-  .home-hero-video { display: none; }
   .program-coverflow-card, .program-coverflow-image, .program-coverflow-dots button { transition: none; }
 }

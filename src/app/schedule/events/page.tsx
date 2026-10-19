@@ -40,7 +40,7 @@ export default async function ScheduleEventsPage() {
         ],
       }}
       related={["/schedule/book", "/programs/endurance", "/visit/camps"]}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[phase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section section-dark" id="night">
         <div className="shell">
@@ -73,7 +73,7 @@ export default async function ScheduleEventsPage() {
       {eventGroups.length > 0 && (
         <section className="section sd-band" id="events">
           <div className="shell">
-            <div className="section-heading split-heading light-split" data-reveal><div><p className="eyebrow">Events</p><h2>Camps, workshops & events.</h2></div><p>Founding members get priority booking for camps, workshops and events.</p></div>
+            <div className="section-heading split-heading light-split" data-reveal><div><p className="eyebrow">Events</p><h2>Camps, workshops & events.</h2></div><p>Early members get priority booking for camps, workshops and events.</p></div>
             {eventGroups.map((g) => (
               <div className="sd-event-group" key={g.kind}>
                 <h3 className="sd-subhead" data-reveal>{g.label}</h3>

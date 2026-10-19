@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const tierLine = tiers.map((i) => `${i.name} ${formatPhp(i.price)}${i.unit}`).join(", ");
   return {
     title: "Membership & Pricing",
-    description: `BaseCamp CamSur membership and pricing${tierLine ? `: ${tierLine}` : ""}. Founding-member rates, plus class packs, day passes, recovery and corporate pricing.`,
+    description: `BaseCamp CamSur membership and pricing${tierLine ? `: ${tierLine}` : ""}. Early-member rates, plus class packs, day passes, recovery and corporate pricing.`,
   };
 }
 

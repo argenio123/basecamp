@@ -39,7 +39,7 @@ export default async function SchedulePage() {
           { label: "Timetable", value: TIMETABLE_STATUS[phase] },
         ],
       }}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[phase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section" id="rhythm">
         <div className="shell">

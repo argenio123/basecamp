@@ -13,7 +13,7 @@ export default function FoundingCounter({ founding, showBar = false, className }
     <div className={`ui-founding-counter${className ? ` ${className}` : ""}`}>
       <p className="ui-founding-counter-text"><strong>{remaining}</strong> of {cap} spots remaining</p>
       {showBar && cap > 0 && (
-        <progress className="ui-founding-counter-bar" max={cap} value={claimed} aria-label={`${claimed} of ${cap} founding spots claimed`} />
+        <progress className="ui-founding-counter-bar" max={cap} value={claimed} aria-label={`${claimed} of ${cap} early spots claimed`} />
       )}
     </div>
   );

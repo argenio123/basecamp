@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function CtaBand({
   eyebrow,
   title = "Move with purpose.",
-  body = "Join the founding list for founding-member rates, exclusive updates and priority access.",
+  body = "Join the early access list for early-member rates, exclusive updates and priority access.",
   label = "Get early access",
   href = "/contact",
 }: { eyebrow?: string; title?: string; body?: string; label?: string; href?: string }) {

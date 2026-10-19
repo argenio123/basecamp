@@ -10,7 +10,7 @@ export const AVAILABILITY_LABEL: Record<Availability, string> = {
 
 export const PHASE_COPY: Record<LaunchPhase, { scheduleNotice: string; bookingSubmit: string; ctaLabel: string }> = {
   "pre-launch": { scheduleNotice: "Timetable preview: sessions open at launch and exact times are still to be confirmed.", bookingSubmit: "Request early access", ctaLabel: "Get early access" },
-  "soft-opening": { scheduleNotice: "Soft opening: invitation-only sessions for founding members.", bookingSubmit: "Request a session", ctaLabel: "Become a founding member" },
+  "soft-opening": { scheduleNotice: "Soft opening: invitation-only sessions for early members.", bookingSubmit: "Request a session", ctaLabel: "Become an early member" },
   live: { scheduleNotice: "BaseCamp is live. Request a session below.", bookingSubmit: "Request a booking", ctaLabel: "Book a session" },
 };
 

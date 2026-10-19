@@ -36,7 +36,7 @@ export default async function CoachingPage() {
         summary: "Start with a baseline, train with coaches who plan for progress, and retest before you leave.",
       }}
       related={["/programs/personal-coaching", "/visit/camps", "/schedule/book"]}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[phase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section shell" id="philosophy">
         <div className="pr-philosophy">

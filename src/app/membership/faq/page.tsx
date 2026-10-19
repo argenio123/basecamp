@@ -9,7 +9,7 @@ const PLATFORM_NOTE = "Coming soon: online sign-up, class bookings with waitlist
 
 export const metadata: Metadata = {
   title: "Membership FAQ",
-  description: "Answers on BaseCamp CamSur class-pack validity, guest passes, freezes, cancellations and the founding member offer, plus what the member platform will add.",
+  description: "Answers on BaseCamp CamSur class-pack validity, guest passes, freezes, cancellations and the early member offer, plus what the member platform will add.",
 };
 
 export default async function MembershipFaqPage() {
@@ -22,7 +22,7 @@ export default async function MembershipFaqPage() {
       path={PATH}
       hero={<PageHero eyebrow="Membership · FAQ" title="Before you join." intro="How packs, passes and memberships work, and what the member platform will add." image="/images/facilities/facility-detail.jpg" imageAlt="Architectural detail at BaseCamp CamSur" />}
       glance={{
-        summary: "Quick answers on memberships, passes and the founding offer, and what the member platform will add.",
+        summary: "Quick answers on memberships, passes and the early offer, and what the member platform will add.",
         facts: [
           faq.length > 0 && { label: "Questions answered", value: String(faq.length) },
           { label: "Member platform", value: "Coming soon" },

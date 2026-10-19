@@ -1,41 +1,32 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
-type NavigatorWithConnection = Navigator & {
-  connection?: { saveData?: boolean };
-};
-
-/** Decorative hero media. The poster is always available; motion is loaded only when the visitor allows it. */
+/**
+ * Homepage hero video. It is in the server HTML with autoplay, so a refresh shows only the video (over the dark
+ * hero background), never a still photo first. With prefers-reduced-motion it is paused on its first frame.
+ */
 export default function HomeHeroMedia() {
-  const [showVideo, setShowVideo] = useState(false);
+  const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.muted = true; // autoplay needs muted; set the property too in case the attribute was dropped
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const saveData = (navigator as NavigatorWithConnection).connection?.saveData === true;
-    const update = () => setShowVideo(!reducedMotion.matches && !saveData);
+    const sync = () => {
+      if (reducedMotion.matches) video.pause();
+      else void video.play().catch(() => {});
+    };
 
-    update();
-    reducedMotion.addEventListener("change", update);
-    return () => reducedMotion.removeEventListener("change", update);
+    sync();
+    reducedMotion.addEventListener("change", sync);
+    return () => reducedMotion.removeEventListener("change", sync);
   }, []);
 
   return (
-    <>
-      <Image
-        src="/images/hero/hero-training.png"
-        alt=""
-        fill
-        sizes="100vw"
-        className="home-hero-poster"
-        preload
-      />
-      {showVideo && (
-        <video className="home-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1}>
-          <source src="https://res.cloudinary.com/nkk9rbc7/video/upload/basecamp-hero.mp4" type="video/mp4" />
-        </video>
-      )}
-    </>
+    <video ref={ref} className="home-hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1}>
+      <source src="https://res.cloudinary.com/nkk9rbc7/video/upload/basecamp-hero.mp4" type="video/mp4" />
+    </video>
   );
 }

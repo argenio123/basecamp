@@ -124,7 +124,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
           </div>
         </section>
       )}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
     >
       <div className="pr-detail">
         <Row id="what-it-is" eyebrow="The program" title="What it is">

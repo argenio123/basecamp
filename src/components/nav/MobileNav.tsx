@@ -55,7 +55,7 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
         <div className="nv-mobile-extras">
           <ScrollTopLink href={LOGIN_PATH} className="nv-mobile-login" aria-label="Staff login">Login</ScrollTopLink>
           <ScrollTopLink href="/contact">Contact</ScrollTopLink>
-          <Link href={FOUNDING_HREF}>Become a founding member</Link>
+          <Link href={FOUNDING_HREF}>Become an early member</Link>
         </div>
       </div>
     </details>

@@ -16,7 +16,7 @@ export default function EarlyAccessForm(props: Props) {
   return <EarlyAccessFormInner key={formKey} {...props} onReset={() => setFormKey((k) => k + 1)} />;
 }
 
-function EarlyAccessFormInner({ source, submitLabel = "Join the founding list", onReset }: Props & { onReset: () => void }) {
+function EarlyAccessFormInner({ source, submitLabel = "Join the early access list", onReset }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const id = useId();
 
@@ -75,7 +75,7 @@ function EarlyAccessFormInner({ source, submitLabel = "Join the founding list", 
       </fieldset>
       <label className="check-field" htmlFor={`${id}-consent`}>
         <input id={`${id}-consent`} name="consent" type="checkbox" required {...fieldA11y(state, `${id}-consent`, "consent")} />
-        <span>I&apos;m 18+ and agree to receive BaseCamp CamSur founding-member news and opening updates.</span>
+        <span>I&apos;m 18+ and agree to receive BaseCamp CamSur early-member news and opening updates.</span>
       </label>
       <FieldError id={`${id}-consent`} state={state} name="consent" />
       <PrivacyNote />

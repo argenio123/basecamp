@@ -150,7 +150,7 @@ function EarlyAccessPanel({ source, preselected, programmeTitle, onReset }: { so
   return (
     <form className="interest-form ct-fields" action={formAction} onSubmit={submitWithoutReset(formAction)} noValidate>
       <Hidden kind="early-access" source={source} id={id} />
-      <p className="ct-panel-intro">Founding-member rates, exclusive updates and priority access.{programmeTitle && <> You&apos;re asking about <strong>{programmeTitle}</strong>.</>}</p>
+      <p className="ct-panel-intro">Early-member rates, exclusive updates and priority access.{programmeTitle && <> You&apos;re asking about <strong>{programmeTitle}</strong>.</>}</p>
       <FormStatus state={state} />
       <ContactFields id={id} state={state} />
       <fieldset className="ct-fieldset">
@@ -172,8 +172,8 @@ function EarlyAccessPanel({ source, preselected, programmeTitle, onReset }: { so
         <textarea id={`${id}-message`} name="message" rows={4} maxLength={2000} placeholder="Anything we should know? Goals, dates, group size…" {...fieldA11y(state, `${id}-message`, "message")} />
         <FieldError id={`${id}-message`} state={state} name="message" />
       </label>
-      <Consent id={id} state={state} label="I'm 18+ and agree to receive BaseCamp CamSur founding-member news and opening updates." />
-      <Submit pending={pending} label="Join the founding list" />
+      <Consent id={id} state={state} label="I'm 18+ and agree to receive BaseCamp CamSur early-member news and opening updates." />
+      <Submit pending={pending} label="Join the early access list" />
     </form>
   );
 }

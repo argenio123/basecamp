@@ -9,7 +9,7 @@ import type { LeadKind, LeadResult } from "./types";
 import { validateLead } from "./validate";
 
 const SUCCESS: Record<LeadKind, string> = {
-  "early-access": "You're on the founding list. We'll be in touch with founding-member rates and opening updates.",
+  "early-access": "You're on the early access list. We'll be in touch with early-member rates and opening updates.",
   booking: "Request received. We'll confirm availability by email or phone.",
   enquiry: "Thanks, your inquiry is in. We'll reply by email.",
   newsletter: "You're on the list.",

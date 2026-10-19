@@ -156,7 +156,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     href: "/membership",
     overview: page({
       href: "/membership", label: "Membership", tabLabel: "Overview",
-      summary: "Founding rates, membership tiers and what each one includes.",
+      summary: "Early rates, membership tiers and what each one includes.",
       image: "/images/hero/hero-training.png", imageAlt: "Athlete training at BaseCamp CamSur", adminTab: "pricing",
     }),
     pages: [
@@ -182,10 +182,10 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       }),
     ],
     menu: {
-      text: "Founding rates, membership tiers, passes and recovery pricing.",
+      text: "Early rates, membership tiers, passes and recovery pricing.",
       image: "/images/hero/hero-training.png", imageAlt: "Athlete training at BaseCamp CamSur",
       highlights: [
-        { href: "/membership#founding", label: "Founding membership" },
+        { href: "/membership#founding", label: "Early membership" },
         { href: "/membership#tiers", label: "Tiers" },
         { href: "/membership/passes", label: "Class packs & day passes" },
         { href: "/membership/recovery-pricing", label: "Recovery pricing" },

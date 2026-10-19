@@ -53,7 +53,7 @@ export default function FooterSignup() {
           {emailError && <span className="ui-field-error" id="footer-email-error">{emailError}</span>}
           <label className="footer-consent">
             <input type="checkbox" name="consent" required aria-invalid={consentError ? true : undefined} aria-describedby={consentError ? "footer-consent-error" : undefined} />
-            <span>I agree to receive BaseCamp CamSur founding-member news and opening updates.</span>
+            <span>I agree to receive BaseCamp CamSur early-member news and opening updates.</span>
           </label>
           {consentError && <span className="ui-field-error" id="footer-consent-error">{consentError}</span>}
           {state.status === "error" && !state.fieldErrors?.email && !consentError && (

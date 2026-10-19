@@ -11,7 +11,7 @@ export default function FoundingBand({ founding }: { founding: FoundingOffer }) 
     <section id="founding" className="section section-dark mb-founding">
       <div className="shell mb-founding-grid">
         <div data-reveal>
-          <p className="eyebrow eyebrow-light">Founding membership</p>
+          <p className="eyebrow eyebrow-light">Early membership</p>
           <h2>{founding.title}</h2>
           {founding.summary && <p className="lead mb-founding-summary">{founding.summary}</p>}
           {founding.example && <p className="mb-founding-example">{founding.example}</p>}

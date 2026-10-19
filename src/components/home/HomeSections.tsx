@@ -67,7 +67,7 @@ export function EarlyAccess({ c }: Props) {
                 ? <ul className="hm-check-list hm-early-founding-list">{founding.benefits.map((b, i) => <li key={`${i}-${b}`}>{b}</li>)}</ul>
                 : founding.summary && <p>{founding.summary}</p>}
               <FoundingCounter founding={founding} />
-              {founding.expiresOn && <p className="hm-early-expires">Founding rates end {formatDateLabel(founding.expiresOn)}</p>}
+              {founding.expiresOn && <p className="hm-early-expires">Early rates end {formatDateLabel(founding.expiresOn)}</p>}
             </div>
           )}
         </div>

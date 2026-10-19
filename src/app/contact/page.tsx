@@ -13,7 +13,7 @@ import { directionsUrl } from "@/data/brand";
 
 export const metadata: Metadata = {
   title: "Early Access & Contact",
-  description: "Join the BaseCamp CamSur founding list for founding-member rates, exclusive updates and priority access, send an inquiry about corporate, camp and partnership bookings, or get directions.",
+  description: "Join the BaseCamp CamSur early access list for early-member rates, exclusive updates and priority access, send an inquiry about corporate, camp and partnership bookings, or get directions.",
 };
 
 // Stage-3 §1: intro → At a glance (ways to reach BaseCamp) → enquiry form → address + map link.

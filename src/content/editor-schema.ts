@@ -127,8 +127,8 @@ const PRICE_ITEM_FIELDS = {
 // ---------- the schema ----------
 export const EDITOR_SCHEMA = {
   settings: {
-    label: "Site settings & founding offer",
-    description: "Launch phase, opening date, contact details, social links and the founding member offer. Used on every page.",
+    label: "Site settings & early offer",
+    description: "Launch phase, opening date, contact details, social links and the early member offer. Used on every page.",
     previewPath: "/contact",
     groups: [
       {
@@ -167,20 +167,20 @@ export const EDITOR_SCHEMA = {
         },
       },
       {
-        title: "Founding member offer",
+        title: "Early member offer",
         anchor: "/membership#founding",
-        help: "Confirm the founding discount wording (₱3,200 vs ₱4,500 is about 29%) with the owner.",
+        help: "Confirm the early discount wording (₱3,200 vs ₱4,500 is about 29%) with the owner.",
         fields: {
           founding: {
             kind: "object", label: "",
             fields: {
-              enabled: bool("Show the founding offer"),
+              enabled: bool("Show the early offer"),
               title: title(),
               summary: area("Summary", { max: 400 }),
               example: text("Example", { max: 200 }),
               benefits: lines("Benefits", 8, 200),
               cap: int("Member cap", 1, 100000),
-              claimed: int("Spots claimed", 0, 100000, "Founding 'claimed' must reflect real sign-ups: the counter is shown publicly when enabled."),
+              claimed: int("Spots claimed", 0, 100000, "Early 'claimed' must reflect real sign-ups: the counter is shown publicly when enabled."),
               showCounter: bool("Show the public spots counter"),
               expiresOn: date("Offer expires on"),
               ctaLabel: text("Button label", { required: true, max: 60 }),
@@ -393,7 +393,7 @@ export const EDITOR_SCHEMA = {
       },
       {
         title: "Testimonials", anchor: "testimonials",
-        help: "Testimonials are edited in the Coaches, partners & testimonials tab. They appear inside “Become a founding member” and are hidden while there are none.",
+        help: "Testimonials are edited in the Coaches, partners & testimonials tab. They appear inside “Become an early member” and are hidden while there are none.",
         fields: { testimonials: { kind: "object", label: "", fields: { enabled: enabled(), title: title("Heading") } } },
       },
       {
@@ -770,13 +770,13 @@ export const EDITOR_SCHEMA = {
         },
       },
       {
-        title: "Testimonials", anchor: "/#early-access", help: "Shown on the homepage, inside “Become a founding member”, once at least one testimonial is added.",
+        title: "Testimonials", anchor: "/#early-access", help: "Shown on the homepage, inside “Become an early member”, once at least one testimonial is added.",
         fields: {
           testimonials: {
             kind: "list", label: "Testimonials", itemTitleKey: "name", maxItems: 24,
             fields: {
               id: id(), quote: area("Quote", { max: 600, required: true }), name: title("Name"), context: text("Context", { max: 120 }),
-              source: select("Source", [{ value: "founding-member", label: "Founding member" }, { value: "soft-opening", label: "Soft opening" }, { value: "ambassador", label: "Ambassador" }, { value: "google", label: "Google review" }]),
+              source: select("Source", [{ value: "founding-member", label: "Early member" }, { value: "soft-opening", label: "Soft opening" }, { value: "ambassador", label: "Ambassador" }, { value: "google", label: "Google review" }]),
             },
             newItem: () => ({ id: newId("testimonial"), quote: "", name: "Name", context: "", source: "founding-member" as const }),
           },

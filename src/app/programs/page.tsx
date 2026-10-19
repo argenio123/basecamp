@@ -25,7 +25,7 @@ export default async function ProgramsPage() {
         summary: "Five coach-led programs help you build strength, fitness, endurance and recovery with a clear path forward.",
       }}
       cards={false}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
     >
       <section className="section shell pr-core" id="core">
         <div className="nv-block-head" data-reveal>

@@ -54,7 +54,7 @@ export default async function ScheduleBookPage() {
         ],
       }}
       related={["/membership/passes", "/membership/recovery-pricing", "/visit/camps"]}
-      cta={<CtaBand eyebrow="Founding members" label={PHASE_COPY[phase].ctaLabel} />}
+      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section" id="book">
         <div className="shell sd-book">

@@ -17,7 +17,7 @@ export const ABOUT_GLANCE = {
   overview: "BaseCamp CamSur is a purpose-built destination in Camarines Sur where performance training, recovery and lifestyle come together in one place.",
   design: "A facility designed to grow from the landscape: modern tropical architecture, lakes and jungle on the doorstep, and nature as a training partner.",
   build: "Follow BaseCamp CamSur from construction to opening: build updates, the countdown to launch and the vision for what comes next.",
-  contact: "Join the founding list, send an inquiry about camps, corporate or partnerships, or find directions to BaseCamp CamSur.",
+  contact: "Join the early access list, send an inquiry about camps, corporate or partnerships, or find directions to BaseCamp CamSur.",
 };
 
 export const DESIGN_HERO = {
@@ -189,12 +189,12 @@ export const PARTNERS = {
 /** /contact (spec §C.8 + stage-3 §1: At a glance · enquiry form · address + map link). */
 export const CONTACT = {
   eyebrow: "Early access",
-  title: "Become a founding member.",
-  lead: "Join the founding list: founding-member rates, exclusive updates and priority access.",
+  title: "Become an early member.",
+  lead: "Join the early access list: early-member rates, exclusive updates and priority access.",
   formEyebrow: "Get in touch",
   formTitle: "Two ways to reach us.",
-  formIntro: "Early access puts you on the founding list. Inquiry is for corporate off-sites, camps and group bookings, partnerships and media.",
-  foundingLink: "About founding membership",
+  formIntro: "Early access puts you on the early access list. Inquiry is for corporate off-sites, camps and group bookings, partnerships and media.",
+  foundingLink: "About early membership",
   findEyebrow: "Find us",
   findTitle: "Address & directions.",
   findIntro: "BaseCamp CamSur is in Camarines Sur, Philippines. Getting there, transfers and the map are on the Visit page.",
@@ -203,5 +203,5 @@ export const CONTACT = {
 
 export const ABOUT_CTA = {
   title: "Come build with us.",
-  body: "Join the founding list for founding-member rates, exclusive updates and priority access.",
+  body: "Join the early access list for early-member rates, exclusive updates and priority access.",
 };
