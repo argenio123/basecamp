@@ -45,3 +45,16 @@ Files in `public` are production assets and are referenced from the site with pa
 npm run lint
 npm run build
 ```
+
+## Admin setup
+
+Create a local `.env.local` file (it is gitignored) and set:
+
+```dotenv
+ADMIN_PASSWORD=choose-a-long-unique-password
+ADMIN_SESSION_SECRET=replace-with-at-least-32-random-characters
+```
+
+Generate the session secret with `openssl rand -base64 32` (or any cryptographically secure password generator), then restart `npm run dev`. Sign in at `/login`; `/admin/login` permanently redirects there.
+
+For Vercel, open the project’s **Settings → Environment Variables**, add the same two variables for Production and Preview, then redeploy. Add `KV_REST_API_URL` and `KV_REST_API_TOKEN` as well if admin edits must persist in production; without storage, the production admin is intentionally read-only.

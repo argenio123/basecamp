@@ -1,18 +1,65 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
+import ItemList from "@/components/facilities/ItemList";
+import { statFact } from "@/components/facilities/facts";
+import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
-import { facilityFeatures, toAnchor } from "@/data/site";
+import { FACILITY_ANCHORS } from "@/content/constants";
+import { getSiteContent } from "@/content/get";
+import { currentHrefFor } from "@/content/sitemap";
+import { ARRIVAL, DESIGN, FACILITIES_CTA, FACILITIES_HERO, ZONES } from "@/data/facilities";
 
-export const metadata: Metadata = { title: "Facilities", description: "Discover the spaces planned for Basecamp CamSur." };
+// Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
+export const metadata: Metadata = {
+  title: "Facilities",
+  description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level and spaces to stay longer.",
+};
 
-export default function FacilitiesPage() {
-  return <>
-    <PageHero eyebrow="Facilities" title="Space to perform. Room to thrive." intro="An integrated destination designed to make training, recovery, and time well spent feel like one seamless experience." image="/images/facilities/facility-aerial.jpg" imageAlt="Aerial architectural rendering of Basecamp CamSur" />
-    <section className="section shell"><div className="intro-grid"><h2>Every detail has a purpose.</h2><div><p className="lead">The facility is being shaped around flow: how you arrive, how you train, how you recover, and how you reconnect after the work is done.</p><p>Final amenities and operating details will be published as the opening program is confirmed.</p></div></div>
-      <div className="feature-grid">{facilityFeatures.map(([title,body], i) => <article key={title} id={toAnchor(title)}><span>0{i+1}</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    </section>
-    <section className="gallery-grid shell"><div className="image-frame gallery-wide"><Image src="/images/facilities/facility-exterior.jpg" alt="Exterior rendering of Basecamp CamSur" fill sizes="70vw" className="cover-image" /></div><div className="image-frame"><Image src="/images/facilities/facility-front.jpg" alt="Front approach to the Basecamp CamSur facility" fill sizes="30vw" className="cover-image" /></div><div className="image-frame"><Image src="/images/facilities/facility-detail.jpg" alt="Architectural detail of the Basecamp CamSur facility" fill sizes="40vw" className="cover-image" /></div><div className="gallery-quote"><p>Designed as a destination, not a stopover.</p><span>BASECAMP CAMSUR</span></div></section>
-    <CtaBand eyebrow="Come and see" title="Experience the space." body="Join early access to receive preview and tour announcements when they become available." label="Register for previews" />
-  </>;
+const zoneNo = (i: number) => String(i + 1).padStart(2, "0");
+
+// Stage-3 §1 overview: At a glance · [design] · [arrival] · cards → 4 sub-pages · CTA.
+// Static rule (spec §0.17): only awaits the cached getSiteContent() ('use cache' + cacheTag, see
+// node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-cache.md), so the page prerenders.
+// Legacy #anchors (e.g. /facilities#recovery) are forwarded by the root layout's <HashForwarder />.
+export default async function FacilitiesPage() {
+  const c = await getSiteContent();
+  const stats = c.home.stats.items;
+
+  return (
+    <OverviewTemplate
+      path="/facilities"
+      hero={<PageHero {...FACILITIES_HERO} />}
+      glance={{
+        summary: "Training zones, a recovery-forward wellness level and spaces to stay longer, designed around climate, light and landscape in Camarines Sur.",
+        facts: [statFact(stats, "sqm"), statFact(stats, "zones"), statFact(stats, "floor"), statFact(stats, "modalities")],
+      }}
+      cta={<CtaBand {...FACILITIES_CTA} />}
+    >
+      <section id="design" className="section shell">
+        <div className="split-heading light-split" data-reveal><div><p className="eyebrow">{DESIGN.eyebrow}</p><h2>{DESIGN.title}</h2></div><blockquote className="fc-pull">{DESIGN.quote}</blockquote></div>
+        <p className="fc-design-summary" data-reveal>See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>
+        <Link className="button button-dark" href="/about/design">Explore the design approach <span aria-hidden="true">↗</span></Link>
+      </section>
+
+      <section id="zones" className="section fc-zone-deep" aria-labelledby="fc-journey-title">
+        <div className="shell">
+          <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone journey</p><h2 id="fc-journey-title">From arrival to the lounge.</h2></div><p>Five zones, in the order you move through them.</p></div>
+          <ol className="fc-journey" data-reveal="stagger">
+            {ZONES.map((z, i) => {
+              const href = z.anchor === FACILITY_ANCHORS.arrival ? `#${z.anchor}` : currentHrefFor("/facilities", z.anchor);
+              return <li key={z.anchor}><Link href={href}><span className="fc-index">{zoneNo(i)}</span><span className="fc-journey-label">{z.label}</span><span aria-hidden="true">{href.startsWith("#") ? "↓" : "→"}</span></Link></li>;
+            })}
+          </ol>
+        </div>
+      </section>
+
+      <section id={FACILITY_ANCHORS.arrival} className="section">
+        <div className="shell">
+          <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone 01</p><h2>{ARRIVAL.title}</h2></div><p>{ARRIVAL.intro}</p></div>
+          <ItemList items={ARRIVAL.items} cols={2} />
+        </div>
+      </section>
+    </OverviewTemplate>
+  );
 }

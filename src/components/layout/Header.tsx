@@ -3,22 +3,19 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import MegaMenu from "@/components/nav/MegaMenu";
+import MobileNav from "@/components/nav/MobileNav";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
+import { LOGIN_PATH, type SiteSection } from "@/content/sitemap";
 
-const links = [
-  { href: "/programs", label: "Programs" },
-  { href: "/facilities", label: "Facilities" },
-  { href: "/membership", label: "Membership" },
-  { href: "/schedule", label: "Schedule" },
-  { href: "/visit", label: "Visit" },
-  { href: "/about", label: "About" },
-];
+/** `sections` comes from getSections(content programmes) in the root layout (src/content/sitemap.ts). */
+type HeaderProps = { ctaLabel: string; sections: SiteSection[] };
 
-export default function Header() {
+export default function Header({ ctaLabel, sections }: HeaderProps) {
   const pathname = usePathname();
   const isLandingPage = pathname === "/";
-  // Pages that open with a full-bleed image hero get the transparent overlay header
-  const hasHeroOverlay = isLandingPage || links.some((link) => pathname.startsWith(link.href));
+  // Pages that open with a full-bleed image hero (every section overview and sub-route) get the transparent overlay header
+  const hasHeroOverlay = isLandingPage || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,7 +32,12 @@ export default function Header() {
     };
   }, [hasHeroOverlay, pathname]);
 
-  const isSolid = !hasHeroOverlay || hasScrolled;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // An open mega-menu panel always gets the solid bar, even over the hero.
+  const isSolid = !hasHeroOverlay || hasScrolled || isMenuOpen;
+
+  // After all hooks: the admin and the sign-in page have their own chrome.
+  if (pathname.startsWith("/admin") || pathname === LOGIN_PATH) return null;
 
   return (
     <header
@@ -45,7 +47,7 @@ export default function Header() {
         <ScrollTopLink
           href="/"
           className="brand header-brand"
-          aria-label="Basecamp CamSur home"
+          aria-label="BaseCamp CamSur home"
           onClick={(event) => {
             if (
               !isLandingPage ||
@@ -74,26 +76,16 @@ export default function Header() {
             className="header-brand-logo"
           />
         </ScrollTopLink>
-        <nav className="desktop-nav" aria-label="Primary navigation">
-          <div className="desktop-nav-group desktop-nav-group--left">
-            {links.slice(0, 3).map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
-          </div>
-          <span className="desktop-nav-logo-slot" aria-hidden="true" />
-          <div className="desktop-nav-group desktop-nav-group--right">
-            {links.slice(3).map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
-          </div>
-        </nav>
-        <ScrollTopLink className="button button-small header-cta" href="/contact">
-          <span className="header-cta-label">Join early access</span>
-          <span className="header-cta-arrow" aria-hidden="true">↗</span>
-        </ScrollTopLink>
-        <details className="mobile-menu">
-          <summary aria-label="Open navigation"><span /><span /></summary>
-          <div className="mobile-panel">
-            {links.map((link) => <ScrollTopLink key={link.href} href={link.href}>{link.label}</ScrollTopLink>)}
-            <ScrollTopLink href="/contact">Join early access</ScrollTopLink>
-          </div>
-        </details>
+        <MegaMenu sections={sections} pathname={pathname} onOpenChange={setIsMenuOpen} />
+        <div className="header-actions">
+          <ScrollTopLink className="button button-small header-cta" href="/contact">
+            <span className="header-cta-label">{ctaLabel}</span>
+          </ScrollTopLink>
+          <ScrollTopLink className="button button-small header-login" href={LOGIN_PATH} aria-label="Staff login">
+            Login
+          </ScrollTopLink>
+        </div>
+        <MobileNav sections={sections} />
       </div>
     </header>
   );

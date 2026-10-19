@@ -1,11 +1,21 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
+import { Fragment } from "react";
 import HomeScrollReveal from "@/components/HomeScrollReveal";
 import ProgramCoverflow from "@/components/ProgramCoverflow";
 import SocialGallery from "@/components/SocialGallery";
-import CtaBand from "@/components/sections/CtaBand";
-import { programs } from "@/data/site";
+import HomeHeroMedia from "@/components/home/HomeHeroMedia";
+import { EarlyAccess, TrainAndRecover } from "@/components/home/HomeSections";
+import { getSiteContent } from "@/content/get";
+import { programmeHref } from "@/content/sitemap";
+import { POSITIONING_LINE } from "@/data/brand";
+
+export const metadata: Metadata = {
+  title: { absolute: "BaseCamp CamSur | Train. Transform. Thrive." },
+  description: POSITIONING_LINE,
+};
 
 const gretaros = localFont({
   src: "./fonts/Gretaros-Regular.otf",
@@ -18,63 +28,59 @@ const destinationPillars = [
   {
     title: "TRAIN",
     description: "Purpose-built performance training zones combining CrossFit, functional fitness, and endurance programming in a world-class outdoor environment.",
+    href: "/facilities/training",
     image: "/images/destination/train.png",
     imagePosition: "center",
   },
   {
     title: "TRANSFORM",
     description: "Comprehensive recovery infrastructure featuring contrast therapy, cold plunge pools, saunas, and dedicated wellness facilities.",
+    href: "/facilities/recovery",
     image: "/images/destination/transform.png",
     imagePosition: "center",
   },
   {
     title: "THRIVE",
     description: "A thriving community ecosystem where athletes connect, grow, and belong. Designed for long stays and lasting impact.",
+    href: "/facilities/lifestyle",
     image: "/images/destination/thrive.png",
     imagePosition: "right center",
   },
 ];
 
-export default function Home() {
+// Static: only awaits the cached getSiteContent() (spec §0.17; docs 01-directives/use-cache.md).
+export default async function Home() {
+  const c = await getSiteContent();
+  const { rhythm } = c.home;
+  const instagram = c.settings.socials.find((s) => s.platform === "Instagram" && s.url);
+
   return (
     <>
       <HomeScrollReveal />
       <div className="sticky-hero-curtain">
         <section className="home-hero">
-          <video
-            className="home-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="/images/hero/hero-training.png"
-            aria-hidden="true"
-            tabIndex={-1}
-          >
-            <source src="https://res.cloudinary.com/nkk9rbc7/video/upload/basecamp-hero.mp4" type="video/mp4" />
-          </video>
+          <HomeHeroMedia />
           <div className="home-hero-shade" />
           <div className="home-hero-content">
-            <div className="button-row"><Link href="/contact" className="button button-light">Start your journey <span>↗</span></Link><Link href="/programs" className="button button-ghost">Discover training</Link></div>
+            <div className="button-row"><Link href="/contact" className={`button home-hero-cta ${gretaros.className}`}>Start your journey <span>↗</span></Link></div>
           </div>
           <div className="hero-index shell"><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
         </section>
 
         <section className="destination-intro section">
           <div className="shell">
-            <h2 className={gretaros.className} data-home-reveal>
+            <h1 className={gretaros.className} data-home-reveal>
               The Philippines&apos; first<br />
               integrated sports, fitness<br />
               &amp; wellness destination
-            </h2>
+            </h1>
             <p className="destination-summary" data-home-reveal data-home-reveal-delay="short">Basecamp CamSur represents a bold new category in sports tourism: an integrated destination where elite performance training, evidence-based recovery, and authentic lifestyle converge to create transformative experiences.</p>
             <div className="destination-pillars">
-              {destinationPillars.map(({ title, description, image, imagePosition }, index) => (
-                <button
-                  type="button"
+              {destinationPillars.map(({ title, description, href, image, imagePosition }, index) => (
+                <Link
+                  href={href}
                   className="destination-pillar"
-                  aria-label={`${title}: ${description}`}
+                  aria-label={`Learn more about ${title.toLowerCase()}`}
                   data-home-reveal
                   data-home-reveal-delay={index === 0 ? "medium" : index === 1 ? "long" : "longer"}
                   key={title}
@@ -93,29 +99,24 @@ export default function Home() {
                     <span className="destination-pillar-copy">{description}</span>
                     <span className={`${gretaros.className} destination-pillar-title`}>{title}</span>
                   </span>
-                </button>
+                </Link>
               ))}
             </div>
           </div>
         </section>
       </div>
 
-      <section id="ways-to-move" className="section section-dark">
-        <div className="shell section-heading split-heading" data-home-reveal><div><h2>Find your<br />training rhythm.</h2></div><p>From focused coaching to high-energy sessions and recovery-led movement, Basecamp is designed to meet you where you are.</p></div>
-        <ProgramCoverflow programs={programs} />
-        <div className="shell section-link" data-home-reveal><Link href="/programs" className="text-link light">Explore all programs <span>↗</span></Link></div>
+      <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
+        <div className="shell section-heading split-heading" data-home-reveal><div>{rhythm.eyebrow && <p className="eyebrow eyebrow-light">{rhythm.eyebrow}</p>}<h2>{rhythm.title.split("\n").map((line, index) => <Fragment key={index}>{index > 0 && <br />}{line}</Fragment>)}</h2></div>{rhythm.intro && <p>{rhythm.intro}</p>}</div>
+        <ProgramCoverflow programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
+        <div className="shell section-link" data-home-reveal><Link href="/programs" className="text-link light">{rhythm.linkLabel || "Explore all programs"} <span>↗</span></Link></div>
       </section>
 
-      <section className="facility-feature section">
-        <Image src="/images/facilities/facility-background-a1-5-b.jpg" alt="" fill sizes="100vw" className="facility-feature-background" />
-        <div className="facility-feature-shade" aria-hidden="true" />
-        <div className="facility-feature-inner shell" data-home-reveal>
-          <div className="facility-copy"><h2>Designed around how you live.</h2><p className="lead">Training spaces, recovery areas, and places to connect—brought together as one considered experience.</p><Link href="/facilities" className="button button-light">Explore the facility <span>↗</span></Link></div>
-        </div>
-      </section>
-
-      <SocialGallery />
-      <CtaBand revealOnScroll />
+      {/* Stage 4 removes the duplicate site-directory, persona tabs and daily-rhythm strip. Their canonical
+          destinations remain available through the navigation, programme pages and Schedule. */}
+      <TrainAndRecover c={c} />
+      {c.home.social.enabled && <SocialGallery socials={c.settings.socials} titleClassName={gretaros.className} eyebrow={c.gallery.eyebrow} title={c.gallery.title} intro={c.gallery.intro} posts={c.gallery.posts} followHref={instagram?.url ?? ""} handle={instagram?.handle || undefined} />}
+      <EarlyAccess c={c} />
     </>
   );
 }

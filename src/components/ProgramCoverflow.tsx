@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   useRef,
   useState,
@@ -8,11 +9,17 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from "react";
+import StatusBadge from "@/components/ui/StatusBadge";
+import type { Availability } from "@/content/types";
 
 type Program = {
   title: string;
   description: string;
   image: string;
+  /** The active card's title links here (programme pages: /programs/[slug]). */
+  href?: string;
+  /** Shown as the availability label on the card (spec §0.7). */
+  availability?: Availability;
 };
 
 type ProgramCoverflowProps = {
@@ -20,6 +27,8 @@ type ProgramCoverflowProps = {
 };
 
 const swipeThreshold = 56;
+/** Above this many cards, mobile shows the "03 / 13" count instead of the dots (the dots would overflow at 390px). */
+const maxDots = 7;
 
 export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -53,8 +62,10 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
   };
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    // Let the active card's title link receive its own click (pointer capture would retarget it).
+    if ((event.target as HTMLElement).closest(".hm-coverflow-link")) return;
     hideDescriptionDuringNavigation();
-    const card = (event.target as HTMLElement).closest<HTMLButtonElement>(
+    const card = (event.target as HTMLElement).closest<HTMLElement>(
       ".program-coverflow-card",
     );
 
@@ -69,7 +80,7 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
     if (dragStart.current === null) {
       if (event.pointerType === "mouse" && needsFreshHoverMovement.current) {
         needsFreshHoverMovement.current = false;
-        const card = (event.target as HTMLElement).closest<HTMLButtonElement>(
+        const card = (event.target as HTMLElement).closest<HTMLElement>(
           ".program-coverflow-card.is-active",
         );
 
@@ -140,7 +151,7 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
 
   return (
     <div
-      className="program-coverflow"
+      className={`program-coverflow${programs.length > maxDots ? " hm-coverflow-many" : ""}`}
       aria-label="Training programs"
       aria-roledescription="carousel"
       data-home-reveal
@@ -166,14 +177,10 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
           const isDescriptionVisible = isActive && hoveredIndex === index;
 
           return (
-            <button
-              type="button"
+            <div
               className={`program-coverflow-card${isActive ? " is-active" : ""}${isDescriptionVisible ? " is-description-visible" : ""}`}
               data-offset={offset}
               data-index={index}
-              aria-label={`${program.title}. ${program.description}`}
-              aria-current={isActive ? "true" : undefined}
-              tabIndex={isActive ? 0 : -1}
               key={program.title}
               onPointerEnter={(event) => {
                 if (
@@ -187,16 +194,23 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
               onPointerLeave={() => {
                 if (hoveredIndex === index) setHoveredIndex(null);
               }}
-              onClick={(event) => {
-                if (didDrag.current) {
-                  didDrag.current = false;
-                  return;
-                }
-
-                if (event.detail > 0) return;
-                moveTo(index);
-              }}
             >
+              <button
+                type="button"
+                className="hm-coverflow-hit"
+                aria-label={`${program.title}. ${program.description}`}
+                aria-current={isActive ? "true" : undefined}
+                tabIndex={isActive ? 0 : -1}
+                onClick={(event) => {
+                  if (didDrag.current) {
+                    didDrag.current = false;
+                    return;
+                  }
+
+                  if (event.detail > 0) return;
+                  moveTo(index);
+                }}
+              />
               <span className="program-coverflow-media" aria-hidden="true">
                 <Image
                   src={program.image}
@@ -212,10 +226,13 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
                 <span className="program-coverflow-kicker">
                   {String(index + 1).padStart(2, "0")} / {String(programs.length).padStart(2, "0")}
                 </span>
-                <span className="program-coverflow-title">{program.title}</span>
-                <span className="program-coverflow-description">{program.description}</span>
+                {program.availability && <StatusBadge availability={program.availability} className="hm-coverflow-badge" />}
+                {isActive && program.href
+                  ? <Link href={program.href} className="program-coverflow-title hm-coverflow-link" draggable={false}>{program.title} <span aria-hidden="true">↗</span></Link>
+                  : <span className="program-coverflow-title" aria-hidden="true">{program.title}</span>}
+                <span className="program-coverflow-description" aria-hidden="true">{program.description}</span>
               </span>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -227,7 +244,7 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
         <p className="program-coverflow-count" aria-hidden="true">
           {String(activeIndex + 1).padStart(2, "0")} / {String(programs.length).padStart(2, "0")}
         </p>
-        <div className="program-coverflow-dots" aria-label="Choose a program">
+        <div className="program-coverflow-dots hm-coverflow-dots" aria-label="Choose a program">
           {programs.map((program, index) => (
             <button
               type="button"

@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/layout/Header";
+import Script from "next/script";
 import Footer from "@/components/layout/Footer";
+import FooterGate from "@/components/layout/FooterGate";
+import Header from "@/components/layout/Header";
+import HashForwarder from "@/components/nav/HashForwarder";
+import JsonLd from "@/components/seo/JsonLd";
+import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
+import CopyGuard from "@/components/ui/CopyGuard";
 import RouteScrollReset from "@/components/ui/RouteScrollReset";
+import SiteReveal from "@/components/ui/SiteReveal";
+import { getSiteContent } from "@/content/get";
+import { PHASE_COPY } from "@/content/labels";
+import { getSections } from "@/content/sitemap";
+import { KEYWORDS, POSITIONING_LINE, siteUrl } from "@/data/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,25 +26,58 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: {
-    default: "Basecamp CamSur — Train. Transform. Thrive.",
-    template: "%s | Basecamp CamSur",
+    default: "BaseCamp CamSur | Train. Transform. Thrive.",
+    template: "%s | BaseCamp CamSur",
   },
-  description: "A new home for movement, performance, recovery, and community in Camarines Sur.",
+  description: POSITIONING_LINE,
+  keywords: KEYWORDS,
+  openGraph: {
+    type: "website",
+    siteName: "BaseCamp CamSur",
+    locale: "en_PH",
+    title: "BaseCamp CamSur | Southeast Asia's Performance Playground",
+    description: POSITIONING_LINE,
+    images: [{ url: "/images/facilities/facility-aerial.jpg" }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+// getSiteContent() is 'use cache' (tag site-content), so awaiting it here keeps every route prerenderable.
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const c = await getSiteContent();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body>
+        <a className="skip-link" href="#main-content">Skip to content</a>
         <RouteScrollReset />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <Header
+          ctaLabel={PHASE_COPY[c.settings.launchPhase]?.ctaLabel ?? PHASE_COPY["pre-launch"].ctaLabel}
+          sections={getSections(c.programmes.featured)}
+        />
+        <main id="main-content" tabIndex={-1}>{children}</main>
+        <FooterGate><Footer /></FooterGate>
+        <SiteReveal />
+        <CopyGuard />
+        <HashForwarder />
+        <AdminQuickEdit />
+        <JsonLd />
+        {gaId && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`} strategy="afterInteractive" />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',${JSON.stringify(gaId)});`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
