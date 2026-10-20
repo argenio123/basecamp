@@ -41,7 +41,7 @@
 .nv-desktop-nav .nv-panel-image { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; margin-bottom: 20px; background: rgba(255,255,255,.08); }
 .nv-desktop-nav .nv-panel-text { margin: 0 0 22px; color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.55; }
 .nv-desktop-nav .nv-panel a.nv-panel-explore { position: relative; gap: 14px; padding: 0 18px; }
-.nv-desktop-nav .nv-panel a.nv-panel-explore::after { content: none; }
+.nv-desktop-nav .nv-panel a::after { content: none; }
 .nv-desktop-nav .nv-panel-highlights { padding-left: clamp(32px, 4vw, 64px); border-left: 1px solid rgba(255,255,255,.16); }
 .nv-desktop-nav .nv-panel-highlights .eyebrow { margin-bottom: 12px; }
 .nv-desktop-nav .nv-panel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; margin: 0; padding: 0; list-style: none; }
