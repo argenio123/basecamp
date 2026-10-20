@@ -3,7 +3,7 @@
 // legacy #anchor forwarding, AdminQuickEdit tab mapping, admin "View on site" links and app/sitemap.ts
 // all read from here. Pure data + pure functions: client-safe (no server-only imports).
 //
-// Programme detail pages (/programs/[slug]) are derived from content: pass `programmes`
+// Class detail pages (/classes/[slug]) are derived from programme content: pass `programmes`
 // (getSiteContent().programmes.programmes, or any { slug, title, summary, image }[]) to the functions below.
 import type { FeaturedProgramme, SectionKey } from "./types";
 
@@ -63,19 +63,19 @@ export const HOME_PAGE: SitePage = {
   adminTab: "home",
 };
 
-export const programmeHref = (slug: string) => `/programs/${slug}`;
+export const programmeHref = (slug: string) => `/classes/${slug}`;
 
-/** Programme slugs that would collide with the static /programs/coaching and /programs/corporate pages. */
+/** Programme slugs that would collide with the static /classes/coaching and /classes/corporate pages. */
 export const RESERVED_PROGRAMME_SLUGS: ReadonlySet<string> = new Set(["coaching", "corporate"]);
 
 const NUMBER_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
 
 function programmesMenuText(count: number): string {
-  // Spec §4 copy is "Five coach-led programmes …"; the count follows content so the line stays true.
+  // The count follows content so the line stays true as the class catalogue evolves.
   const word = NUMBER_WORDS[count];
   return word && count > 1
-    ? `${word} coach-led programs for strength, fitness, endurance and recovery.`
-    : "Coach-led programs for strength, fitness, endurance and recovery.";
+    ? `${word} coach-led class disciplines for strength, fitness, endurance and recovery.`
+    : "Coach-led classes for strength, fitness, endurance and recovery.";
 }
 
 const page = (p: SitePage): SitePage => p;
@@ -84,21 +84,21 @@ const page = (p: SitePage): SitePage => p;
 const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
   programs: {
     id: "programs",
-    label: "Programs",
-    href: "/programs",
+    label: "Classes",
+    href: "/classes",
     overview: page({
-      href: "/programs", label: "Programs", tabLabel: "Overview",
-      summary: "Coach-led programs for strength, fitness, endurance and recovery.",
+      href: "/classes", label: "Classes", tabLabel: "Overview",
+      summary: "Coach-led classes for strength, fitness, endurance and recovery.",
       image: "/images/programs/program-functional.png", imageAlt: "Athlete training inside a modern functional fitness space", adminTab: "programmes",
     }),
     pages: [
       page({
-        href: "/programs/coaching", label: "Coaching & assessment", tabLabel: "Coaching",
+        href: "/classes/coaching", label: "Coaching & assessment", tabLabel: "Coaching",
         summary: "Your starting assessment, mindset training and the coaching team.",
         image: "/images/programs/program-coaching.png", imageAlt: "Coach working one-to-one with an athlete", adminTab: "programmes",
       }),
       page({
-        href: "/programs/corporate", label: "Corporate programs", tabLabel: "Corporate",
+        href: "/classes/corporate", label: "Corporate classes", tabLabel: "Corporate",
         summary: "Team off-sites, wellness and group training for organizations.",
         image: "/images/destination/transform.png", imageAlt: "Two athletes training with kettlebells", adminTab: "programmes",
       }),
@@ -320,8 +320,8 @@ export function getSections(programmes: readonly ProgrammeRef[]): SiteSection[] 
         text: programmesMenuText(programmes.length),
         highlights: [
           ...progPages.map((p) => ({ href: p.href, label: p.label })),
-          { href: "/programs/coaching", label: "Coaching & assessment" },
-          { href: "/programs/corporate", label: "Corporate" },
+          { href: "/classes/coaching", label: "Coaching & assessment" },
+          { href: "/classes/corporate", label: "Corporate" },
         ],
       },
     };
@@ -407,7 +407,7 @@ export function getPublicPaths(programmes: readonly ProgrammeRef[]): string[] {
   return getPageOrder(programmes).map((pg) => pg.href);
 }
 
-/** Admin tab for the "Edit this page" pill. Programme pages need no list: every /programs/* maps to programmes. */
+/** Admin tab for the "Edit this page" pill. Class pages need no list: every /classes/* maps to programmes. */
 export function adminTabForPath(path: string): SectionKey | null {
   const p = normalisePath(path);
   if (p === HOME_PAGE.href) return HOME_PAGE.adminTab;
@@ -418,7 +418,7 @@ export function adminTabForPath(path: string): SectionKey | null {
     const hit = s.pages.find((pg) => pg.href === p);
     if (hit) return hit.adminTab;
   }
-  if (p.startsWith("/programs/")) return "programmes";
+  if (p.startsWith("/classes/")) return "programmes";
   return null;
 }
 
@@ -432,20 +432,20 @@ export const LEGACY_HASH_REDIRECTS: Readonly<Record<string, Readonly<Record<stri
     differentiators: "/about#differentiators",
     "founders-vision": "/about#founders",
     build: "/about/the-build",
-    "day-at-basecamp": "/programs#day-at-basecamp",
-    "who-its-for": "/programs",
+    "day-at-basecamp": "/classes",
+    "who-its-for": "/classes",
   },
-  "/programs": {
-    disciplines: "/programs/functional-training#inside",
-    modalities: "/programs/functional-training#inside",
-    formats: "/programs/functional-training#inside",
-    signature: "/programs/endurance#inside",
-    fusion: "/programs/recovery-mobility#inside",
-    assessment: "/programs/coaching#assessment",
-    mindset: "/programs/coaching#mindset",
-    coaches: "/programs/coaching#coaches",
-    "wellness-partners": "/programs/personal-coaching#inside",
-    corporate: "/programs/corporate",
+  "/classes": {
+    disciplines: "/classes#disciplines",
+    modalities: "/classes/functional-training#inside",
+    formats: "/classes/functional-training#inside",
+    signature: "/classes/endurance#inside",
+    fusion: "/classes/recovery-mobility#inside",
+    assessment: "/classes/coaching#assessment",
+    mindset: "/classes/coaching#mindset",
+    coaches: "/classes/coaching#coaches",
+    "wellness-partners": "/classes/personal-coaching#inside",
+    corporate: "/classes/corporate",
   },
   "/facilities": {
     "training-zones": "/facilities/training#training-zones",

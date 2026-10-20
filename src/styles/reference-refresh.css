@@ -1,0 +1,206 @@
+/* Reference-led visual system: RITE Bali's warm ritual-led discovery meets Reload's kinetic studio energy.
+   Imported last so every public route and shared template receives the same treatment. */
+
+/* ---------- Foundation ---------- */
+:root {
+  --header-height: 106px;
+  --radius-card: 28px;
+  --radius-panel: 38px;
+  --shadow-card: 0 24px 70px rgba(21,23,19,.1);
+  --ease-studio: cubic-bezier(.22, 1, .36, 1);
+}
+
+body { background: var(--bone); }
+.shell { width: min(1440px, calc(100% - clamp(36px, 6vw, 112px))); }
+.section { padding-block: clamp(88px, 10vw, 156px); }
+.section-dark { background: var(--ink); }
+.section-heading { margin-bottom: clamp(48px, 7vw, 92px); }
+h2 { font-size: clamp(46px, 6.4vw, 94px); line-height: .9; letter-spacing: -.07em; font-weight: 580; }
+.lead { font-size: clamp(21px, 2.4vw, 32px); line-height: 1.35; }
+.eyebrow { display: flex; align-items: center; gap: 10px; color: var(--olive); font: 700 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .17em; }
+.eyebrow::before { content: ""; width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--signal); }
+.eyebrow-light { color: var(--stone); }
+.button { min-height: 54px; padding-inline: 26px; border-radius: 999px; letter-spacing: .11em; }
+.button span { transition: transform .25s var(--ease-studio); }
+.button:hover span, .button:focus-visible span { transform: translate(3px, -3px); }
+.button-ghost { backdrop-filter: blur(12px); background: rgba(21,23,19,.16); }
+.text-link { position: relative; min-height: 44px; padding: 0 54px 0 0; border: 0; }
+.text-link::after { content: ""; position: absolute; right: 0; width: 40px; height: 40px; border: 1px solid currentColor; border-radius: 50%; transition: color .25s ease, background-color .25s ease, transform .3s var(--ease-studio); }
+.text-link > span { position: absolute; right: 13px; z-index: 1; color: currentColor; transition: color .18s ease, transform .18s ease; }
+.text-link:hover::after, .text-link:focus-visible::after { border-color: var(--signal); background: var(--signal); transform: rotate(45deg); }
+.text-link:hover > span, .text-link:focus-visible > span { color: var(--ink); transform: translate(2px, -2px); }
+
+/* ---------- Header and navigation (header, menu panel and footer colours are kept as they were) ---------- */
+.site-header { height: 106px; --header-height: 106px; }
+.desktop-nav, .nv-trigger { font-size: 16px; font-weight: 650; letter-spacing: 0; text-transform: none; }
+.desktop-nav-group a::after, .nv-trigger::after { height: 2px; background: var(--signal); }
+.header-login { border-radius: 999px; }
+.header-cta { border-radius: 999px; }
+.nv-desktop-nav .nv-panel-inner { padding-block: 48px 58px; }
+.nv-desktop-nav .nv-panel-image { border-radius: 26px; }
+.nv-desktop-nav .nv-panel-highlights { border-left-color: rgba(255,255,255,.14); }
+.nv-desktop-nav .nv-panel-list a { min-height: 62px; font-size: 19px; }
+.nv-desktop-nav .nv-panel-list a:hover { color: var(--signal); }
+.mobile-panel { background: var(--bone); }
+.nv-mobile-row { border-color: var(--line); }
+
+/* ---------- Landing video hero: media stays untouched ---------- */
+.hero-index { width: 100%; border-color: rgba(255,255,255,.22); background: rgba(21,23,19,.22); backdrop-filter: blur(12px); }
+.hero-index span { padding: 18px 0; color: var(--stone); }
+.hero-index span:not(:first-child) { border-color: rgba(255,255,255,.22); }
+
+/* ---------- All secondary heroes: video/photo source stays untouched ---------- */
+.page-hero:not(.page-hero--ratio) { min-height: min(900px, 88svh); }
+.page-hero { isolation: isolate; }
+.page-hero .hero-shade { z-index: 1; background: linear-gradient(90deg, rgba(21,23,19,.83), rgba(21,23,19,.3) 58%, rgba(21,23,19,.08)), linear-gradient(0deg, rgba(21,23,19,.66), transparent 58%); }
+.page-hero-content { padding-bottom: clamp(56px, 8vw, 108px); }
+.page-hero h1 { max-width: 12ch; margin-bottom: 24px; font-size: clamp(64px, 9vw, 138px); line-height: .78; letter-spacing: -.075em; font-weight: 560; text-transform: uppercase; }
+.page-hero-content > p:last-child { max-width: 600px; padding-left: 20px; border-left: 2px solid var(--signal); color: var(--white); font-size: clamp(16px, 1.45vw, 20px); }
+
+/* ---------- Page-template navigation ---------- */
+.nv-breadcrumbs { background: var(--ink); border-color: rgba(255,255,255,.12); }
+.nv-breadcrumbs ol, .nv-breadcrumbs li + li::before { color: var(--stone); }
+.nv-breadcrumbs [aria-current="page"], .nv-breadcrumbs a:hover { color: var(--signal); }
+.nv-glance { padding-block: clamp(70px, 8vw, 116px); background: var(--stone); border: 0; }
+.nv-glance-main { display: grid; grid-template-columns: minmax(180px, .35fr) minmax(0, 1fr); column-gap: clamp(40px, 8vw, 130px); align-items: start; }
+.nv-glance .eyebrow { margin-top: 9px; }
+.nv-glance-summary { max-width: 940px; margin: 0; font-size: clamp(30px, 4vw, 58px); font-weight: 560; line-height: 1.05; letter-spacing: -.05em; }
+.nv-glance-facts { grid-column: 2; margin-top: 34px; }
+.nv-chip { padding: 10px 18px; border: 0; border-radius: 999px; background: var(--bone); }
+.nv-chip-value { color: var(--ink); }
+.nv-block-head { max-width: 900px; margin-bottom: 56px; }
+.nv-cards, .pr-grid, .sd-grid, .ab-build-grid { gap: clamp(18px, 2vw, 30px); }
+.nv-card, .nv-related-card, .nv-prevnext-link { overflow: hidden; border: 0; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); }
+.nv-card-image img, .pr-card-media img, .ab-build-media img { transition: transform .7s var(--ease-studio), filter .5s ease; }
+.nv-card:hover .nv-card-image img, .pr-card:hover .pr-card-media img, .ab-build-card:hover .ab-build-media img { filter: saturate(1.06); transform: scale(1.045); }
+.nv-card-body { padding: 30px; }
+.nv-card-title { font-size: clamp(24px, 2.2vw, 34px); }
+.nv-card-more { color: var(--olive); }
+.nv-related { background: var(--stone); border: 0; }
+.nv-related-card { min-height: 190px; justify-content: flex-end; background: var(--bone); }
+.nv-related-card:hover, .nv-prevnext-link:hover { border: 0; background: var(--signal); transform: translateY(-6px); }
+.nv-prevnext { background: var(--ink); }
+.nv-prevnext-inner { padding-block: clamp(52px, 6vw, 88px); }
+.nv-prevnext-link { color: var(--white); background: var(--graphite); box-shadow: none; }
+.nv-prevnext-dir { color: var(--stone); }
+.nv-prevnext-link:hover .nv-prevnext-dir, .nv-prevnext-link:hover .nv-prevnext-label { color: var(--ink); }
+
+/* ---------- Universal cards and content modules ---------- */
+.pr-card, .pr-tile, .pr-format a, .pr-lab, .sd-card, .sd-leaderboard, .fc-recovery-card, .fc-recovery-extras article, .mb-tier, .mb-corporate-card, .hm-member-price, .hm-event, .hm-camps, .ab-vision-card, .ab-contrast article, .ab-build-card, .ab-diff-card, .ct-find-card, .form-card { border: 0; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); }
+.pr-card, .pr-tile, .pr-format a, .sd-card, .mb-tier, .mb-corporate-card, .hm-member-price, .hm-event, .hm-camps, .ab-vision-card, .ab-build-card, .ab-diff-card, .ct-find-card, .form-card { background: var(--white); }
+.pr-card, .pr-format a, .sd-card, .fc-recovery-card, .mb-tier, .hm-member-price, .hm-event, .ab-vision-card, .ab-build-card, .ab-diff-card { transition: transform .4s var(--ease-studio), box-shadow .4s ease, background-color .3s ease; }
+.pr-card:hover, .pr-format a:hover, .sd-card:hover, .fc-recovery-card:hover, .mb-tier:hover, .hm-member-price:hover, .hm-event:hover, .ab-vision-card:hover, .ab-build-card:hover, .ab-diff-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-card); }
+.pr-card-media, .pr-coach-media, .ab-build-media, .fc-zone-card-image, .image-frame { border-radius: var(--radius-card); }
+.section-dark .pr-tile, .section-dark .sd-card, .section-dark .nv-card, .section-dark .fc-recovery-card { border: 0; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+
+/* ---------- Programme and facility discovery ---------- */
+.pr-chip, .fc-filter-chip, .mb-tab, .ct-tab { border-radius: 999px; }
+.pr-chip[aria-pressed="true"], .fc-filter-chip[aria-pressed="true"], .mb-tab[aria-selected="true"], .ct-tab[aria-selected="true"] { border-color: var(--signal); background: var(--signal); color: var(--ink); }
+.pr-explorer-tabs, .ct-tabs { gap: 8px; padding: 6px; border: 1px solid var(--line); border-radius: 999px; }
+.pr-explorer-tab, .ct-tab { margin: 0; padding-inline: 20px; border: 0; }
+.pr-modality { border-radius: 22px; }
+.pr-lab, .sd-leaderboard { background: var(--graphite); }
+.fc-journey { overflow: hidden; border: 0; border-radius: var(--radius-card); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.fc-journey a { min-height: 180px; padding: 28px; }
+.fc-journey a:hover, .fc-journey a:focus-visible { color: var(--ink); background: var(--signal); }
+.fc-stat-list li { padding: 26px; border: 0; border-radius: 22px; background: var(--white); }
+.fc-stat-list strong { font-size: clamp(54px, 6vw, 92px); }
+.fc-recovery-grid { gap: 20px; }
+.fc-recovery-card { min-height: 320px; padding: 30px; background: var(--white); }
+.section-dark .fc-recovery-card { background: rgba(255,255,255,.07); }
+
+/* ---------- Membership, schedule, visit ---------- */
+.mb-founding { background: var(--ink); }
+.mb-tier[data-featured] { border: 0; background: var(--signal); box-shadow: none; transform: translateY(-10px); }
+.mb-tier[data-featured] .mb-meta, .mb-tier[data-featured] .mb-tier-desc, .mb-tier[data-featured] .mb-tier-price span, .mb-tier[data-featured] .mb-tier-usd, .mb-tier[data-featured] .mb-checks li { color: var(--ink); }
+.mb-row { margin-bottom: 10px; padding: 26px 28px; border: 0; border-radius: 20px; background: var(--white); }
+.mb-row[data-featured] { background: var(--signal); box-shadow: none; }
+.mb-faq-item { padding-inline: 24px; border: 0; border-radius: 20px; background: var(--white); }
+.mb-faq-item + .mb-faq-item { margin-top: 10px; }
+.sd-rhythm { overflow: hidden; border: 0; border-radius: var(--radius-card); background: var(--white); }
+.sd-rhythm li { min-height: 280px; padding: 34px; }
+.sd-day h3 { border-color: var(--signal); }
+.sd-slot a { border: 0; border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.sd-slot a:hover { box-shadow: inset 0 0 0 2px var(--signal); }
+.sd-slot[data-category="night"] a { background: var(--graphite); }
+.sd-form .sd-service { border: 0; border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line); }
+.sd-form .sd-service:has(input:checked) { background: var(--signal); color: var(--ink); box-shadow: none; }
+.vt-camp-card, .vt-contact, .vt-long { overflow: hidden; border-radius: var(--radius-card); }
+.vt-camp-card { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.vt-reasons li { padding: 28px; border-radius: 22px; background: var(--white); }
+
+/* ---------- About and contact ---------- */
+.ab-problem, .ab-design, .ct-hero { background: var(--stone); }
+.ab-identity { background: var(--bone); }
+.ab-card { padding: 34px; border: 0; }
+.ab-cards { gap: 18px; border: 0; }
+.ab-cards .ab-card { border-radius: 22px; background: var(--white); }
+.ab-vision-card[data-highlight], .ab-contrast article[data-highlight] { background: var(--signal); color: var(--ink); }
+.ab-contrast article[data-highlight] .ab-contrast-place, .ab-contrast article[data-highlight] p:last-child { color: var(--ink); }
+.ab-nature { margin-inline: clamp(18px, 3vw, 48px); overflow: hidden; border-radius: var(--radius-panel); }
+.ab-launch { border-radius: var(--radius-card); }
+.ct-hero .ct-title { max-width: 10ch; font-size: clamp(68px, 10vw, 148px); text-transform: uppercase; }
+.contact-page.ct-page { background: var(--bone); }
+.form-card { padding: clamp(30px, 5vw, 66px); }
+.interest-form input, .interest-form select, .interest-form textarea { min-height: 52px; padding: 14px 16px; border: 0; border-radius: 14px; background: var(--bone); box-shadow: inset 0 0 0 1px var(--line); }
+.interest-form textarea { min-height: 130px; }
+.interest-form input:focus, .interest-form select:focus, .interest-form textarea:focus { box-shadow: inset 0 0 0 2px var(--signal); }
+
+/* ---------- Homepage content beyond the preserved video ---------- */
+.destination-intro { background: var(--bone); }
+.destination-intro h1 { max-width: 12ch; margin-inline: auto; font-size: clamp(58px, 8vw, 124px); line-height: .78; text-align: center; text-transform: uppercase; }
+.destination-summary { max-width: 760px; margin-bottom: 70px; font-style: normal; font-size: 18px; }
+.destination-pillars { gap: 20px; }
+.destination-pillar { border-radius: var(--radius-panel); }
+.destination-pillar-title { font-size: clamp(48px, 6vw, 86px); }
+.program-coverflow-card { border-radius: var(--radius-panel); }
+.program-coverflow-dots button.is-active { background: var(--signal); }
+.hm-stats { background: var(--ink); }
+.hm-stats-inner { gap: 72px; }
+.hm-pricing, .hm-events { background: var(--stone); }
+.hm-member-founding, .hm-night-card { border-radius: var(--radius-panel); background: var(--ink); }
+.hm-pricing .hm-member-founding, .hm-night-card { overflow: hidden; }
+.hm-member-founding { padding: clamp(32px, 4vw, 56px); }
+.hm-member-price { min-height: 330px; padding: 32px; }
+.hm-event { min-height: 330px; padding: 32px; }
+.hm-camps { overflow: hidden; }
+
+/* ---------- Calls to action and footer ---------- */
+.cta-band { margin: clamp(18px, 3vw, 48px); overflow: hidden; border-radius: var(--radius-panel); background: var(--olive); }
+.cta-band-inner { min-height: 440px; padding-block: clamp(66px, 8vw, 112px); }
+.cta-band h2 { max-width: 10ch; font-size: clamp(54px, 7vw, 106px); line-height: .84; text-transform: uppercase; }
+.footer-primary { padding-block: clamp(70px, 8vw, 120px); }
+.footer-brand-logo { width: 176px; }
+.footer-newsletter-row input { border-color: rgba(255,255,255,.28); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1040px) {
+  .nv-glance-main { grid-template-columns: 1fr; }
+  .nv-glance-facts { grid-column: 1; }
+  .ab-nature { margin-inline: 18px; }
+}
+
+@media (max-width: 760px) {
+  :root { --radius-card: 22px; --radius-panel: 28px; }
+  .shell { width: min(100% - 36px, 1440px); }
+  .section { padding-block: 78px; }
+  h2 { font-size: clamp(42px, 14vw, 64px); }
+  .hero-index span { padding-block: 15px; }
+  .page-hero:not(.page-hero--ratio) { min-height: 78svh; }
+  .page-hero h1 { font-size: clamp(54px, 16vw, 82px); }
+  .page-hero.page-hero--ratio .page-hero-content { padding: 34px 18px 54px; }
+  .page-hero.page-hero--ratio .page-hero-content > p:last-child { color: var(--stone); }
+  .nv-glance-summary { font-size: 30px; }
+  .nv-cards, .nv-related-list, .pr-grid, .sd-grid-2, .sd-grid-3, .sd-grid-4, .sd-grid-5, .ab-build-grid { grid-template-columns: 1fr; }
+  .destination-pillars { gap: 14px; }
+  .destination-pillar { min-height: 450px; }
+  .cta-band { margin: 10px; }
+  .cta-band-inner { min-height: 400px; align-items: flex-start; }
+  .ab-nature { margin-inline: 10px; }
+  .pr-explorer-tabs, .ct-tabs { border-radius: 20px; }
+  .footer-primary { padding-top: 70px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-card-image img, .pr-card-media img, .ab-build-media img { transition: none; }
+}

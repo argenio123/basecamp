@@ -4,7 +4,8 @@ import { formatDateLabel } from "@/content/format";
 import type { FoundingOffer } from "@/content/types";
 
 /** /membership#founding (spec §C.6.2). Renders nothing while the offer is disabled. */
-export default function FoundingBand({ founding }: { founding: FoundingOffer }) {
+/** `showBenefits={false}` when the page shows the benefits as cards (<BenefitCards>) instead. */
+export default function FoundingBand({ founding, showBenefits = true }: { founding: FoundingOffer; showBenefits?: boolean }) {
   if (!founding.enabled) return null;
   const expires = founding.expiresOn ? formatDateLabel(founding.expiresOn) : "";
   return (
@@ -17,7 +18,7 @@ export default function FoundingBand({ founding }: { founding: FoundingOffer }) 
           {founding.example && <p className="mb-founding-example">{founding.example}</p>}
         </div>
         <div className="mb-founding-side" data-reveal data-reveal-delay="short">
-          {founding.benefits.length > 0 && <ul className="mb-founding-benefits">{founding.benefits.map((b) => <li key={b}>{b}</li>)}</ul>}
+          {showBenefits && founding.benefits.length > 0 && <ul className="mb-founding-benefits">{founding.benefits.map((b) => <li key={b}>{b}</li>)}</ul>}
           <FoundingCounter founding={founding} showBar className="mb-founding-counter" />
           {expires && expires !== "To be announced" && <p className="mb-founding-expiry">Offer ends {expires}</p>}
           <Link href="/contact?interest=membership-local" className="button button-light mb-founding-cta">{founding.ctaLabel} <span>↗</span></Link>

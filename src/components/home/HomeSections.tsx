@@ -1,6 +1,5 @@
 import Image from "next/image";
 import EarlyAccessForm from "@/components/forms/EarlyAccessForm";
-import HomeLink from "@/components/home/HomeLink";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import { formatDateLabel } from "@/content/format";
 import type { SiteContent } from "@/content/types";
@@ -38,9 +37,6 @@ export function TrainAndRecover({ c }: Props) {
             ))}
           </dl>
         )}
-        <div className="hm-train-actions" data-home-reveal data-home-reveal-delay="medium">
-          {s.cta.href && <HomeLink href={s.cta.href} className="button button-light">{s.cta.label} <span>↗</span></HomeLink>}
-        </div>
       </div>
     </section>
   );

@@ -7,17 +7,20 @@ type AtAGlanceProps = {
   facts?: readonly (GlanceFact | string | null | undefined | false)[];
   eyebrow?: string;
   id?: string;
+  /** Faded oversized word behind the title (reload-fitness.com ghost headings), e.g. "FACILITIES". */
+  ghost?: string;
 };
 
 /** "At a glance" band under the hero on section pages: a one-line summary plus optional fact chips. */
-export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance", id }: AtAGlanceProps) {
+export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance", id, ghost }: AtAGlanceProps) {
   const chips = facts
     .flatMap((f): GlanceFact[] => (!f ? [] : typeof f === "string" ? [{ value: f }] : [f]))
     .filter((f) => f.value.trim() !== "")
     .slice(0, 4);
 
   return (
-    <section id={id} className="nv-glance" aria-labelledby={id ? `${id}-title` : undefined}>
+    <section id={id} className={`nv-glance${ghost ? " ft-ghost-host" : ""}`} aria-labelledby={id ? `${id}-title` : undefined}>
+      {ghost && <span className="ft-ghost ft-ghost--glance" aria-hidden="true">{ghost}</span>}
       <div className="shell nv-glance-inner">
         <div className="nv-glance-main" data-reveal>
           <p className="eyebrow" id={id ? `${id}-title` : undefined}>{eyebrow}</p>

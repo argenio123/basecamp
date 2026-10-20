@@ -93,7 +93,7 @@ export const CAMPS = {
   eyebrow: "Camps",
   title: "Camps & retreats.",
   intro: "Athletes plan their year around training camps here. Coaches bring their communities for immersive experiences.",
-  assessment: { text: "Every camp is designed to start with baseline testing and end with a checkout reassessment", label: "How assessment works", href: "/programs/coaching#assessment" },
+  assessment: { text: "Every camp is designed to start with baseline testing and end with a checkout reassessment", label: "How assessment works", href: "/classes/coaching#assessment" },
   requestLabel: "Request this camp",
   pricesTitle: "Camp packages",
   typesTitle: "Camp types",

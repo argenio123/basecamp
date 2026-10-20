@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ItemList from "@/components/facilities/ItemList";
+import PillarTiles from "@/components/features/PillarTiles";
 import { statFact } from "@/components/facilities/facts";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { FACILITY_ANCHORS } from "@/content/constants";
 import { getSiteContent } from "@/content/get";
-import { currentHrefFor } from "@/content/sitemap";
+import { currentHrefFor, findPage } from "@/content/sitemap";
 import { ARRIVAL, DESIGN, FACILITIES_CTA, FACILITIES_HERO, ZONES } from "@/data/facilities";
 
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
 export const metadata: Metadata = {
   title: "Facilities",
   description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level and spaces to stay longer.",
+};
+
+// One distinct photo per facilities tile (several sub-pages share the same building render).
+const PILLAR_IMAGES: Record<string, string> = {
+  "/facilities/training": "/images/programs/program-functional.png",
+  "/facilities/recovery": "/images/programs/program-recovery.png",
+  "/facilities/lifestyle": "/images/facilities/facility-landscape.jpg",
+  "/facilities/gallery": "/images/facilities/facility-aerial-render.jpg",
 };
 
 const zoneNo = (i: number) => String(i + 1).padStart(2, "0");
@@ -43,8 +52,11 @@ export default async function FacilitiesPage() {
         summary: "Training zones, a recovery-forward wellness level and spaces to stay longer, designed around climate, light and landscape in Camarines Sur.",
         facts: [statFact(stats, "sqm"), statFact(stats, "zones"), statFact(stats, "floor"), statFact(stats, "modalities")],
       }}
+      cards={false}
+      quote={false}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
+      <PillarTiles eyebrow="Explore" title="Train. Recover. Stay." items={(findPage("/facilities", c.programmes.featured)?.section.pages ?? []).map((pg) => ({ title: pg.label, href: pg.href, image: PILLAR_IMAGES[pg.href] ?? pg.image }))} />
       <section id="design" className="section shell">
         <div className="split-heading light-split" data-reveal><div><p className="eyebrow">{DESIGN.eyebrow}</p><h2>{DESIGN.title}</h2></div><blockquote className="fc-pull">{DESIGN.quote}</blockquote></div>
         <p className="fc-design-summary" data-reveal>See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>

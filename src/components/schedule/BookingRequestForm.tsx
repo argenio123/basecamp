@@ -31,7 +31,7 @@ const isService = (v: string | null | undefined): v is Service => !!v && SERVICE
 function optionGroups(service: Service, content: BookingFormContent): OptionGroup[] {
   switch (service) {
     case "class": return [
-      { label: "Programs", options: content.programmes.map((p) => ({ value: p.slug, label: p.title })) },
+      { label: "Classes", options: content.programmes.map((p) => ({ value: p.slug, label: p.title })) },
       { label: "Timetable sessions", options: content.slots.map((s) => ({ value: s.id, label: `${WEEKDAY_LABEL[s.day]} · ${s.time} · ${s.title}${s.status === "full" ? ` (${SLOT_STATUS_LABEL.full})` : ""}` })) },
     ].filter((g) => g.options.length > 0);
     case "appointment": return [{ label: "Recovery & 1:1", options: [...content.appointments, { value: "performance-testing", label: "Performance testing" }] }];

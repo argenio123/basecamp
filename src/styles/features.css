@@ -1,0 +1,266 @@
+/* Reference features (ritebali.com + reload-fitness.com) built as components in src/components/features.
+   Loaded after reference-refresh.css. Palette C only: ink, bone, stone, olive, graphite, signal lime, white. */
+
+/* ---------- Shared bits ---------- */
+.ft-pill { border-radius: 999px; }
+/* .button (globals.css) loads after this file, so outline rules need the extra class to keep their border. */
+.button.ft-pill-outline { border: 1px solid var(--ink); color: var(--ink); background: transparent; }
+.button.ft-pill-outline:hover, .button.ft-pill-outline:focus-visible { color: var(--white); background: var(--ink); }
+.section-dark .button.ft-pill-outline { border-color: rgba(255,255,255,.6); color: var(--white); }
+.section-dark .button.ft-pill-outline:hover, .section-dark .button.ft-pill-outline:focus-visible { color: var(--ink); background: var(--white); }
+.ft-center-action { display: flex; justify-content: center; margin-top: clamp(36px, 4vw, 56px); }
+.ft-pair { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+/* ---------- Ghost words (Reload "WORKOUT" / "THE TEAM") ---------- */
+.ft-ghost-host { position: relative; overflow: hidden; }
+.ft-ghost-host > .shell { position: relative; z-index: 1; }
+.ft-ghost { position: absolute; z-index: 0; color: rgba(21,23,19,.07); font-size: clamp(84px, 15vw, 250px); font-weight: 800; line-height: .78; letter-spacing: -.05em; text-transform: uppercase; white-space: nowrap; pointer-events: none; user-select: none; }
+.section-dark .ft-ghost, .ft-team .ft-ghost { color: rgba(255,255,255,.06); }
+.ft-ghost--glance { top: clamp(18px, 2.4vw, 36px); right: -.04em; }
+.ft-ghost-wrap { position: relative; }
+
+/* ---------- Marquee headings (Rite "Find Your Ritual ○ …") ---------- */
+.ft-marquee { overflow: hidden; padding-block: clamp(36px, 5vw, 76px); background: var(--bone); color: var(--ink); }
+.ft-marquee--dark { background: var(--ink); color: var(--bone); }
+.ft-marquee--stone { background: var(--stone); color: var(--ink); }
+.ft-marquee-track { display: flex; width: max-content; animation: ft-marquee 46s linear infinite; will-change: transform; }
+.ft-marquee-group { display: flex; flex: none; }
+.ft-marquee-item { display: inline-flex; align-items: center; gap: .32em; padding-right: .32em; font-size: clamp(54px, 8.6vw, 136px); font-weight: 500; line-height: 1; letter-spacing: -.05em; white-space: nowrap; }
+.ft-marquee--brand .ft-marquee-item { font-weight: 400; text-transform: uppercase; }
+.ft-marquee-dot { width: .2em; height: .2em; flex: none; border: 2px solid currentColor; border-radius: 50%; opacity: .55; }
+.ft-marquee--dark .ft-marquee-dot { border-color: var(--signal); opacity: 1; }
+@keyframes ft-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+
+/* ---------- Closing quote (Reload) ---------- */
+.ft-quote { padding-block: clamp(84px, 10vw, 150px); background: var(--ink); color: var(--bone); }
+.ft-quote-inner { display: grid; justify-items: center; gap: 6px; max-width: 1040px; margin: 0 auto; text-align: center; }
+.ft-quote blockquote { margin: 0; }
+.ft-quote blockquote p { margin: 0; font-size: clamp(30px, 4.4vw, 62px); font-weight: 500; line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
+.ft-quote-mark { color: var(--signal); font-size: clamp(64px, 7vw, 104px); font-weight: 800; line-height: .62; }
+
+/* ---------- Pillar tiles (Rite "Gym · Recovery · Cafe · The Lab") ---------- */
+.ft-pillars-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 24px); margin: 0; padding: 0; list-style: none; }
+.ft-pillars-grid > * { min-width: 0; }
+.ft-pillar { display: grid; gap: 18px; color: var(--ink); }
+.ft-pillar-media { position: relative; overflow: hidden; aspect-ratio: 3 / 4; border-radius: var(--radius-card, 24px); background: var(--stone); }
+.ft-pillar-media img { transition: transform .8s var(--ease-studio, ease), filter .5s ease; }
+.ft-pillar:hover .ft-pillar-media img, .ft-pillar:focus-visible .ft-pillar-media img { transform: scale(1.05); filter: saturate(1.08); }
+.ft-pillar-title { font-size: clamp(24px, 2.3vw, 36px); font-weight: 500; line-height: 1.1; letter-spacing: -.04em; }
+.ft-pillar:focus-visible { outline: 2px solid var(--olive); outline-offset: 6px; border-radius: var(--radius-card, 24px); }
+
+/* ---------- Member benefit cards (Rite) ---------- */
+.ft-benefits-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
+.ft-benefits-row > * { min-width: 0; }
+.ft-benefit-media { position: relative; display: block; overflow: hidden; aspect-ratio: 1; border-radius: 18px; background: var(--graphite); }
+.ft-benefit-media img { filter: grayscale(.35) brightness(.62); }
+.ft-benefit-overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 22px; color: var(--white); font-size: clamp(24px, 2.3vw, 34px); font-weight: 800; line-height: .95; letter-spacing: -.03em; text-align: center; text-transform: uppercase; text-wrap: balance; }
+.ft-benefit h3 { margin: 20px 0 10px; font-size: 19px; font-weight: 700; letter-spacing: .01em; line-height: 1.2; text-transform: uppercase; }
+.ft-benefit p { margin: 0; color: rgba(21,23,19,.68); font-size: 15px; line-height: 1.6; }
+.section-dark .ft-benefit p { color: rgba(255,255,255,.66); }
+
+/* ---------- Partner strip (Rite "Our Partners") ---------- */
+.ft-partners { overflow: hidden; text-align: center; }
+.ft-partners-title { margin: 0 0 clamp(36px, 4vw, 56px); font-size: clamp(36px, 4.4vw, 64px); }
+.ft-partners-strip { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.ft-partners-track { display: flex; width: max-content; animation: ft-marquee 52s linear infinite; }
+.ft-partners-group { display: flex; flex: none; align-items: center; }
+.ft-partner { padding-inline: clamp(28px, 4vw, 64px); color: rgba(255,255,255,.72); font-size: clamp(20px, 2.2vw, 32px); font-weight: 800; letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; }
+
+/* ---------- Team carousel (Reload "THE TEAM") ---------- */
+.ft-team { overflow: hidden; }
+.ft-team .ft-ghost { top: -.12em; left: -.04em; }
+.ft-team-title { position: relative; z-index: 1; margin: 0; padding-top: clamp(30px, 4vw, 60px); }
+.ft-team-row { display: flex; gap: clamp(16px, 2vw, 28px); margin: clamp(32px, 4vw, 56px) 0 0; padding: 0 max(18px, calc((100vw - 1440px) / 2)) 8px; overflow-x: auto; list-style: none; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.ft-team-row::-webkit-scrollbar { display: none; }
+.ft-coach { position: relative; flex: 0 0 clamp(240px, 22vw, 320px); overflow: hidden; aspect-ratio: 3 / 4; border-radius: var(--radius-card, 24px); background: var(--graphite); scroll-snap-align: start; }
+.ft-coach-name { position: absolute; right: 18px; bottom: 16px; left: 18px; display: grid; gap: 2px; color: var(--white); font-size: 22px; font-weight: 600; letter-spacing: -.02em; text-shadow: 0 2px 18px rgba(0,0,0,.5); }
+.ft-coach-name small { color: var(--signal); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ---------- Photo strip (Reload) ---------- */
+.ft-strip-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.ft-strip-item { position: relative; overflow: hidden; aspect-ratio: 1; background: var(--graphite); }
+.ft-strip-item img { transition: transform .8s var(--ease-studio, ease); }
+.ft-strip-item:hover img { transform: scale(1.05); }
+.ft-strip-caption { position: absolute; right: 18px; bottom: 16px; color: var(--white); font-size: clamp(16px, 1.6vw, 22px); font-weight: 800; letter-spacing: -.01em; text-transform: uppercase; text-shadow: 0 2px 16px rgba(0,0,0,.55); }
+
+/* ---------- Program concept tiles (Reload "CONCEPTS" + Rite paired buttons) ---------- */
+.ft-concepts .ft-ghost-wrap { height: clamp(56px, 8vw, 120px); }
+.ft-concepts .ft-ghost { top: 0; left: 50%; transform: translateX(-50%); }
+.ft-concepts-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 22px); margin: calc(-1 * clamp(18px, 3vw, 44px)) 0 0; padding: 0; list-style: none; }
+.ft-concepts-grid > * { min-width: 0; }
+.ft-concept-tile { position: relative; display: grid; place-items: center; overflow: hidden; aspect-ratio: 1 / .96; border-radius: var(--radius-card, 24px); background: var(--ink); }
+.ft-concept-tile img { filter: brightness(.42) saturate(.85); transition: transform .28s var(--ease-studio, ease), filter .22s ease; }
+.ft-concept-tile:hover img, .ft-concept-tile:focus-visible img { transform: scale(1.05); filter: brightness(.55) saturate(1); }
+.ft-concept-name { position: relative; z-index: 1; padding: 0 20px; color: var(--signal); font-size: clamp(24px, 2.5vw, 38px); font-weight: 800; line-height: 1; letter-spacing: -.02em; text-align: center; text-transform: uppercase; text-wrap: balance; }
+.ft-concept-tile:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+
+/* ---------- Closing call to action (Rite "Start Your Journey") ---------- */
+.cta-band.ft-cta { position: relative; isolation: isolate; display: grid; place-items: center; min-height: clamp(460px, 48vw, 640px); background: var(--ink); color: var(--white); }
+.ft-cta-image { z-index: -2; }
+.ft-cta-shade { position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at center, rgba(21,23,19,.5), rgba(21,23,19,.82)); }
+.ft-cta-inner { display: grid; justify-items: center; gap: 18px; padding-block: clamp(70px, 8vw, 110px); text-align: center; }
+.ft-cta-inner .eyebrow { justify-content: center; }
+.cta-band.ft-cta h2 { max-width: 14ch; margin: 0; color: var(--white); font-size: clamp(46px, 6.4vw, 98px); line-height: .9; text-wrap: balance; }
+.ft-cta-inner > p { max-width: 560px; margin: 0; color: rgba(255,255,255,.82); font-size: clamp(16px, 1.4vw, 19px); line-height: 1.55; }
+.ft-cta-inner .button { margin-top: 10px; }
+
+/* ---------- Find us: dark map + floating card (Rite) with lime details (Reload) ---------- */
+.ft-find { position: relative; display: flex; align-items: flex-end; min-height: clamp(520px, 52vw, 680px); overflow: hidden; background: var(--ink); color: var(--bone); }
+.ft-find .ft-find-map { position: absolute; inset: 0; aspect-ratio: auto; min-height: 0; background: var(--ink); }
+.ft-find .ft-find-map iframe { filter: grayscale(1) invert(.92) contrast(.88) brightness(.82); }
+.ft-find-shell { position: relative; z-index: 1; padding-block: clamp(28px, 4vw, 56px); pointer-events: none; }
+.ft-find-card { width: min(440px, 100%); padding: clamp(26px, 3vw, 36px); border-radius: var(--radius-card, 24px); background: rgba(21,23,19,.94); font-style: normal; box-shadow: 0 24px 70px rgba(0,0,0,.35); pointer-events: auto; }
+.ft-find-card h2 { margin: 0; color: var(--white); font-size: clamp(34px, 3.4vw, 50px); }
+.ft-find-name { margin: 10px 0 0; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.14); color: var(--stone); font: 700 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+.ft-find-details { display: grid; gap: 14px; margin-top: 18px; }
+.ft-find-details > * { min-width: 0; }
+.ft-find-details p { margin: 0; color: var(--signal); font-size: 16px; line-height: 1.5; overflow-wrap: break-word; }
+.ft-find-details a { color: var(--signal); }
+.ft-find-details a:hover, .ft-find-details a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.ft-find-hours { margin: 16px 0 0; color: rgba(255,255,255,.66); font-size: 14px; }
+.ft-find-links { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 22px 0 0; }
+.ft-find-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--white); font-size: 17px; }
+.ft-find-links a > span[aria-hidden] { color: var(--signal); }
+.ft-find-links a:hover, .ft-find-links a:focus-visible { color: var(--signal); }
+
+/* ---------- Contact form: dark fields beside the intro (Rite contact) ---------- */
+.contact-page.ct-page { background: var(--ink); color: var(--bone); }
+.contact-page.ct-page .eyebrow { color: var(--stone); }
+.contact-page.ct-page .ct-form-title { color: var(--white); }
+.contact-page.ct-page .ct-form-intro, .contact-page.ct-page .ct-founding p { color: rgba(255,255,255,.72); }
+.contact-page.ct-page .ct-founding { border-top-color: rgba(255,255,255,.14); }
+.contact-page.ct-page .ct-founding .ct-founding-example { color: var(--signal); }
+.contact-page.ct-page .ct-socials a { border-color: rgba(255,255,255,.24); color: var(--white); }
+.contact-page.ct-page .ct-socials a:hover, .contact-page.ct-page .ct-socials a:focus-visible { border-color: var(--signal); background: var(--signal); color: var(--ink); }
+.contact-page.ct-page .text-link { color: var(--white); }
+.contact-page.ct-page .form-card { background: var(--graphite); color: var(--bone); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.contact-page.ct-page .form-card .ct-tabs { border-color: rgba(255,255,255,.16); }
+.contact-page.ct-page .form-card .ct-tab { color: var(--stone); }
+.contact-page.ct-page .form-card .ct-tab[aria-selected="true"] { color: var(--ink); }
+.contact-page.ct-page .form-card .ct-panel-intro { color: rgba(255,255,255,.7); }
+.contact-page.ct-page .form-card .ct-panel-intro strong { color: var(--white); }
+.contact-page.ct-page .interest-form input:not([type="checkbox"]):not([type="radio"]),
+.contact-page.ct-page .interest-form select,
+.contact-page.ct-page .interest-form textarea { border: 0; background: var(--ink); color: var(--white); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.contact-page.ct-page .interest-form input::placeholder, .contact-page.ct-page .interest-form textarea::placeholder { color: rgba(255,255,255,.45); }
+.contact-page.ct-page .interest-form input:focus, .contact-page.ct-page .interest-form select:focus, .contact-page.ct-page .interest-form textarea:focus { box-shadow: inset 0 0 0 2px var(--signal); }
+.contact-page.ct-page .interest-form select option { color: var(--ink); background: var(--white); }
+.contact-page.ct-page .interest-form .ct-check input { accent-color: var(--signal); }
+.contact-page.ct-page .ui-privacy-note, .contact-page.ct-page .form-note { color: rgba(255,255,255,.6); }
+/* Checkboxes keep their own size (the shared field rule would otherwise stretch them). */
+.interest-form .ct-check input { min-height: 0; box-shadow: none; }
+
+/* ---------- Footer sign-up: underlined field with an arrow (Reload "New hot stuff here") ----------
+   Scoped to .site-footer because the original footer rules in globals.css load after this file. */
+.site-footer .footer-newsletter-row { align-items: end; gap: 0; border-bottom: 1px solid rgba(255,255,255,.4); }
+.site-footer .footer-newsletter-row input { height: 56px; padding: 0 4px; border: 0; border-radius: 0; background: transparent; font-size: 18px; }
+.site-footer .footer-newsletter-row input:focus { outline: none; }
+.site-footer .footer-newsletter-row:focus-within { border-bottom-color: var(--signal); }
+.site-footer .footer-newsletter-row button { display: inline-flex; align-items: center; gap: 10px; width: auto; min-height: 56px; padding: 0 4px 0 16px; border: 0; border-radius: 0; background: transparent; color: var(--white); }
+.site-footer .footer-newsletter-row button::after { content: "»"; color: var(--signal); font-size: 26px; font-weight: 400; line-height: 1; transition: transform .25s var(--ease-studio, ease); }
+.site-footer .footer-newsletter-row button:hover { border: 0; background: transparent; color: var(--signal); transform: none; }
+.site-footer .footer-newsletter-row button:hover::after { transform: translateX(4px); }
+/* Footer "Go to signup": plain arrow on one underline (no circled arrow) */
+.site-footer .text-link { gap: 26px; min-height: 0; padding: 0 0 7px; border-bottom: 1px solid currentColor; }
+.site-footer .text-link::after { content: none; }
+.site-footer .text-link > span, .site-footer .text-link:hover > span, .site-footer .text-link:focus-visible > span { position: static; color: currentColor; }
+
+/* ---------- Navbar dropdown panels: black panel, white labels, lime selected state ---------- */
+.site-header .nv-desktop-nav .nv-panel { color: var(--white); background: #000; }
+.site-header .nv-desktop-nav .nv-panel-text { color: var(--white); }
+.site-header .nv-desktop-nav .nv-panel-highlights .eyebrow,
+.site-header .nv-desktop-nav .nv-panel-list a,
+.site-header .nv-desktop-nav .nv-panel a.nv-panel-explore { font-family: var(--font-poppins), system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 13.76px; font-weight: 500; letter-spacing: .5504px; line-height: 22.704px; text-transform: uppercase; }
+.site-header .nv-desktop-nav .nv-panel-highlights .eyebrow { color: var(--white); }
+.site-header .nv-desktop-nav .nv-panel-highlights .eyebrow::before { content: none; }
+.site-header .nv-desktop-nav .nv-panel-list a { padding-left: 0; color: var(--white); transition: none; }
+.site-header .nv-desktop-nav .nv-panel-list a:hover,
+.site-header .nv-desktop-nav .nv-panel-list a:focus-visible,
+.site-header .nv-desktop-nav .nv-panel-list a:active,
+.site-header .nv-desktop-nav .nv-panel-list a[aria-current="page"] { padding-left: 0; color: var(--signal); }
+.site-header .nv-desktop-nav .nv-panel-list a::after { opacity: 1; }
+.site-header .nv-desktop-nav .nv-panel-list a:hover .nv-panel-label,
+.site-header .nv-desktop-nav .nv-panel-list a:focus-visible .nv-panel-label,
+.site-header .nv-desktop-nav .nv-panel-list a[aria-current="page"] .nv-panel-label { text-decoration: underline 4px currentColor; text-underline-offset: 8px; }
+.site-header .nv-desktop-nav .nv-panel a.nv-panel-explore { min-height: 48px; padding: 0 22px; border: 1px solid var(--white); border-radius: 0; color: var(--white); background: transparent; }
+.site-header .nv-desktop-nav .nv-panel a.nv-panel-explore:hover, .site-header .nv-desktop-nav .nv-panel a.nv-panel-explore:focus-visible { color: #000; background: var(--signal); transform: none; }
+.site-header .nv-desktop-nav .nv-panel a.nv-panel-explore:active, .site-header .nv-desktop-nav .nv-panel a.nv-panel-explore[aria-current="page"] { border-color: var(--signal); color: var(--signal); background: transparent; }
+.site-header .nv-desktop-nav .nv-panel a:focus-visible { outline-color: var(--signal); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1040px) {
+  .ft-pillars-grid, .ft-benefits-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ft-concepts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .ft-benefits-row { display: flex; gap: 14px; margin-inline: -18px; padding: 0 18px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 18px; scrollbar-width: none; }
+  .ft-benefits-row::-webkit-scrollbar { display: none; }
+  .ft-benefits-row > li { flex: 0 0 78%; scroll-snap-align: start; }
+  .ft-concepts-grid { grid-template-columns: 1fr; }
+  .ft-strip-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ft-find { display: block; min-height: 0; }
+  .ft-find .ft-find-map { position: relative; height: 320px; }
+  .ft-find-shell { padding-block: 0; }
+  .ft-find-card { width: auto; margin: -64px 0 0; border-radius: 22px; }
+  .site-footer .footer-newsletter-row { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
+@media (max-width: 480px) {
+  .ft-pillars-grid { grid-template-columns: 1fr; }
+  .ft-pillar-media { aspect-ratio: 4 / 3; }
+}
+
+/* ---------- Home: program carousel, Train & recover, Early access (matched to the supplied reference images) ---------- */
+/* Shared: plain sans eyebrow with no dot */
+.hm-train .eyebrow, .hm-early .eyebrow { font-family: inherit; letter-spacing: .2em; }
+.hm-train .eyebrow::before, .hm-early .eyebrow::before { content: none; }
+
+/* Program carousel: lime titles and arrows; "Explore all programs" as a lime underlined link with a plain arrow */
+#ways-to-move { background: var(--ink); }
+#ways-to-move .program-coverflow-dots button.is-active { background: var(--signal); }
+#ways-to-move .program-coverflow-title { color: var(--signal); }
+#ways-to-move .program-coverflow-image { transition: transform .28s var(--ease-studio, ease), filter .22s ease; }
+#ways-to-move .program-coverflow-card.is-description-visible .program-coverflow-image { filter: brightness(.55) saturate(1); transform: scale(1.05); }
+#ways-to-move .program-coverflow-title { transition-duration: .22s; }
+#ways-to-move .program-coverflow-description { transition: max-height .22s var(--ease-studio, ease), margin-top .18s var(--ease-studio, ease), opacity .14s ease, transform .22s var(--ease-studio, ease); }
+#ways-to-move .program-coverflow-arrow, #ways-to-move .program-coverflow-count { color: var(--signal); }
+#ways-to-move .program-coverflow-arrow:hover { color: var(--ink); background: var(--signal); border-color: var(--signal); }
+#ways-to-move .text-link.light { gap: 26px; min-height: 0; padding: 0 0 7px; border-bottom: 1px solid currentColor; color: var(--signal); }
+#ways-to-move .text-link::after { content: none; }
+#ways-to-move .text-link > span, #ways-to-move .text-link:hover > span, #ways-to-move .text-link:focus-visible > span { position: static; color: currentColor; }
+
+/* Hero: one decisive lime action, with the secondary action using the same signal color. */
+.home-hero .home-hero-actions { width: auto; }
+.home-hero .home-hero-cta--primary { border-color: var(--signal); color: var(--ink); background: var(--signal); }
+.home-hero .home-hero-cta--secondary { border-color: var(--signal); color: var(--signal); background: rgba(21,23,19,.42); backdrop-filter: blur(8px); }
+.home-hero .home-hero-cta--primary:hover, .home-hero .home-hero-cta--primary:focus-visible { border-color: var(--ink); color: var(--signal); background: var(--ink); }
+.home-hero .home-hero-cta--secondary:hover, .home-hero .home-hero-cta--secondary:focus-visible { color: var(--ink); background: var(--signal); }
+
+/* Train & recover: lime eyebrow, heading, values and labels on the photo */
+.hm-train .eyebrow { color: #c5c744; }
+.hm-train .hm-stats-copy h2 { color: var(--signal); }
+.hm-train .hm-stats-tile dt { color: var(--signal); }
+
+/* Early access: full-width black band, lime copy, square off-white form with underline fields and a black button */
+.hm-section.hm-early { margin: 0; border-radius: 0; background: #000; }
+.hm-early .eyebrow { color: #c6da3c; }
+.hm-early .hm-early-copy h2 { color: var(--signal); }
+.hm-early .hm-early-body { color: #c6da3c; font-size: 20px; }
+.hm-early .hm-check-list li { color: var(--white); }
+.hm-early .hm-check-list li::before { color: var(--signal); }
+.hm-early .hm-early-founding { border-color: rgba(255,255,255,.24); }
+.hm-early .hm-early-founding > .hm-early-founding-title { color: var(--signal); }
+.hm-early .hm-early-founding-list { color: var(--white); }
+.hm-early .form-card.hm-early-form { border-radius: 0; background: #f8f6f1; box-shadow: none; color: var(--ink); }
+.hm-early .interest-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) { min-height: 52px; padding: 14px 0; border: 0; border-bottom: 1px solid #a9a7a0; border-radius: 0; background: transparent; box-shadow: none; }
+.hm-early .interest-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus { border-bottom-color: var(--ink); box-shadow: none; }
+.hm-early .interest-form input[type="radio"], .hm-early .interest-form input[type="checkbox"] { width: 16px; height: 16px; min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; accent-color: var(--ink); }
+.hm-early .ui-privacy-note { color: var(--ink); }
+.hm-early .interest-form .button.button-dark { border: 0; border-radius: 0; color: var(--signal); background: var(--ink); }
+.hm-early .interest-form .button.button-dark:hover, .hm-early .interest-form .button.button-dark:focus-visible { color: var(--ink); background: var(--signal); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-marquee-track, .ft-partners-track { animation: none; }
+  .ft-pillar-media img, .ft-strip-item img, .ft-concept-tile img { transition: none; }
+}

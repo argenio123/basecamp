@@ -1,5 +1,8 @@
 import type { ComponentProps, ReactNode } from "react";
+import Marquee from "@/components/features/Marquee";
+import QuoteBand from "@/components/features/QuoteBand";
 import AtAGlance from "@/components/ui/AtAGlance";
+import { SECTION_FEATURES, sectionKeyFor } from "@/data/features";
 import Breadcrumbs from "./Breadcrumbs";
 import PrevNext from "./PrevNext";
 import RelatedLinks from "./RelatedLinks";
@@ -19,6 +22,8 @@ type OverviewTemplateProps = {
    * <SubpageCards section=… /> yourself inside `children` (e.g. Programmes, where cards come last).
    */
   cards?: Omit<SubpageCardsProps, "section"> | false;
+  /** Closing quote band before the CTA. Default on; `false` hides it on this overview. */
+  quote?: boolean;
   /** Usually <CtaBand …/>. */
   cta?: ReactNode;
   /** Highlights: the overview's own sections. */
@@ -29,13 +34,17 @@ type OverviewTemplateProps = {
  * Overview page order: hero → at a glance → sub-page cards → highlights → CTA (no previous/next on overviews).
  * Legacy #anchors are forwarded by the site-wide <HashForwarder /> in the root layout.
  */
-export function OverviewTemplate({ path, hero, glance, cards = {}, cta, children }: OverviewTemplateProps) {
+export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, cta, children }: OverviewTemplateProps) {
+  // Reference features on every overview: ghost word behind "At a glance", scrolling marquee, closing quote.
+  const feature = SECTION_FEATURES[sectionKeyFor(path)];
   return (
     <>
       {hero}
-      <AtAGlance {...glance} />
+      <AtAGlance ghost={feature.ghost} {...glance} />
+      <Marquee text={feature.marquee} />
       {cards !== false && <SubpageCards section={path} title="Explore" {...cards} />}
       {children}
+      {quote && <QuoteBand quote={feature.quote} />}
       {cta}
     </>
   );
@@ -65,8 +74,9 @@ export function DetailTemplate({ path, hero, glance, crumbLabel, related, relate
     <>
       {hero}
       <Breadcrumbs current={path} label={crumbLabel} />
-      <AtAGlance {...glance} />
+      <AtAGlance ghost={SECTION_FEATURES[sectionKeyFor(path)].ghost} {...glance} />
       {children}
+      <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />
       <RelatedLinks current={path} hrefs={related} title={relatedTitle} />
       {afterRelated}
       {cta}

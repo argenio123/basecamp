@@ -10,10 +10,16 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
 import { programmeHref, RESERVED_PROGRAMME_SLUGS } from "@/content/sitemap";
-import type { Availability, FeaturedProgramme } from "@/content/types";
-import { FEATURED_PROGRAMME_LINKS, OUTCOMES_NOTE, PARTNER_TERMS, WELLNESS_PARTNERS } from "@/data/programs-static";
+import type { Availability, FeaturedProgramme, LaunchPhase } from "@/content/types";
+import { CLASS_PREVIEW, FEATURED_PROGRAMME_LINKS, OUTCOMES_NOTE, PARTNER_TERMS, WELLNESS_PARTNERS } from "@/data/programs-static";
 
 type Params = { slug: string };
+
+const PROGRAMME_STATUS: Record<LaunchPhase, string> = {
+  "pre-launch": "At launch",
+  "soft-opening": "Early access",
+  live: "Available now",
+};
 
 /** Unknown slugs wait for the route result so notFound() can return a real 404 before streaming. */
 export const ensureStatic = "navigation";
@@ -94,6 +100,9 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
   const fusion = pick(p.fusion, links.fusion);
   const totalMinutes = programme.timeline.reduce((total, block) => total + block.minutes, 0);
   const mentionsMedical = /hyperbaric|cryotherapy|NAD\+/i.test(JSON.stringify([programme, offerings, modalities, fusion]));
+  const classPreview = CLASS_PREVIEW.filter((item) => item.programmeSlug === programme.slug);
+  const supportHref = programme.slug === "recovery-mobility" ? "/facilities/recovery" : "/classes/coaching";
+  const supportTitle = programme.slug === "recovery-mobility" ? "Recovery facilities" : "Coaching support";
 
   type InsideItem = { key: string; type: string; title: string; description: string; availability?: Availability; note?: string };
   const inside: InsideItem[] = [
@@ -109,12 +118,18 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
   return (
     <DetailTemplate
       path={path}
-      hero={<PageHero eyebrow="Program" title={programme.title} intro={programme.description} image={programme.image} imageAlt={`${programme.title} at BaseCamp CamSur`} />}
+      hero={<PageHero eyebrow="Classes" title={programme.title} intro={programme.description} image={programme.image} imageAlt={`${programme.title} at BaseCamp CamSur`} />}
       glance={{
         summary: programme.description,
+        facts: [
+          { label: "Level", value: programme.level },
+          { label: "Session", value: `${programme.duration} minutes` },
+          { label: "Format", value: programme.format },
+          { label: "Status", value: PROGRAMME_STATUS[c.settings.launchPhase] },
+        ],
       }}
       related={relatedProgrammes(p.featured, programme)}
-      relatedTitle="Related programs"
+      relatedTitle="Related classes"
       afterRelated={(
         <section className="section shell pr-get-started" aria-labelledby="get-started-title">
           <div data-reveal>
@@ -127,7 +142,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
     >
       <div className="pr-detail">
-        <Row id="what-it-is" eyebrow="The program" title="What it is">
+        <Row id="what-it-is" eyebrow="The discipline" title="What it is">
           <p className="pr-lead" data-reveal data-reveal-delay="short">{programme.about}</p>
         </Row>
 
@@ -157,7 +172,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
         </Row>
 
         {inside.length > 0 && (
-          <Row id="inside" eyebrow="The wider BaseCamp system" title="Inside the program">
+          <Row id="inside" eyebrow="The wider BaseCamp system" title="Inside this class category">
             <ul className="pr-card-grid pr-card-grid-3" data-reveal="stagger">
               {inside.map((item) => (
                 <li className="pr-tile" key={item.key}>
@@ -172,13 +187,43 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
           </Row>
         )}
 
+        {classPreview.length > 0 && (
+          <Row id="classes" eyebrow="What you book" title="Class preview">
+            <ul className="pr-detail-classes" data-reveal="stagger">
+              {classPreview.map((item) => (
+                <li key={item.id}>
+                  <div>
+                    <p className="pr-meta">{item.duration} · Intensity {item.intensity}</p>
+                    <h3>{item.title}</h3>
+                    <p>{item.goal}</p>
+                  </div>
+                  <dl>
+                    <div><dt>Level</dt><dd>{item.level}</dd></div>
+                    <div><dt>Area</dt><dd>{item.area}</dd></div>
+                    <div><dt>Access</dt><dd>{item.access}</dd></div>
+                    <div><dt>Coach</dt><dd>{item.coach}</dd></div>
+                  </dl>
+                  <StatusBadge availability={item.availability} />
+                </li>
+              ))}
+            </ul>
+            <Link className="pr-inline-link" href="/classes#finder">Compare all launch classes <span aria-hidden="true">→</span></Link>
+          </Row>
+        )}
+
         <Row id="spaces" eyebrow="Where you'll train" title="Spaces you'll use">
           <ul className="pr-spaces" data-reveal="stagger">
             {programme.spaces.map((space) => <li key={space}><Link href={spaceHref(space)}><span className="pr-spaces-label">{space}</span><span className="pr-meta">Facilities</span><span className="pr-spaces-arrow" aria-hidden="true">→</span></Link></li>)}
           </ul>
         </Row>
 
-
+        <Row id="plan" eyebrow="Make it work for you" title="Plan your training">
+          <ul className="pr-plan-grid" data-reveal="stagger">
+            <li><Link href="/membership"><span className="pr-meta">Access</span><h3>Memberships &amp; passes</h3><p>Compare the access routes that include this kind of training.</p><span>Compare access →</span></Link></li>
+            <li><Link href="/schedule#timetable"><span className="pr-meta">Sessions</span><h3>Schedule preview</h3><p>See how coached classes, independent training and appointments fit into the week.</p><span>View schedule →</span></Link></li>
+            <li><Link href={supportHref}><span className="pr-meta">Support</span><h3>{supportTitle}</h3><p>Connect your classes to the specialist support that helps you progress.</p><span>Explore support →</span></Link></li>
+          </ul>
+        </Row>
 
         {mentionsMedical && <p className="shell pr-note pr-disclaimer">{c.recovery.disclaimer}</p>}
       </div>

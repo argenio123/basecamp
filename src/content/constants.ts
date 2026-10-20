@@ -21,7 +21,7 @@ export const MODALITY_PRICE_ID: Record<string, string> = {
 
 export const ANCHORS = {
   home: ["ways-to-move", "complete-system", "training-ground", "differentiators", "after-dark", "recovery-teaser", "day-at-basecamp", "programmes-pricing", "who-its-for", "why-camsur", "founders-vision", "build", "whats-on", "socials", "testimonials", "early-access"],
-  programs: ["disciplines", "core", "modalities", "formats", "signature", "fusion", "assessment", "mindset", "coaches", "wellness-partners", "corporate"],
+  programs: ["disciplines", "finder", "schedule-preview", "class-system", "class-faq", "modalities", "formats", "signature", "fusion", "assessment", "mindset", "coaches", "wellness-partners", "corporate"],
   facilities: ["design", "arrival", "training-zones", "running-loop", "recovery", "social-lounge", "fuel", "signature-spaces", "all-weather", "gallery"],
   membership: ["founding", "tiers", "packs", "day-passes", "open-gym", "yoga", "recovery-pricing", "advanced-recovery", "camps-pricing", "corporate", "faq", "platform"],
   schedule: ["rhythm", "timetable", "night", "competition", "events", "book", "platform"],
@@ -33,6 +33,7 @@ export const CONDITIONAL_ANCHORS = ["home#testimonials", "about#partners", "memb
 
 export const INTEREST_OPTIONS = [
   { value: "membership-local", label: "Membership (local)" }, { value: "drop-in", label: "Drop-in / day pass / open gym" },
+  { value: "schedule", label: "Class schedule and launch timetable" },
   { value: "yoga", label: "Yoga" }, { value: "recovery", label: "Recovery services" }, { value: "performance-testing", label: "Performance testing" },
   { value: "day-clinic", label: "Day workshop / clinic" }, { value: "training-camp", label: "Training camp / retreat" },
   { value: "hyrox", label: "HYROX-style program" }, { value: "competition-prep", label: "Competition prep" },

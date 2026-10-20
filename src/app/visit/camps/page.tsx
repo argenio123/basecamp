@@ -40,7 +40,7 @@ export default async function CampsPage() {
           statuses.length === 1 && { label: "Status", value: AVAILABILITY_LABEL[statuses[0]] },
         ],
       }}
-      related={["/visit/why-camsur", "/programs/coaching", "/membership/passes"]}
+      related={["/visit/why-camsur", "/classes/coaching", "/membership/passes"]}
       cta={<CtaBand eyebrow={CAMPS_CTA.eyebrow} />}
     >
       <section id="camps" className="section shell">

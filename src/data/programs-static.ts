@@ -104,6 +104,148 @@ export const INTEREST_PRICE_ITEMS: Partial<Record<InterestValue, readonly string
 export const OUTCOMES_NOTE = "These are the markers we track, not a promise: progress depends on your starting point, consistency and recovery.";
 export const SCHEDULE_SOON = "Schedule releasing soon";
 
+/** Clear, outcome-led labels used on the flagship program overview. */
+export const FEATURED_PROGRAMME_OUTCOMES: Readonly<Record<string, string>> = {
+  "strength-conditioning": "Build durable, whole-body strength",
+  "functional-training": "Move better and build all-round fitness",
+  "personal-coaching": "Follow a plan shaped around you",
+  endurance: "Develop pace, resilience and aerobic capacity",
+  "recovery-mobility": "Restore range of motion and recover well",
+};
+
+export type ClassPreview = {
+  id: string;
+  title: string;
+  programmeSlug: string;
+  programme: string;
+  goal: string;
+  intensity: string;
+  level: string;
+  duration: string;
+  coach: string;
+  area: string;
+  equipment: string;
+  access: string;
+  availability: Availability;
+  filters: readonly ClassFilter[];
+};
+
+export type ClassFilter = "beginner" | "strength" | "conditioning" | "endurance" | "recovery" | "one-to-one";
+
+export const CLASS_FILTERS: readonly { value: "all" | ClassFilter; label: string }[] = [
+  { value: "all", label: "All classes" },
+  { value: "beginner", label: "Beginner friendly" },
+  { value: "strength", label: "Strength" },
+  { value: "conditioning", label: "Conditioning" },
+  { value: "endurance", label: "Endurance" },
+  { value: "recovery", label: "Recovery" },
+  { value: "one-to-one", label: "1:1 coaching" },
+];
+
+/**
+ * Launch catalogue: programs describe the training outcome; these are the sessions members will book.
+ * Exact coaches and times remain deliberately uncommitted until the operating timetable is confirmed.
+ */
+export const CLASS_PREVIEW: readonly ClassPreview[] = [
+  {
+    id: "sunrise-strength",
+    title: "Sunrise Strength",
+    programmeSlug: "strength-conditioning",
+    programme: "Strength & Conditioning",
+    goal: "Progress the major lifts and build usable strength.",
+    intensity: "4 / 5",
+    level: "All levels",
+    duration: "60 min",
+    coach: "Coach line-up to be announced",
+    area: "Strength area",
+    equipment: "Racks, barbells and free weights",
+    access: "Athlete membership or class pass",
+    availability: "at-launch",
+    filters: ["strength", "beginner"],
+  },
+  {
+    id: "basecamp-conditioning",
+    title: "BaseCamp Conditioning",
+    programmeSlug: "functional-training",
+    programme: "Functional Training",
+    goal: "Build work capacity through scalable, varied movement.",
+    intensity: "3 / 5",
+    level: "All levels",
+    duration: "50 min",
+    coach: "Coach line-up to be announced",
+    area: "Main training floor",
+    equipment: "Rigs, cardio and functional kit",
+    access: "Athlete membership or class pass",
+    availability: "at-launch",
+    filters: ["conditioning", "beginner"],
+  },
+  {
+    id: "engine-room",
+    title: "Engine Room",
+    programmeSlug: "endurance",
+    programme: "Endurance",
+    goal: "Improve pacing and repeatable aerobic output.",
+    intensity: "4 / 5",
+    level: "Intermediate+",
+    duration: "45 min",
+    coach: "Coach line-up to be announced",
+    area: "Running loop and training floor",
+    equipment: "Running loop, sleds and cardio stations",
+    access: "Athlete membership or class pass",
+    availability: "at-launch",
+    filters: ["conditioning", "endurance"],
+  },
+  {
+    id: "mobility-reset",
+    title: "Mobility Reset",
+    programmeSlug: "recovery-mobility",
+    programme: "Recovery & Mobility",
+    goal: "Restore movement quality between harder sessions.",
+    intensity: "1 / 5",
+    level: "Beginner friendly",
+    duration: "45 min",
+    coach: "Coach line-up to be announced",
+    area: "Recovery level",
+    equipment: "Mats, bands and mobility tools",
+    access: "Membership, recovery credit or class pass",
+    availability: "at-launch",
+    filters: ["recovery", "beginner"],
+  },
+  {
+    id: "personal-assessment",
+    title: "Personal Assessment",
+    programmeSlug: "personal-coaching",
+    programme: "Personal Coaching",
+    goal: "Set a baseline and define an individual training plan.",
+    intensity: "Individual",
+    level: "All levels",
+    duration: "60 min",
+    coach: "Assigned coach to be confirmed",
+    area: "Coaching and assessment area",
+    equipment: "Movement and performance assessment tools",
+    access: "Booked coaching appointment",
+    availability: "at-launch",
+    filters: ["one-to-one", "beginner"],
+  },
+];
+
+export const CLASS_RHYTHM_PREVIEW = [
+  { id: "sunrise", window: "Early morning", title: "Sunrise strength & conditioning", note: "Before the heat" },
+  { id: "open", window: "Midday", title: "Open gym & 1:1 coaching", note: "Independent and private training" },
+  { id: "recovery", window: "By appointment", title: "Recovery & mobility", note: "Book a guided reset" },
+  { id: "evening", window: "Evening", title: "Team conditioning", note: "Coach-led group sessions" },
+  { id: "weekend", window: "Weekend", title: "Endurance sessions", note: "Longer outdoor work" },
+] as const;
+
+export const CLASS_FAQ = [
+  { question: "Do I need experience?", answer: "No. Beginner-friendly sessions are clearly labelled and coaches scale movements, loads and pace to the athlete in front of them." },
+  { question: "How long are classes?", answer: "Most launch classes are planned for 45 to 60 minutes. The final duration is shown on each class before booking opens." },
+  { question: "What should I bring?", answer: "Wear comfortable training clothes and suitable shoes. Class-specific equipment is provided; hydration and any personal supports are your responsibility." },
+  { question: "Do I need to book in advance?", answer: "Coached classes, appointments and recovery sessions will require advance booking. Open-gym access will follow the access rules of your membership or pass." },
+  { question: "Which membership includes classes?", answer: "Access depends on the class. Each listing identifies whether it is included in a membership, uses a class pass or requires a separate appointment." },
+  { question: "What happens when a class is full?", answer: "When live booking launches, full classes will offer a waitlist. Members will be notified if a place becomes available." },
+] as const;
+
 /* ---------- /programs: shared sections ---------- */
 
 export const MODALITY_FILTERS: { value: "all" | Modality["category"]; label: string }[] = [

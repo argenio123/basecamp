@@ -3,13 +3,15 @@ import Link from "next/link";
 import { Suspense } from "react";
 import InterestForm, { type ProgrammeOption } from "@/components/forms/InterestForm";
 import ProgramInterestForm from "@/components/forms/ProgramInterestForm";
+import FindUs from "@/components/features/FindUs";
+import Marquee from "@/components/features/Marquee";
+import { SECTION_FEATURES } from "@/data/features";
 import AtAGlance from "@/components/ui/AtAGlance";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import SocialIcon from "@/components/ui/SocialIcon";
 import { getSiteContent } from "@/content/get";
 import { FOUNDING_HREF } from "@/content/sitemap";
 import { ABOUT_GLANCE, CONTACT } from "@/data/about";
-import { directionsUrl } from "@/data/brand";
 
 export const metadata: Metadata = {
   title: "Early Access & Contact",
@@ -43,6 +45,8 @@ export default async function ContactPage() {
       ]}
     />
 
+    <Marquee text={SECTION_FEATURES.contact.marquee} />
+
     <section id="enquire" className="contact-page ct-page"><div className="shell contact-grid">
       {/* .contact-intro is sticky on desktop, so the reveal goes on an inner wrapper. */}
       <div className="contact-intro"><div data-reveal>
@@ -62,21 +66,6 @@ export default async function ContactPage() {
       </div>
     </div></section>
 
-    {hasAddress && <section id="find-us" className="section ct-find"><div className="shell ct-find-grid">
-      <div data-reveal>
-        <p className="eyebrow">{CONTACT.findEyebrow}</p>
-        <h2>{CONTACT.findTitle}</h2>
-        <p className="ct-find-intro">{CONTACT.findIntro}</p>
-        <Link href="/visit" className="text-link">{CONTACT.visitLink} <span>↗</span></Link>
-      </div>
-      <address className="ct-find-card" data-reveal data-reveal-delay="short">
-        <span className="ct-find-name">BaseCamp CamSur</span>
-        {contact.addressLines.length > 0 && <span className="ct-find-lines">{contact.addressLines.map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}</span>}
-        {contact.phoneDisplay && <span className="ct-find-row"><span>Phone</span><a href={`tel:${contact.phoneE164}`}>{contact.phoneDisplay}</a></span>}
-        {contact.email && <span className="ct-find-row"><span>Email</span><a href={`mailto:${contact.email}`}>{contact.email}</a></span>}
-        {contact.hours && <span className="ct-find-row"><span>Hours</span><span>{contact.hours}</span></span>}
-        {contact.mapsQuery && <a className="button button-dark ct-find-directions" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions <span aria-hidden="true">↗</span></a>}
-      </address>
-    </div></section>}
+    {hasAddress && <FindUs contact={contact} title={CONTACT.findTitle} />}
   </>;
 }

@@ -8,6 +8,9 @@ import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
+import BenefitCards, { benefitFromText } from "@/components/features/BenefitCards";
+
+const BENEFIT_IMAGES = ["/images/programs/program-strength.png", "/images/programs/program-coaching.png", "/images/programs/program-functional.png", "/images/facilities/facility-front.jpg"];
 
 // Moved here from the stage-2 audience tabs: the audience framing now introduces the "from" prices.
 const AUDIENCE_INTRO = "Local and regional regulars find value in monthly memberships and class packs. Travelers, weekenders and camp participants choose day passes, retreat bundles and immersive experiences.";
@@ -52,7 +55,15 @@ export default async function MembershipPage() {
         <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/contact?interest=membership-local" />
       </>}
     >
-      <FoundingBand founding={founding} />
+      <FoundingBand founding={founding} showBenefits={!founding.enabled || founding.benefits.length === 0} />
+      {founding.enabled && (
+        <BenefitCards
+          eyebrow="Early member benefits"
+          title="What you get."
+          items={founding.benefits.map((text, i) => benefitFromText(text, BENEFIT_IMAGES[i % BENEFIT_IMAGES.length]))}
+          cta={founding.ctaLabel ? { label: founding.ctaLabel, href: "/contact" } : undefined}
+        />
+      )}
       {tiers.length > 0 && (
         <section id="tiers" className="section mb-tiers-section">
           <div className="shell">

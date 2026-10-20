@@ -10,6 +10,16 @@ type Filter = "all" | "launch" | "planned";
 const FILTERS: { value: Filter; label: string }[] = [{ value: "all", label: "All" }, { value: "launch", label: "At launch" }, { value: "planned", label: "Planned" }];
 // "At launch" covers anything available now or at launch; "Planned" covers phase 2 and later.
 const bucket = (a: Availability): Filter => (a === "available" || a === "at-launch" ? "launch" : "planned");
+const RECOVERY_AUDIENCE: Record<RecoveryModality["category"], string> = {
+  cold: "Post-training recovery",
+  heat: "Recovery and relaxation",
+  contrast: "High-volume training weeks",
+  compression: "Endurance and leg recovery",
+  light: "Athletes following a recovery plan",
+  oxygen: "Screened recovery clients",
+  "mind-body": "All experience levels",
+  sleep: "Athletes improving sleep quality",
+};
 
 /**
  * Recovery modalities with availability filter and pricing (spec §C.4.7).
@@ -39,6 +49,12 @@ export default function RecoveryGrid({ modalities, priceItems, exchangeRate, dis
               <StatusBadge availability={m.availability} />
               <h3>{m.title}</h3>
               <p>{m.description}</p>
+              <dl className="fc-card-facts">
+                <div><dt>Best for</dt><dd>{RECOVERY_AUDIENCE[m.category]}</dd></div>
+                <div><dt>Member access</dt><dd>{price?.visible ? "Session add-on" : "Plan access to be confirmed"}</dd></div>
+                <div><dt>Booking</dt><dd>{m.medicalNote ? "Screening and booking required" : "Reserve a recovery slot"}</dd></div>
+                <div><dt>Related programs</dt><dd>Recovery &amp; Mobility</dd></div>
+              </dl>
               {m.detail && <p className="fc-recovery-detail">{m.detail}</p>}
               {price && price.visible && (
                 <div className="fc-recovery-price">

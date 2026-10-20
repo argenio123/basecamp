@@ -276,7 +276,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       enabled: true, eyebrow: "The complete system", title: "Train. Transform. Thrive.",
       intro: "This isn't three separate offerings: it's one integrated system where each element strengthens the others.",
       pillars: [
-        { id: "train", name: "TRAIN", theme: "Performance", subtitle: "Strength & Engine", bullets: ["Functional fitness programming", "HYROX-style preparation", "Endurance conditioning", "Competition training"], link: { label: "Explore programs", href: "/programs" } },
+        { id: "train", name: "TRAIN", theme: "Performance", subtitle: "Strength & Engine", bullets: ["Functional fitness programming", "HYROX-style preparation", "Endurance conditioning", "Competition training"], link: { label: "Explore classes", href: "/classes" } },
         { id: "transform", name: "TRANSFORM", theme: "Recovery", subtitle: "Wellness & Longevity", bullets: ["Contrast therapy protocols", "Massage & bodywork", "Diverse therapy zones", "Mobility work"], link: { label: "Explore recovery", href: "/facilities/recovery" } },
         { id: "thrive", name: "THRIVE", theme: "Lifestyle", subtitle: "Community & Belonging", bullets: ["Social spaces & café", "Workshops & events", "Yoga & movement", "Long-term relationships"], link: { label: "Our story", href: "/about" } },
       ],
@@ -298,12 +298,12 @@ export const DEFAULT_CONTENT: SiteContent = {
       enabled: true, eyebrow: "Why BaseCamp", title: "Not a gym. Not a resort. A new category.",
       intro: "Southeast Asia's Performance Playground: results-driven, but joyful.",
       items: [
-        { id: "prove-results", title: "Prove results", body: "Outcome-based, not experience-based: baseline testing on arrival and reassessment before you leave.", link: { label: "Learn more", href: "/programs/coaching#assessment" }, availability: "planned" },
+        { id: "prove-results", title: "Prove results", body: "Outcome-based, not experience-based: baseline testing on arrival and reassessment before you leave.", link: { label: "Learn more", href: "/classes/coaching#assessment" }, availability: "planned" },
         { id: "recovery-forward", title: "Recovery-forward", body: "Recovery is as important as training. Adaptation happens during recovery, not during training.", link: { label: "Learn more", href: "/facilities/recovery" }, availability: "at-launch" },
         { id: "own-the-night", title: "Own the night", body: "Weekly training under lights: Night Games, Friday Night Lights and night runs.", link: { label: "Learn more", href: "/schedule/events#night" }, availability: "planned" },
         { id: "competition", title: "Constant competition", body: "There's always something to train for, always a leaderboard to climb, always a challenge to attempt.", link: { label: "Learn more", href: "/schedule/events#competition" }, availability: "planned" },
         { id: "food", title: "Performance food", body: "Filipino food isn't just delicious: it's performance fuel.", link: { label: "Learn more", href: "/facilities/lifestyle#fuel" }, availability: "planned" },
-        { id: "multi-sport", title: "Multi-sport village", body: "Southeast Asia's first Multi-Sport Training Village: stay for weeks without repeating a session.", link: { label: "Learn more", href: "/programs#modalities" }, availability: "at-launch" },
+        { id: "multi-sport", title: "Multi-sport village", body: "Southeast Asia's first Multi-Sport Training Village: stay for weeks without repeating a session.", link: { label: "Learn more", href: "/classes#disciplines" }, availability: "at-launch" },
       ],
     },
     afterDark: {
@@ -342,7 +342,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         { id: "local", title: "Local fitness community", body: "CamSur residents seeking world-class training facilities and professional coaching.", link: { label: "Memberships", href: "/membership#tiers" } },
         { id: "domestic", title: "Domestic enthusiasts", body: "Filipino athletes from Manila and other cities seeking training destinations for weekends, training camps, and extended visits.", link: { label: "Camps & weekends", href: "/visit/camps" } },
         { id: "international", title: "International camps", body: "Global fitness communities organizing training camps and group trips.", link: { label: "Group camps", href: "/visit/camps" } },
-        { id: "corporate", title: "Corporate wellness", body: "Companies seeking unique venues for team off-sites, leadership development, and wellness programming that actually engages participants.", link: { label: "Corporate off-sites", href: "/programs/corporate" } },
+        { id: "corporate", title: "Corporate wellness", body: "Companies seeking unique venues for team off-sites, leadership development, and wellness programming that actually engages participants.", link: { label: "Corporate off-sites", href: "/classes/corporate" } },
         { id: "nomads", title: "Digital nomads", body: "Remote workers seeking locations that support both productivity and fitness, staying for extended periods.", link: { label: "Long stays", href: "/visit/camps#long-stays" } },
       ],
     },
@@ -378,10 +378,10 @@ export const DEFAULT_CONTENT: SiteContent = {
     programmes,
     formats: [
       { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.png`, href: "/schedule#timetable" },
-      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/programs/functional-training" },
-      { id: "hyrox-programmes", title: "HYROX-style Programs", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/programs/endurance" },
+      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/classes/functional-training" },
+      { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/classes/endurance" },
       { id: "training-camps", title: "Training Camps", description: "Immersive multi-day experiences with accommodation and full programming", image: `${F}/facility-aerial.jpg`, href: "/visit/camps" },
-      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.png`, href: "/programs/corporate" },
+      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.png`, href: "/classes/corporate" },
       { id: "community-comps", title: "Community Comps", description: "Regular competitions and events building local engagement", image: `${P}/program-coaching.png`, href: "/schedule/events#competition" },
     ],
     modalities: [

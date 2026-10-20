@@ -43,7 +43,7 @@ export default async function RecoveryPricingPage() {
           { label: "Yoga", value: fromChip(items("yoga")) },
         ],
       }}
-      related={["/facilities/recovery", "/programs/recovery-mobility", "/programs/personal-coaching", "/membership#tiers"]}
+      related={["/facilities/recovery", "/classes/recovery-mobility", "/classes/personal-coaching", "/membership#tiers"]}
       cta={<>
         <CtaBand eyebrow="Recovery" title="Make recovery part of the plan." label="Register interest" href="/contact?interest=recovery" />
       </>}

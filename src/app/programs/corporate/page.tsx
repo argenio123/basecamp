@@ -12,7 +12,7 @@ import { programmeHref } from "@/content/sitemap";
 import { CORPORATE_BAND, FEATURED_PROGRAMME_LINKS } from "@/data/programs-static";
 
 export const metadata: Metadata = {
-  title: "Corporate programs",
+  title: "Corporate classes",
   description: "Team-building, leadership and wellness off-sites with customized programming and recovery designed for groups, in Camarines Sur.",
 };
 
@@ -33,12 +33,12 @@ export default async function CorporatePage() {
 
   return (
     <DetailTemplate
-      path="/programs/corporate"
+      path="/classes/corporate"
       hero={<PageHero eyebrow="Corporate" title={CORPORATE_BAND.title} intro="Team-building and wellness off-sites with customized programming." image="/images/destination/transform.png" imageAlt="Two athletes training with kettlebells" />}
       glance={{
         summary: "Team-building, leadership and wellness off-sites with customized programming and recovery designed for groups.",
       }}
-      related={["/membership/corporate", "/visit/camps", "/programs/coaching"]}
+      related={["/membership/corporate", "/visit/camps", "/classes/coaching"]}
       cta={<CtaBand eyebrow="Corporate" title="Bring your team." body="Tell us about your group and we will shape a program around it." label={CORPORATE_BAND.cta.label} href={CORPORATE_BAND.cta.href} />}
     >
       <section className="section section-dark pr-corporate" id="corporate">
@@ -94,7 +94,7 @@ export default async function CorporatePage() {
         <section className="section pr-band" id="group-programmes">
           <div className="shell">
             <div className="nv-block-head" data-reveal>
-              <p className="eyebrow">Programs for groups</p>
+              <p className="eyebrow">Classes for groups</p>
               <h2>Train together.</h2>
             </div>
             <ul className="nv-cards" data-reveal="stagger">

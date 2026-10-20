@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import FacilityCardFacts from "@/components/facilities/FacilityCardFacts";
 import ItemList from "@/components/facilities/ItemList";
 import { statFact } from "@/components/facilities/facts";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
@@ -30,14 +31,14 @@ export default async function FacilitiesTrainingPage() {
         summary: "Three training zones with 673 square meters outdoors, a planned running loop through nature and design that works in every kind of weather.",
         facts: [statFact(stats, "sqm"), statFact(stats, "zones"), lanes && { label: lanes.title, value: "Planned" }],
       }}
-      related={["/programs/endurance", "/facilities/recovery", "/membership/passes"]}
+      related={["/classes/endurance", "/facilities/recovery", "/membership/passes"]}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id={FACILITY_ANCHORS.training} className="section">
         <div className="shell">
           <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone 02</p><h2>{TRAINING.title}</h2></div></div>
           <ul className="fc-zone-cards" data-reveal="stagger">
-            {TRAINING.zones.map((z) => <li key={z.title}><div className="image-frame fc-zone-card-image"><Image src={z.image} alt={z.imageAlt} fill sizes="(max-width: 760px) 100vw, (max-width: 1040px) 50vw, 33vw" className="cover-image" /></div><h3>{z.title}</h3><p>{z.body}</p></li>)}
+            {TRAINING.zones.map((z) => <li className="fc-facility-card" key={z.title}><div className="image-frame fc-zone-card-image"><Image src={z.image} alt={z.imageAlt} fill sizes="(max-width: 760px) 100vw, (max-width: 1040px) 50vw, 33vw" className="cover-image" /></div><div className="fc-zone-card-copy"><StatusBadge availability={z.availability} /><h3>{z.title}</h3><p>{z.body}</p><FacilityCardFacts details={z.details} /></div></li>)}
           </ul>
           <ItemList items={TRAINING.planned} cols={2} />
           {statRow.length > 0 && (

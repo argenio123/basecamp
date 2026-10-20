@@ -1,7 +1,7 @@
 import { currentHrefFor, normalisePath } from "@/content/sitemap";
 
 /**
- * Editable content links may still use stage-2 anchors (e.g. "/visit#camps", "/programs#corporate").
+ * Editable content links may still use stage-2 anchors (e.g. "/visit#camps", "/classes#corporate").
  * Resolve them to their stage-3 page with the site map (LEGACY_HASH_REDIRECTS), keeping any query string,
  * so rendered links never depend on the client-side HashForwarder. External and plain links pass through.
  */

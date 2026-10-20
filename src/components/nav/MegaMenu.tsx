@@ -17,10 +17,10 @@ import type { SectionId, SiteSection } from "@/content/sitemap";
 type MenuState = { id: SectionId; path: string };
 
 // Hash links use plain Link so the browser lands on the anchor (ScrollTopLink forces top).
-function NavLink({ href, className, children, onClick }: { href: string; className?: string; children: ReactNode; onClick?: () => void }) {
+function NavLink({ href, className, children, onClick, isCurrent }: { href: string; className?: string; children: ReactNode; onClick?: () => void; isCurrent?: boolean }) {
   return href.includes("#")
-    ? <Link href={href} className={className} onClick={onClick}>{children}</Link>
-    : <ScrollTopLink href={href} className={className} onClick={onClick}>{children}</ScrollTopLink>;
+    ? <Link href={href} className={className} onClick={onClick} aria-current={isCurrent ? "page" : undefined}>{children}</Link>
+    : <ScrollTopLink href={href} className={className} onClick={onClick} aria-current={isCurrent ? "page" : undefined}>{children}</ScrollTopLink>;
 }
 
 type MegaMenuProps = { sections: SiteSection[]; pathname: string; onOpenChange?: (isOpen: boolean) => void };
@@ -141,7 +141,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
                 <Image src={section.menu.image} alt={section.menu.imageAlt} fill sizes="(max-width: 1440px) 30vw, 420px" className="cover-image" />
               </div>
               <p className="nv-panel-text">{section.menu.text}</p>
-              <NavLink href={section.href} className="button button-light button-small nv-panel-explore" onClick={() => close()}>
+              <NavLink href={section.href} className="button button-light button-small nv-panel-explore" onClick={() => close()} isCurrent={pathname === section.href}>
                 Explore {section.label} <span aria-hidden="true">→</span>
               </NavLink>
             </div>
@@ -149,7 +149,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
               <p className="eyebrow eyebrow-light">Highlights</p>
               <ul className="nv-panel-list">
                 {section.menu.highlights.map((h) => (
-                  <li key={h.href}><NavLink href={h.href} onClick={() => close()}>{h.label}</NavLink></li>
+                  <li key={h.href}><NavLink href={h.href} onClick={() => close()} isCurrent={pathname === h.href.split("#")[0]}><span className="nv-panel-label">{h.label}</span></NavLink></li>
                 ))}
               </ul>
             </div>

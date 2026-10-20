@@ -2,23 +2,25 @@
    Shared components: footer additions, status badges, form status/errors, notes, map, brand blocks,
    founding counter, early-access form, admin quick edit.
    Colours: tokens (--ink, --ink-soft, --paper, --paper-deep, --white, --olive, --olive-dark, --line) and the
-   existing greys only (#1b1e19 #151713 #c4c7c0 #8f938b #666a61 #656960 #5e6259 #f8f6f1). Spec §0.3. */
+   existing greys only (var(--graphite) #151713 var(--stone) var(--olive) var(--olive) var(--olive) var(--olive) var(--white)). Spec §0.3. */
 
 /* ---------- Footer additions ---------- */
-.ui-footer-tagline { margin: 24px 0 6px; color: #fff; font-size: clamp(18px, 1.4vw, 22px); font-weight: 600; letter-spacing: -.02em; }
-.ui-footer-positioning { max-width: 260px; margin: 0; color: #c4c7c0; font-size: 14px; line-height: 1.5; }
-.ui-footer-hours { color: #fff; }
-.ui-footer-directions { display: inline-flex; align-items: center; gap: 10px; justify-self: start; min-height: 44px; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 6px; transition: color .2s ease; }
-.ui-footer-directions:hover, .ui-footer-directions:focus-visible { color: #c4c7c0; }
-.ui-footer-signup-status { margin: 0; color: #fff; font-size: 18px; line-height: 1.5; }
-.site-footer .ui-privacy-note { color: #8f938b; }
-.site-footer .ui-field-error { margin-top: 8px; color: #fff; }
-.site-footer .ui-form-status { margin-top: 12px; background: transparent; border-left-color: #fff; color: #fff; }
+.ui-footer-tagline { margin: 24px 0 6px; color: var(--signal); font-size: clamp(18px, 1.4vw, 22px); font-weight: 600; letter-spacing: -.02em; }
+.ui-footer-positioning { max-width: 260px; margin: 0; color: #c5c7c1; font-size: 14px; line-height: 1.5; }
+.ui-footer-hours { color: var(--signal); }
+.ui-footer-directions { display: inline-flex; align-items: center; gap: 10px; justify-self: start; min-height: 44px; color: var(--signal); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 6px; transition: color .2s ease; }
+.ui-footer-directions:hover, .ui-footer-directions:focus-visible { color: var(--white); }
+.ui-footer-signup-status { margin: 0; color: var(--white); font-size: 18px; line-height: 1.5; }
+.site-footer .ui-privacy-note { color: var(--stone); }
+.site-footer .ui-field-error { margin-top: 8px; color: var(--white); }
+.site-footer .ui-form-status { margin-top: 12px; background: transparent; border-left-color: var(--white); color: var(--white); }
+
+/* ---------- Site-wide experience rail ---------- */
+
 
 /* ---------- Status badge ---------- */
 .ui-status-badge { display: inline-flex; align-items: center; gap: 6px; width: max-content; max-width: 100%; padding: 5px 10px; border: 1px solid currentColor; border-radius: 999px; color: inherit; font-size: 10px; font-weight: 700; letter-spacing: .12em; line-height: 1.2; text-transform: uppercase; white-space: nowrap; }
-.ui-status-badge[data-availability="available"] { border-color: var(--olive-dark); background: var(--olive-dark); color: var(--white); }
-.ui-status-badge[data-availability="at-launch"] { border-color: var(--olive); background: var(--olive); color: var(--white); }
+.ui-status-badge[data-availability="available"], .ui-status-badge[data-availability="at-launch"] { border-color: var(--signal); background: var(--signal); color: var(--ink); }
 .ui-status-badge[data-availability="phase-2"] { background: transparent; }
 .ui-status-badge[data-availability="planned"] { border-style: dashed; background: transparent; opacity: .82; }
 
@@ -32,7 +34,7 @@
 .ui-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 /* ---------- Notes ---------- */
-.ui-privacy-note { margin: 0; color: #666a61; font-size: 12px; line-height: 1.55; text-transform: none; letter-spacing: 0; font-weight: 400; }
+.ui-privacy-note { margin: 0; color: var(--olive); font-size: 12px; line-height: 1.55; text-transform: none; letter-spacing: 0; font-weight: 400; }
 .ui-privacy-note a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .ui-privacy-note[data-compact] { margin-top: 10px; font-size: 10px; line-height: 1.45; }
 
@@ -50,10 +52,10 @@
 .ui-brand-statement-grid li:first-child { padding-left: 0; border-left: 0; }
 .ui-brand-statement-index { display: block; margin-bottom: 18px; color: var(--olive-dark); font: 11px var(--font-geist-mono), monospace; }
 .ui-brand-statement-grid h3 { margin-bottom: 12px; font-size: 22px; line-height: 1.15; letter-spacing: -.03em; font-weight: 600; }
-.ui-brand-statement-grid p { margin: 0; color: #656960; line-height: 1.6; }
-.section-dark .ui-brand-statement-not, .section-dark .ui-brand-statement-index { color: #c4c7c0; }
+.ui-brand-statement-grid p { margin: 0; color: var(--olive); line-height: 1.6; }
+.section-dark .ui-brand-statement-not, .section-dark .ui-brand-statement-index { color: var(--stone); }
 .section-dark .ui-brand-statement-grid, .section-dark .ui-brand-statement-grid li { border-color: rgba(255,255,255,.16); }
-.section-dark .ui-brand-statement-grid p { color: #c4c7c0; }
+.section-dark .ui-brand-statement-grid p { color: var(--stone); }
 
 /* ---------- Brand pillars ---------- */
 .ui-brand-pillars { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 48px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
@@ -61,18 +63,18 @@
 .ui-brand-pillars-item { padding: 24px 20px 0; border-left: 1px solid var(--line); }
 .ui-brand-pillars-item:first-child { padding-left: 0; border-left: 0; }
 .ui-brand-pillars-item h3 { margin-bottom: 10px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.ui-brand-pillars-item p { margin: 0; color: #656960; font-size: 15px; line-height: 1.55; }
+.ui-brand-pillars-item p { margin: 0; color: var(--olive); font-size: 15px; line-height: 1.55; }
 .section-dark .ui-brand-pillars, .section-dark .ui-brand-pillars-item { border-color: rgba(255,255,255,.16); }
-.section-dark .ui-brand-pillars-item p { color: #c4c7c0; }
+.section-dark .ui-brand-pillars-item p { color: var(--stone); }
 
 /* ---------- Founding counter ---------- */
 .ui-founding-counter { display: grid; gap: 10px; margin-top: 18px; }
 .ui-founding-counter-text { margin: 0; font-size: 14px; line-height: 1.5; }
 .ui-founding-counter-text strong { font-size: 1.5em; font-weight: 650; letter-spacing: -.02em; }
-.ui-founding-counter-bar { appearance: none; -webkit-appearance: none; display: block; width: 100%; max-width: 420px; height: 6px; overflow: hidden; border: 0; border-radius: 999px; background: color-mix(in srgb, currentColor 18%, transparent); color: var(--olive); }
+.ui-founding-counter-bar { appearance: none; -webkit-appearance: none; display: block; width: 100%; max-width: 420px; height: 6px; overflow: hidden; border: 0; border-radius: 999px; background: color-mix(in srgb, currentColor 18%, transparent); color: var(--signal); }
 .ui-founding-counter-bar::-webkit-progress-bar { border-radius: 999px; background: color-mix(in srgb, currentColor 18%, transparent); }
-.ui-founding-counter-bar::-webkit-progress-value { border-radius: 999px; background: var(--olive); }
-.ui-founding-counter-bar::-moz-progress-bar { border-radius: 999px; background: var(--olive); }
+.ui-founding-counter-bar::-webkit-progress-value { border-radius: 999px; background: var(--signal); }
+.ui-founding-counter-bar::-moz-progress-bar { border-radius: 999px; background: var(--signal); }
 
 /* ---------- Early-access form ---------- */
 .ui-early-form-personas { display: grid; gap: 4px; min-width: 0; margin: 0; padding: 0; border: 0; }
@@ -112,3 +114,6 @@
    so there is nothing to copy; form fields stay selectable so people can edit what they type. */
 .copy-guard body { -webkit-user-select: none; user-select: none; }
 .copy-guard input, .copy-guard textarea, .copy-guard select, .copy-guard [contenteditable]:not([contenteditable="false"]) { -webkit-user-select: text; user-select: text; }
+
+@media (prefers-reduced-motion: reduce) {
+}

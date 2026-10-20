@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
-import { Fragment } from "react";
 import HomeScrollReveal from "@/components/HomeScrollReveal";
 import ProgramCoverflow from "@/components/ProgramCoverflow";
 import SocialGallery from "@/components/SocialGallery";
 import HomeHeroMedia from "@/components/home/HomeHeroMedia";
+import Marquee from "@/components/features/Marquee";
+import { SECTION_FEATURES } from "@/data/features";
 import { EarlyAccess, TrainAndRecover } from "@/components/home/HomeSections";
 import { getSiteContent } from "@/content/get";
 import { programmeHref } from "@/content/sitemap";
@@ -51,7 +52,6 @@ const destinationPillars = [
 // Static: only awaits the cached getSiteContent() (spec §0.17; docs 01-directives/use-cache.md).
 export default async function Home() {
   const c = await getSiteContent();
-  const { rhythm } = c.home;
   const instagram = c.settings.socials.find((s) => s.platform === "Instagram" && s.url);
 
   return (
@@ -62,7 +62,10 @@ export default async function Home() {
           <HomeHeroMedia />
           <div className="home-hero-shade" />
           <div className="home-hero-content">
-            <div className="button-row"><Link href="/contact" className={`button home-hero-cta ${gretaros.className}`}>Start your journey <span>↗</span></Link></div>
+            <div className="button-row home-hero-actions">
+              <Link href="#early-access" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access <span>↗</span></Link>
+              <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships <span>↗</span></Link>
+            </div>
           </div>
           <div className="hero-index shell"><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
         </section>
@@ -106,10 +109,11 @@ export default async function Home() {
         </section>
       </div>
 
+      <Marquee text={SECTION_FEATURES.home.marquee} tone="dark" className={`${gretaros.className} ft-marquee--brand`} />
+
       <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
-        <div className="shell section-heading split-heading" data-home-reveal><div>{rhythm.eyebrow && <p className="eyebrow eyebrow-light">{rhythm.eyebrow}</p>}<h2>{rhythm.title.split("\n").map((line, index) => <Fragment key={index}>{index > 0 && <br />}{line}</Fragment>)}</h2></div>{rhythm.intro && <p>{rhythm.intro}</p>}</div>
         <ProgramCoverflow programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
-        <div className="shell section-link" data-home-reveal><Link href="/programs" className="text-link light">{rhythm.linkLabel || "Explore all programs"} <span>↗</span></Link></div>
+        <div className="shell section-link" data-home-reveal><Link href="/classes" className="text-link light">Explore all classes <span>↗</span></Link></div>
       </section>
 
       {/* Stage 4 removes the duplicate site-directory, persona tabs and daily-rhythm strip. Their canonical

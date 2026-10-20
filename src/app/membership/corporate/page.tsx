@@ -30,7 +30,7 @@ export default async function CorporatePricingPage() {
         summary: "Group training rates, team-building and wellness off-sites for companies, quoted on request for your group and dates.",
         facts: items.slice(0, 3).map((i) => ({ label: i.name, value: formatPhp(i.price) })),
       }}
-      related={["/programs/corporate", "/visit/camps", "/contact"]}
+      related={["/classes/corporate", "/visit/camps", "/contact"]}
       cta={<>
         <CtaBand eyebrow="Corporate" title="Plan your team off-site." body="Tell us about your team, your dates and what you want from the day." label="Inquire about corporate" href={ENQUIRE_HREF} />
       </>}
@@ -41,7 +41,7 @@ export default async function CorporatePricingPage() {
             <p className="eyebrow">{group?.title || "Corporate bookings"}</p>
             <h2>Rates for teams.</h2>
             {group?.intro && <p className="mb-corporate-intro">{group.intro}</p>}
-            <Link href="/programs/corporate" className="text-link">See corporate programs <span>→</span></Link>
+            <Link href="/classes/corporate" className="text-link">See corporate classes <span>→</span></Link>
           </div>
           <div className="mb-corporate-cards" data-reveal="stagger">
             {items.map((item) => (

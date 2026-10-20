@@ -23,7 +23,11 @@ export function EventCard({ event }: { event: CalendarEvent }) {
       <p>{event.description}</p>
       <div className="sd-event-footer">
         <StatusBadge availability={event.availability} />
-        {event.ctaHref && <Link className="text-link" href={event.ctaHref}>Register interest <span>↗</span></Link>}
+      </div>
+      {/* Paired actions (ritebali.com style): register (filled) and see the weekly schedule (outline). */}
+      <div className="ft-pair">
+        {event.ctaHref && <Link className="button button-dark button-small ft-pill" href={event.ctaHref}>Register interest</Link>}
+        <Link className="button button-small ft-pill ft-pill-outline" href="/schedule/book">Book a session</Link>
       </div>
     </li>
   );

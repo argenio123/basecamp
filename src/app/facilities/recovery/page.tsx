@@ -37,7 +37,7 @@ export default async function FacilitiesRecoveryPage() {
         summary: "An entire wellness level for cold, heat and contrast therapy, designed for training camps, with the launch status of every modality.",
         facts: [statFact(c.home.stats.items, "floor"), total, launch, later],
       }}
-      related={["/membership/recovery-pricing", "/programs/recovery-mobility", "/facilities/lifestyle"]}
+      related={["/membership/recovery-pricing", "/classes/recovery-mobility", "/facilities/lifestyle"]}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id="infrastructure" className="section">

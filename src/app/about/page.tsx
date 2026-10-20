@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import AboutLink from "@/components/about/AboutLink";
+import CoachCarousel from "@/components/features/CoachCarousel";
+import PartnerStrip from "@/components/features/PartnerStrip";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import BrandPillars from "@/components/sections/BrandPillars";
 import BrandStatement from "@/components/sections/BrandStatement";
@@ -146,6 +148,8 @@ export default async function AboutPage() {
         <div data-reveal><p className="eyebrow">{PARTNERS.eyebrow}</p><h2 className="ab-title">{PARTNERS.title}</h2></div>
         {partnerGroups.map((g) => <div key={g.type} className="ab-partner-group" data-reveal><h3>{PARTNERS.typeLabel[g.type]}</h3><ul className="ab-cards ab-cards-3">{g.items.map((p) => <li key={p.id} className="ab-card"><h4>{p.url ? <a href={p.url} target="_blank" rel="noreferrer">{p.name} <span aria-hidden="true">↗</span></a> : p.name}</h4>{p.description && <p>{p.description}</p>}</li>)}</ul></div>)}
       </div></section>}
+      <CoachCarousel coaches={c.people.coaches} />
+      {c.people.partners.length > 0 && <PartnerStrip title="Our partners" names={c.people.partners.map((p) => p.name)} />}
     </OverviewTemplate>
   );
 }

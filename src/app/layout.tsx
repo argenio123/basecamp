@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import Script from "next/script";
 import Footer from "@/components/layout/Footer";
 import FooterGate from "@/components/layout/FooterGate";
@@ -23,6 +23,13 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+// Navbar text and its button labels (not a variable font, so the weight is named).
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: "500",
   subsets: ["latin"],
 });
 
@@ -54,7 +61,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}
     >
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>

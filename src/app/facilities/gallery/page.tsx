@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import PhotoStrip from "@/components/features/PhotoStrip";
 import SocialGallery from "@/components/SocialGallery";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
@@ -43,6 +44,12 @@ export default async function FacilitiesGalleryPage() {
         </div>
       </section>
 
+      <PhotoStrip photos={[
+        { image: "/images/facilities/facility-aerial-render.jpg", alt: "Aerial render of BaseCamp CamSur", caption: "The site" },
+        { image: "/images/facilities/facility-front.jpg", alt: "Front of the BaseCamp CamSur building", caption: "Arrival" },
+        { image: "/images/facilities/facility-render-a1-2.jpg", alt: "Render of the BaseCamp CamSur facility", caption: "Training" },
+        { image: "/images/facilities/facility-landscape.jpg", alt: "BaseCamp CamSur landscape", caption: "Landscape" },
+      ]} />
       {posts.length > 0 && <SocialGallery socials={c.settings.socials} eyebrow={c.gallery.eyebrow} title={c.gallery.title} intro={c.gallery.intro} posts={posts} followHref={instagram?.url ?? ""} handle={instagram?.handle || undefined} />}
     </DetailTemplate>
   );

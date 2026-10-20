@@ -7,18 +7,18 @@
 /* ---------- Building blocks ---------- */
 .vt-deep { background: var(--paper-deep); }
 .vt-index { display: block; margin-bottom: 18px; color: var(--olive-dark); font: 11px var(--font-geist-mono), monospace; }
-.section-dark .vt-index { color: #c4c7c0; }
+.section-dark .vt-index { color: var(--stone); }
 .vt-subhead { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; line-height: 1.4; text-transform: uppercase; }
 .vt-chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 40px 0 0; padding: 0; list-style: none; }
 .vt-chips li { padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; line-height: 1.35; }
 .section-dark .vt-chips li { border-color: rgba(255,255,255,.22); }
 .vt-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-.vt-note { color: #666a61; font-size: 10px; font-weight: 700; letter-spacing: .12em; line-height: 1.2; text-transform: uppercase; }
-.section-dark .vt-note { color: #c4c7c0; }
+.vt-note { color: var(--olive); font-size: 10px; font-weight: 700; letter-spacing: .12em; line-height: 1.2; text-transform: uppercase; }
+.section-dark .vt-note { color: var(--stone); }
 .vt-story { max-width: 920px; margin: 64px 0 0; }
 .vt-inline-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .vt-row-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-top: 72px; }
-.vt-row-head p { margin: 0; color: #666a61; font-size: 14px; }
+.vt-row-head p { margin: 0; color: var(--olive); font-size: 14px; }
 
 /* Bordered item list (components/visit/VisitItems.tsx) */
 .vt-items { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 32px; margin: 56px 0 0; padding: 0; list-style: none; }
@@ -28,10 +28,10 @@
 .vt-row-head + .vt-items { margin-top: 24px; }
 .vt-items li { display: flex; flex-direction: column; padding-top: 22px; border-top: 1px solid var(--line); }
 .vt-items h3 { margin: 0 0 10px; font-size: 20px; font-weight: 600; line-height: 1.2; letter-spacing: -.02em; }
-.vt-items p { margin: 0 0 14px; color: #666a61; font-size: 15px; line-height: 1.6; }
+.vt-items p { margin: 0 0 14px; color: var(--olive); font-size: 15px; line-height: 1.6; }
 .vt-items .vt-badges { margin-top: auto; padding-top: 4px; }
 .section-dark .vt-items li { border-color: rgba(255,255,255,.16); }
-.section-dark .vt-items p { color: #c4c7c0; }
+.section-dark .vt-items p { color: var(--stone); }
 
 /* ---------- Overview: getting there ---------- */
 .vt-getting { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: start; }
@@ -39,7 +39,7 @@
 .vt-getting h2 { margin-bottom: 32px; }
 .vt-contact { margin: 0 0 28px; border-top: 1px solid var(--line); }
 .vt-contact > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.vt-contact dt { color: #666a61; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.vt-contact dt { color: var(--olive); font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .vt-contact dd { margin: 0; font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
 .vt-contact address { font-style: normal; }
 .vt-contact address span { display: block; }
@@ -52,7 +52,7 @@
 .vt-reasons > * { min-width: 0; }
 .vt-reasons li { padding-top: 22px; border-top: 1px solid var(--line); }
 .vt-reasons h3 { margin: 36px 0 12px; font-size: 21px; font-weight: 600; line-height: 1.2; letter-spacing: -.02em; }
-.vt-reasons p { margin: 0; color: #666a61; font-size: 15px; line-height: 1.6; }
+.vt-reasons p { margin: 0; color: var(--olive); font-size: 15px; line-height: 1.6; }
 
 /* ---------- Camps ---------- */
 .vt-camps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 24px 0 0; padding: 0; list-style: none; }
@@ -62,9 +62,9 @@
 .vt-camps h3 { margin: 18px 0 14px; font-size: 22px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; }
 .vt-camp-price { display: flex; flex-direction: column; gap: 4px; margin: 0; }
 .vt-camp-price strong { font-size: clamp(24px, 2.2vw, 30px); font-weight: 620; line-height: 1.1; letter-spacing: -.03em; }
-.vt-camp-price span, .vt-camp-usd { color: #666a61; font-size: 13px; }
+.vt-camp-price span, .vt-camp-usd { color: var(--olive); font-size: 13px; }
 .vt-camp-usd { margin: 6px 0 0; }
-.vt-camp-desc { margin: 16px 0 24px; color: #666a61; font-size: 14px; line-height: 1.6; }
+.vt-camp-desc { margin: 16px 0 24px; color: var(--olive); font-size: 14px; line-height: 1.6; }
 .vt-camps .button { gap: 14px; margin-top: auto; padding-inline: 18px; }
 .vt-pricing-link { margin-top: 28px; }
 .vt-who { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--line); }
@@ -74,7 +74,7 @@
 .vt-long > * { min-width: 0; }
 .vt-long .image-frame { min-height: 520px; }
 .vt-long h2 { margin-bottom: 20px; }
-.vt-long-body { max-width: 560px; margin: 24px 0 32px; color: #666a61; font-size: 18px; line-height: 1.6; }
+.vt-long-body { max-width: 560px; margin: 24px 0 32px; color: var(--olive); font-size: 18px; line-height: 1.6; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1040px) {

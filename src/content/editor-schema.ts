@@ -218,7 +218,7 @@ export const EDITOR_SCHEMA = {
                   id: id(), title: title(), who: text("Who", { max: 80 }), cadence: text("Cadence", { max: 120 }),
                   offer: text("Offer", { max: 120 }), body: area("Body", { max: 400 }), link: link(),
                 },
-                newItem: () => ({ id: newId("path"), title: "New path", who: "", cadence: "", offer: "", body: "", link: { label: "Learn more", href: "/programs" } }),
+                newItem: () => ({ id: newId("path"), title: "New path", who: "", cadence: "", offer: "", body: "", link: { label: "Learn more", href: "/classes" } }),
               },
               dayRhythm: bodyItems("Day rhythm", 8, "rhythm"),
               linkLabel: text("Section link label", { max: 60 }),
@@ -240,7 +240,7 @@ export const EDITOR_SCHEMA = {
                   id: id(), name: title("Name"), theme: text("Theme", { max: 60 }), subtitle: text("Subtitle", { max: 80 }),
                   bullets: lines("Bullets", 8, 120), link: link(),
                 },
-                newItem: () => ({ id: newId("pillar"), name: "NEW", theme: "", subtitle: "", bullets: [], link: { label: "Learn more", href: "/programs" } }),
+                newItem: () => ({ id: newId("pillar"), name: "NEW", theme: "", subtitle: "", bullets: [], link: { label: "Learn more", href: "/classes" } }),
               },
               closing: area("Closing line", { max: 400 }),
             },
@@ -276,7 +276,7 @@ export const EDITOR_SCHEMA = {
               items: {
                 kind: "list", label: "Cards", itemTitleKey: "title", maxItems: 9,
                 fields: { id: id(), title: title(), body: area("Body", { max: 400 }), link: link(), availability: availability() },
-                newItem: () => ({ id: newId("card"), title: "New card", body: "", link: { label: "Learn more", href: "/programs" }, availability: "planned" as Availability }),
+                newItem: () => ({ id: newId("card"), title: "New card", body: "", link: { label: "Learn more", href: "/classes" }, availability: "planned" as Availability }),
               },
             },
           },
@@ -309,12 +309,12 @@ export const EDITOR_SCHEMA = {
         },
       },
       {
-        title: "Day at BaseCamp (Programs page)", anchor: "day-at-basecamp",
-        help: "Shown on the Programs overview.",
+        title: "Day at BaseCamp (legacy)", anchor: "day-at-basecamp",
+        help: "Legacy content retained in the editor but not shown on the Classes overview.",
         fields: {
           dayFlow: {
             kind: "object", label: "",
-            fields: { enabled: enabled("on the Programs page"), title: title("Heading"), steps: bodyItems("Steps", 6, "step"), quote: area("Quote", { max: 600 }) },
+            fields: { enabled: enabled("in legacy content"), title: title("Heading"), steps: bodyItems("Steps", 6, "step"), quote: area("Quote", { max: 600 }) },
           },
         },
       },
@@ -333,7 +333,7 @@ export const EDITOR_SCHEMA = {
       },
       {
         title: "Who it's for", anchor: "who-its-for",
-        help: "No longer shown as its own section. The Corporate persona's text is used on Programs › Corporate.",
+        help: "No longer shown as its own section. The Corporate persona's text is used on Classes › Corporate.",
         fields: {
           personas: {
             kind: "object", label: "",
@@ -412,9 +412,9 @@ export const EDITOR_SCHEMA = {
   },
 
   programmes: {
-    label: "Programs",
+    label: "Classes",
     description: "Disciplines, programs, formats, modalities, fusion formats, signature workouts and the assessment journey.",
-    previewPath: "/programs",
+    previewPath: "/classes",
     groups: [
       { title: "Introduction", fields: { intro: area("Intro", { max: 600 }), tagline: text("Tagline", { max: 120 }) } },
       {
@@ -460,10 +460,10 @@ export const EDITOR_SCHEMA = {
       },
       { title: "Disciplines", anchor: "disciplines", fields: { disciplines: descItems("Disciplines", 8, "discipline") } },
       {
-        title: "Programs", anchor: "core",
+        title: "Class disciplines", anchor: "disciplines",
         fields: {
           programmes: {
-            kind: "list", label: "Programs", itemTitleKey: "title", maxItems: 24,
+            kind: "list", label: "Class disciplines", itemTitleKey: "title", maxItems: 24,
             fields: {
               slug: { kind: "id", label: "Slug", help: "Used in links (?program=…). Lowercase letters, numbers and hyphens." },
               title: title(),
@@ -499,7 +499,7 @@ export const EDITOR_SCHEMA = {
           formats: {
             kind: "list", label: "Formats (homepage coverflow)", itemTitleKey: "title", maxItems: 12,
             fields: { id: id(), title: title(), description: area("Description", { max: 400 }), image: image(), href: href() },
-            newItem: () => ({ id: newId("format"), title: "New format", description: "", image: IMAGE_LIBRARY[0] ?? "", href: "/programs" }),
+            newItem: () => ({ id: newId("format"), title: "New format", description: "", image: IMAGE_LIBRARY[0] ?? "", href: "/classes" }),
           },
         },
       },
@@ -648,7 +648,7 @@ export const EDITOR_SCHEMA = {
               time: text("Time", { required: true, max: 60 }),
               title: title(),
               category: select("Category", same(["sunrise", "class", "open-gym", "private", "evening", "night", "recovery"] as const)),
-              programmeSlug: text("Program slug", { max: 60, format: "slug", help: "Optional: a program slug from the Programs tab." }),
+              programmeSlug: text("Class slug", { max: 60, format: "slug", help: "Optional: a class slug from the Classes tab." }),
               capacity: { kind: "number", label: "Capacity", min: 1, max: 500, integer: true, nullable: true, help: "Leave empty when not yet set." },
               status: select("Status", [{ value: "tba", label: "To be announced" }, { value: "invite-only", label: "Invite only" }, { value: "open", label: "Open" }, { value: "full", label: "Full (waitlist)" }]),
             },
@@ -743,7 +743,7 @@ export const EDITOR_SCHEMA = {
     previewPath: "/about",
     groups: [
       {
-        title: "Coaches", anchor: "/programs/coaching#coaches", help: "Shown on Programs › Coaching once at least one coach is added.",
+        title: "Coaches", anchor: "/classes/coaching#coaches", help: "Shown on Classes › Coaching once at least one coach is added.",
         fields: {
           coaches: {
             kind: "list", label: "Coaches", itemTitleKey: "name", maxItems: 24,

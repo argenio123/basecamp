@@ -39,7 +39,7 @@ export default async function ScheduleEventsPage() {
           { label: "Leaderboards", value: s.leaderboardCategories.length > 0 ? `${s.leaderboardCategories.length} categories` : "" },
         ],
       }}
-      related={["/schedule/book", "/programs/endurance", "/visit/camps"]}
+      related={["/schedule/book", "/classes/endurance", "/visit/camps"]}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section section-dark" id="night">
