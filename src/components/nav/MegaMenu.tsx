@@ -142,7 +142,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
               </div>
               <p className="nv-panel-text">{section.menu.text}</p>
               <NavLink href={section.href} className="button button-light button-small nv-panel-explore" onClick={() => close()} isCurrent={pathname === section.href}>
-                Explore {section.label} <span aria-hidden="true">→</span>
+                Explore {section.label}
               </NavLink>
             </div>
             <div className="nv-panel-highlights">

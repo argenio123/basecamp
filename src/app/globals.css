@@ -97,8 +97,7 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
 /* Navbar hover (byndfit.co): a 4px underline in the text color, 8px below the text, shown instantly (no transition).
    The open menu and the current section use the same line. */
 .site-header .desktop-nav-group > a::after, .site-header .nv-trigger::after { content: none; }
-.site-header .desktop-nav-group > a:hover, .site-header .nv-trigger:hover, .site-header .nv-trigger[aria-expanded="true"], .site-header .nv-trigger[data-current="true"] { text-decoration: underline 4px currentColor; text-underline-offset: 8px; transition: none; }
-.site-header .nv-trigger[aria-expanded="true"], .site-header .nv-trigger[data-current="true"] { color: var(--signal); }
+.site-header .desktop-nav-group > a:hover, .site-header .nv-trigger:hover, .site-header .nv-trigger[aria-expanded="true"], .site-header .nv-trigger[data-current="true"] { color: var(--signal); text-decoration: underline 4px currentColor; text-underline-offset: 8px; transition: none; }
 .header-cta { position: relative; isolation: isolate; overflow: hidden; flex: 0 0 auto; width: auto; min-width: 0; border-radius: 0; color: var(--header-cta-color); background: transparent; white-space: nowrap; transition: color .35s cubic-bezier(.22, 1, .36, 1), letter-spacing .35s cubic-bezier(.22, 1, .36, 1), transform .35s cubic-bezier(.22, 1, .36, 1); }
 .header-cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--header-cta-fill); transform: translateY(105%); transition: transform .4s cubic-bezier(.22, 1, .36, 1); }
 .header-cta-label { font-size: inherit !important; transition: transform .35s cubic-bezier(.22, 1, .36, 1); }

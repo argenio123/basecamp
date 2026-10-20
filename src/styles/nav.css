@@ -47,9 +47,7 @@
 .nv-desktop-nav .nv-panel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; margin: 0; padding: 0; list-style: none; }
 .nv-desktop-nav .nv-panel-list > * { min-width: 0; }
 .nv-desktop-nav .nv-panel-list a { position: static; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.14); color: var(--white); font-size: 17px; font-weight: 500; letter-spacing: -.01em; line-height: 1.3; transition: color .2s ease, padding .25s cubic-bezier(.22, 1, .36, 1); }
-.nv-desktop-nav .nv-panel-list a::after { content: "\2192"; position: static; flex: none; height: auto; background: none; opacity: .5; transform: none; transition: opacity .2s ease, transform .25s cubic-bezier(.22, 1, .36, 1); }
 .nv-desktop-nav .nv-panel-list a:hover { color: rgba(255,255,255,.78); padding-left: 4px; }
-.nv-desktop-nav .nv-panel-list a:hover::after { opacity: 1; transform: translateX(3px); }
 .nv-desktop-nav .nv-panel a:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 
 /* ---------- Header: mobile expandable rows (inside the existing .mobile-panel) ---------- */
@@ -168,6 +166,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .nv-desktop-nav .nv-panel { transform: none; transition: none; }
-  .nv-card, .nv-related-card, .nv-prevnext-link, .nv-trigger::after, .nv-desktop-nav .nv-panel-list a, .nv-desktop-nav .nv-panel-list a::after { transition: none; }
+  .nv-card, .nv-related-card, .nv-prevnext-link, .nv-trigger::after, .nv-desktop-nav .nv-panel-list a { transition: none; }
   .nv-card:hover, .nv-related-card:hover { transform: none; }
 }

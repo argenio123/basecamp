@@ -29,6 +29,10 @@
 .ft-marquee--brand .ft-marquee-item { font-weight: 400; text-transform: uppercase; }
 .ft-marquee-dot { width: .2em; height: .2em; flex: none; border: 2px solid currentColor; border-radius: 50%; opacity: .55; }
 .ft-marquee--dark .ft-marquee-dot { border-color: var(--signal); opacity: 1; }
+.ft-marquee-gym-mark { display: inline-flex; width: .5em; height: .5em; flex: none; color: var(--signal); }
+.ft-marquee-gym-mark--dumbbell { width: .72em; }
+.ft-marquee-gym-mark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ft-marquee-gym-svg--outline :is(path, rect) { stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 @keyframes ft-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 
 /* ---------- Closing quote (Reload) ---------- */

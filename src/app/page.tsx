@@ -63,8 +63,8 @@ export default async function Home() {
           <div className="home-hero-shade" />
           <div className="home-hero-content">
             <div className="button-row home-hero-actions">
-              <Link href="#early-access" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access <span>↗</span></Link>
-              <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships <span>↗</span></Link>
+              <Link href="#early-access" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</Link>
+              <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
             </div>
           </div>
           <div className="hero-index shell"><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
@@ -109,7 +109,7 @@ export default async function Home() {
         </section>
       </div>
 
-      <Marquee text={SECTION_FEATURES.home.marquee} tone="dark" className={`${gretaros.className} ft-marquee--brand`} />
+      <Marquee text={SECTION_FEATURES.home.marquee} tone="dark" className={`${gretaros.className} ft-marquee--brand`} gymMarks />
 
       <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
         <ProgramCoverflow programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
