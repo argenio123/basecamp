@@ -228,7 +228,7 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
                 </span>
                 {program.availability && <StatusBadge availability={program.availability} className="hm-coverflow-badge" />}
                 {isActive && program.href
-                  ? <Link href={program.href} className="program-coverflow-title hm-coverflow-link" draggable={false}>{program.title} <span aria-hidden="true">↗</span></Link>
+                  ? <Link href={program.href} className="program-coverflow-title hm-coverflow-link" draggable={false}>{program.title}</Link>
                   : <span className="program-coverflow-title" aria-hidden="true">{program.title}</span>}
                 <span className="program-coverflow-description" aria-hidden="true">{program.description}</span>
               </span>

@@ -112,7 +112,6 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
   // Each trigger is followed by its panel in DOM order, so Tab moves from a trigger into its open panel.
   const item = (section: SiteSection, index: number) => {
     const isOpen = openId === section.id;
-    const isCurrent = pathname === section.href || pathname.startsWith(`${section.href}/`);
     return (
       <Fragment key={section.id}>
         <button
@@ -121,7 +120,6 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
           ref={(node) => { triggerRefs.current[section.id] = node; }}
           aria-expanded={isOpen}
           aria-controls={`nv-panel-${section.id}`}
-          data-current={isCurrent ? "true" : undefined}
           onClick={() => onTriggerClick(section.id)}
           onKeyDown={onTriggerKeyDown(section.id, index)}
         >
@@ -149,7 +147,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
               <p className="eyebrow eyebrow-light">Highlights</p>
               <ul className="nv-panel-list">
                 {section.menu.highlights.map((h) => (
-                  <li key={h.href}><NavLink href={h.href} onClick={() => close()} isCurrent={pathname === h.href.split("#")[0]}><span className="nv-panel-label">{h.label}</span></NavLink></li>
+                  <li key={h.href}><NavLink href={h.href} onClick={() => close()} isCurrent={!h.href.includes("#") && pathname === h.href}><span className="nv-panel-label">{h.label}</span></NavLink></li>
                 ))}
               </ul>
             </div>

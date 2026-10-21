@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import AboutChapterNav from "@/components/about/AboutChapterNav";
+import AboutEditorialHero from "@/components/about/AboutEditorialHero";
+import DesignExplorer from "@/components/about/DesignExplorer";
+import ImageComparison from "@/components/about/ImageComparison";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
-import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { getSiteContent } from "@/content/get";
 import { ABOUT_CTA, ABOUT_GLANCE, DESIGN, DESIGN_HERO, IDENTITY, PERFORMANCE_NATURE, PLACE } from "@/data/about";
@@ -23,7 +26,15 @@ export default async function AboutDesignPage() {
   return (
     <DetailTemplate
       path="/about/design"
-      hero={<PageHero {...DESIGN_HERO} />}
+      hero={<>
+        <AboutEditorialHero chapter="02" eyebrow={DESIGN_HERO.eyebrow} title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} variant="design" />
+        <AboutChapterNav label="Design chapters" items={[
+          { id: "design", label: "Architecture" },
+          { id: "place", label: "Place" },
+          { id: "performance-nature", label: "Nature" },
+          { id: "identity", label: "Identity" },
+        ]} />
+      </>}
       glance={{
         summary: ABOUT_GLANCE.design,
         facts: [
@@ -37,13 +48,8 @@ export default async function AboutDesignPage() {
     >
       <section id="design" className="section ab-design"><div className="shell">
         <div className="ab-split" data-reveal><div><p className="eyebrow">{DESIGN.eyebrow}</p><h2>{DESIGN.title}</h2></div><div><p className="lead">{DESIGN.intro}</p></div></div>
-        <div className="ab-design-grid">
-          <div className="image-frame ab-design-image" data-reveal><Image src={DESIGN.image} alt={DESIGN.imageAlt} fill sizes="(max-width: 1040px) 100vw, 50vw" className="cover-image" /></div>
-          <div>
-            <ol className="ab-design-pillars" data-reveal="stagger">{DESIGN.pillars.map((p, i) => <li key={p.title}><span className="ab-index">{pad(i)}</span><h3>{p.title}</h3><p>{p.body}</p></li>)}</ol>
-            <ul className="ab-chips" aria-label="Architectural principles" data-reveal="stagger">{DESIGN.chips.map((chip) => <li key={chip}>{chip}</li>)}</ul>
-          </div>
-        </div>
+        <div data-reveal><DesignExplorer image={DESIGN.image} imageAlt={DESIGN.imageAlt} points={DESIGN.pillars} /></div>
+        <ul className="ab-chips ab-design-chips" aria-label="Architectural principles" data-reveal="stagger">{DESIGN.chips.map((chip) => <li key={chip}>{chip}</li>)}</ul>
         <blockquote className="ab-quote" data-reveal><p>{DESIGN.quote}</p></blockquote>
       </div></section>
 
@@ -53,6 +59,13 @@ export default async function AboutDesignPage() {
           <div className="image-frame ab-place-image" data-reveal data-reveal-delay="short"><Image src={PLACE.image} alt={PLACE.imageAlt} fill sizes="(max-width: 1040px) 100vw, 50vw" className="cover-image" /></div>
         </div>
         <ul className="ab-place-list" data-reveal="stagger">{PLACE.items.map((item) => <li key={item.title}><h3>{item.title}</h3><p>{item.body}</p></li>)}</ul>
+        <div className="ab-render-study" data-reveal>
+          <div className="ab-render-study-head"><p className="eyebrow">Render study</p><h3>One building, two approaches.</h3><p>Compare the formal front elevation with the wider landscape arrival. The control is ready to pair renders with matching construction photography as the build progresses.</p></div>
+          <ImageComparison
+            first={{ src: "/images/facilities/facility-render-a1-3.jpg", alt: "Front elevation render of BaseCamp CamSur", label: "Front elevation" }}
+            second={{ src: "/images/facilities/facility-front.jpg", alt: "Wide landscape approach render of BaseCamp CamSur", label: "Landscape approach" }}
+          />
+        </div>
       </div></section>
 
       <section id="performance-nature" className="ab-nature">

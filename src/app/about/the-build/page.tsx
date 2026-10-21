@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import AboutChapterNav from "@/components/about/AboutChapterNav";
+import AboutEditorialHero from "@/components/about/AboutEditorialHero";
 import BuildCountdown from "@/components/about/BuildCountdown";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
-import PageHero from "@/components/sections/PageHero";
 import SocialIcon from "@/components/ui/SocialIcon";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDateLabel } from "@/content/format";
@@ -33,11 +34,25 @@ export default async function AboutBuildPage() {
   const opening = c.settings.openingDate ? formatDateLabel(c.settings.openingDate) : "";
   const headTitle = live ? b.liveTitle || BUILD.title : b.title || BUILD.title;
   const headIntro = live ? b.liveBody : b.intro;
+  const readiness = [
+    { label: "Design direction", note: "Published", ready: true },
+    { label: "Facility render study", note: "Published", ready: true },
+    { label: "Opening date", note: opening || "To be announced", ready: Boolean(opening) },
+    { label: "Coach line-up", note: c.people.coaches.length > 0 ? `${c.people.coaches.length} announced` : "In preparation", ready: c.people.coaches.length > 0 },
+    { label: "Bookable timetable", note: c.schedule.timetable.length > 0 ? `${c.schedule.timetable.length} sessions listed` : "In preparation", ready: c.schedule.timetable.length > 0 },
+  ];
 
   return (
     <DetailTemplate
       path="/about/the-build"
-      hero={<PageHero {...BUILD_HERO} />}
+      hero={<>
+        <AboutEditorialHero chapter="03" eyebrow={BUILD_HERO.eyebrow} title={BUILD_HERO.title} intro={BUILD_HERO.intro} image={BUILD_HERO.image} imageAlt={BUILD_HERO.imageAlt} variant="build" />
+        <AboutChapterNav label="Build chapters" items={[
+          { id: "build", label: "Journal" },
+          { id: "progress", label: "Progress" },
+          { id: "vision-ahead", label: "Vision ahead" },
+        ]} />
+      </>}
       glance={{
         summary: ABOUT_GLANCE.build,
         facts: [
@@ -72,6 +87,23 @@ export default async function AboutBuildPage() {
           <div className="ab-build-body"><p className="ab-build-meta"><span>{u.tag}</span>{u.date && <time dateTime={u.date}>{formatDateLabel(u.date)}</time>}</p><h3>{u.title}</h3><p>{u.body}</p></div>
         </article>)}</div>}
         {socials.length > 0 && <div className="ab-socials" data-reveal><p className="eyebrow">{BUILD.followLabel}</p><ul>{socials.map((s) => <li key={s.platform}><a href={s.url} target="_blank" rel="noreferrer" aria-label={`${s.platform}${s.handle ? ` ${s.handle}` : ""}`}><SocialIcon platform={s.platform} /><span>{s.handle || s.platform}</span></a></li>)}</ul></div>}
+      </div></section>
+
+      <section id="progress" className="section ab-progress"><div className="shell">
+        <div className="ab-split" data-reveal>
+          <div><p className="eyebrow">Opening readiness</p><h2>What is confirmed. What comes next.</h2></div>
+          <p className="lead">Progress is shown through verifiable milestones rather than an invented percentage. This view updates as dates, people and sessions are published.</p>
+        </div>
+        <ol className="ab-milestones" aria-label="Build phases" data-reveal="stagger">
+          <li data-state="complete"><span>01</span><div><p>Vision &amp; planning</p><strong>Complete</strong></div></li>
+          <li data-state={c.settings.launchPhase === "pre-launch" ? "current" : "complete"}><span>02</span><div><p>Construction</p><strong>{c.settings.launchPhase === "pre-launch" ? "In progress" : "Complete"}</strong></div></li>
+          <li data-state={c.settings.launchPhase === "soft-opening" ? "current" : live ? "complete" : "upcoming"}><span>03</span><div><p>Soft opening</p><strong>{c.settings.launchPhase === "soft-opening" ? "Current phase" : live ? "Complete" : "Ahead"}</strong></div></li>
+          <li data-state={live ? "current" : "upcoming"}><span>04</span><div><p>Open doors</p><strong>{live ? "Open now" : "Ahead"}</strong></div></li>
+        </ol>
+        <div className="ab-readiness" data-reveal>
+          <div><p className="eyebrow">Readiness board</p><h3>Signals we can stand behind.</h3><p>Each item is tied to content already published on the site, so this board becomes more complete without manual progress estimates.</p><Link href="/contact" className="text-link">Get build updates <span>↗</span></Link></div>
+          <ul>{readiness.map((item) => <li key={item.label} data-ready={item.ready ? "true" : "false"}><span aria-hidden="true">{item.ready ? "✓" : "○"}</span><div><strong>{item.label}</strong><p>{item.note}</p></div></li>)}</ul>
+        </div>
       </div></section>
 
       <section id="vision-ahead" className="section section-dark ab-ahead"><div className="shell">

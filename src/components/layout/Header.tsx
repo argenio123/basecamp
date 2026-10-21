@@ -76,7 +76,7 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
             className="header-brand-logo"
           />
         </ScrollTopLink>
-        <MegaMenu sections={sections} pathname={pathname} onOpenChange={setIsMenuOpen} />
+        <MegaMenu key={pathname} sections={sections} pathname={pathname} onOpenChange={setIsMenuOpen} />
         <div className="header-actions">
           <ScrollTopLink className="button button-small header-cta" href="/contact">
             <span className="header-cta-label">{ctaLabel}</span>
