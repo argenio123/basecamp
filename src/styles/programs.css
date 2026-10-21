@@ -666,7 +666,7 @@
 
 /* ---------- Class card: full-photo landscape card (3:2) with the title laid over the image ----------
    Lift lives on the link: the reveal owns the <li>'s transform/transition. */
-.pr-workout-card-grid > li > a { position: relative; isolation: isolate; display: flex; flex: 1; flex-direction: column; justify-content: space-between; aspect-ratio: 3 / 2; overflow: hidden; border-radius: 22px; color: var(--white); background: var(--ink); box-shadow: 0 18px 44px rgba(21,23,19,.16); transition: transform .45s cubic-bezier(.22, 1, .36, 1), box-shadow .45s ease; }
+.pr-workout-card-grid > li > a { position: relative; isolation: isolate; display: flex; flex: 1; flex-direction: column; justify-content: flex-end; aspect-ratio: 3 / 2; overflow: hidden; border-radius: 22px; color: var(--white); background: var(--ink); box-shadow: 0 18px 44px rgba(21,23,19,.16); transition: transform .45s cubic-bezier(.22, 1, .36, 1), box-shadow .45s ease; }
 .pr-workout-card-grid > li > a:hover, .pr-workout-card-grid > li > a:focus-visible { transform: translateY(-6px); box-shadow: 0 28px 60px rgba(21,23,19,.26); }
 .pr-workout-card-image { position: absolute; z-index: -1; inset: 0; overflow: hidden; background: var(--graphite); }
 /* Darkened photo, heaviest at the bottom where the title sits (as in the reference). */
@@ -674,19 +674,12 @@
 .pr-workout-card-image img { transition: transform .7s cubic-bezier(.22, 1, .36, 1), filter .3s ease; }
 .pr-workout-card-grid a:hover img, .pr-workout-card-grid a:focus-visible img { filter: saturate(1.1); transform: scale(1.06); }
 
-/* Top row: number badge left, intensity right. */
-.pr-workout-card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: clamp(16px, 1.8vw, 24px); }
-.pr-workout-card-number { padding: 7px 11px; border-radius: 999px; color: var(--ink); background: var(--signal); font: 700 11px var(--font-geist-mono), monospace; letter-spacing: .1em; }
-.pr-workout-card-top .pr-intensity { padding: 7px 12px; border-radius: 999px; color: var(--white); background: rgba(10,12,9,.42); backdrop-filter: blur(8px); }
 
 /* Bottom: focus label + oversized lime title (Poppins 800, as the classes hero). */
-.pr-workout-card-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 0 clamp(84px, 9vw, 112px) clamp(22px, 2.6vw, 36px) clamp(20px, 2.6vw, 36px); }
+.pr-workout-card-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 0 clamp(20px, 2.6vw, 36px) clamp(22px, 2.6vw, 36px); }
 .pr-workout-card-copy h3 { max-width: 12ch; margin: 0; color: var(--signal); font-family: var(--font-poppins), sans-serif; font-size: clamp(30px, 3.4vw, 58px); font-weight: 800; line-height: .92; letter-spacing: -.035em; text-transform: uppercase; text-wrap: balance; text-shadow: 0 2px 24px rgba(0,0,0,.35); }
 .pr-workout-chip { padding: 6px 11px; border: 1px solid rgba(255,255,255,.42); border-radius: 999px; color: var(--white); background: rgba(10,12,9,.28); font: 600 10px var(--font-geist-mono), monospace; letter-spacing: .08em; text-transform: uppercase; }
 
-/* Lime arrow, bottom-right: turns from 45 degrees to straight on hover. */
-.pr-workout-card-go { position: absolute; right: clamp(18px, 2.2vw, 30px); bottom: clamp(20px, 2.6vw, 36px); display: grid; place-items: center; width: clamp(46px, 3.6vw, 58px); aspect-ratio: 1; border-radius: 50%; color: var(--ink); background: var(--signal); font-size: 20px; font-weight: 700; transform: rotate(-45deg); transition: transform .4s cubic-bezier(.22, 1, .36, 1), background-color .25s ease; }
-.pr-workout-card-grid a:hover .pr-workout-card-go, .pr-workout-card-grid a:focus-visible .pr-workout-card-go { background: var(--white); transform: rotate(0deg) scale(1.06); }
 
 /* Session flow: rises above the label on hover/focus; touch screens skip it (no hover). */
 .pr-workout-card-flow { display: flex; flex-wrap: wrap; gap: 6px; max-height: 0; margin: 0; padding: 0; overflow: hidden; list-style: none; transition: max-height .4s cubic-bezier(.22, 1, .36, 1); }
@@ -695,18 +688,12 @@
 .pr-workout-card-grid a:hover .pr-workout-card-flow li, .pr-workout-card-grid a:focus-visible .pr-workout-card-flow li { opacity: 1; transform: none; }
 @media (hover: none) { .pr-workout-card-flow { display: none; } }
 
-/* Intensity meter: five rising bars, filled range = data/workout-types intensity (white on the photo). */
-.pr-intensity { display: inline-flex; gap: 8px; align-items: center; color: var(--white); font: 600 10px var(--font-geist-mono), monospace; letter-spacing: .06em; text-transform: uppercase; }
-.pr-intensity-bars { display: inline-flex; gap: 3px; align-items: flex-end; height: 16px; }
-.pr-intensity-bars i { width: 4px; height: calc(4px + var(--bar) * 2.4px); border-radius: 1px; background: rgba(255,255,255,.28); transform-origin: bottom; transition: transform .38s cubic-bezier(.34, 1.7, .64, 1) calc(.75s + var(--bar) * 70ms); }
-.pr-intensity-bars i[data-on] { background: var(--white); }
-.pr-intensity-scalable .pr-intensity-bars i[data-on] { background: var(--signal); }
 
 /* ---------- Class cards: sports-style scroll motion ----------
    Each card is its own [data-reveal]; SiteReveal sets data-reveal-visible and data-reveal-direction (down = card
    below the viewport, up = above) and clears visibility when a card leaves, so every effect replays mirrored when
    scrolling back up. Selectors carry [data-reveal] to outrank the generic reveal rules in nav.css.
-   Sequence: sprint start, photo lift, finish-line tape, title smash, number flip, rep pump. */
+   Sequence: sprint start, photo lift, finish-line tape, title smash. */
 /* 1. Sprint start: the card launches with a forward lean and snaps upright. */
 .reveal-ready .pr-workout-card-grid > li[data-reveal] { opacity: 0; transform: translateY(64px) skewY(2deg); transform-origin: left bottom; transition: opacity .4s ease, transform .8s cubic-bezier(.16, 1.15, .3, 1); }
 .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-direction="up"] { transform: translateY(-64px) skewY(-2deg); transform-origin: left top; }
@@ -730,15 +717,8 @@
 .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"][data-reveal-direction="up"] .pr-workout-card-copy h3 { animation-name: pr-title-smash-up; }
 @keyframes pr-title-smash { from { opacity: 0; transform: translateX(-48px) skewX(-14deg); } 70% { opacity: 1; } to { opacity: 1; transform: none; } }
 @keyframes pr-title-smash-up { from { opacity: 0; transform: translateX(48px) skewX(14deg); } 70% { opacity: 1; } to { opacity: 1; transform: none; } }
-.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] .pr-workout-chip, .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] .pr-workout-card-go { animation: pr-label-in .5s cubic-bezier(.22, 1, .36, 1) .7s both; }
+.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] .pr-workout-chip { animation: pr-label-in .5s cubic-bezier(.22, 1, .36, 1) .7s both; }
 @keyframes pr-label-in { from { opacity: 0; } to { opacity: 1; } }
-/* 5. Scoreboard: the number badge flips in like a race-clock digit. */
-.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] .pr-workout-card-number { animation: pr-scoreboard .5s cubic-bezier(.22, 1, .36, 1) .55s both; }
-.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"][data-reveal-direction="up"] .pr-workout-card-number { animation-name: pr-scoreboard-up; }
-@keyframes pr-scoreboard { from { opacity: 0; transform: perspective(200px) rotateX(-90deg); } to { opacity: 1; transform: none; } }
-@keyframes pr-scoreboard-up { from { opacity: 0; transform: perspective(200px) rotateX(90deg); } to { opacity: 1; transform: none; } }
-/* 6. Rep pump: intensity bars spring up one by one. */
-.reveal-ready .pr-workout-card-grid > li[data-reveal]:not([data-reveal-visible="true"]) .pr-intensity-bars i { transform: scaleY(.15); }
 
 /* Category filter: sticks under the site header; scrolls sideways on small screens. */
 .pr-class-filter { position: sticky; z-index: 5; top: var(--header-height); display: flex; gap: 8px; margin: 0 0 clamp(36px, 5vw, 56px); padding: 12px 0; overflow-x: auto; background: var(--paper-deep); scrollbar-width: none; }
@@ -751,9 +731,9 @@
 .pr-workout-groups { scroll-margin-top: calc(var(--header-height) + 96px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .pr-workout-card-grid > li > a, .pr-workout-card-image img, .pr-workout-card-flow li, .pr-intensity-bars i { transition: none; }
-  .pr-workout-card-grid > li > a::before, .pr-workout-card-number, .pr-workout-card-copy h3, .pr-workout-chip, .pr-workout-card-go { animation: none !important; }
-  .pr-workout-card-go, .pr-workout-card-flow { transition: none; }
+  .pr-workout-card-grid > li > a, .pr-workout-card-image img, .pr-workout-card-flow li { transition: none; }
+  .pr-workout-card-grid > li > a::before, .pr-workout-card-copy h3, .pr-workout-chip { animation: none !important; }
+  .pr-workout-card-flow { transition: none; }
   .pr-workout-card-grid > li > a:hover, .pr-workout-card-grid > li > a:focus-visible { transform: none; }
 }
 
@@ -790,7 +770,6 @@
   .pr-workout-group-head { grid-template-columns: 38px 1fr; }
   .pr-workout-card-grid { grid-template-columns: 1fr; }
   .pr-workout-card-grid > li > a { aspect-ratio: 4 / 3; }
-  .pr-workout-card-copy { padding-right: 76px; }
   .pr-style-intro, .pr-style-flow { grid-template-columns: 1fr; }
   .pr-style-facts { grid-template-columns: 1fr; }
   .pr-style-facts div, .pr-style-facts div:first-child { padding: 20px 0; border-left: 0; border-bottom: 1px solid var(--line); }

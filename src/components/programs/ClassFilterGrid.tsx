@@ -7,7 +7,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import IntensityMeter from "./IntensityMeter";
 
 export type ClassCard = {
   slug: string;
@@ -15,9 +14,7 @@ export type ClassCard = {
   image: string;
   imageAlt: string;
   focus: string;
-  intensity: string;
   session: readonly string[];
-  number: string;
 };
 
 export type ClassGroup = { id: string; title: string; description: string; items: ClassCard[] };
@@ -64,13 +61,9 @@ export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
               {group.items.map((item) => (
                 <li key={item.slug} data-reveal>
                   <Link href={`/classes/styles/${item.slug}`}>
-                    {/* Full-photo card: number and intensity on top, focus + title + arrow laid over the photo. */}
+                    {/* Full-photo card: focus label + title laid over the photo. */}
                     <div className="pr-workout-card-image">
                       <Image src={item.image} alt={item.imageAlt} fill sizes="(max-width: 760px) 100vw, 50vw" className="cover-image" />
-                    </div>
-                    <div className="pr-workout-card-top">
-                      <span className="pr-workout-card-number">{item.number}</span>
-                      <IntensityMeter intensity={item.intensity} />
                     </div>
                     <div className="pr-workout-card-copy">
                       <ol className="pr-workout-card-flow" aria-label="Session flow">
@@ -79,7 +72,6 @@ export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
                       <span className="pr-workout-chip">{item.focus}</span>
                       <h3>{item.title}</h3>
                     </div>
-                    <span className="pr-workout-card-go" aria-hidden="true">→</span>
                   </Link>
                 </li>
               ))}

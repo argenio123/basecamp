@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 
 export default async function ProgramsPage() {
   const c = await getSiteContent();
-  let number = 0;
   const groups: ClassGroup[] = WORKOUT_GROUPS.map(({ id, title, description, slugs }) => ({
     id,
     title,
@@ -22,9 +21,7 @@ export default async function ProgramsPage() {
     items: slugs
       .map(workoutTypeBySlug)
       .filter((item): item is WorkoutType => item !== undefined)
-      .map(({ slug, title, image, imageAlt, focus, intensity, session }) => ({
-        slug, title, image, imageAlt, focus, intensity, session, number: String(++number).padStart(2, "0"),
-      })),
+      .map(({ slug, title, image, imageAlt, focus, session }) => ({ slug, title, image, imageAlt, focus, session })),
   }));
 
   return (
