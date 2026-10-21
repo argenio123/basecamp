@@ -5,6 +5,7 @@
 //
 // Class detail pages (/classes/[slug]) are derived from programme content: pass `programmes`
 // (getSiteContent().programmes.programmes, or any { slug, title, summary, image }[]) to the functions below.
+import { facilitiesVideo, facilitiesVideoFrame } from "@/data/brand";
 import type { FeaturedProgramme, SectionKey } from "./types";
 
 export type SectionId = "programs" | "facilities" | "membership" | "schedule" | "visit" | "about";
@@ -34,7 +35,9 @@ export type SiteSection = {
   /** Sub-pages in section order (excludes the overview). */
   pages: SitePage[];
   /** Mega-menu panel (spec §4). */
-  menu: { text: string; image: string; imageAlt: string; highlights: MenuHighlight[] };
+  /** `video` (optional) replaces `image` in the mega-menu card; `videoPoster` is the video's own first frame, shown
+   *  until playback starts. `image` is still used wherever the menu has no video. */
+  menu: { text: string; image: string; imageAlt: string; video?: string; videoPoster?: string; highlights: MenuHighlight[] };
 };
 
 /** What the site map needs from a content programme. */
@@ -140,6 +143,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     menu: {
       text: "Outdoor training, a dedicated recovery level and spaces to stay longer.",
       image: "/images/facilities/facility-aerial-render.jpg", imageAlt: "Aerial render of the BaseCamp CamSur building and grounds",
+      video: facilitiesVideo(960, 540), videoPoster: facilitiesVideoFrame(960, 540),
       highlights: [
         { href: "/facilities/training#training-zones", label: "Training zones" },
         { href: "/facilities/training#running-loop", label: "Running loop" },
@@ -189,7 +193,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         { href: "/membership#tiers", label: "Tiers" },
         { href: "/membership/passes", label: "Class packs & day passes" },
         { href: "/membership/recovery-pricing", label: "Recovery pricing" },
-        { href: "/membership/corporate", label: "Corporate" },
+        { href: "/membership/corporate", label: "Corporate pricing" },
         { href: "/membership/faq", label: "FAQ" },
       ],
     },
@@ -290,6 +294,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         { href: "/about/design", label: "Design & place" },
         { href: "/about/the-build", label: "The build" },
         { href: "/about#different", label: "What makes us different" },
+        { href: "/contact", label: "Contact" },
       ],
     },
   },
@@ -321,7 +326,7 @@ export function getSections(programmes: readonly ProgrammeRef[]): SiteSection[] 
         highlights: [
           ...progPages.map((p) => ({ href: p.href, label: p.label })),
           { href: "/classes/coaching", label: "Coaching & assessment" },
-          { href: "/classes/corporate", label: "Corporate" },
+          { href: "/classes/corporate", label: "Corporate classes" },
         ],
       },
     };

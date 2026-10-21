@@ -41,6 +41,7 @@ export default async function MembershipPage() {
   return (
     <OverviewTemplate
       path="/membership"
+      quote={false}
       hero={<PageHero eyebrow="Membership & pricing" title="Choose access that fits how you train." intro={pricing.intro} image="/images/hero/hero-training.png" imageAlt="Athlete training at BaseCamp CamSur" />}
       glance={{
         summary: "Compare recurring memberships, flexible passes and recovery access before choosing the right way to join.",
@@ -52,7 +53,7 @@ export default async function MembershipPage() {
         ],
       }}
       cta={<>
-        <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/contact?interest=membership-local" />
+        <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/contact?interest=membership-local" className="mb-cta-expanded" />
       </>}
     >
       <FoundingBand founding={founding} showBenefits={!founding.enabled || founding.benefits.length === 0} />

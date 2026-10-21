@@ -29,7 +29,7 @@ const geistMono = Geist_Mono({
 // Navbar text and its button labels (not a variable font, so the weight is named).
 const poppins = Poppins({
   variable: "--font-poppins",
-  weight: "500",
+  weight: ["500", "800"],
   subsets: ["latin"],
 });
 

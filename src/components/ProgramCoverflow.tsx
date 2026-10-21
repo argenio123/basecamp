@@ -24,13 +24,14 @@ type Program = {
 
 type ProgramCoverflowProps = {
   programs: Program[];
+  titleClassName?: string;
 };
 
 const swipeThreshold = 56;
 /** Above this many cards, mobile shows the "03 / 13" count instead of the dots (the dots would overflow at 390px). */
 const maxDots = 7;
 
-export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
+export default function ProgramCoverflow({ programs, titleClassName = "" }: ProgramCoverflowProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -228,8 +229,8 @@ export default function ProgramCoverflow({ programs }: ProgramCoverflowProps) {
                 </span>
                 {program.availability && <StatusBadge availability={program.availability} className="hm-coverflow-badge" />}
                 {isActive && program.href
-                  ? <Link href={program.href} className="program-coverflow-title hm-coverflow-link" draggable={false}>{program.title}</Link>
-                  : <span className="program-coverflow-title" aria-hidden="true">{program.title}</span>}
+                  ? <Link href={program.href} className={`program-coverflow-title hm-coverflow-link ${titleClassName}`} draggable={false}>{program.title}</Link>
+                  : <span className={`program-coverflow-title ${titleClassName}`} aria-hidden="true">{program.title}</span>}
                 <span className="program-coverflow-description" aria-hidden="true">{program.description}</span>
               </span>
             </div>

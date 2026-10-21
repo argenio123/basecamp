@@ -23,10 +23,62 @@ function NavLink({ href, className, children, onClick, isCurrent }: { href: stri
     : <ScrollTopLink href={href} className={className} onClick={onClick} aria-current={isCurrent ? "page" : undefined}>{children}</ScrollTopLink>;
 }
 
-type MegaMenuProps = { sections: SiteSection[]; pathname: string; onOpenChange?: (isOpen: boolean) => void };
+/**
+ * Menu card media: a still image, or, when the menu has a `video`, the video alone. The video's poster is its own
+ * first frame, so the card never shows a different picture before playback: it simply starts moving. The file is
+ * preload="none" (pages never download it unprompted); loading starts on intent (hover/focus of the trigger, `warm`)
+ * and it plays only while the panel is open. With prefers-reduced-motion it stays on its first frame.
+ */
+function PanelMedia({ menu, isOpen, warm }: { menu: SiteSection["menu"]; isOpen: boolean; warm: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const loadStarted = useRef(false);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || (!warm && !isOpen)) return;
+    if (!loadStarted.current) {
+      loadStarted.current = true;
+      video.preload = "auto";
+      video.load();
+    }
+  }, [warm, isOpen]);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    if (isOpen && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.muted = true;
+      void video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [isOpen]);
+
+  if (!menu.video) {
+    return (
+      <div className="nv-panel-image">
+        <Image src={menu.image} alt={menu.imageAlt} fill sizes="(max-width: 1440px) 30vw, 420px" className="cover-image" />
+      </div>
+    );
+  }
+  return (
+    <div className="nv-panel-image" role="img" aria-label={menu.imageAlt}>
+      <video ref={ref} className="nv-panel-video" poster={menu.videoPoster} muted loop playsInline preload="none" aria-hidden="true" tabIndex={-1}>
+        <source src={menu.video} type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
+type MegaMenuProps ={ sections: SiteSection[]; pathname: string; onOpenChange?: (isOpen: boolean) => void };
 
 export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuProps) {
   const [menu, setMenu] = useState<MenuState | null>(null);
+  // True while moving from one open panel to another: the card stays in place and only its content animates
+  // (nav.css [data-switching]). Opening from closed and closing keep the card's own fade/slide.
+  const [switching, setSwitching] = useState(false);
+  // Last trigger the pointer or focus reached: its panel media starts loading before the click (PanelMedia `warm`).
+  const [warmId, setWarmId] = useState<SectionId | null>(null);
   // Derived: a menu opened on another route is closed (no setState in an effect).
   const openId = menu && menu.path === pathname ? menu.id : null;
   const hasOpenPanel = openId !== null;
@@ -35,10 +87,12 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
   const pendingPanelFocus = useRef<SectionId | null>(null);
 
   const open = useCallback((id: SectionId) => {
+    setSwitching(openId !== null);
     setMenu({ id, path: pathname });
-  }, [pathname]);
+  }, [pathname, openId]);
 
   const close = useCallback((returnFocusTo?: SectionId) => {
+    setSwitching(false);
     setMenu(null);
     if (returnFocusTo) triggerRefs.current[returnFocusTo]?.focus();
   }, []);
@@ -121,6 +175,8 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
           aria-expanded={isOpen}
           aria-controls={`nv-panel-${section.id}`}
           onClick={() => onTriggerClick(section.id)}
+          onPointerEnter={() => setWarmId(section.id)}
+          onFocus={() => setWarmId(section.id)}
           onKeyDown={onTriggerKeyDown(section.id, index)}
         >
           {section.label}
@@ -135,9 +191,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
         >
           <div className="nv-panel-inner">
             <div className="nv-panel-feature">
-              <div className="nv-panel-image">
-                <Image src={section.menu.image} alt={section.menu.imageAlt} fill sizes="(max-width: 1440px) 30vw, 420px" className="cover-image" />
-              </div>
+              <PanelMedia menu={section.menu} isOpen={isOpen} warm={warmId === section.id} />
               <p className="nv-panel-text">{section.menu.text}</p>
               <NavLink href={section.href} className="button button-light button-small nv-panel-explore" onClick={() => close()} isCurrent={pathname === section.href}>
                 Explore {section.label}
@@ -158,7 +212,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
   };
 
   return (
-    <nav className="desktop-nav nv-desktop-nav" aria-label="Primary navigation" ref={navRef} onBlur={onNavBlur}>
+    <nav className="desktop-nav nv-desktop-nav" aria-label="Primary navigation" ref={navRef} onBlur={onNavBlur} data-switching={switching && hasOpenPanel ? "true" : undefined}>
       <div className="desktop-nav-group desktop-nav-group--left">
         {sections.slice(0, 3).map((s, i) => item(s, i))}
       </div>

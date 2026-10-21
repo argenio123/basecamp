@@ -3,15 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
+import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
 import ProgrammeActions from "@/components/programs/ProgrammeActions";
 import CtaBand from "@/components/sections/CtaBand";
-import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
 import { programmeHref, RESERVED_PROGRAMME_SLUGS } from "@/content/sitemap";
 import type { Availability, FeaturedProgramme, LaunchPhase } from "@/content/types";
-import { CLASS_PREVIEW, FEATURED_PROGRAMME_LINKS, OUTCOMES_NOTE, PARTNER_TERMS, WELLNESS_PARTNERS } from "@/data/programs-static";
+import { CLASS_PREVIEW, FEATURED_PROGRAMME_LINKS, HYROX_SOURCE_LINKS, HYROX_STATIONS, OUTCOMES_NOTE, PARTNER_TERMS, WELLNESS_PARTNERS } from "@/data/programs-static";
 
 type Params = { slug: string };
 
@@ -70,6 +70,14 @@ function spaceHref(space: string): string {
   return "/facilities/training";
 }
 
+const DETAIL_THEME = {
+  "strength-conditioning": "industrial",
+  "functional-training": "race",
+  endurance: "race",
+  "personal-coaching": "documentary",
+  "recovery-mobility": "restore",
+} as const;
+
 function Row({ id, eyebrow, title, children }: { id: string; eyebrow?: string; title: string; children: ReactNode }) {
   return (
     <section className="pr-row" id={id} aria-labelledby={`${id}-title`}>
@@ -103,6 +111,14 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
   const classPreview = CLASS_PREVIEW.filter((item) => item.programmeSlug === programme.slug);
   const supportHref = programme.slug === "recovery-mobility" ? "/facilities/recovery" : "/classes/coaching";
   const supportTitle = programme.slug === "recovery-mobility" ? "Recovery facilities" : "Coaching support";
+  const theme = DETAIL_THEME[programme.slug as keyof typeof DETAIL_THEME] ?? "overview";
+  const chapter = String(p.featured.findIndex((item) => item.slug === programme.slug) + 1).padStart(2, "0");
+  const preparation = [
+    "Arrive 10 minutes early for your first coach check-in.",
+    programme.slug === "recovery-mobility" ? "Wear layers that let you move and settle comfortably." : "Bring training shoes, water and clothes you can move freely in.",
+    "Share relevant injuries, limitations and current training load before class.",
+    "Choose control over speed until the coach confirms your working level.",
+  ];
 
   type InsideItem = { key: string; type: string; title: string; description: string; availability?: Availability; note?: string };
   const inside: InsideItem[] = [
@@ -118,7 +134,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
   return (
     <DetailTemplate
       path={path}
-      hero={<PageHero eyebrow="Classes" title={programme.title} intro={programme.description} image={programme.image} imageAlt={`${programme.title} at BaseCamp CamSur`} />}
+      hero={<ClassesEditorialHero chapter={chapter} eyebrow="Classes" title={programme.title} intro={programme.description} image={programme.image} imageAlt={`${programme.title} at BaseCamp CamSur`} variant={theme} stat={`${programme.duration}`} statLabel="Minutes" />}
       glance={{
         summary: programme.description,
         facts: [
@@ -141,7 +157,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
       )}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} />}
     >
-      <div className="pr-detail">
+      <div className={`pr-detail pr-detail-${theme}`}>
         <Row id="what-it-is" eyebrow="The discipline" title="What it is">
           <p className="pr-lead" data-reveal data-reveal-delay="short">{programme.about}</p>
         </Row>
@@ -171,6 +187,26 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
           <p className="pr-note" data-reveal data-reveal-delay="short">{OUTCOMES_NOTE}</p>
         </Row>
 
+        {programme.slug === "endurance" && (
+          <Row id="hyrox-stations" eyebrow="Race lab" title="Eight stations. One engine.">
+            <p className="pr-lead">HYROX-style training alternates running with a fixed sequence of functional stations. BaseCamp sessions scale load and volume to the athlete in front of the coach.</p>
+            <ol className="pr-station-grid" data-reveal="stagger">
+              {HYROX_STATIONS.map((station, index) => (
+                <li key={station.id}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <p className="pr-meta">{station.volume}</p>
+                    <h3>{station.name}</h3>
+                    <p>{station.focus}</p>
+                    <p className="pr-station-standard"><strong>Race standard</strong>{station.standard}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p className="pr-note">Distances and division loads referenced from {HYROX_SOURCE_LINKS.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer">{source.label}</a>)}. Event standards may change.</p>
+          </Row>
+        )}
+
         {inside.length > 0 && (
           <Row id="inside" eyebrow="The wider BaseCamp system" title="Inside this class category">
             <ul className="pr-card-grid pr-card-grid-3" data-reveal="stagger">
@@ -199,7 +235,9 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
                   </div>
                   <dl>
                     <div><dt>Level</dt><dd>{item.level}</dd></div>
+                    <div><dt>Intensity</dt><dd>{item.intensity}</dd></div>
                     <div><dt>Area</dt><dd>{item.area}</dd></div>
+                    <div><dt>Equipment</dt><dd>{item.equipment}</dd></div>
                     <div><dt>Access</dt><dd>{item.access}</dd></div>
                     <div><dt>Coach</dt><dd>{item.coach}</dd></div>
                   </dl>
@@ -215,6 +253,11 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
           <ul className="pr-spaces" data-reveal="stagger">
             {programme.spaces.map((space) => <li key={space}><Link href={spaceHref(space)}><span className="pr-spaces-label">{space}</span><span className="pr-meta">Facilities</span><span className="pr-spaces-arrow" aria-hidden="true">→</span></Link></li>)}
           </ul>
+        </Row>
+
+        <Row id="prepare" eyebrow="Before your first session" title="Arrive ready">
+          <ul className="pr-prep-list" data-reveal="stagger">{preparation.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ul>
+          <aside className="pr-coach-announcement" data-reveal><p className="pr-meta">Your coach</p><h3>Coach line-up announcing soon.</h3><p>Every session will show the coach, specialty and required access before booking opens.</p><Link href="/classes/coaching">See the coaching approach →</Link></aside>
         </Row>
 
         <Row id="plan" eyebrow="Make it work for you" title="Plan your training">

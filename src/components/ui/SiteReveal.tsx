@@ -26,10 +26,15 @@ const keysFor = (element: HTMLElement): Keys => (element.hasAttribute("data-home
 /*
  * Streamed page segments can still be un-hydrated when this layout-level effect runs. Writing data-* attributes
  * onto that server HTML makes React report a hydration mismatch, so an element is only touched once React has
- * hydrated it (React tags each hydrated DOM node with a `__reactFiber$…` key). Give up waiting after a few seconds.
+ * hydrated it (React tags each hydrated DOM node with a `__reactFiber$…` key) AND the main thread has gone idle
+ * (see scheduleFlush). Give up waiting after a few seconds.
  */
 const isHydrated = (element: HTMLElement) => Object.keys(element).some((key) => key.startsWith("__reactFiber$"));
 const HYDRATION_WAIT_MS = 4000;
+/** Longest wait for an idle period before taking elements over anyway (keeps content from staying hidden). */
+const IDLE_WAIT_MS = 1500;
+/** Browsers without requestIdleCallback (Safari): short delay instead. */
+const IDLE_FALLBACK_MS = 120;
 
 export default function SiteReveal() {
   const pathname = usePathname();
@@ -68,7 +73,13 @@ export default function SiteReveal() {
           revealFrames.delete(element);
         }
 
-        element.dataset[keys.direction] = scrollDirection;
+        // Site elements take their direction from the edge they sit beyond (above the viewport → "up", below →
+        // "down"), so the hidden pose already matches the side they will re-enter from. Scroll direction alone
+        // flips only on the frame the element becomes visible, too late for the transition to start from that
+        // side. Homepage elements keep their original scroll-direction behavior.
+        element.dataset[keys.direction] = keys === SITE_KEYS
+          ? (entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0) ? "up" : "down")
+          : scrollDirection;
 
         if (!entry.isIntersecting) {
           delete element.dataset[keys.visible];
@@ -92,29 +103,46 @@ export default function SiteReveal() {
 
     const pending = new Set<HTMLElement>();
     const waitStart = performance.now();
-    let pendingFrame = 0;
+    let pendingHandle = 0;
 
-    const flushPending = () => {
-      pendingFrame = 0;
+    // Elements are only taken over in an idle period. React tags a node with its fiber key when hydration *claims*
+    // it, but compares the server attributes later in the same (time-sliced) pass; React's scheduler keeps the main
+    // thread busy until that pass finishes, so waiting for idle keeps our data-* writes out of that window.
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    const scheduleFlush = () => {
+      if (pendingHandle) return;
+      pendingHandle = hasIdle
+        ? window.requestIdleCallback(flushPending, { timeout: IDLE_WAIT_MS })
+        : window.setTimeout(flushPending, IDLE_FALLBACK_MS);
+    };
+    const cancelFlush = () => {
+      if (!pendingHandle) return;
+      if (hasIdle) window.cancelIdleCallback(pendingHandle);
+      else window.clearTimeout(pendingHandle);
+      pendingHandle = 0;
+    };
+
+    const observe = (element: HTMLElement) => {
+      if (elements.has(element)) return;
+      elements.add(element);
+      observerFor(element).observe(element);
+    };
+
+    function flushPending() {
+      pendingHandle = 0;
       const giveUp = performance.now() - waitStart > HYDRATION_WAIT_MS;
       pending.forEach((element) => {
         if (!giveUp && !isHydrated(element)) return;
         pending.delete(element);
-        if (element.isConnected) registerElement(element);
+        if (element.isConnected) observe(element);
       });
-      if (pending.size > 0) pendingFrame = window.requestAnimationFrame(flushPending);
-    };
+      if (pending.size > 0) scheduleFlush();
+    }
 
     const registerElement = (element: HTMLElement) => {
       if (elements.has(element)) return;
-      if (!isHydrated(element) && performance.now() - waitStart <= HYDRATION_WAIT_MS) {
-        pending.add(element);
-        if (!pendingFrame) pendingFrame = window.requestAnimationFrame(flushPending);
-        return;
-      }
-
-      elements.add(element);
-      observerFor(element).observe(element);
+      pending.add(element);
+      scheduleFlush();
     };
 
     const registerRevealElements = (scope: ParentNode = document) => {
@@ -172,7 +200,7 @@ export default function SiteReveal() {
 
     return () => {
       window.cancelAnimationFrame(resetFrame);
-      window.cancelAnimationFrame(pendingFrame);
+      cancelFlush();
       pending.clear();
       revealFrames.forEach((frame) => window.cancelAnimationFrame(frame));
       revealFrames.clear();

@@ -1,9 +1,10 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
-import FormStatus, { FieldError, fieldA11y, submitWithoutReset } from "@/components/forms/FormStatus";
+import Link from "next/link";
+import { startTransition, useActionState, useEffect, useId, useRef, useState, type FormEvent } from "react";
+import FormStatus, { FieldError, fieldA11y } from "@/components/forms/FormStatus";
 import PrivacyNote from "@/components/ui/PrivacyNote";
-import { ENQUIRY_TYPES, INTEREST_OPTIONS, PERSONA_OPTIONS, TIER_OPTIONS } from "@/content/constants";
+import { INTEREST_OPTIONS, TIER_OPTIONS } from "@/content/constants";
 import type { InterestValue } from "@/content/types";
 import { trackLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/leads/actions";
@@ -11,63 +12,151 @@ import { INITIAL_LEAD_RESULT, type LeadKind, type LeadResult } from "@/lib/leads
 
 export type ProgrammeOption = { slug: string; title: string; interest: InterestValue };
 type Props = { programmes: ProgrammeOption[]; program?: string; interests?: string[]; enquiry?: string };
-type Tab = "early-access" | "enquiry";
+type InquiryIntent = "membership" | "camp-group" | "corporate" | "partnership" | "media";
 
-const TABS: { id: Tab; label: string }[] = [{ id: "early-access", label: "Early access" }, { id: "enquiry", label: "Inquiry" }];
-const INTEREST_VALUES = INTEREST_OPTIONS.map((o) => o.value as string);
-const ENQUIRY_VALUES = ENQUIRY_TYPES.map((o) => o.value as string);
+type IntentConfig = {
+  label: string;
+  short: string;
+  description: string;
+  kind: LeadKind;
+  submitLabel: string;
+  successTitle: string;
+  successBody: string;
+  nextHref: string;
+  nextLabel: string;
+};
 
-/**
- * /contact form: "Early access" (kind=early-access) and "Enquiry" (kind=enquiry) tabs, each with its own
- * useActionState(submitLead). Docs: 02-guides/forms.md, 03-api-reference/01-directives/use-server.md.
- * Props come from ProgramInterestForm (search params) or are empty in the prerendered Suspense fallback.
- */
+const INTENTS: Record<InquiryIntent, IntentConfig> = {
+  membership: {
+    label: "Membership",
+    short: "Train with us",
+    description: "Memberships, passes, classes and recovery access.",
+    kind: "early-access",
+    submitLabel: "Request membership guidance",
+    successTitle: "Your membership request is in.",
+    successBody: "We’ll recommend the best starting option and send early-access details by email.",
+    nextHref: "/membership",
+    nextLabel: "Compare membership options",
+  },
+  "camp-group": {
+    label: "Camps & groups",
+    short: "Bring your crew",
+    description: "Training camps, retreats, coach-led groups and longer stays.",
+    kind: "enquiry",
+    submitLabel: "Send camp inquiry",
+    successTitle: "Your camp brief is with us.",
+    successBody: "We’ll review your dates and group needs before replying with the most relevant format.",
+    nextHref: "/visit/camps",
+    nextLabel: "Explore camps and retreats",
+  },
+  corporate: {
+    label: "Corporate",
+    short: "Move as a team",
+    description: "Off-sites, team sessions and company wellness programs.",
+    kind: "enquiry",
+    submitLabel: "Send corporate inquiry",
+    successTitle: "Your team brief is in.",
+    successBody: "We’ll review your group size, goals and timing before suggesting a format.",
+    nextHref: "/membership/corporate",
+    nextLabel: "See corporate options",
+  },
+  partnership: {
+    label: "Partnerships",
+    short: "Build with us",
+    description: "Brand, wellness, ambassador and community collaborations.",
+    kind: "enquiry",
+    submitLabel: "Send partnership inquiry",
+    successTitle: "The partnership team has your note.",
+    successBody: "We’ll review the fit and contact you if there is a strong next step to explore together.",
+    nextHref: "/about",
+    nextLabel: "Learn more about BaseCamp",
+  },
+  media: {
+    label: "Media",
+    short: "Tell the story",
+    description: "Interviews, press information, filming and editorial requests.",
+    kind: "enquiry",
+    submitLabel: "Send media request",
+    successTitle: "Your media request is queued.",
+    successBody: "We’ll check the deadline and connect you with the right person or materials.",
+    nextHref: "/about/the-build",
+    nextLabel: "View the build story",
+  },
+};
+
+const INTENT_ORDER = Object.keys(INTENTS) as InquiryIntent[];
+const INTEREST_VALUES = INTEREST_OPTIONS.map((option) => option.value as string);
+
+function inferredIntent(programme: ProgrammeOption | undefined, interests: string[], enquiry?: string): InquiryIntent | null {
+  if (enquiry && enquiry in INTENTS) return enquiry as InquiryIntent;
+  if (programme) return "membership";
+  if (interests.some((value) => ["training-camp", "coach-group", "extended-stay"].includes(value))) return "camp-group";
+  if (interests.includes("corporate")) return "corporate";
+  if (interests.length > 0) return "membership";
+  return null;
+}
+
 export default function InterestForm({ programmes, program, interests = [], enquiry }: Props) {
-  const selected = programmes.find((p) => p.slug === program);
-  const preselected = [...new Set([...(selected ? [selected.interest] : []), ...interests.filter((v) => INTEREST_VALUES.includes(v))])];
-  const enquiryType = enquiry && ENQUIRY_VALUES.includes(enquiry) ? enquiry : "";
-  const [tab, setTab] = useState<Tab>(enquiry !== undefined ? "enquiry" : "early-access");
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const id = useId();
+  const selectedProgramme = programmes.find((item) => item.slug === program);
+  const preselected = [...new Set([...(selectedProgramme ? [selectedProgramme.interest] : []), ...interests.filter((value) => INTEREST_VALUES.includes(value))])];
+  const [intent, setIntent] = useState<InquiryIntent | null>(() => inferredIntent(selectedProgramme, preselected, enquiry));
 
   const query = new URLSearchParams();
-  if (selected) query.set("program", selected.slug);
-  if (preselected.length && !selected) query.set("interest", preselected.join(","));
-  if (enquiryType) query.set("enquiry", enquiryType);
-  const qs = query.toString();
-  const source = `/contact${qs ? `?${qs}` : ""}`;
+  if (selectedProgramme) query.set("program", selectedProgramme.slug);
+  if (preselected.length && !selectedProgramme) query.set("interest", preselected.join(","));
+  if (intent) query.set("enquiry", intent);
+  const source = `/contact${query.size ? `?${query.toString()}` : ""}`;
 
-  function onTabKey(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    const keys: Record<string, number> = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: TABS.length - 1 };
-    if (!(event.key in keys)) return;
-    event.preventDefault();
-    const next = (keys[event.key] + TABS.length) % TABS.length;
-    setTab(TABS[next].id);
-    tabRefs.current[next]?.focus();
-  }
+  if (!intent) return <PurposeStep onSelect={setIntent} />;
 
   return (
-    <div className="ct-form">
-      <div className="ct-tabs" role="tablist" aria-label="Choose a form">
-        {TABS.map((t, i) => (
-          <button key={t.id} ref={(el) => { tabRefs.current[i] = el; }} type="button" role="tab" id={`${id}-tab-${t.id}`} aria-controls={`${id}-panel-${t.id}`}
-            aria-selected={tab === t.id} tabIndex={tab === t.id ? 0 : -1} className="ct-tab" onClick={() => setTab(t.id)} onKeyDown={(e) => onTabKey(e, i)}>{t.label}</button>
-        ))}
-      </div>
-      <div role="tabpanel" id={`${id}-panel-early-access`} aria-labelledby={`${id}-tab-early-access`} hidden={tab !== "early-access"} className="ct-panel">
-        <Resettable>{(onReset) => <EarlyAccessPanel source={source} preselected={preselected} programmeTitle={selected?.title} onReset={onReset} />}</Resettable>
-      </div>
-      <div role="tabpanel" id={`${id}-panel-enquiry`} aria-labelledby={`${id}-tab-enquiry`} hidden={tab !== "enquiry"} className="ct-panel">
-        <Resettable>{(onReset) => <EnquiryPanel source={source} enquiryType={enquiryType} onReset={onReset} />}</Resettable>
-      </div>
-    </div>
+    <InquiryDetails
+      key={intent}
+      intent={intent}
+      source={source}
+      preselected={preselected}
+      programmeTitle={selectedProgramme?.title}
+      onBack={() => setIntent(null)}
+    />
   );
 }
 
-/** Remounts its child (fresh useActionState) for "Submit another response". */
-function Resettable({ children }: { children: (onReset: () => void) => ReactNode }) {
-  const [key, setKey] = useState(0);
-  return <div key={key}>{children(() => setKey((k) => k + 1))}</div>;
+function Progress({ step }: { step: 1 | 2 | 3 }) {
+  return (
+    <ol className="ct-progress" aria-label={`Contact form: step ${step} of 3`}>
+      {["Purpose", "Details", "Sent"].map((label, index) => {
+        const number = (index + 1) as 1 | 2 | 3;
+        return <li key={label} data-state={number < step ? "complete" : number === step ? "current" : "upcoming"} aria-current={number === step ? "step" : undefined}><span>{number < step ? "✓" : `0${number}`}</span>{label}</li>;
+      })}
+    </ol>
+  );
+}
+
+function PurposeStep({ onSelect }: { onSelect: (intent: InquiryIntent) => void }) {
+  return (
+    <div className="ct-journey">
+      <Progress step={1} />
+      <div className="ct-purpose-head">
+        <p className="eyebrow">Choose your inquiry</p>
+        <h2>What can we help with?</h2>
+        <p>Select one so we only ask for relevant details.</p>
+      </div>
+      <div className="ct-purpose-grid">
+        {INTENT_ORDER.map((intent, index) => {
+          const item = INTENTS[intent];
+          return (
+            <button key={intent} type="button" onClick={() => onSelect(intent)}>
+              <span>0{index + 1}</span>
+              <small>{item.short}</small>
+              <strong>{item.label}</strong>
+              <p>{item.description}</p>
+              <i aria-hidden="true">↗</i>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function useLeadForm(kind: LeadKind) {
@@ -78,26 +167,13 @@ function useLeadForm(kind: LeadKind) {
   return { state, formAction, pending };
 }
 
-function Success({ title, state, onReset }: { title: string; state: LeadResult; onReset: () => void }) {
-  const heading = useRef<HTMLHeadingElement>(null);
-  useEffect(() => { heading.current?.focus(); }, []);
-  return (
-    <div className="form-success ct-success" role="status">
-      <span aria-hidden="true">✓</span>
-      <h2 ref={heading} tabIndex={-1}>{title}</h2>
-      <p>{state.message}</p>
-      <button type="button" className="text-link" onClick={onReset}>Submit another response</button>
-    </div>
-  );
-}
-
 function Hidden({ kind, source, id }: { kind: LeadKind; source: string; id: string }) {
   return <>
     <input type="hidden" name="kind" value={kind} />
     <input type="hidden" name="source" value={source} />
     <div className="ui-hp" aria-hidden="true">
-      <label htmlFor={`${id}-website`}>Website</label>
-      <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+      <label htmlFor={`${id}-hp-website`}>Website</label>
+      <input id={`${id}-hp-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
     </div>
   </>;
 }
@@ -119,7 +195,7 @@ function ContactFields({ id, state }: { id: string; state: LeadResult }) {
         <input id={`${id}-email`} name="email" type="email" autoComplete="email" required maxLength={254} {...fieldA11y(state, `${id}-email`, "email")} />
         <FieldError id={`${id}-email`} state={state} name="email" />
       </label>
-      <label htmlFor={`${id}-phone`}>Phone
+      <label htmlFor={`${id}-phone`}>Phone / WhatsApp
         <input id={`${id}-phone`} name="phone" type="tel" autoComplete="tel" maxLength={30} {...fieldA11y(state, `${id}-phone`, "phone")} />
         <FieldError id={`${id}-phone`} state={state} name="phone" />
       </label>
@@ -127,95 +203,173 @@ function ContactFields({ id, state }: { id: string; state: LeadResult }) {
   </>;
 }
 
-function Consent({ id, state, label }: { id: string; state: LeadResult; label: string }) {
+function Consent({ id, state }: { id: string; state: LeadResult }) {
   return <>
     <label className="check-field ct-check" htmlFor={`${id}-consent`}>
       <input id={`${id}-consent`} name="consent" type="checkbox" required {...fieldA11y(state, `${id}-consent`, "consent")} />
-      <span>{label}</span>
+      <span>I&apos;m 18+ and agree to be contacted by BaseCamp CamSur about this request.</span>
     </label>
     <FieldError id={`${id}-consent`} state={state} name="consent" />
     <PrivacyNote />
   </>;
 }
 
-function Submit({ pending, label }: { pending: boolean; label: string }) {
-  return <button className="button button-dark ct-submit" type="submit" disabled={pending} aria-disabled={pending}>{pending ? "Sending…" : <>{label} <span aria-hidden="true">↗</span></>}</button>;
+function IntentFields({ intent, id }: { intent: InquiryIntent; id: string }) {
+  if (intent === "membership") return <>
+    <div className="field-row">
+      <label htmlFor={`${id}-tier`}>Membership option
+        <select id={`${id}-tier`} name="tier" defaultValue=""><option value="">Not sure yet</option>{TIER_OPTIONS.filter((option) => option.value !== "unsure").map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select>
+      </label>
+      <label htmlFor={`${id}-frequency`}>Training frequency
+        <select id={`${id}-frequency`} name="detailFrequency" defaultValue=""><option value="">Choose one</option><option>1–2 times a week</option><option>3–4 times a week</option><option>5+ times a week</option><option>Visiting / occasional</option></select>
+      </label>
+    </div>
+    <label htmlFor={`${id}-goal`}>Main training goal
+      <input id={`${id}-goal`} name="detailGoal" maxLength={160} placeholder="Strength, conditioning, race preparation…" />
+    </label>
+  </>;
+
+  if (intent === "camp-group") return <>
+    <div className="field-row">
+      <label htmlFor={`${id}-dates`}>Preferred dates
+        <input id={`${id}-dates`} name="detailDates" maxLength={120} placeholder="Month, date range or flexible" />
+      </label>
+      <label htmlFor={`${id}-group`}>Estimated group size
+        <input id={`${id}-group`} name="detailGroupSize" type="number" min={1} max={100} inputMode="numeric" />
+      </label>
+    </div>
+    <div className="field-row">
+      <label htmlFor={`${id}-origin`}>Travelling from
+        <input id={`${id}-origin`} name="detailOrigin" maxLength={100} placeholder="City / country" />
+      </label>
+      <label htmlFor={`${id}-focus`}>Camp focus
+        <select id={`${id}-focus`} name="detailFocus" defaultValue=""><option value="">Choose one</option><option>Performance training</option><option>Competition preparation</option><option>Recovery and wellness</option><option>Mixed group experience</option></select>
+      </label>
+    </div>
+  </>;
+
+  if (intent === "corporate") return <>
+    <div className="field-row">
+      <label htmlFor={`${id}-org`}>Company / organization
+        <input id={`${id}-org`} name="detailOrganisation" autoComplete="organization" maxLength={120} />
+      </label>
+      <label htmlFor={`${id}-group`}>Estimated team size
+        <input id={`${id}-group`} name="detailGroupSize" type="number" min={2} max={200} inputMode="numeric" />
+      </label>
+    </div>
+    <div className="field-row">
+      <label htmlFor={`${id}-date`}>Target date
+        <input id={`${id}-date`} name="detailDate" type="date" />
+      </label>
+      <label htmlFor={`${id}-objective`}>Main objective
+        <select id={`${id}-objective`} name="detailObjective" defaultValue=""><option value="">Choose one</option><option>Team building</option><option>Wellness program</option><option>Leadership off-site</option><option>Private event</option></select>
+      </label>
+    </div>
+  </>;
+
+  if (intent === "partnership") return <>
+    <label htmlFor={`${id}-org`}>Brand / organization
+      <input id={`${id}-org`} name="detailOrganisation" autoComplete="organization" maxLength={120} />
+    </label>
+    <div className="field-row">
+      <label htmlFor={`${id}-type`}>Partnership type
+        <select id={`${id}-type`} name="detailPartnership" defaultValue=""><option value="">Choose one</option><option>Brand collaboration</option><option>Wellness provider</option><option>Coach / ambassador</option><option>Community event</option></select>
+      </label>
+      <label htmlFor={`${id}-website`}>Website or profile
+        <input id={`${id}-website`} name="detailWebsite" type="url" maxLength={240} placeholder="https://" />
+      </label>
+    </div>
+  </>;
+
+  return <>
+    <label htmlFor={`${id}-publication`}>Publication / channel
+      <input id={`${id}-publication`} name="detailPublication" autoComplete="organization" maxLength={120} />
+    </label>
+    <div className="field-row">
+      <label htmlFor={`${id}-request`}>Request type
+        <select id={`${id}-request`} name="detailRequest" defaultValue=""><option value="">Choose one</option><option>Interview</option><option>Press information</option><option>Photography / filming</option><option>Fact check</option></select>
+      </label>
+      <label htmlFor={`${id}-deadline`}>Deadline
+        <input id={`${id}-deadline`} name="detailDeadline" type="date" />
+      </label>
+    </div>
+  </>;
 }
 
-function EarlyAccessPanel({ source, preselected, programmeTitle, onReset }: { source: string; preselected: string[]; programmeTitle?: string; onReset: () => void }) {
-  const { state, formAction, pending } = useLeadForm("early-access");
-  const id = useId();
-  if (state.status === "success") return <Success title="You're on the list." state={state} onReset={onReset} />;
+const DETAIL_LABELS: Record<string, string> = {
+  detailFrequency: "Training frequency", detailGoal: "Training goal", detailDates: "Preferred dates", detailGroupSize: "Group size",
+  detailOrigin: "Travelling from", detailFocus: "Camp focus", detailOrganisation: "Organization", detailDate: "Target date",
+  detailObjective: "Objective", detailPartnership: "Partnership type", detailWebsite: "Website / profile",
+  detailPublication: "Publication / channel", detailRequest: "Media request", detailDeadline: "Deadline",
+};
 
-  return (
-    <form className="interest-form ct-fields" action={formAction} onSubmit={submitWithoutReset(formAction)} noValidate>
-      <Hidden kind="early-access" source={source} id={id} />
-      <p className="ct-panel-intro">Early-member rates, exclusive updates and priority access.{programmeTitle && <> You&apos;re asking about <strong>{programmeTitle}</strong>.</>}</p>
-      <FormStatus state={state} />
-      <ContactFields id={id} state={state} />
-      <fieldset className="ct-fieldset">
-        <legend>I am a…</legend>
-        <div className="ct-options">
-          {PERSONA_OPTIONS.map((o) => <label className="check-field ct-check" key={o.value}><input type="radio" name="persona" value={o.value} /><span>{o.label}</span></label>)}
-        </div>
-      </fieldset>
-      <label htmlFor={`${id}-tier`}>Membership tier
-        <select id={`${id}-tier`} name="tier" defaultValue=""><option value="">Select a tier (optional)</option>{TIER_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-      </label>
-      <fieldset className="ct-fieldset">
-        <legend>I&apos;m interested in</legend>
-        <div className="ct-options ct-options-grid">
-          {INTEREST_OPTIONS.map((o) => <label className="check-field ct-check" key={o.value}><input type="checkbox" name="interests" value={o.value} defaultChecked={preselected.includes(o.value)} /><span>{o.label}</span></label>)}
-        </div>
-      </fieldset>
-      <label htmlFor={`${id}-message`}>Message
-        <textarea id={`${id}-message`} name="message" rows={4} maxLength={2000} placeholder="Anything we should know? Goals, dates, group size…" {...fieldA11y(state, `${id}-message`, "message")} />
-        <FieldError id={`${id}-message`} state={state} name="message" />
-      </label>
-      <Consent id={id} state={state} label="I'm 18+ and agree to receive BaseCamp CamSur early-member news and opening updates." />
-      <Submit pending={pending} label="Join the early access list" />
-    </form>
+function InquiryDetails({ intent, source, preselected, programmeTitle, onBack }: { intent: InquiryIntent; source: string; preselected: string[]; programmeTitle?: string; onBack: () => void }) {
+  const config = INTENTS[intent];
+  const { state, formAction, pending } = useLeadForm(config.kind);
+  const id = useId();
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (state.status === "success") heading.current?.focus();
+  }, [state.status]);
+
+  if (state.status === "success") return (
+    <div className="ct-journey ct-success" role="status">
+      <Progress step={3} />
+      <div className="ct-success-mark" aria-hidden="true">✓</div>
+      <p className="eyebrow">Request received</p>
+      <h2 ref={heading} tabIndex={-1}>{config.successTitle}</h2>
+      <p>{config.successBody}</p>
+      <p className="ct-success-time">Expected response: within one business day.</p>
+      <div className="button-row">
+        <Link href={config.nextHref} className="button button-dark">{config.nextLabel} <span aria-hidden="true">↗</span></Link>
+        <button type="button" className="text-link" onClick={onBack}>Start another inquiry</button>
+      </div>
+    </div>
   );
-}
 
-function EnquiryPanel({ source, enquiryType, onReset }: { source: string; enquiryType: string; onReset: () => void }) {
-  const { state, formAction, pending } = useLeadForm("enquiry");
-  const id = useId();
-  if (state.status === "success") return <Success title="Inquiry sent." state={state} onReset={onReset} />;
-
-  // Organisation has no lead field: prefix it into the message ("Organisation: …"), keeping typed values on error.
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const organisation = String(formData.get("organisation") ?? "").trim();
+    const lines = [`Inquiry: ${config.label}`];
+    if (programmeTitle) lines.push(`Programme: ${programmeTitle}`);
+    for (const [name, label] of Object.entries(DETAIL_LABELS)) {
+      const value = String(formData.get(name) ?? "").trim();
+      if (value) lines.push(`${label}: ${value}`);
+      formData.delete(name);
+    }
     const message = String(formData.get("message") ?? "").trim();
-    formData.delete("organisation");
-    if (organisation && message) formData.set("message", `Organization: ${organisation}\n\n${message}`);
+    if (message) lines.push("", message);
+    formData.set("message", lines.join("\n").slice(0, 2000));
+    if (config.kind === "enquiry") formData.set("enquiryType", intent);
+    if (config.kind === "early-access") {
+      formData.delete("interests");
+      for (const interest of [...new Set(["membership-local", ...preselected])]) formData.append("interests", interest);
+    }
     startTransition(() => formAction(formData));
   }
 
   return (
-    <form className="interest-form ct-fields" action={formAction} onSubmit={onSubmit} noValidate>
-      <Hidden kind="enquiry" source={source} id={id} />
-      <p className="ct-panel-intro">Corporate off-sites, camps and group bookings, partnerships and media. We&apos;ll reply by email.</p>
-      <FormStatus state={state} />
-      <label htmlFor={`${id}-type`}>Inquiry type*
-        <select id={`${id}-type`} name="enquiryType" required defaultValue={enquiryType} {...fieldA11y(state, `${id}-type`, "enquiryType")}>
-          <option value="" disabled>Select an inquiry type</option>
-          {ENQUIRY_TYPES.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-        <FieldError id={`${id}-type`} state={state} name="enquiryType" />
-      </label>
-      <ContactFields id={id} state={state} />
-      <label htmlFor={`${id}-org`}>Organization
-        <input id={`${id}-org`} name="organisation" autoComplete="organization" maxLength={120} />
-      </label>
-      <label htmlFor={`${id}-message`}>Message*
-        <textarea id={`${id}-message`} name="message" rows={5} required maxLength={1800} placeholder="Tell us about your group, dates and what you have in mind." {...fieldA11y(state, `${id}-message`, "message")} />
-        <FieldError id={`${id}-message`} state={state} name="message" />
-      </label>
-      <Consent id={id} state={state} label="I'm 18+ and agree to be contacted by BaseCamp CamSur about this inquiry." />
-      <Submit pending={pending} label="Send inquiry" />
-    </form>
+    <div className="ct-journey">
+      <Progress step={2} />
+      <button type="button" className="ct-change-purpose" onClick={onBack}>← Change inquiry type</button>
+      <div className="ct-details-head">
+        <p className="eyebrow">{config.short}</p>
+        <h2>{config.label}</h2>
+        <p>{config.description} We aim to reply within one business day.</p>
+      </div>
+      <form className="interest-form ct-fields" action={formAction} onSubmit={onSubmit} noValidate>
+        <Hidden kind={config.kind} source={source} id={id} />
+        <FormStatus state={state} />
+        <ContactFields id={id} state={state} />
+        <IntentFields intent={intent} id={id} />
+        <label htmlFor={`${id}-message`}>Anything else?
+          <textarea id={`${id}-message`} name="message" rows={4} maxLength={1200} placeholder="Share any priorities, questions or useful context." {...fieldA11y(state, `${id}-message`, "message")} />
+          <FieldError id={`${id}-message`} state={state} name="message" />
+        </label>
+        <Consent id={id} state={state} />
+        <button className="button button-dark ct-submit" type="submit" disabled={pending} aria-disabled={pending}>{pending ? "Sending…" : <>{config.submitLabel} <span aria-hidden="true">↗</span></>}</button>
+      </form>
+    </div>
   );
 }

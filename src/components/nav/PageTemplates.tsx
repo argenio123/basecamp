@@ -24,6 +24,8 @@ type OverviewTemplateProps = {
   cards?: Omit<SubpageCardsProps, "section"> | false;
   /** Closing quote band before the CTA. Default on; `false` hides it on this overview. */
   quote?: boolean;
+  /** Scrolling statement between the glance band and page content. Default on. */
+  marquee?: boolean;
   /** Usually <CtaBand …/>. */
   cta?: ReactNode;
   /** Highlights: the overview's own sections. */
@@ -34,14 +36,14 @@ type OverviewTemplateProps = {
  * Overview page order: hero → at a glance → sub-page cards → highlights → CTA (no previous/next on overviews).
  * Legacy #anchors are forwarded by the site-wide <HashForwarder /> in the root layout.
  */
-export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, cta, children }: OverviewTemplateProps) {
+export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, marquee = true, cta, children }: OverviewTemplateProps) {
   // Reference features on every overview: ghost word behind "At a glance", scrolling marquee, closing quote.
   const feature = SECTION_FEATURES[sectionKeyFor(path)];
   return (
     <>
       {hero}
       <AtAGlance ghost={feature.ghost} {...glance} />
-      <Marquee text={feature.marquee} />
+      {marquee && <Marquee text={feature.marquee} />}
       {cards !== false && <SubpageCards section={path} title="Explore" {...cards} />}
       {children}
       {quote && <QuoteBand quote={feature.quote} />}

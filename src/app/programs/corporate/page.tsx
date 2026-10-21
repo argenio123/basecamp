@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import { currentHref } from "@/components/programs/links";
+import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
+import CorporateConfigurator from "@/components/programs/CorporateConfigurator";
 import CtaBand from "@/components/sections/CtaBand";
-import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
@@ -34,7 +35,7 @@ export default async function CorporatePage() {
   return (
     <DetailTemplate
       path="/classes/corporate"
-      hero={<PageHero eyebrow="Corporate" title={CORPORATE_BAND.title} intro="Team-building and wellness off-sites with customized programming." image="/images/destination/transform.png" imageAlt="Two athletes training with kettlebells" />}
+      hero={<ClassesEditorialHero chapter="07" eyebrow="Corporate" title={CORPORATE_BAND.title} intro="Team-building and wellness off-sites with customized programming." image="/images/destination/transform.png" imageAlt="Two athletes training with kettlebells" variant="team" stat="3" statLabel="Itinerary formats" />}
       glance={{
         summary: "Team-building, leadership and wellness off-sites with customized programming and recovery designed for groups.",
       }}
@@ -52,6 +53,14 @@ export default async function CorporatePage() {
             <Link className="button button-light" href={CORPORATE_BAND.cta.href}>{CORPORATE_BAND.cta.label} <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
+      </section>
+
+      <section className="section shell" id="configurator" aria-labelledby="corporate-config-title">
+        <div className="section-heading split-heading" data-reveal>
+          <div><p className="eyebrow">Build your off-site</p><h2 id="corporate-config-title">Shape the day around your team.</h2></div>
+          <p>Choose a starting size, duration and objective. We’ll turn it into a practical training and recovery brief.</p>
+        </div>
+        <CorporateConfigurator />
       </section>
 
       {(format || persona || pricingItem) && (
@@ -115,6 +124,10 @@ export default async function CorporatePage() {
           </div>
         </section>
       )}
+
+      <section className="section pr-band" id="case-studies">
+        <div className="shell pr-case-placeholder" data-reveal><p className="eyebrow">Team stories</p><h2>Case studies will follow the first BaseCamp off-sites.</h2><p>We’ll publish the objective, program design and measurable team outcomes only when real groups have completed the experience.</p><Link className="pr-inline-link" href="/contact?enquiry=corporate">Plan a first experience →</Link></div>
+      </section>
     </DetailTemplate>
   );
 }

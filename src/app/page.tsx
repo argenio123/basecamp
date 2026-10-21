@@ -67,7 +67,7 @@ export default async function Home() {
               <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
             </div>
           </div>
-          <div className="hero-index shell"><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
+          <div className={`hero-index shell ${gretaros.className}`}><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
         </section>
 
         <section className="destination-intro section">
@@ -112,15 +112,15 @@ export default async function Home() {
       <Marquee text={SECTION_FEATURES.home.marquee} tone="dark" className={`${gretaros.className} ft-marquee--brand`} gymMarks />
 
       <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
-        <ProgramCoverflow programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
+        <ProgramCoverflow titleClassName={gretaros.className} programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
         <div className="shell section-link" data-home-reveal><Link href="/classes" className="text-link light">Explore all classes <span>↗</span></Link></div>
       </section>
 
       {/* Stage 4 removes the duplicate site-directory, persona tabs and daily-rhythm strip. Their canonical
           destinations remain available through the navigation, programme pages and Schedule. */}
-      <TrainAndRecover c={c} />
+      <TrainAndRecover c={c} titleClassName={gretaros.className} />
       {c.home.social.enabled && <SocialGallery socials={c.settings.socials} titleClassName={gretaros.className} eyebrow={c.gallery.eyebrow} title={c.gallery.title} intro={c.gallery.intro} posts={c.gallery.posts} followHref={instagram?.url ?? ""} handle={instagram?.handle || undefined} />}
-      <EarlyAccess c={c} />
+      <EarlyAccess c={c} titleClassName={gretaros.className} />
     </>
   );
 }

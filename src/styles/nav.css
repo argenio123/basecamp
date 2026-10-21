@@ -36,14 +36,21 @@
    .nv-desktop-nav to outrank the global `.desktop-nav-group a` padding/underline rules. */
 .nv-desktop-nav .nv-panel { position: absolute; z-index: 3; top: 100%; left: calc(50% - 50vw); width: 100vw; max-height: calc(100vh - var(--header-height)); max-height: calc(100svh - var(--header-height)); overflow-y: auto; color: var(--white); background: var(--olive-dark); border-top: 1px solid rgba(255,255,255,.14); box-shadow: 0 24px 48px rgba(21,23,19,.22); font-size: 15px; font-weight: 400; text-align: left; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-8px); transition: opacity .25s cubic-bezier(.22, 1, .36, 1), transform .25s cubic-bezier(.22, 1, .36, 1), visibility 0s linear .25s; }
 .nv-desktop-nav .nv-panel[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition-delay: 0s; }
+/* Switching between items while open: the card swaps in place (no close/re-open); its content plays the same
+   fade + 8px slide the card uses when it first opens. */
+.nv-desktop-nav[data-switching="true"] .nv-panel { transition: none; }
+.nv-desktop-nav[data-switching="true"] .nv-panel[data-open="true"] .nv-panel-inner { animation: nv-panel-swap .25s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes nv-panel-swap { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 .nv-desktop-nav .nv-panel-inner { width: min(1280px, calc(100% - 64px)); margin: 0 auto; display: grid; grid-template-columns: minmax(240px, 380px) minmax(0, 1fr); gap: clamp(40px, 5vw, 88px); padding: 40px 0 48px; }
 .nv-desktop-nav .nv-panel-inner > * { min-width: 0; }
 .nv-desktop-nav .nv-panel-image { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; margin-bottom: 20px; background: rgba(255,255,255,.08); }
+/* Optional menu-card video (MegaMenu PanelMedia): replaces the still; its poster is its own first frame. */
+.nv-desktop-nav .nv-panel-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nv-desktop-nav .nv-panel-text { margin: 0 0 22px; color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.55; }
 .nv-desktop-nav .nv-panel a.nv-panel-explore { position: relative; gap: 14px; padding: 0 18px; }
 .nv-desktop-nav .nv-panel a::after { content: none; }
 .nv-desktop-nav .nv-panel-highlights { padding-left: clamp(32px, 4vw, 64px); border-left: 1px solid rgba(255,255,255,.16); }
-.nv-desktop-nav .nv-panel-highlights .eyebrow { margin-bottom: 12px; }
+.nv-desktop-nav .nv-panel-highlights .eyebrow { margin-bottom: 12px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,.22); }
 .nv-desktop-nav .nv-panel-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; margin: 0; padding: 0; list-style: none; }
 .nv-desktop-nav .nv-panel-list > * { min-width: 0; }
 .nv-desktop-nav .nv-panel-list a { position: static; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.14); color: var(--white); font-size: 17px; font-weight: 500; letter-spacing: -.01em; line-height: 1.3; transition: color .2s ease, padding .25s cubic-bezier(.22, 1, .36, 1); }
@@ -89,7 +96,7 @@
 /* ---------- Sub-page cards ---------- */
 .nv-block-head { max-width: 760px; margin-bottom: 44px; }
 .nv-block-head h2 { margin-bottom: 0; }
-.nv-block-intro { margin: 18px 0 0; color: var(--olive); font-size: 17px; line-height: 1.6; }
+.nv-block-intro { max-width: 64ch; margin: 18px 0 0; color: var(--olive); font-size: 17px; line-height: 1.6; }
 .section-dark .nv-block-intro { color: var(--stone); }
 .nv-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
 .nv-cards > * { min-width: 0; }
@@ -142,6 +149,11 @@
   .footer-primary .footer-nav.nv-footer-sitemap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* Sub-page cards: 2 or 4 cards fill the row instead of leaving an orphan or an empty column (desktop only). */
+@media (min-width: 1041px) {
+  .nv-cards:has(> :nth-child(2):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nv-cards:has(> :nth-child(4):last-child) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 @media (max-width: 1040px) {
   .footer-nav.nv-footer-sitemap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nv-cards, .nv-related-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -166,6 +178,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .nv-desktop-nav .nv-panel { transform: none; transition: none; }
+  .nv-desktop-nav[data-switching="true"] .nv-panel[data-open="true"] .nv-panel-inner { animation: none; }
   .nv-card, .nv-related-card, .nv-prevnext-link, .nv-trigger::after, .nv-desktop-nav .nv-panel-list a { transition: none; }
   .nv-card:hover, .nv-related-card:hover { transform: none; }
 }

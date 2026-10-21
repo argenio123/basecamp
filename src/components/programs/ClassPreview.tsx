@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { programmeHref } from "@/content/sitemap";
 import type { LaunchPhase } from "@/content/types";
-import { CLASS_FILTERS, CLASS_PREVIEW, CLASS_RHYTHM_PREVIEW, type ClassFilter } from "@/data/programs-static";
+import { CLASS_PREVIEW, CLASS_RHYTHM_PREVIEW } from "@/data/programs-static";
 
 const ACTION: Record<LaunchPhase, { label: string; href: string; note: string }> = {
   "pre-launch": {
@@ -27,8 +26,6 @@ const ACTION: Record<LaunchPhase, { label: string; href: string; note: string }>
 
 export default function ClassFinder({ launchPhase }: { launchPhase: LaunchPhase }) {
   const action = ACTION[launchPhase];
-  const [filter, setFilter] = useState<"all" | ClassFilter>("all");
-  const visible = filter === "all" ? CLASS_PREVIEW : CLASS_PREVIEW.filter((item) => item.filters.includes(filter));
 
   return (
     <section className="section pr-class-catalogue" id="finder" aria-labelledby="pr-classes-title">
@@ -39,20 +36,14 @@ export default function ClassFinder({ launchPhase }: { launchPhase: LaunchPhase 
             <h2 id="pr-classes-title">Choose how you want to train.</h2>
           </div>
           <div className="pr-class-intro">
-            <p>Filter by training style, then compare the goal, level, intensity, space and access required for every class.</p>
+            <p>Browse the launch class preview and open the training path that fits your goal.</p>
             <p className="pr-class-note">{action.note}</p>
           </div>
         </div>
 
-        <div className="pr-class-filters" role="group" aria-label="Filter classes" data-reveal>
-          {CLASS_FILTERS.map((item) => (
-            <button key={item.value} type="button" className="pr-class-filter" aria-pressed={filter === item.value} onClick={() => setFilter(item.value)}>{item.label}</button>
-          ))}
-        </div>
-
-        <p className="pr-class-count" role="status">{visible.length} {visible.length === 1 ? "class" : "classes"}</p>
+        <p className="pr-class-count">{CLASS_PREVIEW.length} classes</p>
         <ul className="pr-class-grid">
-          {visible.map((item) => (
+          {CLASS_PREVIEW.map((item) => (
             <li key={item.id} className="pr-class-card">
               <div className="pr-class-card-head">
                 <p className="pr-meta">{item.programme}</p>
@@ -60,12 +51,6 @@ export default function ClassFinder({ launchPhase }: { launchPhase: LaunchPhase 
               </div>
               <h3>{item.title}</h3>
               <p className="pr-class-goal">{item.goal}</p>
-              <dl>
-                <div><dt>Level</dt><dd>{item.level}</dd></div>
-                <div><dt>Intensity</dt><dd>{item.intensity}</dd></div>
-                <div><dt>Duration</dt><dd>{item.duration}</dd></div>
-                <div><dt>Training area</dt><dd>{item.area}</dd></div>
-              </dl>
               <details>
                 <summary>Class details</summary>
                 <div className="pr-class-details">

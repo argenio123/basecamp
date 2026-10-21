@@ -27,3 +27,15 @@ export function siteUrl(): string {
 export function directionsUrl(mapsQuery: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
 }
+
+/**
+ * Facilities walkthrough video (Cloudinary H.264 copies of the 1920×1080 source Sequence_75_1). Width AND height are
+ * pinned (c_scale) at 16:9: a width-only resize came back 4:3 and stretched the picture.
+ * Used by the /facilities hero (1920 desktop, 1280 mobile) and the Facilities mega-menu card (960, ~2.5 MB).
+ */
+export const facilitiesVideo = (width: number, height: number) =>
+  `https://res.cloudinary.com/nkk9rbc7/video/upload/q_auto,w_${width},h_${height},c_scale,vc_h264/Sequence_75_1.mp4`;
+/** Frame 0 of the facilities video as a JPEG (~49 KB at 960×540): the video's own poster, so the menu card shows the
+ *  video's opening shot until playback starts from that same frame (no switch from a different still). */
+export const facilitiesVideoFrame = (width: number, height: number) =>
+  `https://res.cloudinary.com/nkk9rbc7/video/upload/so_0,q_auto,w_${width},h_${height},c_scale/Sequence_75_1.jpg`;

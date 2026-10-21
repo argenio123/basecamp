@@ -12,7 +12,7 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
 
 /**
  * Mobile menu (stage-3 §4, shown wherever the desktop nav is hidden): one expandable row (+/−) per section
- * with its overview and highlights, no images; Contact and "Become a founding member" at the bottom.
+ * with its overview and highlights, no images; account actions stay at the bottom.
  * Keeps the existing <details class="mobile-menu"> shell; closes itself when a link is followed.
  */
 export default function MobileNav({ sections }: { sections: SiteSection[] }) {
@@ -54,7 +54,6 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
         ))}
         <div className="nv-mobile-extras">
           <ScrollTopLink href={LOGIN_PATH} className="nv-mobile-login" aria-label="Staff login">Login</ScrollTopLink>
-          <ScrollTopLink href="/contact">Contact</ScrollTopLink>
           <Link href={FOUNDING_HREF}>Become an early member</Link>
         </div>
       </div>

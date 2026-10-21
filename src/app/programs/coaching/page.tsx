@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
+import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
+import CoachingRouteGuide from "@/components/programs/CoachingRouteGuide";
+import PerformanceBaselineDashboard from "@/components/programs/PerformanceBaselineDashboard";
 import CtaBand from "@/components/sections/CtaBand";
-import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
-import {
-  COACHES_PLACEHOLDER, MINDSET, MINDSET_INTRO, PERSONALISATION, PERSONALISATION_CLOSING, TESTING_LAB,
-} from "@/data/programs-static";
+import { COACHES_PLACEHOLDER, MINDSET, MINDSET_INTRO, PERSONALISATION, PERSONALISATION_CLOSING, TESTING_LAB } from "@/data/programs-static";
 
 export const metadata: Metadata = {
   title: "Coaching & assessment",
@@ -31,7 +31,7 @@ export default async function CoachingPage() {
   return (
     <DetailTemplate
       path="/classes/coaching"
-      hero={<PageHero eyebrow="Coaching" title="Coaching & assessment." intro={p.assessment.promise} image="/images/programs/program-coaching.png" imageAlt="Coach working one-to-one with an athlete" />}
+      hero={<ClassesEditorialHero chapter="06" eyebrow="Coaching" title="Coaching & assessment." intro={p.assessment.promise} image="/images/programs/program-coaching.png" imageAlt="Coach working one-to-one with an athlete" variant="documentary" stat="1:1" statLabel="Coach led" />}
       glance={{
         summary: "Start with a baseline, train with coaches who plan for progress, and retest before you leave.",
       }}
@@ -50,6 +50,14 @@ export default async function CoachingPage() {
             {!hasCoaches && <p className="pr-note">{COACHES_PLACEHOLDER.title}</p>}
           </div>
         </div>
+      </section>
+
+      <section className="section shell" id="coaching-route" aria-labelledby="coaching-route-title">
+        <div className="section-heading split-heading" data-reveal>
+          <div><p className="eyebrow">Choose your route</p><h2 id="coaching-route-title">Which coaching route is right for me?</h2></div>
+          <p>Start with your reason for training. Your assessment turns that intention into a practical plan.</p>
+        </div>
+        <CoachingRouteGuide />
       </section>
 
       <section className="section pr-band" id="assessment">
@@ -86,6 +94,7 @@ export default async function CoachingPage() {
               <p className="pr-closing">{PERSONALISATION_CLOSING}</p>
             </div>
           </div>
+          <PerformanceBaselineDashboard />
         </div>
       </section>
 
@@ -120,6 +129,11 @@ export default async function CoachingPage() {
               ))}
             </ul>
           </div>
+        </section>
+      )}
+      {!hasCoaches && (
+        <section className="section shell" id="coaches">
+          <div className="pr-coach-placeholder" data-reveal><p className="eyebrow">Coach announcement</p><h2>The coaching roster is taking shape.</h2><p>Profiles will include specialties, certifications and the classes each coach leads before bookings open.</p><Link className="button button-dark" href="/contact?enquiry=coaching">Ask about coaching <span aria-hidden="true">↗</span></Link></div>
         </section>
       )}
     </DetailTemplate>

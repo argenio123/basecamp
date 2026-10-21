@@ -113,6 +113,37 @@ export const FEATURED_PROGRAMME_OUTCOMES: Readonly<Record<string, string>> = {
   "recovery-mobility": "Restore range of motion and recover well",
 };
 
+export const TRAINING_PATHWAYS = [
+  { id: "start", label: "Start", text: "Learn the movements and build a repeatable training rhythm.", href: "/classes/functional-training" },
+  { id: "build", label: "Build", text: "Develop strength, movement quality and work capacity.", href: "/classes/strength-conditioning" },
+  { id: "perform", label: "Perform", text: "Train with intent around a goal, sport or personal benchmark.", href: "/classes/personal-coaching" },
+  { id: "compete", label: "Compete", text: "Prepare for endurance events and fitness racing under fatigue.", href: "/classes/endurance" },
+  { id: "recover", label: "Recover", text: "Restore range, regulate load and arrive ready for the next session.", href: "/classes/recovery-mobility" },
+] as const;
+
+export const FIRST_WEEK = [
+  { day: "Day 01", title: "Assessment + foundations", text: "Set a baseline, learn the floor and choose useful starting loads." },
+  { day: "Day 02", title: "Strength & conditioning", text: "Build the major patterns with a coach and finish with controlled work." },
+  { day: "Day 03", title: "Recovery reset", text: "Mobility, breathwork and low-intensity movement between harder days." },
+  { day: "Day 04", title: "Functional training", text: "Put movement quality into a varied, scalable group session." },
+  { day: "Weekend", title: "Endurance base", text: "Easy aerobic work around the running loop, paced to your level." },
+] as const;
+
+export const HYROX_STATIONS = [
+  { id: "skierg", name: "SkiErg", volume: "1,000 m", focus: "Full-body cardio movement focused on the lats, core and legs.", standard: "Machine resistance" },
+  { id: "sled-push", name: "Sled Push", volume: "50 m", focus: "Explosive leg drive and lower-body power across four 12.5-metre lengths.", standard: "102–202 kg · division dependent" },
+  { id: "sled-pull", name: "Sled Pull", volume: "50 m", focus: "A posterior-chain and grip test, pulling the sled hand-over-hand across four lengths.", standard: "78–153 kg · division dependent" },
+  { id: "burpee-broad-jumps", name: "Burpee Broad Jumps", volume: "80 m", focus: "Continuous chest-to-floor burpees combined with a forward broad jump.", standard: "Bodyweight" },
+  { id: "row", name: "Rowing", volume: "1,000 m", focus: "Full-body cardiovascular endurance on a standard indoor rower.", standard: "Machine resistance" },
+  { id: "farmers-carry", name: "Farmer’s Carry", volume: "200 m", focus: "Heavy carries in each hand for grip, posture and core strength.", standard: "16–32 kg per hand · division dependent" },
+  { id: "sandbag-lunges", name: "Sandbag Lunges", volume: "100 m", focus: "Walking lunges with a sandbag resting across the upper back and shoulders.", standard: "10–30 kg · division dependent" },
+  { id: "wall-balls", name: "Wall Balls", volume: "100 reps", focus: "Deep squats into an explosive overhead throw at a fixed wall target.", standard: "4–9 kg ball · 9–10 ft target" },
+] as const;
+
+export const HYROX_SOURCE_LINKS = [
+  { label: "Red Bull’s HYROX station guide", href: "https://www.redbull.com/int-en/hyrox-exercise-stations-guide" },
+] as const;
+
 export type ClassPreview = {
   id: string;
   title: string;
@@ -191,6 +222,22 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     coach: "Coach line-up to be announced",
     area: "Running loop and training floor",
     equipment: "Running loop, sleds and cardio stations",
+    access: "Athlete membership or class pass",
+    availability: "at-launch",
+    filters: ["conditioning", "endurance"],
+  },
+  {
+    id: "hyrox-race-lab",
+    title: "HYROX Race Lab",
+    programmeSlug: "endurance",
+    programme: "Endurance",
+    goal: "Practise running transitions and all eight race stations with controlled pacing.",
+    intensity: "4 / 5",
+    level: "Intermediate+",
+    duration: "60 min",
+    coach: "Coach line-up to be announced",
+    area: "Running loop and training floor",
+    equipment: "SkiErg, sleds, rower, kettlebells, sandbags and wall balls",
     access: "Athlete membership or class pass",
     availability: "at-launch",
     filters: ["conditioning", "endurance"],

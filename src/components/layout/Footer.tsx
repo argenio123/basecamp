@@ -6,7 +6,7 @@ import FooterSignup from "@/components/layout/FooterSignup";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import SocialIcon from "@/components/ui/SocialIcon";
 import { getSiteContent } from "@/content/get";
-import { CONTACT_PAGE, getSections } from "@/content/sitemap";
+import { getSections } from "@/content/sitemap";
 import { directionsUrl, PLAYGROUND, TAGLINE } from "@/data/brand";
 
 // Hash links use plain Link so the browser lands on the anchor (ScrollTopLink forces scroll to top).
@@ -21,8 +21,8 @@ export default async function Footer() {
   const navigationGroups = getSections(programmes.featured).map((section) => ({
     label: section.label,
     href: section.href,
-    // Sub-pages only; the section overviews stay reachable from the header. Contact sits under About.
-    links: [...section.pages.map((pg) => [pg.label, pg.href]), ...(section.id === "about" ? [[CONTACT_PAGE.label, CONTACT_PAGE.href]] : [])],
+    // Keep footer categories identical to the navbar highlights.
+    links: section.menu.highlights.map(({ label, href }) => [label, href] as const),
   }));
 
   return (

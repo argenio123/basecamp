@@ -221,7 +221,7 @@
 /* Program carousel: lime titles and arrows; "Explore all programs" as a lime underlined link with a plain arrow */
 #ways-to-move { background: var(--ink); }
 #ways-to-move .program-coverflow-dots button.is-active { background: var(--signal); }
-#ways-to-move .program-coverflow-title { color: var(--signal); }
+#ways-to-move .program-coverflow-title { color: var(--signal); font-weight: 400; }
 #ways-to-move .program-coverflow-image { transition: transform .28s var(--ease-studio, ease), filter .22s ease; }
 #ways-to-move .program-coverflow-card.is-description-visible .program-coverflow-image { filter: brightness(.55) saturate(1); transform: scale(1.05); }
 #ways-to-move .program-coverflow-title { transition-duration: .22s; }
@@ -241,13 +241,13 @@
 
 /* Train & recover: lime eyebrow, heading, values and labels on the photo */
 .hm-train .eyebrow { color: #c5c744; }
-.hm-train .hm-stats-copy h2 { color: var(--signal); }
+.hm-train .hm-stats-copy h2 { color: var(--signal); font-weight: 400; }
 .hm-train .hm-stats-tile dt { color: var(--signal); }
 
 /* Early access: full-width black band, lime copy, square off-white form with underline fields and a black button */
 .hm-section.hm-early { margin: 0; border-radius: 0; background: #000; }
 .hm-early .eyebrow { color: #c6da3c; }
-.hm-early .hm-early-copy h2 { color: var(--signal); }
+.hm-early .hm-early-copy h2 { color: var(--signal); font-weight: 400; }
 .hm-early .hm-early-body { color: #c6da3c; font-size: 20px; }
 .hm-early .hm-check-list li { color: var(--white); }
 .hm-early .hm-check-list li::before { color: var(--signal); }

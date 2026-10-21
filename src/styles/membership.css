@@ -3,7 +3,7 @@
    grid containers declare `> * { min-width: 0 }`. Imported from globals.css (do not edit globals.css). */
 
 /* ---------- Founding band (#founding) ---------- */
-.mb-founding-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: clamp(48px, 7vw, 120px); align-items: start; }
+.mb-founding-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: clamp(48px, 7vw, 120px); align-items: end; }
 .mb-founding-grid > * { min-width: 0; }
 .mb-founding h2 { max-width: 12ch; margin-bottom: 28px; }
 .mb-founding-summary { max-width: 620px; margin-bottom: 20px; color: rgba(255,255,255,.86); }
@@ -185,3 +185,6 @@
   .mb-from-row, .mb-from-arrow { transition: none; }
   .mb-from-row:hover .mb-from-arrow { transform: none; }
 }
+
+/* "Need help choosing?" spans the viewport; height follows its 1896x853 photo so the render is not cropped on desktop. */
+.cta-band.ft-cta.mb-cta-expanded { min-height: max(540px, calc(100vw * 853 / 1896)); margin: 0; border-radius: 0; }

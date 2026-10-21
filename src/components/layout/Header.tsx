@@ -15,7 +15,7 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
   const pathname = usePathname();
   const isLandingPage = pathname === "/";
   // Pages that open with a full-bleed image hero (every section overview and sub-route) get the transparent overlay header
-  const hasHeroOverlay = isLandingPage || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
+  const hasHeroOverlay = isLandingPage || pathname === "/contact" || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
