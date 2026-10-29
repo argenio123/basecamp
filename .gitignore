@@ -47,3 +47,6 @@ next-env.d.ts
 
 # local content/leads store (admin, dev only)
 /.data/
+
+# local scratch files
+/tmp/
