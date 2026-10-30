@@ -39,3 +39,7 @@ export const facilitiesVideo = (width: number, height: number) =>
  *  video's opening shot until playback starts from that same frame (no switch from a different still). */
 export const facilitiesVideoFrame = (width: number, height: number) =>
   `https://res.cloudinary.com/nkk9rbc7/video/upload/so_0,q_auto,w_${width},h_${height},c_scale/Sequence_75_1.jpg`;
+
+/** Homepage hero video (Cloudinary H.264 copy of the 1920×1080 source NEON, ~9.8 MB at 1920 vs ~80 MB raw). */
+export const homeHeroVideo = (width: number, height: number) =>
+  `https://res.cloudinary.com/nkk9rbc7/video/upload/q_auto,w_${width},h_${height},c_scale,vc_h264/NEON.mp4`;

@@ -50,3 +50,6 @@ next-env.d.ts
 
 # local scratch files
 /tmp/
+
+# local video files (hero video is served from Cloudinary)
+/public/videos/*.mp4

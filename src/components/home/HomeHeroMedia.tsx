@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { homeHeroVideo } from "@/data/brand";
 
 /**
  * Homepage hero video. It is in the server HTML with autoplay, so a refresh shows only the video (over the dark
@@ -26,7 +27,8 @@ export default function HomeHeroMedia() {
 
   return (
     <video ref={ref} className="home-hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1}>
-      <source src="https://res.cloudinary.com/nkk9rbc7/video/upload/basecamp-hero.mp4" type="video/mp4" />
+      <source src={homeHeroVideo(1280, 720)} type="video/mp4" media="(max-width: 768px)" />
+      <source src={homeHeroVideo(1920, 1080)} type="video/mp4" />
     </video>
   );
 }
