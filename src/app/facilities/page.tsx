@@ -45,7 +45,7 @@ export default async function FacilitiesPage() {
   return (
     <OverviewTemplate
       path="/facilities"
-      hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} fitVideo animate={false} />}
+      hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} fitVideo />}
       glance={{
         summary: "Training zones.\nA recovery level.\nSpaces to stay longer.",
         statement: true,
