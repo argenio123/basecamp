@@ -207,3 +207,21 @@
   .fc-card-facts { grid-template-columns: minmax(0, 1fr); }
   .fc-card-facts > div:nth-child(even) { padding-left: 0; border-left: 0; }
 }
+
+/* Facilities "Design" section: two columns (copy | pull quote + facility numbers). Numbers follow the brand book
+   data style (big Poppins numbers, mono labels) in Ink, since Signal on a light background is unreadable. */
+.fc-design { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 110px); align-items: start; }
+.fc-design .fc-design-summary { margin: 36px 0 28px; }
+.fc-design-side { display: grid; gap: clamp(36px, 4vw, 56px); padding-top: clamp(24px, 3vw, 44px); }
+.fc-design-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 3vw, 40px) clamp(24px, 3vw, 48px); margin: 0; }
+.fc-design-stats > div { display: flex; flex-direction: column; gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); }
+.fc-design-stats dt { color: var(--olive); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+.fc-design-stats dd { margin: 0; }
+.fc-design-stat-value { order: -1; color: var(--ink); font-family: var(--font-poppins), sans-serif; font-size: clamp(38px, 3.6vw, 60px); font-weight: 800; line-height: .92; letter-spacing: -.04em; }
+.fc-design-stat-detail { color: var(--olive); font-size: 15px; line-height: 1.45; }
+@media (max-width: 900px) {
+  .fc-design { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .fc-design-stats { grid-template-columns: 1fr; }
+}

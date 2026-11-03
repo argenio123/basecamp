@@ -8,12 +8,15 @@ import HashForwarder from "@/components/nav/HashForwarder";
 import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
 import CopyGuard from "@/components/ui/CopyGuard";
+import { RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
+import RouteScope from "@/components/ui/RouteScope";
 import RouteScrollReset from "@/components/ui/RouteScrollReset";
 import SiteReveal from "@/components/ui/SiteReveal";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
 import { getSections } from "@/content/sitemap";
 import { KEYWORDS, POSITIONING_LINE, siteUrl } from "@/data/brand";
+import { gretaros } from "./fonts";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -61,10 +64,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${gretaros.variable}`}
+      // data-route and the reveal classes are set by the boot scripts before hydration, so the server HTML cannot match.
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: ROUTE_SCOPE_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: RELOAD_TO_TOP_SCRIPT }} />
+      </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>
+        <RouteScope />
         <RouteScrollReset />
         <Header
           ctaLabel={PHASE_COPY[c.settings.launchPhase]?.ctaLabel ?? PHASE_COPY["pre-launch"].ctaLabel}

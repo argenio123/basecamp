@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ItemList from "@/components/facilities/ItemList";
 import PillarTiles from "@/components/features/PillarTiles";
-import { statFact } from "@/components/facilities/facts";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
@@ -48,18 +47,38 @@ export default async function FacilitiesPage() {
       path="/facilities"
       hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} fitVideo animate={false} />}
       glance={{
-        summary: "Training zones, a recovery-forward wellness level and spaces to stay longer, designed around climate, light and landscape in Camarines Sur.",
-        facts: [statFact(stats, "sqm"), statFact(stats, "zones"), statFact(stats, "floor"), statFact(stats, "modalities")],
+        summary: "Training zones.\nA recovery level.\nSpaces to stay longer.",
+        statement: true,
       }}
       cards={false}
       quote={false}
+      marquee={false}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <PillarTiles eyebrow="Explore" title="Train. Recover. Stay." items={(findPage("/facilities", c.programmes.featured)?.section.pages ?? []).map((pg) => ({ title: pg.label, href: pg.href, image: PILLAR_IMAGES[pg.href] ?? pg.image }))} />
-      <section id="design" className="section shell">
-        <div className="split-heading light-split" data-reveal><div><p className="eyebrow">{DESIGN.eyebrow}</p><h2>{DESIGN.title}</h2></div><blockquote className="fc-pull">{DESIGN.quote}</blockquote></div>
-        <p className="fc-design-summary" data-reveal>See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>
-        <Link className="button button-dark" href="/about/design">Explore the design approach <span aria-hidden="true">↗</span></Link>
+      {/* Design: headline + summary on the left; the pull quote and the facility numbers (same content as the
+          homepage "Train & recover" stats, restyled for a light section) on the right. */}
+      <section id="design" className="section shell fc-design">
+        <div className="fc-design-copy" data-reveal>
+          <p className="eyebrow">{DESIGN.eyebrow}</p>
+          <h2>{DESIGN.title}</h2>
+          <p className="fc-design-summary">See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>
+          <Link className="button button-dark" href="/about/design">Explore the design approach <span aria-hidden="true">↗</span></Link>
+        </div>
+        <div className="fc-design-side" data-reveal data-reveal-delay="short">
+          <blockquote className="fc-pull">{DESIGN.quote}</blockquote>
+          {stats.length > 0 && (
+            <dl className="fc-design-stats">
+              {stats.map((stat) => (
+                <div key={stat.id}>
+                  <dt>{stat.label}</dt>
+                  <dd className="fc-design-stat-value">{stat.value}</dd>
+                  {stat.detail && <dd className="fc-design-stat-detail">{stat.detail}</dd>}
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
       </section>
 
       <section id="zones" className="section fc-zone-deep" aria-labelledby="fc-journey-title">

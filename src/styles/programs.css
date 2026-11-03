@@ -476,6 +476,8 @@
 .pr-editorial-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 34px; align-items: end; margin-top: clamp(30px, 6vh, 64px); padding-top: 24px; border-top: 1px solid rgba(255,255,255,.35); }
 .pr-editorial-foot-minimal { grid-template-columns: 1fr; padding-top: 0; border-top: 0; }
 .pr-editorial-foot > p { max-width: 58ch; margin: 0; color: rgba(255,255,255,.82); font-size: clamp(17px, 1.5vw, 22px); line-height: 1.5; }
+/* Same signal rule as the page-hero intro (Facilities, Membership…) so every navigation hero reads alike. */
+.pr-editorial-foot-minimal > p { padding-left: 20px; border-left: 2px solid var(--signal); }
 .pr-editorial-foot > div { display: grid; justify-items: end; }
 .pr-editorial-foot strong { color: var(--signal); font: 700 clamp(38px, 5vw, 72px)/.8 var(--font-geist-mono), monospace; letter-spacing: -.08em; }
 .pr-editorial-foot span { margin-top: 10px; color: rgba(255,255,255,.62); font: 9px var(--font-geist-mono), monospace; letter-spacing: .13em; text-transform: uppercase; }
@@ -483,6 +485,13 @@
 .pr-editorial-hero-documentary .pr-editorial-image { filter: sepia(.12) saturate(.72) contrast(1.03); }
 .pr-editorial-hero-restore .pr-editorial-image { filter: saturate(.58) contrast(.96); animation-duration: 1.45s; }
 @keyframes pr-hero-image { from { opacity: .25; transform: scale(1.09); } to { opacity: 1; transform: scale(1.025); } }
+/* Full-image hero (Classes): the section takes the photo's 1920×1072 proportions, so nothing is cropped and the
+   entrance zoom settles at 100%. Phones keep the default tall crop so the title still fits. */
+@keyframes pr-hero-image-full { from { opacity: .25; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@media (min-width: 761px) {
+  .pr-editorial-hero--full-image { min-height: 560px; aspect-ratio: 1920 / 1072; }
+  .pr-editorial-hero--full-image .pr-editorial-image { transform: none; animation-name: pr-hero-image-full; }
+}
 @keyframes pr-title-wipe { from { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(22px); } to { opacity: 1; clip-path: inset(0); transform: translateY(0); } }
 .pr-pathways { overflow: hidden; background: var(--paper-deep); }
 .pr-pathway-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 1px; background: var(--line); list-style: none; }
@@ -656,7 +665,7 @@
 .pr-workout-types-head h2 { max-width: 11ch; margin: 0; font-size: clamp(46px, 7vw, 104px); line-height: .88; letter-spacing: -.065em; text-transform: uppercase; }
 .pr-workout-groups { display: grid; gap: clamp(64px, 9vw, 120px); }
 .pr-workout-group { padding-top: 24px; border-top: 1px solid var(--line); }
-.pr-workout-group-head { display: grid; grid-template-columns: minmax(54px, .25fr) minmax(0, 1.75fr); gap: 24px; align-items: end; margin-bottom: 28px; }
+.pr-workout-group-head { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: end; margin-bottom: 28px; }
 .pr-workout-group-head > p { margin: 0; color: var(--olive); font: 700 11px var(--font-geist-mono), monospace; letter-spacing: .1em; }
 .pr-workout-group-head h3 { margin: 0; font-size: clamp(30px, 4vw, 54px); line-height: .95; letter-spacing: -.05em; text-transform: uppercase; }
 .pr-workout-group-head span { display: block; margin-top: 9px; color: var(--olive); line-height: 1.5; }
@@ -693,7 +702,7 @@
    Each card is its own [data-reveal]; SiteReveal sets data-reveal-visible and data-reveal-direction (down = card
    below the viewport, up = above) and clears visibility when a card leaves, so every effect replays mirrored when
    scrolling back up. Selectors carry [data-reveal] to outrank the generic reveal rules in nav.css.
-   Sequence: sprint start, photo lift, finish-line tape, title smash. */
+   Sequence: sprint start, finish-line tape, title smash. */
 /* 1. Sprint start: the card launches with a forward lean and snaps upright. */
 .reveal-ready .pr-workout-card-grid > li[data-reveal] { opacity: 0; transform: translateY(64px) skewY(2deg); transform-origin: left bottom; transition: opacity .4s ease, transform .8s cubic-bezier(.16, 1.15, .3, 1); }
 .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-direction="up"] { transform: translateY(-64px) skewY(-2deg); transform-origin: left top; }
@@ -702,11 +711,7 @@
 @media (min-width: 761px) {
   .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"]:nth-child(2n) { transition-delay: .1s; }
 }
-/* 2. Lift reveal: the photo is uncovered bottom-up (top-down when scrolling up) over the dark plate, settling from a zoom. */
-.reveal-ready .pr-workout-card-grid > li[data-reveal] .pr-workout-card-image img { clip-path: inset(100% 0 0 0); transition: clip-path .85s cubic-bezier(.65, 0, .35, 1) .12s, transform .7s cubic-bezier(.22, 1, .36, 1), filter .3s ease; }
-.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-direction="up"] .pr-workout-card-image img { clip-path: inset(0 0 100% 0); }
-.reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] .pr-workout-card-image img { clip-path: inset(0 0 0 0); }
-.reveal-ready .pr-workout-card-grid > li[data-reveal]:not([data-reveal-visible="true"]) .pr-workout-card-image img { transform: scale(1.18); }
+/* 2. No photo reveal: the image is fully visible as soon as the card arrives (no wipe-open or zoom). */
 /* 3. Finish line: a lime tape sweeps across the top as the card lands (right-to-left when scrolling up). */
 .pr-workout-card-grid > li > a::before { content: ""; position: absolute; z-index: 4; top: 0; left: 0; width: 100%; height: 4px; background: var(--signal); transform: translateX(-101%); pointer-events: none; }
 .reveal-ready .pr-workout-card-grid > li[data-reveal][data-reveal-visible="true"] > a::before { animation: pr-finish-line .9s cubic-bezier(.7, 0, .3, 1) .3s both; }
@@ -757,9 +762,17 @@
 .pr-style-outcomes .eyebrow { color: var(--signal); }
 .pr-style-outcomes ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0; padding: 0; list-style: none; }
 .pr-style-outcomes li { padding: 12px 17px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; }
-.pr-style-next { display: flex; justify-content: space-between; gap: 28px; align-items: center; margin-top: 28px; padding: 24px 0; border-block: 1px solid var(--line); }
-.pr-style-next span { color: var(--olive); font: 10px var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
-.pr-style-next strong { font-size: clamp(22px, 3vw, 40px); letter-spacing: -.04em; }
+/* Previous / Next pager on class pages. The first and last stations show "All training styles" instead. */
+.pr-style-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 28px; }
+.pr-style-pager-link { display: grid; gap: 14px; padding: clamp(22px, 2.4vw, 34px); border: 1px solid var(--line); border-radius: 22px; color: var(--ink); text-decoration: none; transition: border-color .25s ease, background-color .25s ease; }
+.pr-style-pager-link:hover, .pr-style-pager-link:focus-visible { border-color: var(--ink); background: rgba(255,255,255,.35); }
+.pr-style-pager-next { justify-items: end; text-align: right; }
+.pr-style-pager-link span { display: inline-flex; align-items: center; gap: 10px; color: var(--olive); font: 12px var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+.pr-style-pager-link span i { font-size: 18px; font-style: normal; line-height: 1; transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+.pr-style-pager-prev:hover span i { transform: translateX(-4px); }
+.pr-style-pager-next:hover span i { transform: translateX(4px); }
+.pr-style-pager-link strong { font-family: var(--font-display), var(--font-poppins), sans-serif; font-size: clamp(24px, 2.8vw, 44px); font-weight: 400; line-height: .95; letter-spacing: -.03em; text-transform: uppercase; }
+@media (max-width: 640px) { .pr-style-pager { grid-template-columns: 1fr; } }
 .pr-style-module-race .pr-style-outcomes { background: #24311d; }
 .pr-style-module-industrial .pr-style-outcomes { background: #151713; }
 .pr-style-module-restore .pr-style-outcomes { background: #516145; }
@@ -767,7 +780,6 @@
 
 @media (max-width: 760px) {
   .pr-workout-types-head { grid-template-columns: 1fr; }
-  .pr-workout-group-head { grid-template-columns: 38px 1fr; }
   .pr-workout-card-grid { grid-template-columns: 1fr; }
   .pr-workout-card-grid > li > a { aspect-ratio: 4 / 3; }
   .pr-style-intro, .pr-style-flow { grid-template-columns: 1fr; }

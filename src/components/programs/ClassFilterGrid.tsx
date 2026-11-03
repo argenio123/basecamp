@@ -43,18 +43,18 @@ export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
 
   return (
     <>
-      <div className="pr-class-filter" role="toolbar" aria-label="Filter classes by category">
+      {/* Chips only when there is more than one category to filter by. */}
+      {groups.length > 1 && <div className="pr-class-filter" role="toolbar" aria-label="Filter classes by category">
         {chips.map((chip) => (
           <button key={chip.id} type="button" aria-pressed={active === chip.id} onClick={() => choose(chip.id)}>
             {chip.title}<span>{chip.count}</span>
           </button>
         ))}
-      </div>
+      </div>}
       <div className="pr-workout-groups" ref={listRef}>
-        {groups.map((group, groupIndex) => (
+        {groups.map((group) => (
           <div className="pr-workout-group" key={group.id} hidden={active !== "all" && active !== group.id} aria-labelledby={`pr-workout-group-${group.id}`}>
             <div className="pr-workout-group-head" data-reveal>
-              <p>{String(groupIndex + 1).padStart(2, "0")}</p>
               <div><h3 id={`pr-workout-group-${group.id}`}>{group.title}</h3><span>{group.description}</span></div>
             </div>
             <ol className="pr-workout-card-grid" key={round}>

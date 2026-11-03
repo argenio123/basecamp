@@ -42,7 +42,7 @@ button, input, select, textarea { font: inherit; }
 button { color: inherit; }
 /* Content width cap. Every page except the homepage gets the wider 1600px cap (the homepage keeps 1280px). */
 :root { --shell-max: 1280px; --header-max: 1440px; }
-body:not(:has(.home-hero)) { --shell-max: 1600px; --header-max: 1600px; }
+html:not([data-route="home"]) body { --shell-max: 1600px; --header-max: 1600px; }
 .shell { width: min(var(--shell-max), calc(100% - clamp(36px, 5vw, 64px))); margin-inline: auto; }
 .cover-image { object-fit: cover; }
 .section { padding-block: 112px; }
@@ -517,4 +517,55 @@ h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055e
   *, *::before, *::after { transition-duration: .01ms !important; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
   .program-coverflow-card, .program-coverflow-image, .program-coverflow-dots button { transition: none; }
+}
+
+/* ---------- Navigation pages: homepage display type ----------
+   Classes, Facilities, Membership, Schedule, Visit, About and Contact use the homepage headline face (Gretaros, all
+   caps) at the homepage scale: hero titles = .destination-intro h1, section titles = homepage h2. Eyebrows stay
+   Geist Mono and body copy stays Geist (brand book 2026 hierarchy). The homepage and the admin are not touched (html[data-route], see RouteScope). */
+html[data-route="page"] main :is(h1, h2),
+html[data-route="page"] main :is(.ft-ghost, .ft-marquee-item, .pr-workout-group-head h3) {
+  font-family: var(--font-display), var(--font-poppins), sans-serif !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+}
+html[data-route="page"] main h1 { font-size: clamp(44px, 6.2vw, 78px) !important; line-height: .9 !important; letter-spacing: -.045em !important; }
+html[data-route="page"] main h2 { font-size: clamp(42px, 5vw, 72px); line-height: .98; letter-spacing: -.055em; }
+html[data-route="page"] main .ft-marquee-item { letter-spacing: -.045em; }
+@media (max-width: 760px) {
+  html[data-route="page"] main h1 { max-width: 100%; font-size: clamp(32px, 9.4vw, 50px) !important; }
+  html[data-route="page"] main h2 { max-width: 100%; font-size: clamp(28px, 8vw, 40px); }
+}
+/* "At a glance" summary on the navigation pages: hero face (Gretaros caps) at a calmer reading size. */
+html[data-route="page"] main .nv-glance-summary { font-family: var(--font-display), var(--font-poppins), sans-serif; font-size: clamp(28px, 3vw, 46px); font-weight: 400; line-height: 1.12; letter-spacing: -.015em; text-transform: uppercase; }
+@media (max-width: 760px) {
+  html[data-route="page"] main .nv-glance-summary { font-size: clamp(22px, 6.2vw, 30px); }
+}
+/* "At a glance" on the navigation pages: no visible label (kept for screen readers), summary + fact chips centred. */
+html[data-route="page"] main .nv-glance .eyebrow { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+html[data-route="page"] main .nv-glance-main { display: flex; flex-direction: column; align-items: center; text-align: center; }
+html[data-route="page"] main .nv-glance-summary { max-width: 1040px; margin-inline: auto; text-wrap: balance; white-space: pre-line; }
+html[data-route="page"] main .nv-glance-facts { justify-content: center; }
+/* Statement summary (Classes): same size and rhythm as the homepage headline (.destination-intro h1). */
+html[data-route="page"] main .nv-glance-summary--statement { max-width: none; font-size: clamp(44px, 7vw, 96px); line-height: .9; letter-spacing: -.045em; }
+@media (min-width: 1041px) {
+  html[data-route="page"] main .nv-glance-summary--statement { font-size: min(78px, calc((100vw - 72px) / 16.5)); }
+}
+@media (max-width: 760px) {
+  html[data-route="page"] main .nv-glance-summary--statement { font-size: clamp(30px, 8.6vw, 44px); }
+}
+
+/* ---------- Brand book section style: Facilities, Membership, Schedule, Visit, About ----------
+   Matches the Canva brand-book layouts: Poppins ExtraBold section headlines (caps, −4%, 0.92), plain Geist Mono
+   eyebrows (wide tracking, no dot) and larger Geist intro copy. Hero titles and the 3-line statements keep the
+   homepage Gretaros face. data-section comes from RouteScope / ROUTE_SCOPE_SCRIPT. */
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main h2 { font-family: var(--font-poppins), system-ui, sans-serif !important; font-weight: 800 !important; font-size: clamp(38px, 4.6vw, 76px); line-height: .92; letter-spacing: -.04em; text-transform: uppercase; }
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main .eyebrow { font: 400 13px/1.3 var(--font-geist-mono), monospace; letter-spacing: .22em; text-transform: uppercase; }
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main .eyebrow::before { display: none; }
+/* Hero eyebrows keep their original treatment (bold, dot). */
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main :is(.page-hero, .pr-editorial-hero, .ab-editorial-hero) .eyebrow { font: 700 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .17em; }
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main :is(.page-hero, .pr-editorial-hero, .ab-editorial-hero) .eyebrow::before { display: block; }
+html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main :is(.split-heading > p, .lead, .fc-design-summary, .nv-block-intro, .ab-place-intro, .mb-corporate-intro, .section-heading p) { font-family: var(--font-sans); font-size: clamp(17px, 1.35vw, 22px); font-weight: 400; line-height: 1.45; letter-spacing: -.01em; }
+@media (max-width: 760px) {
+  html:is([data-section="facilities"], [data-section="membership"], [data-section="schedule"], [data-section="visit"], [data-section="about"]) main h2 { font-size: clamp(30px, 8.4vw, 42px); }
 }

@@ -6,6 +6,7 @@
 // Class detail pages (/classes/[slug]) are derived from programme content: pass `programmes`
 // (getSiteContent().programmes.programmes, or any { slug, title, summary, image }[]) to the functions below.
 import { facilitiesVideo, facilitiesVideoFrame } from "@/data/brand";
+import { WORKOUT_TYPES } from "@/data/workout-types";
 import type { FeaturedProgramme, SectionKey } from "./types";
 
 export type SectionId = "programs" | "facilities" | "membership" | "schedule" | "visit" | "about";
@@ -73,14 +74,6 @@ export const RESERVED_PROGRAMME_SLUGS: ReadonlySet<string> = new Set(["coaching"
 
 const NUMBER_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
 
-function programmesMenuText(count: number): string {
-  // The count follows content so the line stays true as the class catalogue evolves.
-  const word = NUMBER_WORDS[count];
-  return word && count > 1
-    ? `${word} coach-led class disciplines for strength, fitness, endurance and recovery.`
-    : "Coach-led classes for strength, fitness, endurance and recovery.";
-}
-
 const page = (p: SitePage): SitePage => p;
 
 /** Static sections. Programme detail pages are inserted by getSections(). */
@@ -107,7 +100,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       }),
     ],
     // text and highlights are filled from content programmes by getSections()
-    menu: { text: "", image: "/images/programs/program-functional.png", imageAlt: "Athlete training inside a modern functional fitness space", highlights: [] },
+    menu: { text: "", image: "/images/programs/classes-hero.jpg", imageAlt: "Athlete doing dumbbell lunges while a coach sets up a barbell in a brick-and-concrete gym", highlights: [] },
   },
   facilities: {
     id: "facilities",
@@ -322,12 +315,9 @@ export function getSections(programmes: readonly ProgrammeRef[]): SiteSection[] 
       pages: [...progPages, ...s.pages],
       menu: {
         ...s.menu,
-        text: programmesMenuText(programmes.length),
-        highlights: [
-          ...progPages.map((p) => ({ href: p.href, label: p.label })),
-          { href: "/classes/coaching", label: "Coaching & assessment" },
-          { href: "/classes/corporate", label: "Corporate classes" },
-        ],
+        text: `${NUMBER_WORDS[WORKOUT_TYPES.length] ?? WORKOUT_TYPES.length} HYROX-style stations, each with a weekly coached class.`,
+        // Highlights are the station classes (brand book 2026, "Eight stations. One engine."), in station order.
+        highlights: WORKOUT_TYPES.map((w) => ({ href: `/classes/styles/${w.slug}`, label: w.title })),
       },
     };
   });

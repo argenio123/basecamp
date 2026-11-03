@@ -40,10 +40,14 @@ export default function SiteReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname.startsWith("/admin") || pathname === "/login") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
     const root = document.documentElement;
+    if (pathname.startsWith("/admin") || pathname === "/login" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // REVEAL_BOOT_SCRIPT may have started the hidden pose on a public page before navigating here.
+      root.classList.remove("home-reveal-ready", "reveal-ready");
+      return;
+    }
+    // Claims the page so REVEAL_BOOT_SCRIPT's safety timer leaves the hidden pose in place.
+    root.dataset.revealOwner = "true";
     const elements = new Set<HTMLElement>();
 
     root.classList.add("home-reveal-ready", "reveal-ready");

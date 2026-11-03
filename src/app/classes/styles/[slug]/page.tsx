@@ -27,7 +27,10 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
   if (!style) notFound();
 
   const currentIndex = WORKOUT_TYPES.findIndex((item) => item.slug === style.slug);
-  const nextStyle = WORKOUT_TYPES[(currentIndex + 1) % WORKOUT_TYPES.length];
+  // No wrap-around: the first and last stations link back to all training styles instead.
+  const prevStyle = currentIndex > 0 ? WORKOUT_TYPES[currentIndex - 1] : null;
+  const nextStyle = currentIndex < WORKOUT_TYPES.length - 1 ? WORKOUT_TYPES[currentIndex + 1] : null;
+  const ALL_STYLES = { href: "/classes#workout-types", label: "All training styles" };
 
   return (
     <>
@@ -38,8 +41,10 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
         intro={style.description}
         image={style.image}
         imageAlt={style.imageAlt}
-        variant={style.theme}
+        // Same hero as /classes: the whole 1920×1072 station photo (no crop) with the overview colour grade.
+        variant="overview"
         minimalMeta
+        fullImage
       />
 
       <section className={`section pr-style-module pr-style-module-${style.theme}`}>
@@ -67,7 +72,16 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
           </div>
 
 
-          <Link className="pr-style-next" href={`/classes/styles/${nextStyle.slug}`}><span>Next training style</span><strong>{nextStyle.shortTitle} →</strong></Link>
+          <nav className="pr-style-pager" aria-label="Training styles">
+            <Link className="pr-style-pager-link pr-style-pager-prev" href={prevStyle ? `/classes/styles/${prevStyle.slug}` : ALL_STYLES.href}>
+              <span><i aria-hidden="true">‹</i> {prevStyle ? "Previous" : "Back to"}</span>
+              <strong>{prevStyle ? prevStyle.title : ALL_STYLES.label}</strong>
+            </Link>
+            <Link className="pr-style-pager-link pr-style-pager-next" href={nextStyle ? `/classes/styles/${nextStyle.slug}` : ALL_STYLES.href}>
+              <span>{nextStyle ? "Next" : "Back to"} <i aria-hidden="true">›</i></span>
+              <strong>{nextStyle ? nextStyle.title : ALL_STYLES.label}</strong>
+            </Link>
+          </nav>
         </div>
       </section>
 

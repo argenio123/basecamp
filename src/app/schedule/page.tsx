@@ -55,11 +55,11 @@ export default async function SchedulePage() {
         <div className="shell">
           <div className="section-heading split-heading light-split" data-reveal>
             <div>
-              <p className="eyebrow">Timetable preview</p>
-              <h2>A week at BaseCamp.</h2>
+              <p className="eyebrow">Schedule · Book</p>
+              <h2>Find your rhythm.</h2>
               {phase !== "live" && <StatusBadge className="sd-heading-badge" availability="planned" label="Coming soon" />}
             </div>
-            <p>{phase === "live" ? "Choose a session to request a place." : "Choose a session to request a place. Exact times are confirmed before opening."}</p>
+            <p>{phase === "live" ? "Browse the week, filter by discipline and reserve in two taps." : "Browse the week, filter by discipline and request a place in two taps. Exact times are confirmed before opening."}</p>
           </div>
           <Timetable slots={s.timetable} />
         </div>

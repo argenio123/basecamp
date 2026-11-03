@@ -9,7 +9,7 @@ import { WORKOUT_GROUPS, type WorkoutType, workoutTypeBySlug } from "@/data/work
 
 export const metadata: Metadata = {
   title: "Classes",
-  description: "Explore coach-led strength, functional fitness, endurance, recovery and mobility classes at BaseCamp CamSur.",
+  description: "Eight coach-led HYROX-style station classes at BaseCamp CamSur: SkiErg, sled push, sled pull, burpee broad jumps, row, farmers carry, sandbag lunges and wall balls.",
 };
 
 export default async function ProgramsPage() {
@@ -27,21 +27,18 @@ export default async function ProgramsPage() {
   return (
     <OverviewTemplate
       path="/classes"
-      hero={<ClassesEditorialHero chapter="00" eyebrow="Classes" title="Built to perform." intro="Five ways to train. Every session coach-led. Every result tracked." image="/images/programs/program-functional.png" imageAlt="Athlete training inside a modern functional fitness space" variant="overview" minimalMeta />}
+      hero={<ClassesEditorialHero chapter="00" eyebrow="Classes" title="Built to perform." intro="Eight stations. Every session coach-led. Every result tracked." image="/images/programs/classes-hero.jpg" imageAlt="Athlete doing dumbbell lunges while a coach sets up a barbell in a brick-and-concrete gym" variant="overview" minimalMeta fullImage />}
       glance={{
-        summary: "Strength, conditioning, combat, mind-body and race training. Every class is coach-led and scaled to your level.",
+        summary: "Eight HYROX-style stations.\nA weekly coached class each,\nscaled to your level.",
+        statement: true,
       }}
       cards={false}
       quote={false}
       marquee={false}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} className="pr-cta-expanded" />}
     >
-      <section className="section pr-workout-types" id="workout-types" aria-labelledby="pr-workout-types-title">
+      <section className="section pr-workout-types" id="workout-types" aria-label="Workout classes">
         <div className="shell">
-          <div className="pr-workout-types-head" data-reveal>
-            <p className="eyebrow">Workout classes</p>
-            <h2 id="pr-workout-types-title">Pick what you want to get better at.</h2>
-          </div>
           <ClassFilterGrid groups={groups} />
         </div>
       </section>

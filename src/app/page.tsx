@@ -10,8 +10,8 @@ import Marquee from "@/components/features/Marquee";
 import { SECTION_FEATURES } from "@/data/features";
 import { EarlyAccess, TrainAndRecover } from "@/components/home/HomeSections";
 import { getSiteContent } from "@/content/get";
-import { programmeHref } from "@/content/sitemap";
 import { POSITIONING_LINE } from "@/data/brand";
+import { WORKOUT_TYPES } from "@/data/workout-types";
 
 export const metadata: Metadata = {
   title: { absolute: "BaseCamp CamSur | Train. Transform. Thrive." },
@@ -112,7 +112,7 @@ export default async function Home() {
       <Marquee text={SECTION_FEATURES.home.marquee} tone="dark" className={`${gretaros.className} ft-marquee--brand`} gymMarks />
 
       <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
-        <ProgramCoverflow titleClassName={gretaros.className} programs={c.programmes.featured.map((p) => ({ title: p.title, description: p.description, image: p.image, href: programmeHref(p.slug) }))} />
+        <ProgramCoverflow titleClassName={gretaros.className} programs={WORKOUT_TYPES.map((w) => ({ title: w.title, description: w.description, image: w.image, href: `/classes/styles/${w.slug}` }))} />
         <div className="shell section-link" data-home-reveal><Link href="/classes" className="text-link light">Explore all classes <span>↗</span></Link></div>
       </section>
 

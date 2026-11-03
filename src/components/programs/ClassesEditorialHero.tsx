@@ -11,6 +11,8 @@ type ClassesEditorialHeroProps = {
   stat?: string;
   statLabel?: string;
   minimalMeta?: boolean;
+  /** Size the hero to the photo's own 1920×1072 frame on desktop so the whole image shows (no top/bottom crop). */
+  fullImage?: boolean;
 };
 
 const VARIANT_LABEL: Record<ClassesEditorialHeroProps["variant"], string> = {
@@ -22,9 +24,9 @@ const VARIANT_LABEL: Record<ClassesEditorialHeroProps["variant"], string> = {
   team: "Group format",
 };
 
-export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, image, imageAlt, variant, stat, statLabel, minimalMeta = false }: ClassesEditorialHeroProps) {
+export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, image, imageAlt, variant, stat, statLabel, minimalMeta = false, fullImage = false }: ClassesEditorialHeroProps) {
   return (
-    <section className={`pr-editorial-hero pr-editorial-hero-${variant}`} aria-labelledby="pr-editorial-title">
+    <section className={`pr-editorial-hero pr-editorial-hero-${variant}${fullImage ? " pr-editorial-hero--full-image" : ""}`} aria-labelledby="pr-editorial-title">
       <Image src={image} alt={imageAlt} fill priority sizes="100vw" className="pr-editorial-image" />
       <span className="pr-editorial-shade" aria-hidden="true" />
       <div className="shell pr-editorial-inner">

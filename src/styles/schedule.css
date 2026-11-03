@@ -149,3 +149,41 @@
   .sd-slot a { transition: none; }
   .sd-slot a:hover { transform: none; }
 }
+
+/* ---------- Timetable, app style (brand book 2026 · Screens · Book "Find your rhythm") ---------- */
+.sd-app { max-width: 760px; margin-inline: auto; padding: clamp(20px, 3vw, 32px); border-radius: 32px; background: var(--bone); box-shadow: inset 0 0 0 1px var(--line); }
+.sd-app-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.sd-app-days button { display: grid; justify-items: center; gap: 4px; padding: 10px 4px; border: 0; border-radius: 16px; background: var(--white); color: var(--ink); cursor: pointer; box-shadow: inset 0 0 0 1px var(--line); transition: background-color .2s ease; }
+.sd-app-days small { color: var(--olive); font: 400 10px var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.sd-app-days strong { font: 700 20px/1 var(--font-poppins), sans-serif; }
+.sd-app-days button[aria-selected="true"] { background: var(--ink); color: var(--signal); box-shadow: none; }
+.sd-app-days button[aria-selected="true"] small { color: rgba(255,255,255,.7); }
+.sd-app-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.sd-app-filters button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font: 400 11px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.sd-app-filters button[aria-pressed="true"] { border-color: var(--signal); background: var(--signal); }
+.sd-app-list { margin-top: 18px; }
+.sd-app-dayname { margin: 0 0 10px; color: var(--olive); font: 400 11px var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+.sd-app-list ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.sd-app-slot a { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 18px 20px; border-radius: 20px; background: var(--white); color: var(--ink); text-decoration: none; transition: background-color .2s ease, color .2s ease; }
+.sd-app-time { display: grid; gap: 2px; }
+.sd-app-time strong { font: 700 22px/1 var(--font-poppins), sans-serif; letter-spacing: -.02em; }
+.sd-app-time small, .sd-app-spots small { color: var(--olive); font: 400 10px/1.2 var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.sd-app-body { display: grid; justify-items: start; gap: 8px; }
+.sd-app-title { font: 600 17px/1.25 var(--font-poppins), sans-serif; }
+.sd-app-chip { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; font: 400 10px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.sd-app-spots { display: grid; justify-items: end; gap: 2px; }
+.sd-app-spots strong { color: var(--olive); font: 700 20px/1 var(--font-poppins), sans-serif; }
+/* "Your booking in Ink": the hovered / focused session flips to Ink with Signal spots. */
+.sd-app-slot a:hover, .sd-app-slot a:focus-visible { background: var(--ink); color: var(--white); }
+.sd-app-slot a:hover :is(.sd-app-time small, .sd-app-spots small), .sd-app-slot a:focus-visible :is(.sd-app-time small, .sd-app-spots small) { color: rgba(255,255,255,.6); }
+.sd-app-slot a:hover .sd-app-spots strong, .sd-app-slot a:focus-visible .sd-app-spots strong { color: var(--signal); }
+.sd-app-slot a:hover .sd-app-chip, .sd-app-slot a:focus-visible .sd-app-chip { border-color: rgba(255,255,255,.4); }
+.sd-app .sd-caption { margin: 18px 0 0; text-align: center; }
+@media (max-width: 520px) {
+  .sd-app { padding: 16px; border-radius: 24px; }
+  .sd-app-days { gap: 4px; }
+  .sd-app-days button { padding: 8px 2px; border-radius: 12px; }
+  .sd-app-days strong { font-size: 16px; }
+  .sd-app-slot a { grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; padding: 14px; }
+  .sd-app-time strong { font-size: 18px; }
+}

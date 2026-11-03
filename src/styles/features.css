@@ -99,7 +99,8 @@
 .ft-concept-tile:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
 
 /* ---------- Closing call to action (Rite "Start Your Journey") ---------- */
-.cta-band.ft-cta { position: relative; isolation: isolate; display: grid; place-items: center; min-height: clamp(460px, 48vw, 640px); background: var(--ink); color: var(--white); }
+/* Closing CTA band on every page: full-bleed (edge to edge, square corners), not the rounded inset panel. */
+.cta-band.ft-cta { position: relative; isolation: isolate; display: grid; place-items: center; min-height: max(540px, calc(100vw * 853 / 1896)); margin: 0; border-radius: 0; background: var(--ink); color: var(--white); }
 .ft-cta-image { z-index: -2; }
 .ft-cta-shade { position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at center, rgba(21,23,19,.5), rgba(21,23,19,.82)); }
 .ft-cta-inner { display: grid; justify-items: center; gap: 18px; padding-block: clamp(70px, 8vw, 110px); text-align: center; }

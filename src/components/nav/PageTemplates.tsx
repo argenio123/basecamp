@@ -8,6 +8,10 @@ import PrevNext from "./PrevNext";
 import RelatedLinks from "./RelatedLinks";
 import SubpageCards, { type SubpageCardsProps } from "./SubpageCards";
 
+/** Sections whose pages (overview and sub-pages) show no scrolling marquee banner. */
+const NO_MARQUEE = new Set(["membership", "schedule", "visit", "about"]);
+const showsMarquee = (path: string) => !NO_MARQUEE.has(sectionKeyFor(path));
+
 type GlanceProps = ComponentProps<typeof AtAGlance>;
 
 type OverviewTemplateProps = {
@@ -43,7 +47,7 @@ export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true,
     <>
       {hero}
       <AtAGlance ghost={feature.ghost} {...glance} />
-      {marquee && <Marquee text={feature.marquee} />}
+      {marquee && showsMarquee(path) && <Marquee text={feature.marquee} />}
       {cards !== false && <SubpageCards section={path} title="Explore" {...cards} />}
       {children}
       {quote && <QuoteBand quote={feature.quote} />}
@@ -78,7 +82,7 @@ export function DetailTemplate({ path, hero, glance, crumbLabel, related, relate
       <Breadcrumbs current={path} label={crumbLabel} />
       <AtAGlance ghost={SECTION_FEATURES[sectionKeyFor(path)].ghost} {...glance} />
       {children}
-      <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />
+      {showsMarquee(path) && <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />}
       <RelatedLinks current={path} hrefs={related} title={relatedTitle} />
       {afterRelated}
       {cta}

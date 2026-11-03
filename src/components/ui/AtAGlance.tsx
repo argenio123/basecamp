@@ -9,10 +9,12 @@ type AtAGlanceProps = {
   id?: string;
   /** Faded oversized word behind the title (reload-fitness.com ghost headings), e.g. "FACILITIES". */
   ghost?: string;
+  /** Short (≈3-line) summary set at the homepage headline size instead of the paragraph size. */
+  statement?: boolean;
 };
 
 /** "At a glance" band under the hero on section pages: a one-line summary plus optional fact chips. */
-export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance", id, ghost }: AtAGlanceProps) {
+export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance", id, ghost, statement = false }: AtAGlanceProps) {
   const chips = facts
     .flatMap((f): GlanceFact[] => (!f ? [] : typeof f === "string" ? [{ value: f }] : [f]))
     .filter((f) => f.value.trim() !== "")
@@ -24,7 +26,7 @@ export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance"
       <div className="shell nv-glance-inner">
         <div className="nv-glance-main" data-reveal>
           <p className="eyebrow" id={id ? `${id}-title` : undefined}>{eyebrow}</p>
-          <p className="nv-glance-summary">{summary}</p>
+          <p className={`nv-glance-summary${statement ? " nv-glance-summary--statement" : ""}`}>{summary}</p>
           {chips.length > 0 && (
             <ul className="nv-glance-facts" aria-label="Key facts">
               {chips.map((f) => (
