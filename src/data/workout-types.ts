@@ -23,7 +23,7 @@ export type WorkoutGroup = {
 export const WORKOUT_TYPES: readonly WorkoutType[] = [
   {
     slug: "skierg-conditioning",
-    title: "SkiErg Conditioning",
+    title: "SkiErg",
     shortTitle: "SkiErg",
     description: "Build full-body cardio through powerful, repeatable pulls.",
     image: "/images/programs/stations/skierg-machine.jpg",

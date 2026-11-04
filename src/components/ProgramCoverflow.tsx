@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useRef,
   useState,
@@ -32,6 +33,7 @@ const swipeThreshold = 56;
 const maxDots = 7;
 
 export default function ProgramCoverflow({ programs, titleClassName = "" }: ProgramCoverflowProps) {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -114,7 +116,10 @@ export default function ProgramCoverflow({ programs, titleClassName = "" }: Prog
 
     if (dragDelta.current <= -swipeThreshold) moveNext();
     if (dragDelta.current >= swipeThreshold) movePrevious();
-    if (!wasDrag && selectedIndex !== null) moveTo(selectedIndex);
+    // A tap/click (not a swipe) on the front card opens its page; on a side card it brings that card forward.
+    const openHref = !wasDrag && selectedIndex !== null && selectedIndex === activeIndex ? programs[selectedIndex]?.href : undefined;
+    if (openHref) router.push(openHref);
+    else if (!wasDrag && selectedIndex !== null) moveTo(selectedIndex);
 
     pointerDownIndex.current = null;
     dragStart.current = null;
@@ -209,7 +214,9 @@ export default function ProgramCoverflow({ programs, titleClassName = "" }: Prog
                   }
 
                   if (event.detail > 0) return;
-                  moveTo(index);
+                  // Keyboard (Enter / Space) on the focused front card opens its page.
+                  if (isActive && program.href) router.push(program.href);
+                  else moveTo(index);
                 }}
               />
               <span className="program-coverflow-media" aria-hidden="true">

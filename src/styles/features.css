@@ -267,3 +267,6 @@
   .ft-marquee-track, .ft-partners-track { animation: none; }
   .ft-pillar-media img, .ft-strip-item img, .ft-concept-tile img { transition: none; }
 }
+
+/* Homepage carousel: the whole front card opens its class page, so show a pointer over it. */
+#ways-to-move .program-coverflow-card.is-active { cursor: pointer; }

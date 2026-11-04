@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
-import CtaBand from "@/components/sections/CtaBand";
+import GainList from "@/components/programs/GainList";
+import StyleSteps from "@/components/programs/StyleSteps";
+import { WORKOUT_DETAILS, stepImage } from "@/data/workout-details";
 import { WORKOUT_TYPES, workoutTypeBySlug } from "@/data/workout-types";
 
 type Params = { slug: string };
@@ -31,6 +33,9 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
   const prevStyle = currentIndex > 0 ? WORKOUT_TYPES[currentIndex - 1] : null;
   const nextStyle = currentIndex < WORKOUT_TYPES.length - 1 ? WORKOUT_TYPES[currentIndex + 1] : null;
   const ALL_STYLES = { href: "/classes#workout-types", label: "All training styles" };
+  const detail = WORKOUT_DETAILS[style.slug];
+  const station = String(currentIndex + 1).padStart(2, "0");
+  const requestHref = `/schedule/book?service=class&item=${encodeURIComponent(style.slug)}#book`;
 
   return (
     <>
@@ -47,32 +52,43 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
         fullImage
       />
 
-      <section className={`section pr-style-module pr-style-module-${style.theme}`}>
+      {/* Development-page layout (What it is · How a session runs · Photos · Continue into · Ask about · pager). */}
+      <section className="section pr-dev-intro">
         <div className="shell">
-          <Link className="pr-style-back" href="/classes#workout-types">← All training styles</Link>
-          <div className="pr-style-intro">
-            <div><p className="eyebrow">The class</p><h2>What this class builds.</h2></div>
-            <p>{style.description}</p>
+          <div className="pr-dev-statement">
+            <p className="pr-dev-statement-text" data-reveal="stagger">{detail ? detail.statement.map((line) => <span key={line}>{line}</span>) : style.description}</p>
           </div>
+        </div>
+      </section>
 
-          <dl className="pr-style-facts">
-            <div><dt>Focus</dt><dd>{style.focus}</dd></div>
-            <div><dt>Format</dt><dd>{style.format}</dd></div>
-            <div><dt>Intensity</dt><dd>{style.intensity}</dd></div>
-          </dl>
+      <section className="section pr-dev-steps" aria-labelledby="pr-dev-steps-title">
+        <div className="shell">
+          <p className="pr-dev-label pr-dev-label-light" data-reveal>The session · 4 blocks</p>
+          <h2 id="pr-dev-steps-title" data-reveal data-reveal-delay="short">How a session runs</h2>
+        </div>
+        <StyleSteps className={style.shortTitle} steps={style.session.map((title, i) => ({ title, body: detail?.steps[i] ?? "", image: stepImage(style.slug, i) }))} />
+      </section>
 
-          <div className="pr-style-flow">
-            <div><p className="eyebrow">Session flow</p><h2>How a session runs.</h2></div>
-            <ol>{style.session.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item}</strong></li>)}</ol>
+      <section className="section pr-dev-gains" aria-labelledby="pr-dev-gains-title">
+        <div className="shell">
+          <p className="pr-dev-label pr-dev-gains-label" id="pr-dev-gains-title" data-reveal>What you gain</p>
+          <GainList gains={style.outcomes.map((title, i) => ({ title, detail: detail?.gains[i] }))} />
+        </div>
+      </section>
+
+      <section className="section pr-dev-ask" aria-labelledby="pr-dev-ask-title">
+        <div className="shell">
+          <div className="pr-dev-ask-grid">
+            <div data-reveal><p className="pr-dev-label pr-dev-label-light">Ready for station {station}?</p><h2 id="pr-dev-ask-title">Ask about {style.title}</h2></div>
+            <div data-reveal data-reveal-delay="short">
+              <p>Tell us your level and when you want to train. The coaching team confirms times and places before opening, and early members get first access to every station class.</p>
+              <div className="pr-dev-ask-actions">
+                <Link className="button pr-dev-button" href={requestHref}>Request this class <span aria-hidden="true">→</span></Link>
+                <Link className="pr-dev-link pr-dev-link-light" href={`/contact?interest=${encodeURIComponent(style.slug)}`}>General enquiry <span aria-hidden="true">→</span></Link>
+              </div>
+            </div>
           </div>
-
-          <div className="pr-style-outcomes">
-            <p className="eyebrow">What you&apos;ll notice</p>
-            <ul>{style.outcomes.map((item) => <li key={item}>{item}</li>)}</ul>
-          </div>
-
-
-          <nav className="pr-style-pager" aria-label="Training styles">
+          <nav className="pr-style-pager pr-style-pager--dark" aria-label="Training styles" data-reveal="stagger">
             <Link className="pr-style-pager-link pr-style-pager-prev" href={prevStyle ? `/classes/styles/${prevStyle.slug}` : ALL_STYLES.href}>
               <span><i aria-hidden="true">‹</i> {prevStyle ? "Previous" : "Back to"}</span>
               <strong>{prevStyle ? prevStyle.title : ALL_STYLES.label}</strong>
@@ -84,8 +100,6 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
           </nav>
         </div>
       </section>
-
-      <CtaBand eyebrow={style.shortTitle} title="Ready to train?" body="Join the early-access list and tell us which class to try first." label="Get early access" href={`/contact?interest=${encodeURIComponent(style.slug)}`} />
     </>
   );
 }

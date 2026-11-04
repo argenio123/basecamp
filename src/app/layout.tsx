@@ -9,6 +9,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
 import CopyGuard from "@/components/ui/CopyGuard";
 import { RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
+import HeroReplay from "@/components/ui/HeroReplay";
 import RouteScope from "@/components/ui/RouteScope";
 import RouteScrollReset from "@/components/ui/RouteScrollReset";
 import SiteReveal from "@/components/ui/SiteReveal";
@@ -84,6 +85,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main-content" tabIndex={-1}>{children}</main>
         <FooterGate><Footer /></FooterGate>
         <SiteReveal />
+        <HeroReplay />
         <CopyGuard />
         <HashForwarder />
         <AdminQuickEdit />
