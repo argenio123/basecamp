@@ -46,7 +46,7 @@ export type ProgrammeRef = Pick<FeaturedProgramme, "slug" | "title" | "descripti
 
 export const LOGIN_PATH = "/login";
 export const ADMIN_PATH = "/admin";
-export const FOUNDING_HREF = "/membership#founding";
+export const FOUNDING_HREF = "/membership/founding";
 export const SECTION_IDS: readonly SectionId[] = ["programs", "facilities", "membership", "schedule", "visit", "about"];
 
 export const CONTACT_PAGE: SitePage = {
@@ -158,6 +158,21 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     }),
     pages: [
       page({
+        href: "/membership/founding", label: "Founding members", tabLabel: "Founding",
+        summary: "A proposed 30% off your first six months or a locked lifetime rate, plus founding perks.",
+        image: "/images/programs/program-endurance.png", imageAlt: "Coach guiding a barbell squat", adminTab: "pricing",
+      }),
+      page({
+        href: "/membership/launch-promotions", label: "Launch promotions", tabLabel: "Promotions",
+        summary: "Launch rates on test: introductory membership, weekend day pass and early-booking camps.",
+        image: "/images/programs/generated/strength-conditioning.png", imageAlt: "Athlete squatting a loaded barbell", adminTab: "pricing",
+      }),
+      page({
+        href: "/membership/price-guide", label: "Passes, recovery & more", tabLabel: "Price guide",
+        summary: "Starting prices for packs, passes, yoga, recovery, camps and corporate bookings.",
+        image: "/images/programs/program-functional.png", imageAlt: "Functional training session", adminTab: "pricing",
+      }),
+      page({
         href: "/membership/passes", label: "Class packs & day passes", tabLabel: "Passes",
         summary: "Class packs, day passes and open-gym access.",
         image: "/images/programs/program-strength.png", imageAlt: "Strength training session", adminTab: "pricing",
@@ -166,6 +181,16 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         href: "/membership/recovery-pricing", label: "Recovery pricing",
         summary: "Prices for recovery sessions, advanced recovery and yoga.",
         image: "/images/programs/generated/recovery-mobility.png", imageAlt: "Mobility and recovery session", adminTab: "pricing",
+      }),
+      page({
+        href: "/membership/yoga", label: "Yoga pricing", tabLabel: "Yoga",
+        summary: "Single classes, yoga packs and the unlimited yoga add-on for members.",
+        image: "/images/destination/train.png", imageAlt: "Coach adjusting a seated stretch in the studio", adminTab: "pricing",
+      }),
+      page({
+        href: "/membership/camps", label: "Camp pricing", tabLabel: "Camps",
+        summary: "Day clinics, weekend camps and five-day immersive packages.",
+        image: "/images/destination/transform.png", imageAlt: "Athletes training with kettlebells", adminTab: "pricing",
       }),
       page({
         href: "/membership/corporate", label: "Corporate pricing", tabLabel: "Corporate",
@@ -182,10 +207,13 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       text: "Early rates, membership tiers, passes and recovery pricing.",
       image: "/images/hero/hero-training.png", imageAlt: "Athlete training at BaseCamp CamSur",
       highlights: [
-        { href: "/membership#founding", label: "Early membership" },
-        { href: "/membership#tiers", label: "Tiers" },
+        { href: "/membership/founding", label: "Founding members" },
+        { href: "/membership/launch-promotions", label: "Launch promotions" },
+        { href: "/membership/price-guide", label: "Passes, recovery & more" },
         { href: "/membership/passes", label: "Class packs & day passes" },
         { href: "/membership/recovery-pricing", label: "Recovery pricing" },
+        { href: "/membership/yoga", label: "Yoga pricing" },
+        { href: "/membership/camps", label: "Camp pricing" },
         { href: "/membership/corporate", label: "Corporate pricing" },
         { href: "/membership/faq", label: "FAQ" },
       ],
@@ -458,7 +486,7 @@ export const LEGACY_HASH_REDIRECTS: Readonly<Record<string, Readonly<Record<stri
     "open-gym": "/membership/passes#open-gym",
     "recovery-pricing": "/membership/recovery-pricing",
     "advanced-recovery": "/membership/recovery-pricing#advanced-recovery",
-    yoga: "/membership/recovery-pricing#yoga",
+    yoga: "/membership/yoga",
     corporate: "/membership/corporate",
     faq: "/membership/faq",
     platform: "/membership/faq#platform",

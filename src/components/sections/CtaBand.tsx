@@ -22,7 +22,7 @@ export default function CtaBand({
         {eyebrow && <p className="eyebrow eyebrow-light">{eyebrow}</p>}
         <h2>{title}</h2>
         {body && <p>{body}</p>}
-        <Link href={href} className="button button-light ft-pill">{label} <span aria-hidden="true">↗</span></Link>
+        <Link href={href} className="button button-light ft-pill">{label}</Link>
       </div>
     </section>
   );

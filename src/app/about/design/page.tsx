@@ -55,7 +55,7 @@ export default async function AboutDesignPage() {
 
       <section id="place" className="section ab-place"><div className="shell">
         <div className="ab-place-grid">
-          <div className="ab-place-intro" data-reveal><p className="eyebrow">{PLACE.eyebrow}</p><h2>{PLACE.title}</h2><p className="lead">{PLACE.lead}</p><Link href={PLACE.link.href} className="text-link">{PLACE.link.label} <span>↗</span></Link></div>
+          <div className="ab-place-intro" data-reveal><p className="eyebrow">{PLACE.eyebrow}</p><h2>{PLACE.title}</h2><p className="lead">{PLACE.lead}</p><Link href={PLACE.link.href} className="text-link">{PLACE.link.label}</Link></div>
           <div className="image-frame ab-place-image" data-reveal data-reveal-delay="short"><Image src={PLACE.image} alt={PLACE.imageAlt} fill sizes="(max-width: 1040px) 100vw, 50vw" className="cover-image" /></div>
         </div>
         <ul className="ab-place-list" data-reveal="stagger">{PLACE.items.map((item) => <li key={item.title}><h3>{item.title}</h3><p>{item.body}</p></li>)}</ul>

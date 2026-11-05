@@ -117,9 +117,9 @@ const descItems = (label: string, maxItems: number, prefix: string): TypedListFi
 });
 
 const PRICE_ITEM_FIELDS = {
-  id: id(), name: title("Name"), price: { kind: "price", label: "Price (₱)", help: "Tick “On request” to hide the number." } as PriceField,
+  id: id(), name: title("Name"), price: { kind: "price", label: "Price (Php)", help: "Tick “On request” to hide the number." } as PriceField,
   unit: text("Unit", { max: 60, help: "e.g. /month, per session" }), usd: text("USD text", { max: 60, help: "Leave empty to auto-calculate from the exchange rate." }),
-  perUnit: text("Per-unit text", { max: 60, help: "e.g. ₱380 per class" }), validity: text("Validity", { max: 60 }),
+  perUnit: text("Per-unit text", { max: 60, help: "e.g. Php 380 per class" }), validity: text("Validity", { max: 60 }),
   description: area("Description", { max: 600 }), features: lines("Features", 10, 200), featured: bool("Featured (highlighted card)"),
   badge: text("Badge", { max: 60 }), availability: availability(), visible: bool("Visible on the site"),
 };
@@ -169,7 +169,7 @@ export const EDITOR_SCHEMA = {
       {
         title: "Early member offer",
         anchor: "/membership#founding",
-        help: "Confirm the early discount wording (₱3,200 vs ₱4,500 is about 29%) with the owner.",
+        help: "Confirm the early discount wording (Php 3,200 vs Php 4,500 is about 29%) with the owner.",
         fields: {
           founding: {
             kind: "object", label: "",
@@ -191,7 +191,7 @@ export const EDITOR_SCHEMA = {
       {
         title: "Pricing & booking",
         fields: {
-          exchangeRate: { kind: "number", label: "Exchange rate (₱ per US$1)", min: 1, max: 1000, help: "Used for auto-calculated USD prices." },
+          exchangeRate: { kind: "number", label: "Exchange rate (Php per US$1)", min: 1, max: 1000, help: "Used for auto-calculated USD prices." },
           bookingWidgetUrl: url("Booking widget URL", "Optional third-party booking link (https)."),
         },
       },

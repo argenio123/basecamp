@@ -2,20 +2,22 @@
 // Every content price group is rendered on exactly one page, chosen by its anchor:
 //   /membership                   [tiers]
 //   /membership/passes            [packs] [day-passes] [open-gym] (+ any admin-added group with an unknown anchor)
-//   /membership/recovery-pricing  [recovery-pricing] [advanced-recovery] [yoga]
+//   /membership/recovery-pricing  [recovery-pricing] [advanced-recovery]
+//   /membership/yoga              [yoga]
 //   /membership/corporate         [corporate]
-//   /visit/camps                  [camps-pricing] (rendered by the Visit section)
+//   /membership/camps             [camps-pricing] (also shown on /visit/camps)
 import { formatPhp } from "@/content/format";
 import type { Availability, Price, PriceGroup, PriceItem } from "@/content/types";
 
-export type PricingPage = "overview" | "passes" | "recovery" | "corporate" | "camps";
+export type PricingPage = "overview" | "passes" | "recovery" | "yoga" | "corporate" | "camps";
 
 export const PRICING_PATHS: Readonly<Record<PricingPage, string>> = {
   overview: "/membership",
   passes: "/membership/passes",
   recovery: "/membership/recovery-pricing",
+  yoga: "/membership/yoga",
   corporate: "/membership/corporate",
-  camps: "/visit/camps",
+  camps: "/membership/camps",
 };
 
 const PAGE_BY_ANCHOR: Readonly<Record<string, PricingPage>> = {
@@ -25,7 +27,7 @@ const PAGE_BY_ANCHOR: Readonly<Record<string, PricingPage>> = {
   "open-gym": "passes",
   "recovery-pricing": "recovery",
   "advanced-recovery": "recovery",
-  yoga: "recovery",
+  yoga: "yoga",
   corporate: "corporate",
   "camps-pricing": "camps",
 };
@@ -48,7 +50,7 @@ export const groupsFor = (groups: readonly PriceGroup[], pageId: PricingPage) =>
 export function groupHref(group: Pick<PriceGroup, "id" | "anchor">): string {
   const pageId = pricingPageFor(group);
   const path = PRICING_PATHS[pageId];
-  if (pageId === "corporate" || !group.anchor || group.anchor === "recovery-pricing") return path;
+  if (pageId === "corporate" || pageId === "yoga" || pageId === "camps" || !group.anchor || group.anchor === "recovery-pricing") return path;
   return `${path}#${group.anchor}`;
 }
 
@@ -90,7 +92,7 @@ export function fromPrice(items: readonly PriceItem[]): FromPrice | null {
   return { label: varies ? `From ${amount}` : amount, unit: cheapest.unit };
 }
 
-/** "from ₱1,900" style chip value for At a glance ("" when there is no price, so the chip is dropped). */
+/** "from Php 1,900" style chip value for At a glance ("" when there is no price, so the chip is dropped). */
 export function fromChip(items: readonly PriceItem[]): string {
   const p = fromPrice(items);
   if (!p || !items.some((i) => i.visible && i.price)) return "";

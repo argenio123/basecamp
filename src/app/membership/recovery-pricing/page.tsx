@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PriceBlock, PricingNotes } from "@/components/membership/PriceTable";
+import { PriceBlock } from "@/components/membership/PriceTable";
 import { fromChip, groupsFor, toBlocks } from "@/components/membership/pricing";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const recoveryFrom = fromChip(pricing.groups.filter((g) => g.anchor === "recovery-pricing").flatMap((g) => g.items));
   return {
     title: "Recovery Pricing",
-    description: `Prices for recovery sessions${recoveryFrom ? ` (${recoveryFrom})` : ""}, advanced recovery modalities and yoga at BaseCamp CamSur, each labeled with its availability.`,
+    description: `Prices for recovery sessions${recoveryFrom ? ` (${recoveryFrom})` : ""}, and advanced recovery modalities at BaseCamp CamSur, each labeled with its availability.`,
   };
 }
 
@@ -34,16 +34,15 @@ export default async function RecoveryPricingPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero eyebrow="Membership · Recovery pricing" title="Recover like you train." intro="Prices for every recovery session, add-on and yoga class, with USD approximations." image="/images/programs/generated/recovery-mobility.png" imageAlt="Mobility and recovery session at BaseCamp CamSur" />}
+      hero={<PageHero title="Recover like you train." intro="Prices for every recovery session and add-on, with USD approximations." image="/images/programs/generated/recovery-mobility.png" imageAlt="Mobility and recovery session at BaseCamp CamSur" />}
       glance={{
-        summary: "Recovery sessions, advanced modalities and yoga, each labeled with when it becomes available.",
+        summary: "Recovery sessions and advanced modalities, each labeled with when it becomes available.",
         facts: [
           { label: "Recovery sessions", value: fromChip(items("recovery-pricing")) },
           { label: "Advanced recovery", value: fromChip(items("advanced-recovery")) },
-          { label: "Yoga", value: fromChip(items("yoga")) },
         ],
       }}
-      related={["/facilities/recovery", "/classes/recovery-mobility", "/classes/personal-coaching", "/membership#tiers"]}
+      related={["/facilities/recovery", "/classes/recovery-mobility", "/classes/personal-coaching", "/membership/yoga", "/membership#tiers"]}
       cta={<>
         <CtaBand eyebrow="Recovery" title="Make recovery part of the plan." label="Register interest" href="/contact?interest=recovery" />
       </>}
@@ -58,7 +57,6 @@ export default async function RecoveryPricingPage() {
             <div className="mb-panel">
               {blocks.map((block) => <PriceBlock key={block.key} block={block} exchangeRate={settings.exchangeRate} disclaimer={recovery.disclaimer} />)}
             </div>
-            <PricingNotes notes={pricing.notes} />
           </div>
         </section>
       )}

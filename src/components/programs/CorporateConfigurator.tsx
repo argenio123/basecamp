@@ -21,7 +21,7 @@ export default function CorporateConfigurator() {
         <label>Duration<select value={duration} onChange={(event) => setDuration(event.target.value)}>{ITINERARIES.map((item) => <option key={item.id}>{item.label}</option>)}</select></label>
         <label>Objective<select value={objective} onChange={(event) => setObjective(event.target.value)}><option>Team connection</option><option>Leadership under pressure</option><option>Health & wellbeing</option><option>Performance challenge</option></select></label>
       </div>
-      <aside className="pr-config-summary"><p className="pr-meta">Your starting brief</p><h3>{duration} for {team}</h3><p>Primary objective: {objective}. We’ll scale the training, recovery and facilitation around your group.</p><Link href={`/contact?enquiry=corporate&team=${encodeURIComponent(team)}&duration=${encodeURIComponent(duration)}&objective=${encodeURIComponent(objective)}`}>Send this brief →</Link><small>Downloadable proposal summaries will be added when corporate booking goes live.</small></aside>
+      <aside className="pr-config-summary"><p className="pr-meta">Your starting brief</p><h3>{duration} for {team}</h3><p>Primary objective: {objective}. We’ll scale the training, recovery and facilitation around your group.</p><Link href={`/contact?enquiry=corporate&team=${encodeURIComponent(team)}&duration=${encodeURIComponent(duration)}&objective=${encodeURIComponent(objective)}`}>Send this brief</Link><small>Downloadable proposal summaries will be added when corporate booking goes live.</small></aside>
       <div className="pr-itinerary-grid">{ITINERARIES.map((item) => <article key={item.id}><p className="pr-meta">{item.time}</p><h3>{item.label}</h3><p>{item.flow}</p></article>)}</div>
     </div>
   );

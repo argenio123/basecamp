@@ -245,7 +245,7 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
                 </li>
               ))}
             </ul>
-            <Link className="pr-inline-link" href="/classes#finder">Compare all launch classes <span aria-hidden="true">→</span></Link>
+            <Link className="pr-inline-link" href="/classes#finder">Compare all launch classes</Link>
           </Row>
         )}
 
@@ -257,14 +257,14 @@ export default async function ProgrammePage({ params }: { params: Promise<Params
 
         <Row id="prepare" eyebrow="Before your first session" title="Arrive ready">
           <ul className="pr-prep-list" data-reveal="stagger">{preparation.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, "0")}</span><p>{item}</p></li>)}</ul>
-          <aside className="pr-coach-announcement" data-reveal><p className="pr-meta">Your coach</p><h3>Coach line-up announcing soon.</h3><p>Every session will show the coach, specialty and required access before booking opens.</p><Link href="/classes/coaching">See the coaching approach →</Link></aside>
+          <aside className="pr-coach-announcement" data-reveal><p className="pr-meta">Your coach</p><h3>Coach line-up announcing soon.</h3><p>Every session will show the coach, specialty and required access before booking opens.</p><Link href="/classes/coaching">See the coaching approach</Link></aside>
         </Row>
 
         <Row id="plan" eyebrow="Make it work for you" title="Plan your training">
           <ul className="pr-plan-grid" data-reveal="stagger">
-            <li><Link href="/membership"><span className="pr-meta">Access</span><h3>Memberships &amp; passes</h3><p>Compare the access routes that include this kind of training.</p><span>Compare access →</span></Link></li>
-            <li><Link href="/schedule#timetable"><span className="pr-meta">Sessions</span><h3>Schedule preview</h3><p>See how coached classes, independent training and appointments fit into the week.</p><span>View schedule →</span></Link></li>
-            <li><Link href={supportHref}><span className="pr-meta">Support</span><h3>{supportTitle}</h3><p>Connect your classes to the specialist support that helps you progress.</p><span>Explore support →</span></Link></li>
+            <li><Link href="/membership"><span className="pr-meta">Access</span><h3>Memberships &amp; passes</h3><p>Compare the access routes that include this kind of training.</p><span>Compare access</span></Link></li>
+            <li><Link href="/schedule#timetable"><span className="pr-meta">Sessions</span><h3>Schedule preview</h3><p>See how coached classes, independent training and appointments fit into the week.</p><span>View schedule</span></Link></li>
+            <li><Link href={supportHref}><span className="pr-meta">Support</span><h3>{supportTitle}</h3><p>Connect your classes to the specialist support that helps you progress.</p><span>Explore support</span></Link></li>
           </ul>
         </Row>
 

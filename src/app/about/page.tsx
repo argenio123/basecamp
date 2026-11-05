@@ -142,7 +142,7 @@ export default async function AboutPage() {
                 {partners.map((partner) => (
                   <li key={partner.id}>
                     <span>{PARTNERS.typeLabel[partner.type]}</span>
-                    {partner.url ? <a href={partner.url} target="_blank" rel="noreferrer">{partner.name} <span aria-hidden="true">↗</span></a> : <strong>{partner.name}</strong>}
+                    {partner.url ? <a href={partner.url} target="_blank" rel="noreferrer">{partner.name}</a> : <strong>{partner.name}</strong>}
                     {partner.description && <p>{partner.description}</p>}
                   </li>
                 ))}
@@ -159,8 +159,8 @@ export default async function AboutPage() {
                 <h2 id="ab2-partners-title">Build it with us.</h2>
                 <p>We&apos;re looking for partners in accommodation, transport, wellness and athlete ambassadorship who share our standards. Help shape how athletes train, recover and stay in CamSur, from opening day onward.</p>
                 <div className="ab2-partner-actions">
-                  <Link className="button ab2-partner-primary" href="/contact?enquiry=partnership#enquire">Partner with us <span aria-hidden="true">↗</span></Link>
-                  {c.settings.contact.email && <a className="button ab2-partner-secondary" href={`mailto:${c.settings.contact.email}?subject=${encodeURIComponent("Partnership with BaseCamp CamSur")}`}>Email the team <span aria-hidden="true">↗</span></a>}
+                  <Link className="button ab2-partner-primary" href="/contact?enquiry=partnership#enquire">Partner with us</Link>
+                  {c.settings.contact.email && <a className="button ab2-partner-secondary" href={`mailto:${c.settings.contact.email}?subject=${encodeURIComponent("Partnership with BaseCamp CamSur")}`}>Email the team</a>}
                 </div>
               </div>
           </div>
@@ -184,7 +184,7 @@ export default async function AboutPage() {
                       <span className="ab-about-category-number" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                       <span className="ab-about-category-copy">
                         {card && <span className="ab-about-category-tag">{card.tag}</span>}
-                        <strong>{category.label} <span aria-hidden="true">→</span></strong>
+                        <strong>{category.label}</strong>
                       </span>
                     </Link>
                   </li>

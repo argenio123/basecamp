@@ -270,3 +270,102 @@
 
 /* Homepage carousel: the whole front card opens its class page, so show a pointer over it. */
 #ways-to-move .program-coverflow-card.is-active { cursor: pointer; }
+
+
+/* ---------- Explore, feature variant (Membership): two large photo cards per row ----------
+   Full-bleed image, Ink gradient, index + tag on top, Gretaros title, Signal pill on hover. */
+.nv-feature-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); gap: 16px clamp(32px, 6vw, 96px); align-items: end; margin-bottom: clamp(32px, 4vw, 56px); }
+.nv-feature-head h2 { margin: 0; font: 400 clamp(56px, 7vw, 112px)/.85 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.03em; text-transform: uppercase; }
+.nv-feature-head .eyebrow { margin: 0 0 14px; }
+.nv-feature-meta { display: grid; gap: 14px; justify-items: start; }
+.nv-feature-meta p { margin: 0; color: var(--olive); font-size: 17px; line-height: 1.6; }
+.nv-feature-count { padding: 5px 11px; border: 1px solid var(--ink); border-radius: 999px; color: var(--ink); font: 400 10.5px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.nv-feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 1.8vw, 24px); margin: 0; padding: 0; list-style: none; }
+.nv-feature-grid > li { min-width: 0; }
+.nv-feature-grid > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.nv-fcard { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: clamp(380px, 34vw, 520px); height: 100%; overflow: hidden; padding: clamp(22px, 2.4vw, 34px); border-radius: var(--radius-card, 24px); background: var(--ink); color: var(--white); text-decoration: none; }
+.nv-feature-grid > li:last-child:nth-child(odd) .nv-fcard { min-height: clamp(320px, 26vw, 420px); }
+.nv-fcard .nv-fcard-image { z-index: -2; transition: transform .9s cubic-bezier(.22, 1, .36, 1), filter .5s ease; }
+.nv-fcard-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(21,23,19,.35) 0%, rgba(21,23,19,0) 30%, rgba(21,23,19,.25) 55%, rgba(21,23,19,.88) 100%); transition: background-color .4s ease; }
+.nv-fcard:hover .nv-fcard-image, .nv-fcard:focus-visible .nv-fcard-image { transform: scale(1.05); filter: saturate(1.08); }
+.nv-fcard:hover .nv-fcard-shade { background-color: rgba(21,23,19,.12); }
+.nv-fcard:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+.nv-fcard-top { display: flex; align-items: center; justify-content: flex-end; min-height: 26px; gap: 12px; }
+.nv-fcard-index { color: rgba(255,255,255,.85); font: 400 13px var(--font-geist-mono), monospace; letter-spacing: .16em; }
+.nv-fcard-tag { padding: 5px 11px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; background: rgba(21,23,19,.25); backdrop-filter: blur(6px); font: 400 10.5px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.nv-fcard-body { display: grid; gap: 12px; max-width: 560px; }
+.nv-fcard-title { font: 400 clamp(34px, 3.4vw, 54px)/.9 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; }
+.nv-fcard-summary { color: rgba(255,255,255,.82); font-size: 16px; line-height: 1.5; }
+.nv-fcard-cta { justify-self: start; margin-top: 6px; padding: 11px 20px; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; font: 700 12px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-transform: uppercase; transition: background-color .25s ease, border-color .25s ease, color .25s ease; }
+.nv-fcard:hover .nv-fcard-cta, .nv-fcard:focus-visible .nv-fcard-cta { border-color: var(--signal); background: var(--signal); color: var(--ink); }
+@media (max-width: 900px) {
+  .nv-feature-head { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .nv-feature-grid { grid-template-columns: 1fr; }
+  .nv-fcard, .nv-feature-grid > li:last-child:nth-child(odd) .nv-fcard { min-height: 380px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nv-fcard .nv-fcard-image, .nv-fcard-cta { transition: none; }
+  .nv-fcard:hover .nv-fcard-image { transform: none; }
+}
+
+
+/* ---------- Founding members: full-width membership card (same look as the featured Athlete tier) ---------- */
+.mb-fp { background: var(--ink); color: var(--white); padding-block: clamp(72px, 9vw, 140px); }
+.mb-fp-card { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 5vw, 88px); padding: 0; border-radius: 0; background: transparent; color: var(--white); box-shadow: none; }
+.mb-fp-main { display: grid; gap: 18px; align-content: start; }
+.mb-fp-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.mb-fp .mb-label-ghost { color: rgba(255,255,255,.6); }
+.mb-fp-name { margin: 6px 0 0; color: var(--white); font: 400 clamp(44px, 4.8vw, 76px)/.95 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.03em; text-transform: uppercase; }
+.mb-fp-price { display: flex; align-items: flex-end; gap: 10px; margin: clamp(14px, 1.6vw, 26px) 0 0; padding-bottom: 20px; border-bottom: 2px solid var(--signal); }
+.mb-fp-price strong { color: var(--signal); font: 400 clamp(64px, 6.6vw, 108px)/.95 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.04em; }
+.mb-fp-price > span { padding-bottom: 10px; color: rgba(255,255,255,.6); font: 400 14px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.mb-fp-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; color: rgba(255,255,255,.6); font: 400 13px var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+.mb-fp-meta .mb-fp-save { color: var(--signal); }
+.mb-fp-desc { max-width: 54ch; margin: 4px 0 0; color: var(--white); font-size: 18px; line-height: 1.6; }
+
+.mb-fp-side { display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-top: 4px; }
+.mb-fp-checks { display: grid; gap: 20px; margin: 0; padding: 0; list-style: none; }
+.mb-fp-checks li { position: relative; display: grid; gap: 4px; padding-left: 38px; }
+.mb-fp-checks li::before { content: "+"; position: absolute; top: 1px; left: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--signal); color: var(--ink); font: 700 15px/1 var(--font-poppins), sans-serif; }
+.mb-fp-checks strong { color: var(--white); font-size: 18px; font-weight: 500; line-height: 1.35; }
+.mb-fp-checks span { color: rgba(255,255,255,.65); font-size: 15px; line-height: 1.5; }
+.mb-fp-actions { display: grid; gap: 12px; }
+.mb-fp-cta { width: 100%; min-height: 64px; justify-content: center; border-radius: 999px; font-size: 14px; }
+.mb-fp-counter, .mb-fp-expiry { margin: 0; color: rgba(255,255,255,.7); font-size: 14px; text-align: center; }
+
+@media (max-width: 960px) {
+  .mb-fp-card { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- Membership prices: one currency treatment everywhere ----------
+   ₱ is drawn at ~half the figure size and raised, so ₱4,500 / ₱3,200 / ₱650 read as one system on tier cards,
+   price rows, promos, camps and the founding card. */
+/* !important: the price lines style every inner span as the mono unit label ("/month"); the mark must not inherit that. */
+.mb-cur { display: inline-block !important; margin: 0 0 0 .14em !important; padding: 0 !important; border: 0 !important; color: inherit !important; font-family: var(--font-poppins), sans-serif !important; font-size: .3em !important; font-weight: 700 !important; line-height: 1 !important; letter-spacing: .01em !important; text-transform: none !important; vertical-align: baseline !important; }
+/* Keep "Php" and the figure together. */
+.mb-tier-price strong, .mb-row-price strong, .mb-from-price strong, .vt-camp-price strong, .mb-promo-compare dd, .mb-fp-price strong { white-space: nowrap; }
+
+/* Membership section labels: one mono caps style (the tiers heading used the sans eyebrow). */
+html .mb-tiers-section .section-heading .eyebrow { color: var(--olive); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
+
+
+/* Founding card: "What you gain" rows inside the dark card (same open/close rows as the class pages). */
+.mb-fp-gains { display: grid; gap: 14px; }
+.mb-fp-gains-label { margin: 0; color: rgba(255,255,255,.6); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
+.mb-fp .pr-dev-outcomes { border-top: 2px solid var(--signal); }
+.mb-fp .pr-dev-outcomes li { border-bottom-color: rgba(255,255,255,.14); }
+.mb-fp .pr-dev-outcomes button, .mb-fp .pr-dev-gain-static { gap: 18px; padding: clamp(18px, 1.8vw, 24px) 0; color: var(--white); font-size: clamp(24px, 2.4vw, 38px); line-height: .95; }
+.mb-fp .pr-dev-outcomes button:focus-visible { outline-color: var(--signal); }
+.mb-fp .pr-dev-gain-icon { width: 34px; height: 34px; background: var(--signal); }
+.mb-fp .pr-dev-gain-icon::before, .mb-fp .pr-dev-gain-icon::after { background: var(--ink); }
+.mb-fp .pr-dev-gain-panel p { padding-left: 52px; color: rgba(255,255,255,.72); }
+
+/* Launch promotions: benefits checklist on each card (same "+" marks as the tier cards). */
+.mb-promo-perks { display: grid; gap: 14px; margin-top: 6px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.16); }
+.mb-promo-perks-label { margin: 0; color: rgba(255,255,255,.55); font: 400 11px/1.3 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+.mb-promo-checks { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.mb-promo-checks li { position: relative; padding-left: 32px; color: var(--white); font-size: 15px; line-height: 1.45; }
+.mb-promo-checks li::before { content: "+"; position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--signal); color: var(--ink); font: 700 13px/1 var(--font-poppins), sans-serif; }

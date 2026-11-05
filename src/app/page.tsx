@@ -113,7 +113,7 @@ export default async function Home() {
 
       <section id="ways-to-move" className="section section-dark hm-section" data-home-reveal>
         <ProgramCoverflow titleClassName={gretaros.className} programs={WORKOUT_TYPES.map((w) => ({ title: w.title, description: w.description, image: w.image, href: `/classes/styles/${w.slug}` }))} />
-        <div className="shell section-link" data-home-reveal><Link href="/classes" className="text-link light">Explore all classes <span>↗</span></Link></div>
+        <div className="shell section-link" data-home-reveal><Link href="/classes" className="text-link light">Explore all classes</Link></div>
       </section>
 
       {/* Stage 4 removes the duplicate site-directory, persona tabs and daily-rhythm strip. Their canonical

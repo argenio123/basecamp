@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import AudienceTabs from "@/components/membership/AudienceTabs";
-import { PricingNotes } from "@/components/membership/PriceTable";
 import { fromChip, groupsFor } from "@/components/membership/pricing";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
@@ -32,7 +31,7 @@ export default async function PassesPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero eyebrow="Membership · Passes" title="Train on your terms." intro="Try classes with a pack, drop in for a day, or train on your own with an open-gym pass." image="/images/programs/program-strength.png" imageAlt="Strength training session at BaseCamp CamSur" />}
+      hero={<PageHero title="Train on your terms." intro="Try classes with a pack, drop in for a day, or train on your own with an open-gym pass." image="/images/programs/program-strength.png" imageAlt="Strength training session at BaseCamp CamSur" />}
       glance={{
         summary: "Class packs for regulars who are not ready to commit, plus drop-ins, day passes and open-gym passes for visitors.",
         facts: [
@@ -51,7 +50,6 @@ export default async function PassesPage() {
           <AudienceTabs groups={groups} exchangeRate={settings.exchangeRate} disclaimer={recovery.disclaimer}
             eyebrow="Passes" title="Pay as you train."
             intro="Locals start with a class pack; travelers and weekenders pick a drop-in or day pass. Open-gym passes suit everyone." />
-          <PricingNotes notes={pricing.notes} />
         </div>
       </section>
     </DetailTemplate>

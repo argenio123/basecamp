@@ -43,7 +43,7 @@ export default async function SchedulePage() {
     >
       <section className="section" id="rhythm">
         <div className="shell">
-          <div className="notice-bar" data-reveal><strong>Timetable status</strong><span>{notice}</span><Link href="/schedule/book">{PHASE_COPY[phase].bookingSubmit} ↗</Link></div>
+          <div className="notice-bar" data-reveal><strong>Timetable status</strong><span>{notice}</span><Link href="/schedule/book">{PHASE_COPY[phase].bookingSubmit}</Link></div>
           <div className="section-heading split-heading light-split" data-reveal><div><p className="eyebrow">Daily rhythm</p><h2>Choose your training window.</h2></div><p>The day balances coached sessions, independent training and one-to-one appointments.</p></div>
           <ol className="sd-rhythm" data-reveal="stagger">
             {s.rhythm.map((r, i) => <li key={r.id}><span className="sd-index">{pad(i + 1)}</span><h3>{r.title}</h3><p>{r.description}</p></li>)}

@@ -198,7 +198,7 @@ function BookingRequestFormInner({ content, initialService, initialItem, onReset
       <FieldError id={`${id}-consent`} state={state} name="consent" />
       <PrivacyNote />
       <button className="button button-dark" type="submit" disabled={pending}>
-        {pending ? "Sending…" : <>{content.submitLabel} <span aria-hidden="true">↗</span></>}
+        {pending ? "Sending…" : <>{content.submitLabel}</>}
       </button>
     </form>
   );

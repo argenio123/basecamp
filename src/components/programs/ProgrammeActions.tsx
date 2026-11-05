@@ -20,11 +20,11 @@ export default function ProgrammeActions({ programme, launchPhase }: { programme
   return (
     <div className="pr-actions">
       <div className="program-actions">
-        <Link className="button button-dark" href={primary.href}>{primary.label} <span aria-hidden="true">↗</span></Link>
+        <Link className="button button-dark" href={primary.href}>{primary.label}</Link>
         <Link className="button program-button-outline" href="/schedule#timetable" aria-describedby={preLaunch ? `pr-schedule-soon-${slug}` : undefined}>
-          {preLaunch ? "Preview schedule" : "View schedule"} <span aria-hidden="true">→</span>
+          {preLaunch ? "Preview schedule" : "View schedule"}
         </Link>
-        <Link className="button program-button-outline" href="/membership">Compare access <span aria-hidden="true">→</span></Link>
+        <Link className="button program-button-outline" href="/membership">Compare access</Link>
       </div>
       {preLaunch && <p className="pr-actions-note" id={`pr-schedule-soon-${slug}`}>{SCHEDULE_SOON}</p>}
     </div>

@@ -815,7 +815,7 @@ html[data-route="page"] main :is(.pr-dev-intro, .pr-dev-steps, .pr-dev-gallery, 
 .pr-dev-facts dt { color: rgba(255,255,255,.55); font: 400 11px var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
 .pr-dev-facts dd { margin: 0; color: var(--white); font: 400 clamp(22px, 1.9vw, 28px)/1 var(--font-display), var(--font-poppins), sans-serif; text-transform: uppercase; letter-spacing: -.01em; text-align: left; }
 .pr-dev-facts-big dd { color: var(--signal); font-size: clamp(30px, 2.8vw, 44px); }
-.pr-dev-facts .pr-dev-button { width: 100%; justify-content: space-between; }
+.pr-dev-facts .pr-dev-button { width: 100%; justify-content: center; }
 .pr-dev-button { color: var(--ink); background: var(--signal); border-color: var(--signal); }
 .pr-dev-button:hover { color: var(--ink); background: var(--white); border-color: var(--white); }
 .pr-dev-link { display: inline-flex; align-items: center; gap: 10px; padding-bottom: 8px; border-bottom: 2px solid currentColor; color: var(--ink); font: 400 13px var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; }

@@ -75,7 +75,7 @@ export default async function AboutBuildPage() {
           </div>
           {b.enabled && <div className="ab-launch" data-reveal data-reveal-delay="short">
             {live
-              ? <Link href="/schedule/book" className="button button-light">{PHASE_COPY.live.ctaLabel} <span>↗</span></Link>
+              ? <Link href="/schedule/book" className="button button-light">{PHASE_COPY.live.ctaLabel}</Link>
               : <BuildCountdown openingDate={c.settings.openingDate} />}
           </div>}
         </div>
@@ -101,7 +101,7 @@ export default async function AboutBuildPage() {
           <li data-state={live ? "current" : "upcoming"}><span>04</span><div><p>Open doors</p><strong>{live ? "Open now" : "Ahead"}</strong></div></li>
         </ol>
         <div className="ab-readiness" data-reveal>
-          <div><p className="eyebrow">Readiness board</p><h3>Signals we can stand behind.</h3><p>Each item is tied to content already published on the site, so this board becomes more complete without manual progress estimates.</p><Link href="/contact" className="text-link">Get build updates <span>↗</span></Link></div>
+          <div><p className="eyebrow">Readiness board</p><h3>Signals we can stand behind.</h3><p>Each item is tied to content already published on the site, so this board becomes more complete without manual progress estimates.</p><Link href="/contact" className="text-link">Get build updates</Link></div>
           <ul>{readiness.map((item) => <li key={item.label} data-ready={item.ready ? "true" : "false"}><span aria-hidden="true">{item.ready ? "✓" : "○"}</span><div><strong>{item.label}</strong><p>{item.note}</p></div></li>)}</ul>
         </div>
       </div></section>

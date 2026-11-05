@@ -60,9 +60,9 @@ export default function ClassFinder({ launchPhase }: { launchPhase: LaunchPhase 
                 </div>
               </details>
               <div className="pr-class-card-actions">
-                <Link href={programmeHref(item.programmeSlug)}>View class <span aria-hidden="true">→</span></Link>
+                <Link href={programmeHref(item.programmeSlug)}>View class</Link>
                 <Link href={launchPhase === "live" ? `/schedule/book?service=class&item=${item.programmeSlug}` : `/contact?program=${item.programmeSlug}`}>
-                  {launchPhase === "live" ? "Book class" : "Join waitlist"} <span aria-hidden="true">↗</span>
+                  {launchPhase === "live" ? "Book class" : "Join waitlist"}
                 </Link>
               </div>
             </li>
@@ -81,7 +81,7 @@ export default function ClassFinder({ launchPhase }: { launchPhase: LaunchPhase 
           </ol>
         </div>
 
-        <div className="pr-class-footer-action"><Link className="button button-dark" href={action.href}>{action.label} <span aria-hidden="true">↗</span></Link></div>
+        <div className="pr-class-footer-action"><Link className="button button-dark" href={action.href}>{action.label}</Link></div>
       </div>
     </section>
   );

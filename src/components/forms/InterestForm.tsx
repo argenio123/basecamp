@@ -150,7 +150,6 @@ function PurposeStep({ onSelect }: { onSelect: (intent: InquiryIntent) => void }
               <small>{item.short}</small>
               <strong>{item.label}</strong>
               <p>{item.description}</p>
-              <i aria-hidden="true">↗</i>
             </button>
           );
         })}
@@ -322,7 +321,7 @@ function InquiryDetails({ intent, source, preselected, programmeTitle, onBack }:
       <p>{config.successBody}</p>
       <p className="ct-success-time">Expected response: within one business day.</p>
       <div className="button-row">
-        <Link href={config.nextHref} className="button button-dark">{config.nextLabel} <span aria-hidden="true">↗</span></Link>
+        <Link href={config.nextHref} className="button button-dark">{config.nextLabel}</Link>
         <button type="button" className="text-link" onClick={onBack}>Start another inquiry</button>
       </div>
     </div>
@@ -368,7 +367,7 @@ function InquiryDetails({ intent, source, preselected, programmeTitle, onBack }:
           <FieldError id={`${id}-message`} state={state} name="message" />
         </label>
         <Consent id={id} state={state} />
-        <button className="button button-dark ct-submit" type="submit" disabled={pending} aria-disabled={pending}>{pending ? "Sending…" : <>{config.submitLabel} <span aria-hidden="true">↗</span></>}</button>
+        <button className="button button-dark ct-submit" type="submit" disabled={pending} aria-disabled={pending}>{pending ? "Sending…" : <>{config.submitLabel}</>}</button>
       </form>
     </div>
   );

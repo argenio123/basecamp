@@ -25,7 +25,7 @@ export default async function CorporatePricingPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero eyebrow="Membership · Corporate" title="Bring your team." intro={items[0]?.description || "Team-building experiences, group training rates and wellness off-sites for organizations."} image="/images/facilities/facility-exterior.jpg" imageAlt="BaseCamp CamSur facility exterior" />}
+      hero={<PageHero title="Bring your team." intro={items[0]?.description || "Team-building experiences, group training rates and wellness off-sites for organizations."} image="/images/facilities/facility-exterior.jpg" imageAlt="BaseCamp CamSur facility exterior" />}
       glance={{
         summary: "Group training rates, team-building and wellness off-sites for companies, quoted on request for your group and dates.",
         facts: items.slice(0, 3).map((i) => ({ label: i.name, value: formatPhp(i.price) })),
@@ -41,7 +41,7 @@ export default async function CorporatePricingPage() {
             <p className="eyebrow">{group?.title || "Corporate bookings"}</p>
             <h2>Rates for teams.</h2>
             {group?.intro && <p className="mb-corporate-intro">{group.intro}</p>}
-            <Link href="/classes/corporate" className="text-link">See corporate classes <span>→</span></Link>
+            <Link href="/classes/corporate" className="text-link">See corporate classes</Link>
           </div>
           <div className="mb-corporate-cards" data-reveal="stagger">
             {items.map((item) => (
@@ -53,7 +53,7 @@ export default async function CorporatePricingPage() {
                 {item.features.length > 0 && <ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul>}
               </article>
             ))}
-            <Link href={ENQUIRE_HREF} className="button button-dark mb-corporate-cta">Inquire about corporate <span>↗</span></Link>
+            <Link href={ENQUIRE_HREF} className="button button-dark mb-corporate-cta">Inquire about corporate</Link>
           </div>
         </div>
       </section>

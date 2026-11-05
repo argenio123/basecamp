@@ -80,10 +80,10 @@ export default async function ContactPage() {
         </div>
         <div className="ct7-channel-grid" data-reveal="stagger">
           {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer">
-            <span>01 · Fastest</span><em className="ct7-channel-time">Quickest reply</em><h3>WhatsApp</h3><p>Quick questions and same-day visits.</p><strong>Open chat <b aria-hidden="true">↗</b></strong>
+            <span>01 · Fastest</span><em className="ct7-channel-time">Quickest reply</em><h3>WhatsApp</h3><p>Quick questions and same-day visits.</p><strong>Open chat</strong>
           </a>}
           {contact.email && <a href={`mailto:${contact.email}`}>
-            <span>02 · Attachments</span><em className="ct7-channel-time">1 business day</em><h3>Email</h3><p>Proposals, press files and longer briefs.</p><strong>{contact.email} <b aria-hidden="true">↗</b></strong>
+            <span>02 · Attachments</span><em className="ct7-channel-time">1 business day</em><h3>Email</h3><p>Proposals, press files and longer briefs.</p><strong>{contact.email}</strong>
           </a>}
           <a href="#enquire">
             <span>03 · Recommended</span><em className="ct7-channel-time">1 business day</em><h3>Guided form</h3><p>Membership, camps, corporate, partnerships and media.</p><strong>Choose an inquiry <b aria-hidden="true">↑</b></strong>
@@ -107,8 +107,8 @@ export default async function ContactPage() {
             {contact.addressLines.length > 0 && <div><dt>Location</dt><dd>{contact.addressLines.join(", ")}</dd></div>}
           </dl>
           <div className="button-row">
-            {contact.mapsQuery && <a className="button button-dark" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions <span aria-hidden="true">↗</span></a>}
-            <Link className="text-link" href="/visit">Plan your visit <span aria-hidden="true">↗</span></Link>
+            {contact.mapsQuery && <a className="button button-dark" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions</a>}
+            <Link className="text-link" href="/visit">Plan your visit</Link>
           </div>
         </div>
       </div>

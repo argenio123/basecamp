@@ -60,7 +60,7 @@ export default async function FacilitiesRecoveryPage() {
             </>
           )}
           {c.recovery.disclaimer && <p id={DISCLAIMER_ID} className="fc-disclaimer" data-reveal>{c.recovery.disclaimer}</p>}
-          <div data-reveal><Link href={RECOVERY.pricingLink.href} className="text-link light">{RECOVERY.pricingLink.label} <span>↗</span></Link></div>
+          <div data-reveal><Link href={RECOVERY.pricingLink.href} className="text-link light">{RECOVERY.pricingLink.label}</Link></div>
         </div>
       </section>
 

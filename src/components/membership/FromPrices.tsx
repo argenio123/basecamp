@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { PriceGroup } from "@/content/types";
 import { audienceLabel, blockAvailability, blockItems, fromPrice, groupHref, toBlocks } from "./pricing";
+import Money from "./Money";
 
 type FromPricesProps = {
   /** Every group except the tiers; each row links to the page that now holds its full prices. */
@@ -43,7 +44,7 @@ export default function FromPrices({ groups, id, eyebrow, title, intro, children
                     {availability && availability !== "at-launch" && <StatusBadge availability={availability} />}
                   </span>
                 </span>
-                <span className="mb-from-price"><strong>{price.label}</strong>{price.unit && <span>{price.unit}</span>}</span>
+                <span className="mb-from-price"><strong><Money value={price.label} /></strong>{price.unit && <span>{price.unit}</span>}</span>
                 <span className="mb-from-arrow" aria-hidden="true">→</span>
               </Link>
             </li>

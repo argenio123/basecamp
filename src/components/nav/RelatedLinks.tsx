@@ -25,7 +25,7 @@ export default async function RelatedLinks({ current, hrefs, title = "Related", 
               <Link href={pg.href} className="nv-related-card">
                 <span className="nv-card-title">{pg.label}</span>
                 <span className="nv-card-summary">{pg.summary}</span>
-                <span className="nv-card-more">Read more <span aria-hidden="true">→</span></span>
+                <span className="nv-card-more">Read more</span>
               </Link>
             </li>
           ))}

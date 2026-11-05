@@ -85,7 +85,7 @@ export default async function ScheduleBookPage() {
                 <h3>{p.title}</h3>
                 <p>{p.description}</p>
                 {p.id === "booking" && bookingWidgetUrl
-                  ? <a className="text-link" href={bookingWidgetUrl} target="_blank" rel="noopener noreferrer">Book online <span>↗</span></a>
+                  ? <a className="text-link" href={bookingWidgetUrl} target="_blank" rel="noopener noreferrer">Book online</a>
                   : <StatusBadge availability="planned" label="Coming soon" />}
               </li>
             ))}

@@ -50,7 +50,7 @@ export default async function CorporatePage() {
           </div>
           <div className="pr-corporate-body" data-reveal data-reveal-delay="short">
             <p>{CORPORATE_BAND.body}</p>
-            <Link className="button button-light" href={CORPORATE_BAND.cta.href}>{CORPORATE_BAND.cta.label} <span aria-hidden="true">↗</span></Link>
+            <Link className="button button-light" href={CORPORATE_BAND.cta.href}>{CORPORATE_BAND.cta.label}</Link>
           </div>
         </div>
       </section>
@@ -91,7 +91,7 @@ export default async function CorporatePage() {
                 <p>{pricingItem.description}</p>
                 <div className="pr-tile-foot">
                   <StatusBadge availability={pricingItem.availability} />
-                  <Link className="pr-inline-link" href={currentHref("/membership#corporate")}>{formatPhp(pricingItem.price)} <span aria-hidden="true">→</span></Link>
+                  <Link className="pr-inline-link" href={currentHref("/membership#corporate")}>{formatPhp(pricingItem.price)}</Link>
                 </div>
               </li>
             )}
@@ -115,7 +115,7 @@ export default async function CorporatePage() {
                       <StatusBadge availability={x.availability} />
                       <span className="nv-card-title">{x.title}</span>
                       <span className="nv-card-summary">{x.summary}</span>
-                      <span className="nv-card-more">Read more <span aria-hidden="true">→</span></span>
+                      <span className="nv-card-more">Read more</span>
                     </span>
                   </Link>
                 </li>
@@ -126,7 +126,7 @@ export default async function CorporatePage() {
       )}
 
       <section className="section pr-band" id="case-studies">
-        <div className="shell pr-case-placeholder" data-reveal><p className="eyebrow">Team stories</p><h2>Case studies will follow the first BaseCamp off-sites.</h2><p>We’ll publish the objective, program design and measurable team outcomes only when real groups have completed the experience.</p><Link className="pr-inline-link" href="/contact?enquiry=corporate">Plan a first experience →</Link></div>
+        <div className="shell pr-case-placeholder" data-reveal><p className="eyebrow">Team stories</p><h2>Case studies will follow the first BaseCamp off-sites.</h2><p>We’ll publish the objective, program design and measurable team outcomes only when real groups have completed the experience.</p><Link className="pr-inline-link" href="/contact?enquiry=corporate">Plan a first experience</Link></div>
       </section>
     </DetailTemplate>
   );

@@ -21,7 +21,7 @@ export default function CoachingRouteGuide() {
       <div className="pr-route-result" role="tabpanel">
         <p className="pr-meta">Best fit</p><h3 id="pr-route-title">{route.label}</h3><p>{route.fit}</p>
         <ol>{route.plan.map((step, index) => <li key={step}><span>0{index + 1}</span>{step}</li>)}</ol>
-        <Link href={`/contact?enquiry=coaching&route=${route.id}`}>Discuss this route →</Link>
+        <Link href={`/contact?enquiry=coaching&route=${route.id}`}>Discuss this route</Link>
       </div>
     </section>
   );

@@ -80,7 +80,7 @@ function EarlyAccessFormInner({ source, submitLabel = "Join the early access lis
       <FieldError id={`${id}-consent`} state={state} name="consent" />
       <PrivacyNote />
       <button className="button button-dark" type="submit" disabled={pending}>
-        {pending ? "Sending…" : <>{submitLabel} <span aria-hidden="true">↗</span></>}
+        {pending ? "Sending…" : <>{submitLabel}</>}
       </button>
     </form>
   );

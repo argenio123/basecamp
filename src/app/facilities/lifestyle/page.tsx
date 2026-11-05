@@ -41,7 +41,7 @@ export default function FacilitiesLifestylePage() {
         <div className="shell">
           <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone 05</p><h2>{SOCIAL.title}</h2></div></div>
           <ItemList items={SOCIAL.items} cols={3} />
-          <div className="section-link" data-reveal><Link href="/visit/camps#long-stays" className="text-link">Explore camps &amp; long stays <span aria-hidden="true">→</span></Link></div>
+          <div className="section-link" data-reveal><Link href="/visit/camps#long-stays" className="text-link">Explore camps &amp; long stays</Link></div>
         </div>
       </section>
 

@@ -188,3 +188,93 @@
 
 /* "Need help choosing?" spans the viewport; height follows its 1896x853 photo so the render is not cropped on desktop. */
 .cta-band.ft-cta.mb-cta-expanded { min-height: max(540px, calc(100vw * 853 / 1896)); margin: 0; border-radius: 0; }
+
+
+/* ---------- Membership: athletic layout + label system (brand book 2026) ----------
+   Labels: Geist Mono caps chips. Default = Ink outline; .mb-label-signal = Signal on Ink; .mb-label-ghost = quiet.
+   Prices and names in the display face (Gretaros caps), tier cards as class-board panels; Signal only on Ink. */
+.mb-label { display: inline-flex; align-items: center; width: max-content; max-width: 100%; padding: 5px 11px; border: 1px solid currentColor; border-radius: 999px; color: var(--ink); background: transparent; font: 400 10.5px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.mb-label-signal { border-color: var(--signal); background: var(--signal); color: var(--ink); }
+.mb-label-ghost { border-color: transparent; padding-inline: 0; color: var(--olive); }
+
+/* Tier cards. */
+.mb-tiers { gap: 16px; align-items: stretch; }
+.mb-tier { position: relative; gap: 16px; padding: clamp(28px, 3vw, 40px); border: 1px solid var(--line); border-radius: 22px; background: var(--white); transition: transform .35s cubic-bezier(.22, 1, .36, 1), box-shadow .35s ease; }
+.mb-tier:hover { transform: translateY(-4px); box-shadow: 0 24px 48px rgba(21,23,19,.12); }
+.mb-tier-tags { gap: 10px; align-items: center; }
+.mb-tier-name { margin: 6px 0 0; color: var(--ink); font: 400 clamp(34px, 3vw, 48px)/.9 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; }
+.mb-tier-price { gap: 8px; padding-bottom: 18px; border-bottom: 2px solid var(--ink); }
+.mb-tier-price strong { font: 400 clamp(52px, 5vw, 76px)/.85 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.03em; }
+.mb-tier-price span { color: var(--olive); font: 400 13px var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.mb-tier-usd { margin-top: -6px; letter-spacing: .1em; }
+.mb-tier-desc { color: var(--ink); font-size: 16px; }
+.mb-tier .mb-checks { gap: 12px; padding-top: 0; border-top: 0; }
+.mb-tier .mb-checks li { padding-left: 30px; color: var(--ink); font-size: 15px; }
+.mb-tier .mb-checks li::before { content: "+"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--signal); font: 700 13px/1 var(--font-poppins), sans-serif; }
+.mb-button-signal { border-color: var(--signal); background: var(--signal); color: var(--ink); }
+.mb-button-signal:hover, .mb-button-signal:focus-visible { border-color: var(--white); background: var(--white); color: var(--ink); }
+/* Featured tier (Athlete): a dark class board, lifted. */
+.mb-tier[data-featured] { border: 0; background: var(--ink); color: var(--white); box-shadow: 0 30px 60px rgba(21,23,19,.22); }
+@media (min-width: 1041px) { .mb-tier[data-featured] { transform: translateY(-14px); } .mb-tier[data-featured]:hover { transform: translateY(-18px); } }
+.mb-tier[data-featured] .mb-tier-name, .mb-tier[data-featured] .mb-tier-desc, .mb-tier[data-featured] .mb-checks li { color: var(--white); }
+.mb-tier[data-featured] .mb-tier-price { border-color: var(--signal); }
+.mb-tier[data-featured] .mb-tier-price strong { color: var(--signal); }
+.mb-tier[data-featured] :is(.mb-tier-price span, .mb-tier-usd) { color: rgba(255,255,255,.6); }
+.mb-tier[data-featured] .mb-checks li::before { background: var(--signal); color: var(--ink); }
+.mb-tier[data-featured] .mb-label-ghost { color: rgba(255,255,255,.6); }
+
+/* Price rows (passes, packs, yoga, recovery, camps). */
+.mb-group-head h3 { font: 400 clamp(32px, 3.4vw, 54px)/.9 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; }
+.mb-list { border-top: 2px solid var(--ink); border-bottom: 0; }
+.mb-row { padding-block: 22px; transition: background-color .25s ease; }
+.mb-row:hover { background: rgba(255,255,255,.55); }
+.mb-row-title { font: 400 clamp(20px, 1.8vw, 26px)/1.05 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.01em; text-transform: uppercase; }
+.mb-row-price strong { font: 400 clamp(24px, 2.2vw, 32px)/1 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; }
+.mb-row-price span, .mb-row-meta { font-family: var(--font-geist-mono), monospace; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; }
+.mb-row[data-featured] { background: var(--ink); color: var(--white); box-shadow: none; border-radius: 16px; }
+.mb-row[data-featured] .mb-row-price strong { color: var(--signal); }
+.mb-row[data-featured] :is(.mb-row-desc, .mb-row-usd, .mb-row-meta, .mb-row-price span, .mb-checks li) { color: rgba(255,255,255,.72); }
+.mb-row[data-featured] .mb-label { border-color: var(--signal); background: var(--signal); }
+
+/* Launch promotions: Ink band with three test cards. */
+.mb-promos { background: var(--ink); color: var(--white); }
+.mb-promos-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: 12px clamp(32px, 6vw, 96px); align-items: end; margin-bottom: clamp(36px, 4vw, 56px); }
+.mb-promos-head .eyebrow { grid-column: 1 / -1; margin: 0; }
+.mb-promos-head h2 { margin: 0; color: var(--white); }
+.mb-promos-head p:not(.eyebrow) { margin: 0; color: rgba(255,255,255,.72); font-size: 17px; line-height: 1.6; }
+.mb-promos-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+.mb-promo { display: grid; align-content: start; gap: 16px; padding: clamp(24px, 2.6vw, 34px); border: 1px solid rgba(255,255,255,.16); border-radius: 20px; transition: border-color .25s ease, background-color .25s ease; }
+.mb-promo:hover { border-color: var(--signal); background: rgba(198,244,50,.05); }
+.mb-promo h3 { margin: 0; color: var(--white); font: 400 clamp(26px, 2.4vw, 36px)/.95 var(--font-display), var(--font-poppins), sans-serif; text-transform: uppercase; }
+.mb-promo-compare { display: grid; grid-template-columns: 1fr 1fr; margin: 0; border-top: 1px solid rgba(255,255,255,.16); }
+.mb-promo-compare > div { display: grid; gap: 6px; padding-top: 14px; }
+.mb-promo-compare > div + div { padding-left: 16px; border-left: 1px solid rgba(255,255,255,.16); }
+.mb-promo-compare dt { color: rgba(255,255,255,.55); font: 400 11px var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+.mb-promo-compare dd { margin: 0; color: var(--white); font: 400 clamp(30px, 2.8vw, 42px)/1 var(--font-display), var(--font-poppins), sans-serif; }
+.mb-promo-compare > div + div dd { color: var(--signal); }
+.mb-promo-note { margin: 0; color: rgba(255,255,255,.68); font-size: 15px; line-height: 1.55; }
+
+/* "Everything else" rows, founding example, notes. */
+.mb-from-title { font: 400 clamp(22px, 2vw, 30px)/1 var(--font-display), var(--font-poppins), sans-serif; text-transform: uppercase; }
+.mb-from-price strong { font: 400 clamp(24px, 2.2vw, 32px)/1 var(--font-display), var(--font-poppins), sans-serif; }
+.mb-from-audience { font: 400 10.5px var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.mb-founding-example { border-left-color: var(--signal); font-family: var(--font-geist-mono), monospace; letter-spacing: .06em; }
+.mb-notes { border-top: 2px solid var(--ink); }
+.mb-notes li { font-size: 13px; }
+
+@media (max-width: 900px) {
+  .mb-promos-head, .mb-promos-grid { grid-template-columns: 1fr; }
+}
+
+/* Specificity bump: reference-refresh.css (loaded later) paints the featured tier Signal; keep it a dark class board. */
+html .mb-tiers .mb-tier[data-featured] { border: 0; background: var(--ink); color: var(--white); box-shadow: 0 30px 60px rgba(21,23,19,.22); }
+html .mb-tiers .mb-tier[data-featured] :is(.mb-tier-name, .mb-tier-desc, .mb-checks li) { color: var(--white); }
+html .mb-tiers .mb-tier[data-featured] .mb-tier-price strong { color: var(--signal); }
+html .mb-tiers .mb-tier[data-featured] :is(.mb-tier-price span, .mb-tier-usd, .mb-meta, .mb-label-ghost) { color: rgba(255,255,255,.6); }
+html .mb-tiers .mb-tier[data-featured] .mb-label-signal { color: var(--ink); }
+/* Name and price never touch: room between them, natural line heights for the ₱ glyph. */
+html .mb-tiers .mb-tier-name { margin: 4px 0 6px; line-height: .95; }
+html .mb-tiers .mb-tier-price { margin-top: 4px; }
+html .mb-tiers .mb-tier-price strong { line-height: 1; }
+html .mb-list .mb-row[data-featured] { background: var(--ink); color: var(--white); box-shadow: none; }
+html .mb-list .mb-row[data-featured] .mb-row-title { color: var(--white); }

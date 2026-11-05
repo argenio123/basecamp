@@ -52,7 +52,7 @@ export default async function Footer() {
               {contact.email && <div className="footer-contact-row"><dt>Email</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>}
               {contact.hours && <div className="footer-contact-row"><dt>Hours</dt><dd className="ui-footer-hours">{contact.hours}</dd></div>}
             </dl>
-            <a className="ui-footer-directions" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions <span className="sr-only">(opens in a new tab)</span><span aria-hidden="true">↗</span></a>
+            <a className="ui-footer-directions" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions <span className="sr-only">(opens in a new tab)</span></a>
           </address>
         </div>
         <nav className="footer-nav footer-nav-desktop footer-nav-inline nv-footer-sitemap" aria-label="Footer navigation">

@@ -84,7 +84,7 @@ export function EarlyAccess({ c, titleClassName }: Props) {
               </li>
             ))}
           </ul>
-          {reviews && <div className="section-link" data-home-reveal><a href={reviews} className="text-link light" target="_blank" rel="noreferrer">Read our Google reviews <span>↗</span></a></div>}
+          {reviews && <div className="section-link" data-home-reveal><a href={reviews} className="text-link light" target="_blank" rel="noreferrer">Read our Google reviews</a></div>}
         </div>
       )}
     </section>

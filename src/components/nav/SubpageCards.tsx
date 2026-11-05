@@ -20,10 +20,12 @@ export type SubpageCardsProps = {
   summaries?: Readonly<Record<string, string>>;
   id?: string;
   dark?: boolean;
+  /** "feature": two large photo cards per row with the text over the image (Membership). */
+  variant?: "default" | "feature";
 };
 
 /** Sub-page cards (stage-3 §6/§7): image + title + one line + "Read more →", data from the site map. */
-export default async function SubpageCards({ section, hrefs, exclude, eyebrow, title, intro, images = true, summaries, id, dark = false }: SubpageCardsProps) {
+export default async function SubpageCards({ section, hrefs, exclude, eyebrow, title, intro, images = true, summaries, id, dark = false, variant = "default" }: SubpageCardsProps) {
   const programmes = await getProgrammeRefs();
   let pages: SitePage[] = hrefs?.length
     ? hrefs.flatMap((href) => {
@@ -33,6 +35,39 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
     : findPage(section, programmes)?.section.pages ?? [];
   if (exclude?.length) pages = pages.filter((pg) => !exclude.includes(pg.href));
   if (pages.length === 0) return null;
+
+  if (variant === "feature") {
+    return (
+      <section id={id} className="section nv-cards-section nv-feature-section">
+        <div className="shell">
+          <div className="nv-feature-head" data-reveal>
+            <div>
+              {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+              {title && <h2>{title}</h2>}
+            </div>
+            <div className="nv-feature-meta">
+              {intro && <p>{intro}</p>}
+            </div>
+          </div>
+          <ul className="nv-feature-grid" data-reveal="stagger">
+            {pages.map((pg) => (
+              <li key={pg.href}>
+                <Link href={pg.href} className="nv-fcard">
+                  {pg.image && <Image src={pg.image} alt="" fill sizes="(max-width: 680px) 100vw, 50vw" className="cover-image nv-fcard-image" />}
+                  <span className="nv-fcard-shade" aria-hidden="true" />
+                  <span className="nv-fcard-body">
+                    <span className="nv-fcard-title">{pg.label}</span>
+                    <span className="nv-fcard-summary">{summaries?.[pg.href] ?? pg.summary}</span>
+                    <span className="nv-fcard-cta">Explore</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id={id} className={`section nv-cards-section${dark ? " section-dark" : ""}`}>
@@ -56,7 +91,7 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
                 <span className="nv-card-body">
                   <span className="nv-card-title">{pg.label}</span>
                   <span className="nv-card-summary">{summaries?.[pg.href] ?? pg.summary}</span>
-                  <span className="nv-card-more">Read more <span aria-hidden="true">→</span></span>
+                  <span className="nv-card-more">Read more</span>
                 </span>
               </Link>
             </li>

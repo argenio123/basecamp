@@ -11,6 +11,10 @@ import SubpageCards, { type SubpageCardsProps } from "./SubpageCards";
 /** Sections whose pages (overview and sub-pages) show no scrolling marquee banner. */
 const NO_MARQUEE = new Set(["membership", "schedule", "visit", "about"]);
 const showsMarquee = (path: string) => !NO_MARQUEE.has(sectionKeyFor(path));
+/** Sections whose sub-pages show no breadcrumb bar under the hero. */
+const NO_BREADCRUMBS = new Set(["membership"]);
+/** Sections whose sub-pages show no "Related" cards. */
+const NO_RELATED = new Set(["membership"]);
 
 type GlanceProps = ComponentProps<typeof AtAGlance>;
 
@@ -34,13 +38,15 @@ type OverviewTemplateProps = {
   cta?: ReactNode;
   /** Highlights: the overview's own sections. */
   children?: ReactNode;
+  /** Render the page content before the "Explore" sub-page cards instead of after them. */
+  cardsAfter?: boolean;
 };
 
 /**
  * Overview page order: hero → at a glance → sub-page cards → highlights → CTA (no previous/next on overviews).
  * Legacy #anchors are forwarded by the site-wide <HashForwarder /> in the root layout.
  */
-export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, marquee = true, cta, children }: OverviewTemplateProps) {
+export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, marquee = true, cta, children, cardsAfter = false }: OverviewTemplateProps) {
   // Reference features on every overview: ghost word behind "At a glance", scrolling marquee, closing quote.
   const feature = SECTION_FEATURES[sectionKeyFor(path)];
   return (
@@ -48,8 +54,9 @@ export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true,
       {hero}
       <AtAGlance ghost={feature.ghost} {...glance} />
       {marquee && showsMarquee(path) && <Marquee text={feature.marquee} />}
+      {cardsAfter && children}
       {cards !== false && <SubpageCards section={path} title="Explore" {...cards} />}
-      {children}
+      {!cardsAfter && children}
       {quote && <QuoteBand quote={feature.quote} />}
       {cta}
     </>
@@ -79,11 +86,11 @@ export function DetailTemplate({ path, hero, glance, crumbLabel, related, relate
   return (
     <>
       {hero}
-      <Breadcrumbs current={path} label={crumbLabel} />
+      {!NO_BREADCRUMBS.has(sectionKeyFor(path)) && <Breadcrumbs current={path} label={crumbLabel} />}
       <AtAGlance ghost={SECTION_FEATURES[sectionKeyFor(path)].ghost} {...glance} />
       {children}
       {showsMarquee(path) && <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />}
-      <RelatedLinks current={path} hrefs={related} title={relatedTitle} />
+      {!NO_RELATED.has(sectionKeyFor(path)) && <RelatedLinks current={path} hrefs={related} title={relatedTitle} />}
       {afterRelated}
       {cta}
       <PrevNext current={path} />

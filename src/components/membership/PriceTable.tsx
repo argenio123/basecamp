@@ -3,6 +3,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
 import { isMedicalBlock, type PriceBlockData } from "./pricing";
+import Money from "./Money";
 
 // Shared price renderers (no hooks, no directive): used by the client AudienceTabs and by the server pages.
 // Prices are shown verbatim from content (spec §B.7); the USD string uses the item's own figure when set (§B.6).
@@ -16,16 +17,17 @@ export function TierCards({ items, exchangeRate }: { items: PriceItem[]; exchang
         return (
           <li key={item.id} className="mb-tier" data-featured={item.featured ? "" : undefined}>
             <div className="mb-tier-tags">
-              {item.badge && <span className="mb-pill mb-pill-strong">{item.badge}</span>}
+              {item.badge && <span className={`mb-label${item.featured ? " mb-label-signal" : ""}`}>{item.badge}</span>}
+              <span className="mb-label mb-label-ghost">Proposed rate</span>
               {item.availability !== "at-launch" && <StatusBadge availability={item.availability} />}
             </div>
             <h3 className="mb-tier-name">{item.name}</h3>
-            <p className="mb-tier-price"><strong>{formatPhp(item.price)}</strong>{item.unit && <span>{item.unit}</span>}</p>
+            <p className="mb-tier-price"><strong><Money value={formatPhp(item.price)} /></strong>{item.unit && <span>{item.unit}</span>}</p>
             {usd && <p className="mb-tier-usd">{usd}</p>}
             {(item.perUnit || item.validity) && <p className="mb-meta">{[item.perUnit, item.validity].filter(Boolean).join(" · ")}</p>}
             {item.description && <p className="mb-tier-desc">{item.description}</p>}
             {item.features.length > 0 && <ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul>}
-            <Link href="/contact?interest=membership-local" className={`button ${item.featured ? "button-dark" : "mb-button-outline"} mb-tier-cta`}>Register interest <span>↗</span></Link>
+            <Link href="/contact?interest=membership-local" className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>Join {item.name}</Link>
           </li>
         );
       })}
@@ -45,12 +47,12 @@ export function PriceList({ items, exchangeRate }: { items: PriceItem[]; exchang
               <span className="mb-row-title">{item.name}</span>
               {(item.badge || item.availability !== "at-launch") && (
                 <span className="mb-row-tags">
-                  {item.badge && <span className="mb-pill">{item.badge}</span>}
+                  {item.badge && <span className="mb-label">{item.badge}</span>}
                   {item.availability !== "at-launch" && <StatusBadge availability={item.availability} />}
                 </span>
               )}
             </dt>
-            <dd className="mb-row-price"><strong>{formatPhp(item.price)}</strong>{item.unit && <span>{item.unit}</span>}</dd>
+            <dd className="mb-row-price"><strong><Money value={formatPhp(item.price)} /></strong>{item.unit && <span>{item.unit}</span>}</dd>
             {usd && <dd className="mb-row-usd">{usd}</dd>}
             {(item.perUnit || item.validity) && (
               <dd className="mb-row-meta">

@@ -84,7 +84,7 @@ export default async function CoachingPage() {
               <StatusBadge availability={TESTING_LAB.availability} />
               <h3>{TESTING_LAB.title}</h3>
               <p>{TESTING_LAB.description}</p>
-              <Link className="text-link" href={TESTING_LAB.cta.href}>{TESTING_LAB.cta.label} <span aria-hidden="true">↗</span></Link>
+              <Link className="text-link" href={TESTING_LAB.cta.href}>{TESTING_LAB.cta.label}</Link>
             </article>
             <div className="pr-personalisation">
               <div className="pr-personalisation-head"><p className="eyebrow">Data-driven personalization</p><StatusBadge availability="planned" /></div>
@@ -133,7 +133,7 @@ export default async function CoachingPage() {
       )}
       {!hasCoaches && (
         <section className="section shell" id="coaches">
-          <div className="pr-coach-placeholder" data-reveal><p className="eyebrow">Coach announcement</p><h2>The coaching roster is taking shape.</h2><p>Profiles will include specialties, certifications and the classes each coach leads before bookings open.</p><Link className="button button-dark" href="/contact?enquiry=coaching">Ask about coaching <span aria-hidden="true">↗</span></Link></div>
+          <div className="pr-coach-placeholder" data-reveal><p className="eyebrow">Coach announcement</p><h2>The coaching roster is taking shape.</h2><p>Profiles will include specialties, certifications and the classes each coach leads before bookings open.</p><Link className="button button-dark" href="/contact?enquiry=coaching">Ask about coaching</Link></div>
         </section>
       )}
     </DetailTemplate>

@@ -4,13 +4,13 @@ import type { Availability, Price, PriceGroup, PriceItem } from "./types";
 
 const num = (n: number) => n.toLocaleString("en-US");
 
-/** null → "On request"; with max → "₱450–₱600"; else "₱2,500". */
+/** null → "On request"; with max → "Php 450–600"; else "Php 2,500". */
 export function formatPhp(p: Price | null): string {
   if (!p) return "On request";
-  return p.max != null ? `₱${num(p.min)}–₱${num(p.max)}` : `₱${num(p.min)}`;
+  return p.max != null ? `Php ${num(p.min)}–${num(p.max)}` : `Php ${num(p.min)}`;
 }
 
-/** Uses the item's own USD string when set, else ≈ US$ at the given ₱ rate. */
+/** Uses the item's own USD string when set, else ≈ US$ at the given Php rate. */
 export function formatUsd(item: Pick<PriceItem, "price" | "usd">, rate: number): string {
   if (item.usd) return item.usd;
   if (!item.price || !(rate > 0)) return "";

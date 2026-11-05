@@ -46,14 +46,14 @@ export default async function CampsPage() {
       <section id="camps" className="section shell">
         <div className="split-heading light-split" data-reveal>
           <div><p className="eyebrow">{CAMPS.eyebrow}</p><h2>{CAMPS.title}</h2></div>
-          <div><p>{CAMPS.intro}</p><p>{CAMPS.assessment.text}. <Link href={CAMPS.assessment.href} className="vt-inline-link">{CAMPS.assessment.label} →</Link></p></div>
+          <div><p>{CAMPS.intro}</p><p>{CAMPS.assessment.text}. <Link href={CAMPS.assessment.href} className="vt-inline-link">{CAMPS.assessment.label}</Link></p></div>
         </div>
         <div className="vt-row-head" data-reveal><h3 className="vt-subhead">{CAMPS.typesTitle}</h3></div>
         <VisitItems items={CAMPS.types} cols={5} note={CAMPS.enquiryLabel} label={CAMPS.typesTitle} />
         <div className="vt-who" data-reveal>
           <h3 className="vt-subhead">{CAMPS.whoTitle}</h3>
           <ul className="vt-chips" aria-label={CAMPS.whoTitle}>{CAMPS.who.map((w) => <li key={w}>{w}</li>)}</ul>
-          <Link href={CAMPS.cta.href} className="button button-dark">{CAMPS.cta.label} <span>↗</span></Link>
+          <Link href={CAMPS.cta.href} className="button button-dark">{CAMPS.cta.label}</Link>
         </div>
       </section>
 
@@ -66,7 +66,7 @@ export default async function CampsPage() {
               {campGroup?.intro && <p className="nv-block-intro">{campGroup.intro}</p>}
             </div>
             <CampCards items={campItems} exchangeRate={c.settings.exchangeRate} enquiryLabel={CAMPS.enquiryLabel} requestLabel={CAMPS.requestLabel} />
-            <p className="vt-pricing-link" data-reveal><Link href={CAMPS.pricingEnquiry.href} className="text-link">{CAMPS.pricingEnquiry.label} <span>↗</span></Link></p>
+            <p className="vt-pricing-link" data-reveal><Link href={CAMPS.pricingEnquiry.href} className="text-link">{CAMPS.pricingEnquiry.label}</Link></p>
           </div>
         </section>
       )}
@@ -79,7 +79,7 @@ export default async function CampsPage() {
             <h2>{LONG_STAYS.title}</h2>
             <StatusBadge availability={LONG_STAYS.availability} />
             <p className="vt-long-body">{LONG_STAYS.body}</p>
-            <Link href={LONG_STAYS.cta.href} className="button button-dark">{LONG_STAYS.cta.label} <span>↗</span></Link>
+            <Link href={LONG_STAYS.cta.href} className="button button-dark">{LONG_STAYS.cta.label}</Link>
           </div>
         </div>
       </section>

@@ -63,7 +63,7 @@ export default async function FacilitiesPage() {
           <p className="eyebrow">{DESIGN.eyebrow}</p>
           <h2>{DESIGN.title}</h2>
           <p className="fc-design-summary">See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>
-          <Link className="button button-dark" href="/about/design">Explore the design approach <span aria-hidden="true">↗</span></Link>
+          <Link className="button button-dark" href="/about/design">Explore the design approach</Link>
         </div>
         <div className="fc-design-side" data-reveal data-reveal-delay="short">
           <blockquote className="fc-pull">{DESIGN.quote}</blockquote>

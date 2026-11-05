@@ -83,8 +83,8 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
             <div data-reveal data-reveal-delay="short">
               <p>Tell us your level and when you want to train. The coaching team confirms times and places before opening, and early members get first access to every station class.</p>
               <div className="pr-dev-ask-actions">
-                <Link className="button pr-dev-button" href={requestHref}>Request this class <span aria-hidden="true">→</span></Link>
-                <Link className="pr-dev-link pr-dev-link-light" href={`/contact?interest=${encodeURIComponent(style.slug)}`}>General enquiry <span aria-hidden="true">→</span></Link>
+                <Link className="button pr-dev-button" href={requestHref}>Request this class</Link>
+                <Link className="pr-dev-link pr-dev-link-light" href={`/contact?interest=${encodeURIComponent(style.slug)}`}>General enquiry</Link>
               </div>
             </div>
           </div>

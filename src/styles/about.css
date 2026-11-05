@@ -581,7 +581,7 @@
 .ab2-partner-invite h2 { margin: 0; font-size: clamp(46px, 6vw, 96px); line-height: .9; letter-spacing: -.06em; }
 .ab2-partner-invite-copy > p:not(.eyebrow) { max-width: 52ch; margin: 22px 0 36px; color: rgba(255,255,255,.8); font-size: clamp(16px, 1.3vw, 19px); line-height: 1.6; }
 .ab2-partner-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.ab2-partner-actions .button { min-width: 220px; justify-content: space-between; border-radius: 999px; }
+.ab2-partner-actions .button { min-width: 220px; justify-content: center; border-radius: 999px; }
 .ab2-partner-actions .ab2-partner-primary { color: var(--ink); background: var(--signal); }
 .ab2-partner-actions .ab2-partner-primary:hover, .ab2-partner-actions .ab2-partner-primary:focus-visible { background: var(--white); }
 .ab2-partner-actions .ab2-partner-secondary { border-color: rgba(255,255,255,.45); color: var(--white); background: transparent; }

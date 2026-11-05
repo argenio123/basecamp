@@ -20,7 +20,7 @@ export default async function MembershipFaqPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero eyebrow="Membership · FAQ" title="Before you join." intro="How packs, passes and memberships work, and what the member platform will add." image="/images/facilities/facility-detail.jpg" imageAlt="Architectural detail at BaseCamp CamSur" />}
+      hero={<PageHero title="Before you join." intro="How packs, passes and memberships work, and what the member platform will add." image="/images/facilities/facility-detail.jpg" imageAlt="Architectural detail at BaseCamp CamSur" />}
       glance={{
         summary: "Quick answers on memberships, passes and the early offer, and what the member platform will add.",
         facts: [
@@ -30,7 +30,7 @@ export default async function MembershipFaqPage() {
           { label: "Phone", value: contact.phoneDisplay },
         ],
       }}
-      related={["/membership#founding", "/membership/passes", "/contact"]}
+      related={["/membership#tiers", "/membership/passes", "/contact"]}
       cta={<>
         <CtaBand eyebrow="Still unsure?" title="Ask us anything." body="Send a question and the BaseCamp CamSur team will reply." label="Contact us" href="/contact" />
       </>}
@@ -52,7 +52,7 @@ export default async function MembershipFaqPage() {
         <div className="shell mb-platform-inner" data-reveal>
           <p className="eyebrow">Member platform</p>
           <p className="mb-platform-text">{PLATFORM_NOTE}</p>
-          {settings.bookingWidgetUrl && <a href={settings.bookingWidgetUrl} target="_blank" rel="noopener noreferrer" className="text-link">Manage membership <span>↗</span></a>}
+          {settings.bookingWidgetUrl && <a href={settings.bookingWidgetUrl} target="_blank" rel="noopener noreferrer" className="text-link">Manage membership</a>}
         </div>
       </section>
     </DetailTemplate>
