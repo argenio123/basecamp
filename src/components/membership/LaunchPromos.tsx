@@ -13,12 +13,12 @@ const PROMOS = [
   {
     tag: "Visitor test", title: "Day pass", a: ["Standard", "Php 650"], b: ["Weekend", "Php 850"],
     note: "Standard day pass tested against a weekend rate.",
-    perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays and long weekends"],
+    perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays, and long weekends"],
   },
   {
     tag: "Camps", title: "Early booking", a: ["Book ahead", "60+ days"], b: ["Discount", "20%"],
     note: "Proposed for camps booked at least 60 days in advance.",
-    perks: ["20% off camp packages", "Day clinics, weekend camps and five-day immersives", "Lock in your dates early", "Inquiry first: the team confirms dates and pricing"],
+    perks: ["20% off camp packages", "Day clinics, weekend camps, and five-day immersives", "Lock in your dates early", "Inquiry first: the team confirms dates and pricing"],
   },
 ] as const;
 

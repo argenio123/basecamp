@@ -6,6 +6,8 @@ import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
+import { findPage } from "@/content/sitemap";
+import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 
 
 
@@ -18,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const tierLine = tiers.map((i) => `${i.name} ${formatPhp(i.price)}${i.unit}`).join(", ");
   return {
     title: "Membership & Pricing",
-    description: `BaseCamp CamSur membership and pricing${tierLine ? `: ${tierLine}` : ""}. Early-member rates, plus class packs, day passes, recovery and corporate pricing.`,
+    description: `BaseCamp CamSur membership and pricing${tierLine ? `: ${tierLine}` : ""}. Early-member rates, plus class packs, day passes, recovery, and corporate pricing.`,
   };
 }
 
@@ -33,9 +35,8 @@ export default async function MembershipPage() {
     <OverviewTemplate
       path="/membership"
       quote={false}
-      cardsAfter
-      cards={{ variant: "feature", eyebrow: "Membership categories", title: "More membership.", intro: "Founding rates, passes, recovery, yoga, camps and team pricing. Pick a category to see every price." }}
-      hero={<PageHero title="Choose access that fits how you train." intro={pricing.intro} image="/images/hero/hero-training.png" imageAlt="Athlete training at BaseCamp CamSur" />}
+      cards={false}
+      hero={<PageHero title="Choose access that fits how you train." intro={pricing.intro} image="/images/programs/generated/functional-training.png" imageAlt="Athlete driving a weighted sled in the BaseCamp CamSur open-air gym" />}
       glance={{
         summary: "Monthly memberships.\nFlexible passes.\nRecovery on demand.",
         statement: true,
@@ -55,6 +56,12 @@ export default async function MembershipPage() {
           </div>
         </section>
       )}
+      <ScheduleExplore
+        eyebrow="Membership categories"
+        title="More membership."
+        intro="Founding rates, promotions, passes, recovery, yoga, camps, and team pricing. Pick a category to see every price."
+        items={(findPage("/membership", [])?.section.pages ?? []).map((pg) => ({ href: pg.href, label: pg.label, summary: pg.summary, image: pg.image, imageAlt: pg.imageAlt }))}
+      />
     </OverviewTemplate>
   );
 }

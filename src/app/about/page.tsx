@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
+import ScheduleExplore from "@/components/schedule/ScheduleExplore";
+import PageHero from "@/components/sections/PageHero";
 import CtaBand from "@/components/sections/CtaBand";
 import AtAGlance from "@/components/ui/AtAGlance";
 import { getSiteContent } from "@/content/get";
-import { getSections } from "@/content/sitemap";
 import { PARTNERS } from "@/data/about";
 
-const ABOUT_CATEGORIES = getSections([]).find((section) => section.id === "about")?.menu.highlights ?? [];
 
-const ABOUT_CATEGORY_CARDS: Record<string, { image: string; tag: string }> = {
-  "/about#vision": { image: "/images/facilities/facility-exterior.jpg", tag: "Why we exist" },
-  "/about#pillars": { image: "/images/destination/train.png", tag: "What guides us" },
-  "/about/design": { image: "/images/facilities/facility-background-a1-5-b.jpg", tag: "Architecture" },
-  "/about/the-build": { image: "/images/facilities/facility-render-a1-3.jpg", tag: "Progress" },
-  "/about#different": { image: "/images/destination/transform.png", tag: "The difference" },
-  "/contact": { image: "/images/facilities/facility-front.jpg", tag: "Get in touch" },
-};
+/** "Inside BaseCamp" links (About sub-pages + contact), each with a gym photo. */
+const ABOUT_LINKS = [
+  { href: "/about/design", label: "Design & place", summary: "How the facility grows from the landscape, with nature as a training partner.", image: "/images/programs/classes-hero.jpg", imageAlt: "Athletes training in a brick-and-concrete gym" },
+  { href: "/about/the-build", label: "The build", summary: "Construction progress, build updates and the countdown to opening.", image: "/images/programs/stations/sled-push-man.jpg", imageAlt: "Athlete driving a loaded sled" },
+  { href: "/about/faq", label: "FAQ", summary: "Answers on membership, booking and the member platform.", image: "/images/programs/stations/row.jpg", imageAlt: "Athlete on a rowing machine" },
+  { href: "/contact", label: "Contact", summary: "Questions, partnerships and corporate inquiries, straight to the team.", image: "/images/programs/generated/personal-coaching.png", imageAlt: "Coach reviewing a session with an athlete" },
+];
 
 /** Philosophy in three statements: the Train → Transform → Thrive journey. */
 const PHILOSOPHY = [
@@ -37,8 +35,8 @@ const COMPARISON = [
 /** One real example per editable brand pillar (story.brandPillars ids). Pillars without one show no example. */
 const PILLAR_EXAMPLES: Record<string, string> = {
   adventure: "Trail intervals and lakeside race courses.",
-  recovery: "Heat, ice and therapy zones on site.",
-  community: "Group classes, camps and events.",
+  recovery: "Heat, ice, and therapy zones on site.",
+  community: "Group classes, camps, and events.",
   nature: "Open-air zones built around the landscape.",
   performance: "Baseline testing and tracked progress.",
 };
@@ -55,22 +53,14 @@ export default async function AboutPage() {
 
   return (
     <>
-      <ClassesEditorialHero
-        chapter="00"
-        eyebrow="About"
-        title="Shaped by place."
-        intro="Training, recovery and community. One destination in CamSur."
-        image="/images/facilities/facility-exterior.jpg"
-        imageAlt="BaseCamp CamSur facility surrounded by tropical landscape"
-        variant="overview"
-        minimalMeta
-      />
+      <PageHero title="More than a gym." intro="Training, recovery, and community. One destination in CamSur." image="/images/hero/hero-training.png" imageAlt="Coach pushing an athlete through a battle-rope set" />
 
       {/* id="founders" keeps the homepage "Read our story" link (/about#founders) landing on the story summary. */}
       <AtAGlance
         id="founders"
         ghost="About"
-        summary="BaseCamp CamSur is a purpose-built destination where performance training, recovery and community come together, surrounded by the lakes and forests of CamSur."
+        summary={"Train hard.\nRecover well.\nBelong here."}
+        statement
       />
 
       <section className="ab2-philosophy" id="vision" aria-labelledby="ab2-philosophy-title">
@@ -157,7 +147,7 @@ export default async function AboutPage() {
               <div className="ab2-partner-invite-copy" data-reveal>
                 <p className="eyebrow eyebrow-light">Partners</p>
                 <h2 id="ab2-partners-title">Build it with us.</h2>
-                <p>We&apos;re looking for partners in accommodation, transport, wellness and athlete ambassadorship who share our standards. Help shape how athletes train, recover and stay in CamSur, from opening day onward.</p>
+                <p>We&apos;re looking for partners in accommodation, transport, wellness, and athlete ambassadorship who share our standards. Help shape how athletes train, recover, and stay in CamSur, from opening day onward.</p>
                 <div className="ab2-partner-actions">
                   <Link className="button ab2-partner-primary" href="/contact?enquiry=partnership#enquire">Partner with us</Link>
                   {c.settings.contact.email && <a className="button ab2-partner-secondary" href={`mailto:${c.settings.contact.email}?subject=${encodeURIComponent("Partnership with BaseCamp CamSur")}`}>Email the team</a>}
@@ -167,33 +157,12 @@ export default async function AboutPage() {
         </section>
       )}
 
-      <section className="ab-about-categories" aria-labelledby="about-categories-title">
-        <div className="shell">
-          <p className="eyebrow eyebrow-light" id="about-categories-title">Keep exploring</p>
-          <nav aria-label="About categories">
-            <ul className="ab-about-category-list" data-reveal="stagger">
-              {ABOUT_CATEGORIES.map((category, i) => {
-                const card = ABOUT_CATEGORY_CARDS[category.href];
-                return (
-                  <li key={category.href}>
-                    <Link href={category.href}>
-                      <span className="ab-about-category-media" aria-hidden="true">
-                        {card && <Image src={card.image} alt="" fill sizes="(max-width: 760px) 100vw, (max-width: 1040px) 50vw, 34vw" className="ab-about-category-image" />}
-                        <span className="ab-about-category-shade" />
-                      </span>
-                      <span className="ab-about-category-number" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="ab-about-category-copy">
-                        {card && <span className="ab-about-category-tag">{card.tag}</span>}
-                        <strong>{category.label}</strong>
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-      </section>
+      <ScheduleExplore
+        eyebrow="Keep exploring"
+        title="Inside BaseCamp."
+        intro="The design, the build, the questions members ask, and how to reach the team."
+        items={ABOUT_LINKS}
+      />
 
       <CtaBand eyebrow="Early members" className="ab-cta-expanded" />
     </>

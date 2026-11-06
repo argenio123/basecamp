@@ -2,25 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import AboutChapterNav from "@/components/about/AboutChapterNav";
-import AboutEditorialHero from "@/components/about/AboutEditorialHero";
 import BuildCountdown from "@/components/about/BuildCountdown";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import SocialIcon from "@/components/ui/SocialIcon";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDateLabel } from "@/content/format";
+import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
-import type { LaunchPhase } from "@/content/types";
 import { ABOUT_CTA, ABOUT_GLANCE, BUILD, BUILD_HERO, VISION_AHEAD } from "@/data/about";
 
 export const metadata: Metadata = {
   title: "The Build",
-  description: "Follow the build of BaseCamp CamSur in Camarines Sur: construction updates, the countdown to opening, and the vision for a training destination, wellness authority and sports tourism icon.",
+  description: "Follow the build of BaseCamp CamSur in Camarines Sur: construction updates, the countdown to opening, and the vision for a training destination, wellness authority, and sports tourism icon.",
 };
 
 const pad = (i: number) => String(i + 1).padStart(2, "0");
-const PHASE_LABEL: Record<LaunchPhase, string> = { "pre-launch": "Under construction", "soft-opening": "Soft opening", live: "Open now" };
 
 // Detail template (stage-3 §7). Content (stage-3 §1): [build] + countdown + build updates (moved from the
 // homepage; home.build content keys) + [vision-ahead]. The countdown reads the clock on the client only
@@ -46,22 +44,14 @@ export default async function AboutBuildPage() {
     <DetailTemplate
       path="/about/the-build"
       hero={<>
-        <AboutEditorialHero chapter="03" eyebrow={BUILD_HERO.eyebrow} title={BUILD_HERO.title} intro={BUILD_HERO.intro} image={BUILD_HERO.image} imageAlt={BUILD_HERO.imageAlt} variant="build" />
+        <PageHero title={BUILD_HERO.title} intro={BUILD_HERO.intro} image={BUILD_HERO.image} imageAlt={BUILD_HERO.imageAlt} />
         <AboutChapterNav label="Build chapters" items={[
           { id: "build", label: "Journal" },
           { id: "progress", label: "Progress" },
           { id: "vision-ahead", label: "Vision ahead" },
         ]} />
       </>}
-      glance={{
-        summary: ABOUT_GLANCE.build,
-        facts: [
-          { label: "Status", value: PHASE_LABEL[c.settings.launchPhase] },
-          opening && { label: "Opening", value: opening },
-          updates.length > 0 && { label: "Build updates", value: String(updates.length) },
-          { label: "Looking ahead", value: `${VISION_AHEAD.aspirations.length} aspirations` },
-        ],
-      }}
+      glance={{ summary: ABOUT_GLANCE.build, statement: true }}
       related={["/about/design", "/facilities/gallery", "/schedule/events"]}
       cta={<CtaBand title={ABOUT_CTA.title} body={ABOUT_CTA.body} label={c.settings.founding.enabled ? c.settings.founding.ctaLabel || undefined : undefined} href="/contact" />}
     >
@@ -92,7 +82,7 @@ export default async function AboutBuildPage() {
       <section id="progress" className="section ab-progress"><div className="shell">
         <div className="ab-split" data-reveal>
           <div><p className="eyebrow">Opening readiness</p><h2>What is confirmed. What comes next.</h2></div>
-          <p className="lead">Progress is shown through verifiable milestones rather than an invented percentage. This view updates as dates, people and sessions are published.</p>
+          <p className="lead">Progress is shown through verifiable milestones rather than an invented percentage. This view updates as dates, people, and sessions are published.</p>
         </div>
         <ol className="ab-milestones" aria-label="Build phases" data-reveal="stagger">
           <li data-state="complete"><span>01</span><div><p>Vision &amp; planning</p><strong>Complete</strong></div></li>

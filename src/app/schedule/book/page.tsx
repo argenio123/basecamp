@@ -14,7 +14,7 @@ import { BOOKING_NOTE, PLATFORM_CARDS, PLATFORM_COMING_SOON } from "@/data/progr
 
 export const metadata: Metadata = {
   title: "Book a session",
-  description: "Request a class, recovery or 1:1 appointment, camp place or corporate group session at BaseCamp CamSur. Our team confirms every request by email or phone.",
+  description: "Request a class, recovery, or 1:1 appointment, camp place, or corporate group session at BaseCamp CamSur. Our team confirms every request by email or phone.",
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -46,14 +46,14 @@ export default async function ScheduleBookPage() {
       path="/schedule/book"
       hero={<PageHero eyebrow="Book" title="Request a session." intro="Classes, recovery and 1:1 appointments, camps and corporate groups: tell us what you need and we'll confirm availability." image="/images/programs/generated/functional-training.png" imageAlt="Functional training session" />}
       glance={{
-        summary: "Request a class, recovery appointment, camp place or group session. Our team confirms every request by email or phone.",
+        summary: "Request a class, recovery appointment, camp place, or group session. Our team confirms every request by email or phone.",
         facts: [
           { label: "Request", value: "Classes · appointments · camps · groups" },
           { label: "Party size", value: "1–60" },
           { label: "Confirmation", value: "By email or phone" },
         ],
       }}
-      related={["/membership/passes", "/membership/recovery-pricing", "/visit/camps"]}
+      related={["/membership/price-guide", "/visit/camps"]}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >
       <section className="section" id="book">
@@ -62,7 +62,7 @@ export default async function ScheduleBookPage() {
             <div className="sd-book-intro-inner" data-reveal>
               <p className="eyebrow">Book</p>
               <h2>Your booking request.</h2>
-              <p className="lead">Choose a service, pick a program, session or package, and tell us when suits you.</p>
+              <p className="lead">Choose a service, pick a program, session, or package, and tell us when suits you.</p>
               <p className="sd-meta">{BOOKING_NOTE}</p>
               {c.recovery.disclaimer && <p className="sd-meta sd-disclaimer">{c.recovery.disclaimer}</p>}
             </div>
@@ -77,7 +77,7 @@ export default async function ScheduleBookPage() {
 
       <section className="section sd-band" id="platform">
         <div className="shell">
-          <div className="section-heading split-heading light-split" data-reveal><div><p className="eyebrow">Digital platform</p><h2>Booking made easy.</h2></div><p>The digital experience will match the physical one: easy booking, clear communication and frictionless membership.</p></div>
+          <div className="section-heading split-heading light-split" data-reveal><div><p className="eyebrow">Digital platform</p><h2>Booking made easy.</h2></div><p>The digital experience will match the physical one: easy booking, clear communication, and frictionless membership.</p></div>
           <ul className="sd-grid sd-grid-4" data-reveal="stagger">
             {PLATFORM_CARDS.map((p, i) => (
               <li className="sd-card" key={p.id}>

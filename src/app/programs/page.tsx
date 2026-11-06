@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
-import ClassFilterGrid, { type ClassGroup } from "@/components/programs/ClassFilterGrid";
+import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
@@ -9,20 +9,17 @@ import { WORKOUT_GROUPS, type WorkoutType, workoutTypeBySlug } from "@/data/work
 
 export const metadata: Metadata = {
   title: "Classes",
-  description: "Eight coach-led HYROX-style station classes at BaseCamp CamSur: SkiErg, sled push, sled pull, burpee broad jumps, row, farmers carry, sandbag lunges and wall balls.",
+  description: "Eight coach-led HYROX-style station classes at BaseCamp CamSur: SkiErg, sled push, sled pull, burpee broad jumps, row, farmers carry, sandbag lunges, and wall balls.",
 };
 
 export default async function ProgramsPage() {
   const c = await getSiteContent();
-  const groups: ClassGroup[] = WORKOUT_GROUPS.map(({ id, title, description, slugs }) => ({
-    id,
-    title,
-    description,
-    items: slugs
-      .map(workoutTypeBySlug)
-      .filter((item): item is WorkoutType => item !== undefined)
-      .map(({ slug, title, image, imageAlt, focus, session }) => ({ slug, title, image, imageAlt, focus, session })),
-  }));
+  // Station classes in the same list-plus-photo layout as Membership categories and Schedule "Events & booking".
+  const group = WORKOUT_GROUPS[0];
+  const stations = group.slugs
+    .map(workoutTypeBySlug)
+    .filter((item): item is WorkoutType => item !== undefined)
+    .map(({ slug, title, description, image, imageAlt }) => ({ href: `/classes/styles/${slug}`, label: title, summary: description, image, imageAlt }));
 
   return (
     <OverviewTemplate
@@ -37,11 +34,9 @@ export default async function ProgramsPage() {
       marquee={false}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[c.settings.launchPhase].ctaLabel} className="pr-cta-expanded" />}
     >
-      <section className="section pr-workout-types" id="workout-types" aria-label="Workout classes">
-        <div className="shell">
-          <ClassFilterGrid groups={groups} />
-        </div>
-      </section>
+      <div id="workout-types">
+        <ScheduleExplore eyebrow="Classes" title={group.title} intro={group.description} items={stations} />
+      </div>
     </OverviewTemplate>
   );
 }

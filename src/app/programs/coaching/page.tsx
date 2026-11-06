@@ -13,7 +13,7 @@ import { COACHES_PLACEHOLDER, MINDSET, MINDSET_INTRO, PERSONALISATION, PERSONALI
 
 export const metadata: Metadata = {
   title: "Coaching & assessment",
-  description: "Baseline testing and reassessment, mental performance training, the coaching team and partner specialists at BaseCamp CamSur.",
+  description: "Baseline testing and reassessment, mental performance training, the coaching team, and partner specialists at BaseCamp CamSur.",
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -102,7 +102,7 @@ export default async function CoachingPage() {
         <div className="nv-block-head" data-reveal>
           <p className="eyebrow">Mindset</p>
           <h2>{MINDSET_INTRO}</h2>
-          <p className="nv-block-intro">Mental skills built into training: focus, decisions under fatigue, visualization and guided sessions.</p>
+          <p className="nv-block-intro">Mental skills built into training: focus, decisions under fatigue, visualization, and guided sessions.</p>
           <StatusBadge availability="planned" className="pr-heading-badge" />
         </div>
         <ol className="pr-card-grid pr-card-grid-4" data-reveal="stagger">

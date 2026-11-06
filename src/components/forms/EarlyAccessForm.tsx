@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useId, useState } from "react";
 import FormStatus, { FieldError, fieldA11y, submitWithoutReset } from "@/components/forms/FormStatus";
+import MemberGate from "@/components/members/MemberGate";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { PERSONA_OPTIONS } from "@/content/constants";
 import { trackLead } from "@/lib/analytics";
@@ -13,7 +14,11 @@ type Props = { source: string; submitLabel?: string };
 /** Founding-list sign-up (kind=early-access). Docs: 02-guides/forms.md (useActionState). */
 export default function EarlyAccessForm(props: Props) {
   const [formKey, setFormKey] = useState(0);
-  return <EarlyAccessFormInner key={formKey} {...props} onReset={() => setFormKey((k) => k + 1)} />;
+  return (
+    <MemberGate title="Log in to join the early access list" text="Early-access sign-ups, requests, and purchases need a free BaseCamp member account.">
+      <EarlyAccessFormInner key={formKey} {...props} onReset={() => setFormKey((k) => k + 1)} />
+    </MemberGate>
+  );
 }
 
 function EarlyAccessFormInner({ source, submitLabel = "Join the early access list", onReset }: Props & { onReset: () => void }) {

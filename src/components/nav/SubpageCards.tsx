@@ -18,6 +18,8 @@ export type SubpageCardsProps = {
   images?: boolean;
   /** Override a card's one-line summary by href. */
   summaries?: Readonly<Record<string, string>>;
+  /** Override a card's label, summary or image by href (e.g. several cards pointing into one page). */
+  overrides?: Readonly<Record<string, Partial<Pick<SitePage, "label" | "summary" | "image" | "imageAlt">>>>;
   id?: string;
   dark?: boolean;
   /** "feature": two large photo cards per row with the text over the image (Membership). */
@@ -25,7 +27,7 @@ export type SubpageCardsProps = {
 };
 
 /** Sub-page cards (stage-3 §6/§7): image + title + one line + "Read more →", data from the site map. */
-export default async function SubpageCards({ section, hrefs, exclude, eyebrow, title, intro, images = true, summaries, id, dark = false, variant = "default" }: SubpageCardsProps) {
+export default async function SubpageCards({ section, hrefs, exclude, eyebrow, title, intro, images = true, summaries, overrides, id, dark = false, variant = "default" }: SubpageCardsProps) {
   const programmes = await getProgrammeRefs();
   let pages: SitePage[] = hrefs?.length
     ? hrefs.flatMap((href) => {
@@ -34,6 +36,7 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
     })
     : findPage(section, programmes)?.section.pages ?? [];
   if (exclude?.length) pages = pages.filter((pg) => !exclude.includes(pg.href));
+  if (overrides) pages = pages.map((pg) => ({ ...pg, ...overrides[pg.href] }));
   if (pages.length === 0) return null;
 
   if (variant === "feature") {

@@ -5,7 +5,7 @@ import { PriceBlock } from "@/components/membership/PriceTable";
 import { toBlocks } from "@/components/membership/pricing";
 import type { PriceGroup } from "@/content/types";
 
-// Audience filter for price groups (spec §C.6.3; /membership/passes in stage 3). Every group is prerendered;
+// Audience filter for price groups (spec §C.6.3; formerly /membership/passes). Every group is prerendered;
 // the tabs only toggle `hidden`, so all prices stay in the HTML. A hash that targets a hidden group switches
 // the view back to "All prices". The tabs are left out when filtering would change nothing.
 type Tab = "all" | "locals" | "travellers";

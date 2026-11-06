@@ -30,7 +30,7 @@ const INTENTS: Record<InquiryIntent, IntentConfig> = {
   membership: {
     label: "Membership",
     short: "Train with us",
-    description: "Memberships, passes, classes and recovery access.",
+    description: "Memberships, passes, classes, and recovery access.",
     kind: "early-access",
     submitLabel: "Request membership guidance",
     successTitle: "Your membership request is in.",
@@ -41,7 +41,7 @@ const INTENTS: Record<InquiryIntent, IntentConfig> = {
   "camp-group": {
     label: "Camps & groups",
     short: "Bring your crew",
-    description: "Training camps, retreats, coach-led groups and longer stays.",
+    description: "Training camps, retreats, coach-led groups, and longer stays.",
     kind: "enquiry",
     submitLabel: "Send camp inquiry",
     successTitle: "Your camp brief is with us.",
@@ -52,18 +52,18 @@ const INTENTS: Record<InquiryIntent, IntentConfig> = {
   corporate: {
     label: "Corporate",
     short: "Move as a team",
-    description: "Off-sites, team sessions and company wellness programs.",
+    description: "Off-sites, team sessions, and company wellness programs.",
     kind: "enquiry",
     submitLabel: "Send corporate inquiry",
     successTitle: "Your team brief is in.",
-    successBody: "We’ll review your group size, goals and timing before suggesting a format.",
-    nextHref: "/membership/corporate",
+    successBody: "We’ll review your group size, goals, and timing before suggesting a format.",
+    nextHref: "/membership/price-guide#corporate",
     nextLabel: "See corporate options",
   },
   partnership: {
     label: "Partnerships",
     short: "Build with us",
-    description: "Brand, wellness, ambassador and community collaborations.",
+    description: "Brand, wellness, ambassador, and community collaborations.",
     kind: "enquiry",
     submitLabel: "Send partnership inquiry",
     successTitle: "The partnership team has your note.",
@@ -74,7 +74,7 @@ const INTENTS: Record<InquiryIntent, IntentConfig> = {
   media: {
     label: "Media",
     short: "Tell the story",
-    description: "Interviews, press information, filming and editorial requests.",
+    description: "Interviews, press information, filming, and editorial requests.",
     kind: "enquiry",
     submitLabel: "Send media request",
     successTitle: "Your media request is queued.",
@@ -238,7 +238,7 @@ function IntentFields({ intent, id }: { intent: InquiryIntent; id: string }) {
       </label>
     </div>
     <div className="field-row">
-      <label htmlFor={`${id}-origin`}>Travelling from
+      <label htmlFor={`${id}-origin`}>Traveling from
         <input id={`${id}-origin`} name="detailOrigin" maxLength={100} placeholder="City / country" />
       </label>
       <label htmlFor={`${id}-focus`}>Camp focus
@@ -297,7 +297,7 @@ function IntentFields({ intent, id }: { intent: InquiryIntent; id: string }) {
 
 const DETAIL_LABELS: Record<string, string> = {
   detailFrequency: "Training frequency", detailGoal: "Training goal", detailDates: "Preferred dates", detailGroupSize: "Group size",
-  detailOrigin: "Travelling from", detailFocus: "Camp focus", detailOrganisation: "Organization", detailDate: "Target date",
+  detailOrigin: "Traveling from", detailFocus: "Camp focus", detailOrganisation: "Organization", detailDate: "Target date",
   detailObjective: "Objective", detailPartnership: "Partnership type", detailWebsite: "Website / profile",
   detailPublication: "Publication / channel", detailRequest: "Media request", detailDeadline: "Deadline",
 };
@@ -331,7 +331,7 @@ function InquiryDetails({ intent, source, preselected, programmeTitle, onBack }:
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const lines = [`Inquiry: ${config.label}`];
-    if (programmeTitle) lines.push(`Programme: ${programmeTitle}`);
+    if (programmeTitle) lines.push(`Program: ${programmeTitle}`);
     for (const [name, label] of Object.entries(DETAIL_LABELS)) {
       const value = String(formData.get(name) ?? "").trim();
       if (value) lines.push(`${label}: ${value}`);
@@ -363,7 +363,7 @@ function InquiryDetails({ intent, source, preselected, programmeTitle, onBack }:
         <ContactFields id={id} state={state} />
         <IntentFields intent={intent} id={id} />
         <label htmlFor={`${id}-message`}>Anything else?
-          <textarea id={`${id}-message`} name="message" rows={4} maxLength={1200} placeholder="Share any priorities, questions or useful context." {...fieldA11y(state, `${id}-message`, "message")} />
+          <textarea id={`${id}-message`} name="message" rows={4} maxLength={1200} placeholder="Share any priorities, questions, or useful context." {...fieldA11y(state, `${id}-message`, "message")} />
           <FieldError id={`${id}-message`} state={state} name="message" />
         </label>
         <Consent id={id} state={state} />

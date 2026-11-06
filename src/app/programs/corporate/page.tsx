@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 // Static under cacheComponents: reads only the cached getSiteContent() (spec §0.17).
-// Content moved from /programs#corporate (stage-3 §1); corporate pricing itself lives on /membership/corporate.
+// Content moved from /programs#corporate (stage-3 §1); corporate pricing itself lives on /membership/price-guide#corporate.
 export default async function CorporatePage() {
   const c = await getSiteContent();
   const { programmes: p, home } = c;
@@ -39,7 +39,7 @@ export default async function CorporatePage() {
       glance={{
         summary: "Team-building, leadership and wellness off-sites with customized programming and recovery designed for groups.",
       }}
-      related={["/membership/corporate", "/visit/camps", "/classes/coaching"]}
+      related={["/membership/price-guide#corporate", "/visit/camps", "/classes/coaching"]}
       cta={<CtaBand eyebrow="Corporate" title="Bring your team." body="Tell us about your group and we will shape a program around it." label={CORPORATE_BAND.cta.label} href={CORPORATE_BAND.cta.href} />}
     >
       <section className="section section-dark pr-corporate" id="corporate">
@@ -58,7 +58,7 @@ export default async function CorporatePage() {
       <section className="section shell" id="configurator" aria-labelledby="corporate-config-title">
         <div className="section-heading split-heading" data-reveal>
           <div><p className="eyebrow">Build your off-site</p><h2 id="corporate-config-title">Shape the day around your team.</h2></div>
-          <p>Choose a starting size, duration and objective. We’ll turn it into a practical training and recovery brief.</p>
+          <p>Choose a starting size, duration, and objective. We’ll turn it into a practical training and recovery brief.</p>
         </div>
         <CorporateConfigurator />
       </section>

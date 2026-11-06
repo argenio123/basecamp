@@ -36,7 +36,7 @@ export default async function FacilitiesGalleryPage() {
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id="gallery" className="fc-gallery">
-        <div className="shell split-heading light-split" data-reveal><div><p className="eyebrow">{GALLERY.eyebrow}</p><h2>Architectural renders.</h2></div><p>The exterior, the front approach, architectural details and the site in its landscape.</p></div>
+        <div className="shell split-heading light-split" data-reveal><div><p className="eyebrow">{GALLERY.eyebrow}</p><h2>Architectural renders.</h2></div><p>The exterior, the front approach, architectural details, and the site in its landscape.</p></div>
         <div className="gallery-grid shell" data-reveal="stagger">
           {GALLERY.images.slice(0, 4).map((img) => <div key={img.src} className={`image-frame${img.wide ? " gallery-wide" : ""}`}><Image src={img.src} alt={img.alt} fill sizes={img.wide ? "(max-width: 760px) 100vw, 60vw" : "(max-width: 760px) 100vw, 40vw"} className="cover-image" /></div>)}
           <div className="gallery-quote"><p>{GALLERY.quote}</p><span>BASECAMP CAMSUR</span></div>

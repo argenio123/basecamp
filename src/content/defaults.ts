@@ -32,13 +32,52 @@ const space = {
 } satisfies Record<string, ProgrammeSpace>;
 
 const DAYS: Weekday[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/** Session pool for the preview week, grouped by time of day. */
+type PoolSlot = Omit<TimetableSlot, "id" | "day" | "capacity" | "status"> & { key: string };
+const SESSION_POOL: Record<"morning" | "midday" | "evening", PoolSlot[]> = {
+  morning: [
+    { key: "sunrise-class", time: "Early morning (time TBA)", title: "Sunrise session: coached group class", category: "sunrise", programmeSlug: "crossfit-group" },
+    { key: "sunrise-hyrox", time: "Early morning (time TBA)", title: "Sunrise HYROX-style stations", category: "sunrise", programmeSlug: "hyrox" },
+    { key: "sunrise-run", time: "Early morning (time TBA)", title: "Sunrise run club: outdoor loop", category: "sunrise", programmeSlug: "outdoor-running" },
+  ],
+  midday: [
+    { key: "foundations", time: "Midday (time TBA)", title: "Foundations on-ramp", category: "class", programmeSlug: "foundations" },
+    { key: "open-gym", time: "Midday (time TBA)", title: "Open gym: athlete hours", category: "open-gym", programmeSlug: "open-gym" },
+    { key: "mobility", time: "Afternoon (time TBA)", title: "Stretch & mobility deck", category: "recovery", programmeSlug: "mobility-deck" },
+    { key: "ice-sauna", time: "Afternoon (time TBA)", title: "Ice bath + sauna circuit", category: "recovery", programmeSlug: "ice-sauna" },
+  ],
+  evening: [
+    { key: "evening-class", time: "Evening (time TBA)", title: "Evening session: coached group class", category: "evening", programmeSlug: "crossfit-group" },
+    { key: "evening-hyrox", time: "Evening (time TBA)", title: "HYROX-style evening stations", category: "evening", programmeSlug: "hyrox" },
+    { key: "evening-strength", time: "Evening (time TBA)", title: "Strength & conditioning", category: "evening", programmeSlug: "commercial-gym" },
+  ],
+};
+
+/** Small seeded PRNG (mulberry32): the week looks random but is identical on every build and render. */
+function seeded(seed: number) {
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rand = seeded(20261106);
+const pick = <T,>(list: T[]) => list[Math.floor(rand() * list.length)];
+
+// Every day: a randomly chosen morning, midday and evening session, each kept with a different probability so the
+// days carry 2–4 sessions. Friday's evening is always Friday Night Lights.
 const timetable: TimetableSlot[] = DAYS.flatMap((day): TimetableSlot[] => {
   const d = day.toLowerCase();
-  const isFri = day === "Fri";
-  return [
-    { id: `${d}-am`, day, time: "Early morning (time TBA)", title: "Sunrise session: coached group class", category: "sunrise", programmeSlug: "crossfit-group", capacity: null, status: "tba" },
-    { id: `${d}-pm`, day, time: "Evening (time TBA)", title: isFri ? "Friday Night Lights (CrossFit-style)" : "Evening session: coached group class", category: isFri ? "night" : "evening", programmeSlug: "crossfit-group", capacity: null, status: "tba" },
-  ];
+  const picks: PoolSlot[] = [];
+  if (rand() < 0.85) picks.push(pick(SESSION_POOL.morning));
+  if (rand() < 0.7) picks.push(pick(SESSION_POOL.midday));
+  if (rand() < 0.45) picks.push(pick(SESSION_POOL.midday.filter((s) => !picks.includes(s))));
+  if (day === "Fri") picks.push({ key: "night-lights", time: "Evening (time TBA)", title: "Friday Night Lights (CrossFit-style)", category: "night", programmeSlug: "crossfit-group" });
+  else picks.push(pick(SESSION_POOL.evening));
+  if (picks.length < 2) picks.unshift(pick(SESSION_POOL.morning));
+  return picks.map(({ key, ...slot }) => ({ id: `${d}-${key}`, day, ...slot, capacity: null, status: "tba" }));
 });
 
 const dayRhythm = [
@@ -79,7 +118,7 @@ const programmes: Programme[] = [
   {
     slug: "commercial-gym", title: "Commercial gym", group: "core", availability: "at-launch", image: `${P}/program-strength.png`,
     audiences: ["local", "traveller"], level: "All levels", format: "Self-directed", interest: "drop-in", bookable: true,
-    summary: "Traditional strength equipment, cardio machines and accessory zones for aesthetics, physique and individual programming.",
+    summary: "Traditional strength equipment, cardio machines, and accessory zones for aesthetics, physique and individual programming.",
     whatToExpect: "Bodybuilding and traditional gym training alongside functional fitness.",
     whoFor: ["Bodybuilding and physique athletes", "Traditional gym-goers"],
     outcomes: ["Strength gain", "Body composition"],
@@ -98,7 +137,7 @@ const programmes: Programme[] = [
     slug: "foundations", title: "Foundations on-ramp", group: "core", availability: "at-launch", image: `${G}/personal-coaching.png`,
     audiences: ["beginner"], level: "Beginner", format: "Small-group foundation course", interest: "membership-local", bookable: true,
     summary: "A foundation course for new members. Everyone is welcome.",
-    whatToExpect: "We teach the core movements, track your completion, assess readiness and move you into regular classes when you're ready. Trial class details are announced at launch.",
+    whatToExpect: "We teach the core movements, track your completion, assess readiness, and move you into regular classes when you're ready. Trial class details are announced at launch.",
     whoFor: ["Fitness newcomers", "Anyone returning to training"],
     outcomes: ["Mobility + strength baseline"],
     spaces: [space.training, space.arrival],
@@ -115,8 +154,8 @@ const programmes: Programme[] = [
   {
     slug: "mobility-deck", title: "Stretch & mobility deck", group: "wellness", availability: "at-launch", image: `${G}/recovery-mobility.png`,
     audiences: ["recovery", "beginner", "local"], level: "All levels", format: "Open & guided", interest: "recovery", bookable: true,
-    summary: "A dedicated deck for stretching, mobility work and recovery protocols.",
-    whatToExpect: "Foam rollers, massage guns, resistance bands, mats and yoga props.",
+    summary: "A dedicated deck for stretching, mobility work, and recovery protocols.",
+    whatToExpect: "Foam rollers, massage guns, resistance bands, mats, and yoga props.",
     whoFor: ["Every athlete, every day"],
     outcomes: ["Mobility + strength baseline"],
     spaces: [space.recovery],
@@ -249,7 +288,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       example: "Example: Athlete founding rate Php 3,200/month (standard Php 4,500).",
       benefits: [
         "Founding rate: a proposed 30% off your first six months, or a locked lifetime alumni rate",
-        "Priority access to camps, workshops and special events",
+        "Priority access to camps, workshops, and special events",
         "Founding-community recognition",
         "An exclusive launch event",
       ],
@@ -263,7 +302,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   home: {
     rhythm: {
       eyebrow: "Ways to train", title: "Find your\ntraining rhythm.",
-      intro: "Morning classes, open gym periods, private sessions and evening programming: choose the path that fits how you train.",
+      intro: "Morning classes, open gym periods, private sessions, and evening programming: choose the path that fits how you train.",
       paths: [
         { id: "local", title: "Local athlete", who: "CamSur & Bicol", cadence: "4–6 sessions a week", offer: "Monthly memberships & class packs", body: "Community connection and expert coaching, every week.", link: { label: "See memberships", href: "/membership#tiers" } },
         { id: "manila", title: "Manila & domestic traveler", who: "Weekend escapes", cadence: "Weekends, 3D/2N camps or 1-week programs", offer: "Camp packages, drop-ins & weekly passes", body: "Escape the city, train intensely, recover properly.", link: { label: "Explore camps", href: "/visit/camps" } },
@@ -308,7 +347,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     },
     afterDark: {
       enabled: true, eyebrow: "After dark", title: "Own the night.",
-      body: "Lakefront lighting, music and energy rivalling a concert, and athletes training under the stars. Train hard without the afternoon sun.",
+      body: "Lakefront lighting, music, and energy rivaling a concert, and athletes training under the stars. Train hard without the afternoon sun.",
       highlights: ["Night Games (HYROX-style) · weekly", "Friday Night Lights (CrossFit-style) · weekly", "Night runs · weekly"],
       image: `${P}/program-endurance.png`,
       cta: { label: "See night programming", href: "/schedule/events#night" },
@@ -337,7 +376,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       cta: { label: "See full pricing", href: "/membership" },
     },
     personas: {
-      enabled: true, eyebrow: "Who it's for", title: "Athletes, beginners and travelers.",
+      enabled: true, eyebrow: "Who it's for", title: "Athletes, beginners, and travelers.",
       items: [
         { id: "local", title: "Local fitness community", body: "CamSur residents seeking world-class training facilities and professional coaching.", link: { label: "Memberships", href: "/membership#tiers" } },
         { id: "domestic", title: "Domestic enthusiasts", body: "Filipino athletes from Manila and other cities seeking training destinations for weekends, training camps, and extended visits.", link: { label: "Camps & weekends", href: "/visit/camps" } },
@@ -357,7 +396,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     testimonials: { enabled: true, title: "From the community." },
     earlyAccess: {
       eyebrow: "Early access", title: "Train. Transform. Thrive.",
-      body: "Join the early access list: early-member rates, exclusive updates and priority access.",
+      body: "Join the early access list: early-member rates, exclusive updates, and priority access.",
       benefits: ["Early-member rates", "Exclusive build and opening updates", "Priority access to camps and events"],
       image: `${F}/facility-exterior.jpg`,
     },
@@ -377,7 +416,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     programmes,
     formats: [
-      { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.png`, href: "/schedule#timetable" },
+      { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.png`, href: "/schedule/timetable" },
       { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/classes/functional-training" },
       { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/classes/endurance" },
       { id: "training-camps", title: "Training Camps", description: "Immersive multi-day experiences with accommodation and full programming", image: `${F}/facility-aerial.jpg`, href: "/visit/camps" },
@@ -443,7 +482,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "sleep-lab", title: "Sleep Labs", description: "Optimized environments and protocols for better sleep quality and duration.", detail: "", category: "sleep", availability: planned, medicalNote: false },
       { id: "nad-music", title: "NAD+ Music Therapy", description: "IV NAD+ combined with curated soundscapes for mental restoration.", detail: "Sound healing and vibroacoustic therapy beds.", category: "mind-body", availability: planned, medicalNote: true },
     ],
-    disclaimer: "Advanced therapies such as hyperbaric oxygen, cryotherapy and NAD+ IV therapy are planned and require health screening. Consult your doctor before use. Nothing on this site is medical advice.",
+    disclaimer: "Advanced therapies such as hyperbaric oxygen, cryotherapy and NAD+ IV therapy are planned, and require health screening. Consult your doctor before use. Nothing on this site is medical advice.",
   },
 
   // ---------- pricing (§B.7) ----------
@@ -474,14 +513,14 @@ export const DEFAULT_CONTENT: SiteContent = {
     rhythm: dayRhythm.map(({ id, title, body }) => ({ id, title, description: body })),
     timetable,
     recurring: [
-      { id: "leaderboards", title: "Daily Leaderboards", cadence: "Daily", night: false, availability: planned, description: "Overall, age-group, weight-class and improvement-rate rankings." },
+      { id: "leaderboards", title: "Daily Leaderboards", cadence: "Daily", night: false, availability: planned, description: "Overall, age-group, weight-class, and improvement-rate rankings." },
       { id: "time-trials", title: "Weekly Time Trials", cadence: "Weekly", night: false, availability: planned, description: "HYROX-style stations tested every week." },
       { id: "night-games", title: "Night Games (HYROX-style)", cadence: "Weekly", night: true, availability: planned, description: "Competitive events under lights, team competitions with spectators and leaderboards." },
-      { id: "friday-night-lights", title: "Friday Night Lights (CrossFit-style)", cadence: "Weekly", night: true, availability: planned, description: "Our signature weekly event with scaled divisions and a social gathering afterwards." },
+      { id: "friday-night-lights", title: "Friday Night Lights (CrossFit-style)", cadence: "Weekly", night: true, availability: planned, description: "Our signature weekly event with scaled divisions and a social gathering afterward." },
       { id: "night-runs", title: "Night Runs", cadence: "Weekly", night: true, availability: planned, description: "Headlamp trail runs under the stars and illuminated lake loops." },
       { id: "partner-challenges", title: "Partner Challenges", cadence: "Regular", night: false, availability: planned, description: "Two-person team workouts with a random or chosen partner." },
       { id: "obstacle-races", title: "Obstacle Races", cadence: "Monthly", night: false, availability: planned, description: "Around the lake and through forests, over different distances, with family-friendly options." },
-      { id: "team-challenges", title: "3-Hour Team Challenges", cadence: "Quarterly", night: false, availability: planned, description: "Endurance relays of running, rowing, lifting and skills, fundraising for local community projects." },
+      { id: "team-challenges", title: "3-Hour Team Challenges", cadence: "Quarterly", night: false, availability: planned, description: "Endurance relays of running, rowing, lifting, and skills, fundraising for local community projects." },
     ],
     events: [
       { id: "founders-workout", title: "Founders Workout", kind: "launch", date: "", dateLabel: "Opening day: date to be announced", availability: planned, description: "The first workout at BaseCamp, for early members.", ctaHref: "/membership/founding" },
@@ -539,7 +578,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   // ---------- gallery (§B.12b) ----------
   gallery: {
     eyebrow: "Community", title: "Follow the movement.",
-    intro: "Training intensity, nature, community, behind-the-scenes build updates and coach spotlights.",
+    intro: "Training intensity, nature, community, behind-the-scenes build updates, and coach spotlights.",
     posts: [
       {
         id: "build-destination", platform: "Facebook", type: "Facility", pillar: "build", format: "Update", badge: "Built from the ground up",
@@ -577,7 +616,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   // ---------- whyCamsur (§B.13) ----------
   whyCamsur: {
     title: "Why CamSur.",
-    intro: "CamSur is a feature, not a compromise: natural beauty, accessibility and local culture.",
+    intro: "CamSur is a feature, not a compromise: natural beauty, accessibility, and local culture.",
     reasons: [
       { id: "adventure", title: "Proven adventure destination", body: "CamSur has established itself as the Philippines' premier adventure tourism hub, with wakeboarding, water sports, and outdoor activities drawing visitors year-round." },
       { id: "climate", title: "Year-round tropical climate", body: "Consistent weather enables outdoor training 365 days a year: no seasonal closures and no weather-dependent programming limits (typhoons aside)." },

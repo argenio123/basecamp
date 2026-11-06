@@ -101,7 +101,7 @@ export const INTEREST_PRICE_ITEMS: Partial<Record<InterestValue, readonly string
   corporate: ["corporate-groups"],
 };
 
-export const OUTCOMES_NOTE = "These are the markers we track, not a promise: progress depends on your starting point, consistency and recovery.";
+export const OUTCOMES_NOTE = "These are the markers we track, not a promise: progress depends on your starting point, consistency, and recovery.";
 export const SCHEDULE_SOON = "Schedule releasing soon";
 
 /** Clear, outcome-led labels used on the flagship program overview. */
@@ -109,7 +109,7 @@ export const FEATURED_PROGRAMME_OUTCOMES: Readonly<Record<string, string>> = {
   "strength-conditioning": "Build durable, whole-body strength",
   "functional-training": "Move better and build all-round fitness",
   "personal-coaching": "Follow a plan shaped around you",
-  endurance: "Develop pace, resilience and aerobic capacity",
+  endurance: "Develop pace, resilience, and aerobic capacity",
   "recovery-mobility": "Restore range of motion and recover well",
 };
 
@@ -122,9 +122,9 @@ export const TRAINING_PATHWAYS = [
 ] as const;
 
 export const FIRST_WEEK = [
-  { day: "Day 01", title: "Assessment + foundations", text: "Set a baseline, learn the floor and choose useful starting loads." },
+  { day: "Day 01", title: "Assessment + foundations", text: "Set a baseline, learn the floor, and choose useful starting loads." },
   { day: "Day 02", title: "Strength & conditioning", text: "Build the major patterns with a coach and finish with controlled work." },
-  { day: "Day 03", title: "Recovery reset", text: "Mobility, breathwork and low-intensity movement between harder days." },
+  { day: "Day 03", title: "Recovery reset", text: "Mobility, breathwork, and low-intensity movement between harder days." },
   { day: "Day 04", title: "Functional training", text: "Put movement quality into a varied, scalable group session." },
   { day: "Weekend", title: "Endurance base", text: "Easy aerobic work around the running loop, paced to your level." },
 ] as const;
@@ -189,7 +189,7 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     duration: "60 min",
     coach: "Coach line-up to be announced",
     area: "Strength area",
-    equipment: "Racks, barbells and free weights",
+    equipment: "Racks, barbells, and free weights",
     access: "Athlete membership or class pass",
     availability: "at-launch",
     filters: ["strength", "beginner"],
@@ -205,7 +205,7 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     duration: "50 min",
     coach: "Coach line-up to be announced",
     area: "Main training floor",
-    equipment: "Rigs, cardio and functional kit",
+    equipment: "Rigs, cardio, and functional kit",
     access: "Athlete membership or class pass",
     availability: "at-launch",
     filters: ["conditioning", "beginner"],
@@ -221,7 +221,7 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     duration: "45 min",
     coach: "Coach line-up to be announced",
     area: "Running loop and training floor",
-    equipment: "Running loop, sleds and cardio stations",
+    equipment: "Running loop, sleds, and cardio stations",
     access: "Athlete membership or class pass",
     availability: "at-launch",
     filters: ["conditioning", "endurance"],
@@ -231,13 +231,13 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     title: "HYROX Race Lab",
     programmeSlug: "endurance",
     programme: "Endurance",
-    goal: "Practise running transitions and all eight race stations with controlled pacing.",
+    goal: "Practice running transitions and all eight race stations with controlled pacing.",
     intensity: "4 / 5",
     level: "Intermediate+",
     duration: "60 min",
     coach: "Coach line-up to be announced",
     area: "Running loop and training floor",
-    equipment: "SkiErg, sleds, rower, kettlebells, sandbags and wall balls",
+    equipment: "SkiErg, sleds, rower, kettlebells, sandbags, and wall balls",
     access: "Athlete membership or class pass",
     availability: "at-launch",
     filters: ["conditioning", "endurance"],
@@ -253,8 +253,8 @@ export const CLASS_PREVIEW: readonly ClassPreview[] = [
     duration: "45 min",
     coach: "Coach line-up to be announced",
     area: "Recovery level",
-    equipment: "Mats, bands and mobility tools",
-    access: "Membership, recovery credit or class pass",
+    equipment: "Mats, bands, and mobility tools",
+    access: "Membership, recovery credit, or class pass",
     availability: "at-launch",
     filters: ["recovery", "beginner"],
   },
@@ -285,10 +285,10 @@ export const CLASS_RHYTHM_PREVIEW = [
 ] as const;
 
 export const CLASS_FAQ = [
-  { question: "Do I need experience?", answer: "No. Beginner-friendly sessions are clearly labelled and coaches scale movements, loads and pace to the athlete in front of them." },
+  { question: "Do I need experience?", answer: "No. Beginner-friendly sessions are clearly labelled and coaches scale movements, loads, and pace to the athlete in front of them." },
   { question: "How long are classes?", answer: "Most launch classes are planned for 45 to 60 minutes. The final duration is shown on each class before booking opens." },
   { question: "What should I bring?", answer: "Wear comfortable training clothes and suitable shoes. Class-specific equipment is provided; hydration and any personal supports are your responsibility." },
-  { question: "Do I need to book in advance?", answer: "Coached classes, appointments and recovery sessions will require advance booking. Open-gym access will follow the access rules of your membership or pass." },
+  { question: "Do I need to book in advance?", answer: "Coached classes, appointments, and recovery sessions will require advance booking. Open-gym access will follow the access rules of your membership or pass." },
   { question: "Which membership includes classes?", answer: "Access depends on the class. Each listing identifies whether it is included in a membership, uses a class pass or requires a separate appointment." },
   { question: "What happens when a class is full?", answer: "When live booking launches, full classes will offer a waitlist. Members will be notified if a place becomes available." },
 ] as const;
@@ -339,7 +339,7 @@ export const MINDSET: StaticItem[] = [
 
 export const COACHES_PLACEHOLDER = {
   title: "Meet the coaches: line-up announced before opening.",
-  body: "Coaching philosophy: progressive overload, periodization and individual athlete development.",
+  body: "Coaching philosophy: progressive overload, periodization, and individual athlete development.",
 };
 
 // Deck p66 "Wellness providers": titles only (spec C.2.11), no invented descriptions.
@@ -369,9 +369,9 @@ export const SLOT_STATUS_LABEL: Record<TimetableSlot["status"], string> = { tba:
 export const TIMETABLE_CAPTION = "Times are refined as we open: sessions are added at high-demand times.";
 
 export const NIGHT_ELEMENTS: (StaticItem & { availability: Availability })[] = [
-  { id: "lighting", title: "Lakefront stadium lighting", description: "Sports lighting across the running loop, training zones and water's edge: bright enough for safety, dramatic enough for atmosphere.", availability: "planned" },
-  { id: "night-games", title: "Night Games (HYROX-style)", description: "Weekly competitive events under lights, with team competitions, spectators and leaderboards.", availability: "planned" },
-  { id: "fnl", title: "Friday Night Lights (CrossFit-style)", description: "A signature weekly event with scaled divisions and a social gathering afterwards.", availability: "planned" },
+  { id: "lighting", title: "Lakefront stadium lighting", description: "Sports lighting across the running loop, training zones, and water's edge: bright enough for safety, dramatic enough for atmosphere.", availability: "planned" },
+  { id: "night-games", title: "Night Games (HYROX-style)", description: "Weekly competitive events under lights, with team competitions, spectators, and leaderboards.", availability: "planned" },
+  { id: "fnl", title: "Friday Night Lights (CrossFit-style)", description: "A signature weekly event with scaled divisions and a social gathering afterward.", availability: "planned" },
   { id: "heat", title: "Summer heat avoidance", description: "Train hard without the afternoon sun.", availability: "planned" },
   { id: "music", title: "Music + lights + crowds", description: "DJ sets, light shows synced to workouts, spectators welcome.", availability: "planned" },
 ];

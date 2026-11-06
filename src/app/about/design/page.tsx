@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import AboutChapterNav from "@/components/about/AboutChapterNav";
-import AboutEditorialHero from "@/components/about/AboutEditorialHero";
 import DesignExplorer from "@/components/about/DesignExplorer";
 import ImageComparison from "@/components/about/ImageComparison";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import StatusBadge from "@/components/ui/StatusBadge";
+import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { ABOUT_CTA, ABOUT_GLANCE, DESIGN, DESIGN_HERO, IDENTITY, PERFORMANCE_NATURE, PLACE } from "@/data/about";
 
@@ -27,7 +27,7 @@ export default async function AboutDesignPage() {
     <DetailTemplate
       path="/about/design"
       hero={<>
-        <AboutEditorialHero chapter="02" eyebrow={DESIGN_HERO.eyebrow} title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} variant="design" />
+        <PageHero title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} />
         <AboutChapterNav label="Design chapters" items={[
           { id: "design", label: "Architecture" },
           { id: "place", label: "Place" },
@@ -35,14 +35,7 @@ export default async function AboutDesignPage() {
           { id: "identity", label: "Identity" },
         ]} />
       </>}
-      glance={{
-        summary: ABOUT_GLANCE.design,
-        facts: [
-          { label: "Design", value: DESIGN.pillars[0]?.title ?? "" },
-          { label: "Setting", value: PLACE.title.replace(/\.$/, "") },
-          { label: "Outdoor lab", value: `${PERFORMANCE_NATURE.items.length} planned training elements` },
-        ],
-      }}
+      glance={{ summary: ABOUT_GLANCE.design, statement: true }}
       related={["/facilities", "/visit/why-camsur", "/facilities/gallery"]}
       cta={<CtaBand title={ABOUT_CTA.title} body={ABOUT_CTA.body} label={c.settings.founding.enabled ? c.settings.founding.ctaLabel || undefined : undefined} href="/contact" />}
     >

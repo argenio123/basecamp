@@ -3,8 +3,9 @@ import FindUs from "@/components/features/FindUs";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
-import VisitItems from "@/components/visit/VisitItems";
+import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import { getSiteContent } from "@/content/get";
+import { findPage } from "@/content/sitemap";
 import { GETTING_THERE, VISIT_CTA, VISIT_GLANCE, VISIT_HERO, VISIT_META } from "@/data/visit";
 
 // Static metadata object (01-app/03-api-reference/04-functions/generate-metadata.md#the-metadata-object).
@@ -22,23 +23,18 @@ export default async function VisitPage() {
     <OverviewTemplate
       path="/visit"
       hero={<PageHero {...VISIT_HERO} />}
-      glance={{
-        summary: VISIT_GLANCE.summary,
-        facts: [
-          { label: "Region", value: "Camarines Sur" },
-          { label: "Access", value: GETTING_THERE.line.replace(/\.$/, "") },
-          { label: "Airports", value: GETTING_THERE.airports },
-        ],
-      }}
+      glance={{ summary: VISIT_GLANCE.summary, statement: true }}
+      cards={false}
+      quote={false}
       cta={<CtaBand eyebrow={VISIT_CTA.eyebrow} />}
     >
+      <ScheduleExplore
+        eyebrow="Plan your visit"
+        title="Camps & CamSur."
+        intro="Training camps, retreats, and extended stays, plus why Camarines Sur is the place to train."
+        items={(findPage("/visit", [])?.section.pages ?? []).map((pg) => ({ href: pg.href, label: pg.label, summary: pg.summary, image: pg.image, imageAlt: pg.imageAlt }))}
+      />
       <FindUs contact={contact} title={GETTING_THERE.title} id="find-us" />
-      <section id="getting-there" className="section vt-deep">
-        <div className="shell">
-          <VisitItems items={GETTING_THERE.options} label={GETTING_THERE.eyebrow} />
-          <p className="vt-line" data-reveal>{GETTING_THERE.line}</p>
-        </div>
-      </section>
     </OverviewTemplate>
   );
 }

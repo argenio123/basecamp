@@ -12,9 +12,11 @@ import SubpageCards, { type SubpageCardsProps } from "./SubpageCards";
 const NO_MARQUEE = new Set(["membership", "schedule", "visit", "about"]);
 const showsMarquee = (path: string) => !NO_MARQUEE.has(sectionKeyFor(path));
 /** Sections whose sub-pages show no breadcrumb bar under the hero. */
-const NO_BREADCRUMBS = new Set(["membership"]);
+const NO_BREADCRUMBS = new Set(["membership", "visit", "about", "schedule"]);
+/** Pages outside those sections that keep the Membership page style (FAQ moved from Membership to About). */
+const MEMBERSHIP_STYLE_PAGES = new Set(["/about/faq"]);
 /** Sections whose sub-pages show no "Related" cards. */
-const NO_RELATED = new Set(["membership"]);
+const NO_RELATED = new Set(["membership", "visit", "about", "schedule"]);
 
 type GlanceProps = ComponentProps<typeof AtAGlance>;
 
@@ -86,11 +88,11 @@ export function DetailTemplate({ path, hero, glance, crumbLabel, related, relate
   return (
     <>
       {hero}
-      {!NO_BREADCRUMBS.has(sectionKeyFor(path)) && <Breadcrumbs current={path} label={crumbLabel} />}
+      {!NO_BREADCRUMBS.has(sectionKeyFor(path)) && !MEMBERSHIP_STYLE_PAGES.has(path) && <Breadcrumbs current={path} label={crumbLabel} />}
       <AtAGlance ghost={SECTION_FEATURES[sectionKeyFor(path)].ghost} {...glance} />
       {children}
       {showsMarquee(path) && <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />}
-      {!NO_RELATED.has(sectionKeyFor(path)) && <RelatedLinks current={path} hrefs={related} title={relatedTitle} />}
+      {!NO_RELATED.has(sectionKeyFor(path)) && !MEMBERSHIP_STYLE_PAGES.has(path) && <RelatedLinks current={path} hrefs={related} title={relatedTitle} />}
       {afterRelated}
       {cta}
       <PrevNext current={path} />

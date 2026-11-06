@@ -4,10 +4,18 @@
 // and the CSV route handler re-checks with isAdminRequest().
 import { NextResponse, type NextRequest } from "next/server";
 import { verifySession } from "@/lib/auth/token";
+import { MEMBER_COOKIE, verifyMemberSession } from "@/lib/members/token";
 
 // The sign-in page lives at /login (outside the matcher); next.config.ts permanently redirects /admin/login → /login,
 // and config redirects run before Proxy.
 export function proxy(request: NextRequest) {
+  // Member-only pages (request / inquire / purchase / book): send visitors to the member log-in, then back.
+  if (!request.nextUrl.pathname.startsWith("/admin")) {
+    if (verifyMemberSession(request.cookies.get(MEMBER_COOKIE)?.value ?? "", Date.now())) return NextResponse.next();
+    const login = new URL("/account/login", request.url);
+    login.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+    return NextResponse.redirect(login);
+  }
   const ok = verifySession(request.cookies.get("bc_admin_session")?.value ?? "", Date.now());
   if (ok) return NextResponse.next();
   // The CSV download is fetched directly, not navigated to: answer 401 rather than redirecting to the login page.
@@ -17,4 +25,4 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
-export const config = { matcher: ["/admin", "/admin/:path*"] };
+export const config = { matcher: ["/admin", "/admin/:path*", "/contact", "/schedule/book"] };

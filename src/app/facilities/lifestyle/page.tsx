@@ -11,7 +11,7 @@ import { FACILITIES_CTA, FUEL, LIFESTYLE_HERO, SIGNATURE, SIGNATURE_PREVIEW, SOC
 
 export const metadata: Metadata = {
   title: "Lounge, food & signature spaces",
-  description: "Life beyond the workout at BaseCamp CamSur: the café and social lounge, planned performance Filipino menu concepts and signature spaces built to be photographed.",
+  description: "Life beyond the workout at BaseCamp CamSur: the café and social lounge, planned performance Filipino menu concepts, and signature spaces built to be photographed.",
 };
 
 // Stage-3 §1: /facilities/lifestyle holds [social-lounge] [fuel] [signature-spaces] (ids kept for menu and legacy links).

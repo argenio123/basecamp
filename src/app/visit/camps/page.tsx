@@ -7,9 +7,7 @@ import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import CampCards from "@/components/visit/CampCards";
 import VisitItems from "@/components/visit/VisitItems";
-import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
-import { AVAILABILITY_LABEL } from "@/content/labels";
 import { CAMPS, CAMPS_CTA, CAMPS_GLANCE, CAMPS_HERO, CAMPS_META, LONG_STAYS } from "@/data/visit";
 
 // Static metadata object (01-app/03-api-reference/04-functions/generate-metadata.md#the-metadata-object).
@@ -22,25 +20,14 @@ export default async function CampsPage() {
   const c = await getSiteContent();
   const campGroup = c.pricing.groups.find((g) => g.id === "camps");
   const campItems = (campGroup?.items ?? []).filter((i) => i.visible);
-  const prices = campItems.flatMap((i) => (i.price ? [i.price.min] : []));
-  const fromPrice = prices.length > 0 ? formatPhp({ min: Math.min(...prices), max: null }) : "";
-  const statuses = [...new Set(campItems.map((i) => i.availability))];
 
 
   return (
     <DetailTemplate
       path="/visit/camps"
       hero={<PageHero {...CAMPS_HERO} />}
-      glance={{
-        summary: CAMPS_GLANCE.summary,
-        facts: [
-          campItems.length > 0 && { label: CAMPS.pricesTitle, value: String(campItems.length) },
-          fromPrice && { label: "From", value: fromPrice },
-          { label: "Booking", value: CAMPS.enquiryLabel },
-          statuses.length === 1 && { label: "Status", value: AVAILABILITY_LABEL[statuses[0]] },
-        ],
-      }}
-      related={["/visit/why-camsur", "/classes/coaching", "/membership/passes"]}
+      glance={{ summary: CAMPS_GLANCE.summary, statement: true }}
+      related={["/visit/why-camsur", "/classes/coaching", "/membership/price-guide"]}
       cta={<CtaBand eyebrow={CAMPS_CTA.eyebrow} />}
     >
       <section id="camps" className="section shell">

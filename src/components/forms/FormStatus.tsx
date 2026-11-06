@@ -1,9 +1,11 @@
+import { LoginPrompt } from "@/components/members/MemberGate";
 import { startTransition, type FormEvent } from "react";
 import type { LeadResult } from "@/lib/leads/types";
 
 /** Error banner for a form result: `.ui-form-status[data-state=error]` with role="alert". */
 export default function FormStatus({ state, className }: { state: LeadResult; className?: string }) {
   if (state.status !== "error" || !state.message) return null;
+  if (state.loginRequired) return <LoginPrompt compact title="Log in to continue" text={state.message} />;
   return <p className={`ui-form-status${className ? ` ${className}` : ""}`} data-state="error" role="alert">{state.message}</p>;
 }
 

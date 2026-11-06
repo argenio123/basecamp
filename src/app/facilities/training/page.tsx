@@ -13,7 +13,7 @@ import { ALL_WEATHER, FACILITIES_CTA, RUNNING, TRAINING, TRAINING_HERO } from "@
 
 export const metadata: Metadata = {
   title: "Training zones & running loop",
-  description: "BaseCamp CamSur training zones: a CrossFit-style area, a complete gym, 673 square meters of outdoor space, a planned running loop and all-weather design.",
+  description: "BaseCamp CamSur training zones: a CrossFit-style area, a complete gym, 673 square meters of outdoor space, a planned running loop, and all-weather design.",
 };
 
 // Stage-3 §1: /facilities/training holds [training-zones] [running-loop] [all-weather] (ids kept for menu and legacy links).
@@ -31,7 +31,7 @@ export default async function FacilitiesTrainingPage() {
         summary: "Three training zones with 673 square meters outdoors, a planned running loop through nature and design that works in every kind of weather.",
         facts: [statFact(stats, "sqm"), statFact(stats, "zones"), lanes && { label: lanes.title, value: "Planned" }],
       }}
-      related={["/classes/endurance", "/facilities/recovery", "/membership/passes"]}
+      related={["/classes/endurance", "/facilities/recovery", "/membership/price-guide"]}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id={FACILITY_ANCHORS.training} className="section">

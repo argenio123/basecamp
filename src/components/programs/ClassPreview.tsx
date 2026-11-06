@@ -10,17 +10,17 @@ const ACTION: Record<LaunchPhase, { label: string; href: string; note: string }>
   "pre-launch": {
     label: "Join the schedule waitlist",
     href: "/contact?interest=schedule",
-    note: "This is a launch preview. Exact days, times and coaches will be confirmed before booking opens.",
+    note: "This is a launch preview. Exact days, times, and coaches will be confirmed before booking opens.",
   },
   "soft-opening": {
     label: "View the soft-opening schedule",
-    href: "/schedule#timetable",
+    href: "/schedule/timetable",
     note: "Invitation-only sessions are being released during soft opening.",
   },
   live: {
     label: "View the live schedule",
-    href: "/schedule#timetable",
-    note: "Check the current timetable for coaches, availability and booking options.",
+    href: "/schedule/timetable",
+    note: "Check the current timetable for coaches, availability, and booking options.",
   },
 };
 

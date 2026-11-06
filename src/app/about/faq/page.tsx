@@ -4,33 +4,24 @@ import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 
-const PATH = "/membership/faq";
-const PLATFORM_NOTE = "Coming soon: online sign-up, class bookings with waitlists, guest-pass tracking, priority booking for Premium members and automated billing.";
+const PATH = "/about/faq";
+const PLATFORM_NOTE = "Coming soon: online sign-up, class bookings with waitlists, guest-pass tracking, priority booking for Premium members, and automated billing.";
 
 export const metadata: Metadata = {
   title: "Membership FAQ",
-  description: "Answers on BaseCamp CamSur class-pack validity, guest passes, freezes, cancellations and the early member offer, plus what the member platform will add.",
+  description: "Answers on BaseCamp CamSur class-pack validity, guest passes, freezes, cancellations, and the early member offer, plus what the member platform will add.",
 };
 
 export default async function MembershipFaqPage() {
   const { settings, pricing } = await getSiteContent();
   const { faq } = pricing;
-  const { contact } = settings;
 
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero title="Before you join." intro="How packs, passes and memberships work, and what the member platform will add." image="/images/facilities/facility-detail.jpg" imageAlt="Architectural detail at BaseCamp CamSur" />}
-      glance={{
-        summary: "Quick answers on memberships, passes and the early offer, and what the member platform will add.",
-        facts: [
-          faq.length > 0 && { label: "Questions answered", value: String(faq.length) },
-          { label: "Member platform", value: "Coming soon" },
-          { label: "Email", value: contact.email },
-          { label: "Phone", value: contact.phoneDisplay },
-        ],
-      }}
-      related={["/membership#tiers", "/membership/passes", "/contact"]}
+      hero={<PageHero title="Before you join." intro="How packs, passes, and memberships work, and what the member platform will add." image="/images/programs/stations/row.jpg" imageAlt="Athlete on a rowing machine at BaseCamp CamSur" />}
+      glance={{ summary: "Packs and passes.\nThe founding offer.\nThe member platform.", statement: true }}
+      related={["/membership#tiers", "/membership/price-guide", "/contact"]}
       cta={<>
         <CtaBand eyebrow="Still unsure?" title="Ask us anything." body="Send a question and the BaseCamp CamSur team will reply." label="Contact us" href="/contact" />
       </>}

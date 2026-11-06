@@ -14,26 +14,26 @@ export const ABOUT_HERO = {
 
 /** "At a glance" summaries (≤25 words each, stage-3 §6). */
 export const ABOUT_GLANCE = {
-  overview: "BaseCamp CamSur is a purpose-built destination in Camarines Sur where performance training, recovery and lifestyle come together in one place.",
-  design: "A facility designed to grow from the landscape: modern tropical architecture, lakes and jungle on the doorstep, and nature as a training partner.",
-  build: "Follow BaseCamp CamSur from construction to opening: build updates, the countdown to launch and the vision for what comes next.",
-  contact: "Join the early access list, send an inquiry about camps, corporate or partnerships, or find directions to BaseCamp CamSur.",
+  overview: "BaseCamp CamSur is a purpose-built destination in Camarines Sur where performance training, recovery, and lifestyle come together in one place.",
+  design: "Built into the landscape.\nLakes and jungle outside.\nNature as a training partner.",
+  build: "Ground broken.\nWalls going up.\nDoors opening soon.",
+  contact: "Join the early access list, send an inquiry about camps, corporate, or partnerships, or find directions to BaseCamp CamSur.",
 };
 
 export const DESIGN_HERO = {
-  eyebrow: "About",
-  title: "Design & place.",
-  intro: "A facility shaped by performance, nature and place: open-air training, lakes and jungle, and architecture that belongs to the landscape.",
-  image: "/images/facilities/facility-detail.jpg",
-  imageAlt: "Architectural detail at BaseCamp CamSur",
+  eyebrow: "",
+  title: "Built for performance.",
+  intro: "A facility shaped by performance, nature, and place: open-air training, lakes and jungle, and architecture that belongs to the landscape.",
+  image: "/images/programs/classes-hero.jpg",
+  imageAlt: "Athletes training in a brick-and-concrete gym",
 };
 
 export const BUILD_HERO = {
-  eyebrow: "About",
-  title: "The build.",
-  intro: "Built from the ground up in Camarines Sur. Follow the construction, the countdown to opening and the vision ahead.",
-  image: "/images/facilities/facility-render-a1-3.jpg",
-  imageAlt: "Render of the BaseCamp CamSur facility",
+  eyebrow: "",
+  title: "Built from the ground up.",
+  intro: "Built from the ground up in Camarines Sur. Follow the construction, the countdown to opening, and the vision ahead.",
+  image: "/images/programs/stations/sled-push-man.jpg",
+  imageAlt: "Athlete driving a loaded sled across the gym floor",
 };
 
 export const VISION = {
@@ -54,7 +54,7 @@ export const PROBLEM = {
   lead: "Today's athletes want more than workouts; they want transformation, community, and an environment purpose-built for their complete journey.",
   body: "The modern athlete trains across multiple disciplines, values recovery as much as performance, and seeks authentic community. Yet no destination in Southeast Asia delivers all three elements in an integrated, professionally operated environment.",
   /** Overview summary of `body` (stage-3 §1: [problem] + [edge] merged as short copy; intros ≤2 sentences). */
-  short: "Athletes train across disciplines, value recovery as much as performance and seek real community. No destination in Southeast Asia yet delivers all three in one place.",
+  short: "Athletes train across disciplines, value recovery as much as performance, and seek real community. No destination in Southeast Asia yet delivers all three in one place.",
   gaps: [
     { title: "Urban gyms fall short", body: "Crowded, indoor environments offering repetitive programming without the space, natural elements, or infrastructure serious athletes need." },
     { title: "Wellness retreats miss the mark", body: "Passive experiences focused on relaxation rather than performance, lacking the training intensity and programming hybrid athletes demand." },
@@ -77,7 +77,7 @@ export const IDENTITY = {
   eyebrow: "Who we are",
   title: "Sports first. Recovery as essential. A destination worth the trip.",
   items: [
-    { title: "Sports & performance", body: "CrossFit-style, HYROX-style and outdoor training at the core" },
+    { title: "Sports & performance", body: "CrossFit-style, HYROX-style, and outdoor training at the core" },
     { title: "Wellness & recovery", body: "Recovery built in as essential infrastructure" },
     { title: "Destination", body: "Train somewhere worth traveling to" },
   ] satisfies Item[],
@@ -87,7 +87,7 @@ export const EDGE = {
   eyebrow: "Our edge",
   title: "Our edge: performance science meets natural beauty.",
   contrastLabel: "Three destinations, three promises",
-  intro: "BaseCamp CamSur brings together what no one else in Southeast Asia offers in one place: performance, technology, outdoor athleticism and recovery.",
+  intro: "BaseCamp CamSur brings together what no one else in Southeast Asia offers in one place: performance, technology, outdoor athleticism, and recovery.",
   chips: ["Functional fitness", "HYROX-style preparation", "Outdoor performance conditioning", "Advanced recovery technology", "Lake-based multi-sport training", "Data-driven transformation"],
   contrast: [
     { place: "Bali", promise: "Feel good", body: "Leave feeling relaxed, spiritually connected and emotionally refreshed.", highlight: false },
@@ -104,11 +104,11 @@ export const PERFORMANCE_NATURE = {
   image: "/images/programs/program-endurance.png",
   imageAlt: "Athlete running outdoors on an endurance session",
   items: [
-    { title: "Trail-based conditioning", body: "Purpose-built trails for interval training, hill repeats and technical running. Varying terrain develops agility, strength and mental toughness together." },
+    { title: "Trail-based conditioning", body: "Purpose-built trails for interval training, hill repeats, and technical running. Varying terrain develops agility, strength, and mental toughness together." },
     { title: "Lake running + water circuits", body: "Shallow-water resistance work along the lake edge, deep-water running for low-impact conditioning, and swimming built into cross-training circuits." },
-    { title: "Obstacle + terrain integration", body: "Logs, rocks and hills built into workout design: climbing, jumping and crawling through real landscape rather than artificial gym obstacles." },
+    { title: "Obstacle + terrain integration", body: "Logs, rocks, and hills built into workout design: climbing, jumping and crawling through real landscape rather than artificial gym obstacles." },
     { title: "HYROX-style lakeside events", body: "Racing through nature, rather than inside warehouses. Race-style courses set against lake and mountain scenery." },
-    { title: "Multi-element workouts", body: "Sessions that combine mud, forest, mountain and water, for a unique training stimulus and mental challenge." },
+    { title: "Multi-element workouts", body: "Sessions that combine mud, forest, mountain, and water, for a unique training stimulus and mental challenge." },
   ] satisfies Item[],
 };
 
@@ -119,9 +119,9 @@ export const PLACE = {
   image: "/images/facilities/facility-background-a1-5-b.jpg",
   imageAlt: "Architectural render of BaseCamp CamSur's open-air training areas",
   items: [
-    { title: "Lago Del Rey", body: "A protected lake for paddle training, open water swimming and water-based conditioning, all year round and without ocean hazards." },
+    { title: "Lago Del Rey", body: "A protected lake for paddle training, open water swimming, and water-based conditioning, all year round and without ocean hazards." },
     { title: "CamSur Watersports Complex", body: "The region's established wakeboarding and water-sports hub, close to BaseCamp." },
-    { title: "Villa Del Rey lodging", body: "Nearby lodging for camps, weekends and longer training blocks." },
+    { title: "Villa Del Rey lodging", body: "Nearby lodging for camps, weekends, and longer training blocks." },
     { title: "Mountains, lakes, forests", body: "CamSur's natural assets are the raw materials for nature-first training." },
     { title: "Philippine warmth and accessibility", body: "A fresh alternative to Bali, accessible from Manila, with an established hospitality ecosystem." },
     { title: "Nature immersion", body: "The natural environment treated as a core wellness modality, alongside structured training." },
@@ -190,14 +190,14 @@ export const PARTNERS = {
 export const CONTACT = {
   eyebrow: "Early access",
   title: "Become an early member.",
-  lead: "Join the early access list: early-member rates, exclusive updates and priority access.",
+  lead: "Join the early access list: early-member rates, exclusive updates, and priority access.",
   formEyebrow: "Get in touch",
   formTitle: "Two ways to reach us.",
-  formIntro: "Early access puts you on the early access list. Inquiry is for corporate off-sites, camps and group bookings, partnerships and media.",
+  formIntro: "Early access puts you on the early access list. Inquiry is for corporate off-sites, camps, group bookings, partnerships, and media.",
   foundingLink: "About early membership",
   findEyebrow: "Find us",
   findTitle: "Address & directions.",
-  findIntro: "BaseCamp CamSur is in Camarines Sur, Philippines. Getting there, transfers and the map are on the Visit page.",
+  findIntro: "BaseCamp CamSur is in Camarines Sur, Philippines. Getting there, transfers, and the map are on the Visit page.",
   visitLink: "Getting there",
 };
 

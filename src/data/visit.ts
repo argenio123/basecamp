@@ -7,19 +7,18 @@ export type VisitItem = { title: string; body?: string; availability?: Availabil
 // ---------- /visit (overview) ----------
 export const VISIT_META = {
   title: "Visit",
-  description: "Plan your visit to BaseCamp CamSur in Pili, Camarines Sur: address, map and directions, with flights to Naga or Legazpi, car rental and van transfers. Accessible from Manila.",
+  description: "Plan your visit to BaseCamp CamSur in Pili, Camarines Sur: address, map, and directions, with flights to Naga or Legazpi, car rental, and van transfers. Accessible from Manila.",
 };
 
 export const VISIT_HERO = {
-  eyebrow: "Visit",
-  title: "Plan your visit.",
+  title: "Come train with us.",
   intro: "BaseCamp CamSur is in Pili, Camarines Sur, accessible from Manila. Here's how to find us.",
-  image: "/images/facilities/facility-landscape.jpg",
-  imageAlt: "Landscape view of the planned BaseCamp CamSur facility",
+  image: "/images/programs/generated/endurance.png",
+  imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
 };
 
 export const VISIT_GLANCE = {
-  summary: "Plan the journey to Camarines Sur, compare airport options and choose the most practical way to reach BaseCamp.",
+  summary: "Fly into Naga or Legazpi.\nDrive to Pili.\nTrain at BaseCamp.",
 };
 
 export const GETTING_THERE = {
@@ -45,15 +44,14 @@ export const WHY_META = {
 };
 
 export const WHY_HERO = {
-  eyebrow: "Why CamSur",
-  title: "The freshwater and forest alternative.",
-  intro: "While others do beaches, CamSur offers cooler temperatures, calmer waters and mountain backdrops: a different kind of paradise.",
-  image: "/images/facilities/facility-aerial.jpg",
-  imageAlt: "Aerial view of the BaseCamp CamSur site",
+  title: "Train where nature pushes back.",
+  intro: "While others do beaches, CamSur offers cooler temperatures, calmer waters, and mountain backdrops: a different kind of paradise.",
+  image: "/images/programs/generated/recovery-mobility.png",
+  imageAlt: "Coach guiding a mobility session in the open-air gym with tropical hills behind",
 };
 
 export const WHY_GLANCE = {
-  summary: "Why Camarines Sur: freshwater and forest instead of beach, outdoor training all year, and water-based conditioning on Lago Del Rey.",
+  summary: "Freshwater, not beach.\nTraining all year.\nConditioning on the lake.",
   eyebrow: "Why CamSur",
 };
 
@@ -62,7 +60,7 @@ export const LAGO = {
   title: "Train on the water.",
   note: "Partner experiences",
   items: [
-    { title: "Lago Del Rey", body: "Paddle training, open water swimming and water-based conditioning: year-round water sports, without ocean hazards." },
+    { title: "Lago Del Rey", body: "Paddle training, open water swimming, and water-based conditioning: year-round water sports, without ocean hazards." },
     { title: "CamSur Watersports Complex (CWC)", body: "Wakeboarding and water sports." },
     { title: "Trails", body: "Trails for running and mountain biking." },
     { title: "Triathlon courses", body: "Triathlon courses and transition zones." },
@@ -74,19 +72,18 @@ export const LAGO = {
 // ---------- /visit/camps ----------
 export const CAMPS_META = {
   title: "Camps & Retreats",
-  description: "Training camps, retreats and long stays at BaseCamp CamSur: day clinics, weekend and week-long immersive camps with lodging at Villa Del Rey, and long stays for remote workers. Inquiry only.",
+  description: "Training camps, retreats, and long stays at BaseCamp CamSur: day clinics, weekend and week-long immersive camps with lodging at Villa Del Rey, and long stays for remote workers. Inquiry only.",
 };
 
 export const CAMPS_HERO = {
-  eyebrow: "Camps & retreats",
-  title: "Camps, retreats & long stays.",
-  intro: "Training camps and retreats for athletes, coaches and their communities, plus long stays for remote workers and fitness nomads.",
-  image: "/images/destination/thrive.png",
-  imageAlt: "Athlete training on gymnastic rings",
+  title: "Train hard. Stay longer.",
+  intro: "Training camps and retreats for athletes, coaches, and their communities, plus long stays for remote workers and fitness nomads.",
+  image: "/images/destination/transform.png",
+  imageAlt: "Athletes training together with kettlebells at BaseCamp CamSur",
 };
 
 export const CAMPS_GLANCE = {
-  summary: "Training camps, retreats and long stays for athletes, coaches and travelers, from single-day clinics to week-long immersive camps.",
+  summary: "One-day clinics.\nWeek-long camps.\nStays that last months.",
 };
 
 export const CAMPS = {
@@ -114,10 +111,10 @@ export const CAMPS = {
 export const LONG_STAYS = {
   eyebrow: "Long stays",
   title: "Live here for a while.",
-  body: "A wellness hub for remote workers and fitness nomads: co-working next to training, healthy dining and recovery, all walkable. Digital nomads base themselves here for months at a time.",
+  body: "A wellness hub for remote workers and fitness nomads: co-working next to training, healthy dining, and recovery, all walkable. Digital nomads base themselves here for months at a time.",
   availability: "planned" as Availability,
-  image: "/images/facilities/facility-background-a1-5-b.jpg",
-  imageAlt: "Open, planted spaces at BaseCamp CamSur",
+  image: "/images/destination/train.png",
+  imageAlt: "Coach guiding a stretching session in a studio with residences outside",
   cta: { label: "Register interest", href: "/contact?interest=extended-stay" },
 };
 

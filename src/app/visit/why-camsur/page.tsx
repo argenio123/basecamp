@@ -20,10 +20,7 @@ export default async function WhyCamsurPage() {
     <DetailTemplate
       path="/visit/why-camsur"
       hero={<PageHero {...WHY_HERO} />}
-      glance={{
-        summary: WHY_GLANCE.summary,
-        facts: [...why.reasons.slice(0, 3).map((r) => r.title), { label: "On the water", value: LAGO.eyebrow }],
-      }}
+      glance={{ summary: WHY_GLANCE.summary, statement: true }}
       related={["/visit/camps", "/facilities/training", "/schedule/events"]}
       cta={<CtaBand eyebrow={VISIT_CTA.eyebrow} />}
     >

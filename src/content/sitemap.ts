@@ -52,7 +52,7 @@ export const SECTION_IDS: readonly SectionId[] = ["programs", "facilities", "mem
 export const CONTACT_PAGE: SitePage = {
   href: "/contact",
   label: "Contact",
-  summary: "Ways to reach BaseCamp CamSur, the inquiry form and directions.",
+  summary: "Ways to reach BaseCamp CamSur, the inquiry form, and directions.",
   image: "/images/facilities/facility-front.jpg",
   imageAlt: "The front of the BaseCamp CamSur facility",
   adminTab: "settings",
@@ -84,18 +84,18 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     href: "/classes",
     overview: page({
       href: "/classes", label: "Classes", tabLabel: "Overview",
-      summary: "Coach-led classes for strength, fitness, endurance and recovery.",
+      summary: "Coach-led classes for strength, fitness, endurance, and recovery.",
       image: "/images/programs/program-functional.png", imageAlt: "Athlete training inside a modern functional fitness space", adminTab: "programmes",
     }),
     pages: [
       page({
         href: "/classes/coaching", label: "Coaching & assessment", tabLabel: "Coaching",
-        summary: "Your starting assessment, mindset training and the coaching team.",
+        summary: "Your starting assessment, mindset training, and the coaching team.",
         image: "/images/programs/program-coaching.png", imageAlt: "Coach working one-to-one with an athlete", adminTab: "programmes",
       }),
       page({
         href: "/classes/corporate", label: "Corporate classes", tabLabel: "Corporate",
-        summary: "Team off-sites, wellness and group training for organizations.",
+        summary: "Team off-sites, wellness, and group training for organizations.",
         image: "/images/destination/transform.png", imageAlt: "Two athletes training with kettlebells", adminTab: "programmes",
       }),
     ],
@@ -108,18 +108,18 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     href: "/facilities",
     overview: page({
       href: "/facilities", label: "Facilities", tabLabel: "Overview",
-      summary: "Outdoor training, a dedicated recovery level and spaces to stay longer.",
+      summary: "Outdoor training, a dedicated recovery level, and spaces to stay longer.",
       image: "/images/facilities/facility-aerial.jpg", imageAlt: "Aerial view of the BaseCamp CamSur site", adminTab: "recovery",
     }),
     pages: [
       page({
         href: "/facilities/training", label: "Training zones", tabLabel: "Training",
-        summary: "Training zones, the running loop and all-weather cover.",
+        summary: "Training zones, the running loop, and all-weather cover.",
         image: "/images/facilities/facility-front.jpg", imageAlt: "Outdoor training area at BaseCamp CamSur", adminTab: "home",
       }),
       page({
         href: "/facilities/recovery", label: "Recovery",
-        summary: "Cold, heat, contrast and more, with the status of each modality.",
+        summary: "Cold, heat, contrast, and more, with the status of each modality.",
         image: "/images/programs/program-recovery.png", imageAlt: "Recovery session at BaseCamp CamSur", adminTab: "recovery",
       }),
       page({
@@ -134,7 +134,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       }),
     ],
     menu: {
-      text: "Outdoor training, a dedicated recovery level and spaces to stay longer.",
+      text: "Outdoor training, a dedicated recovery level, and spaces to stay longer.",
       image: "/images/facilities/facility-aerial-render.jpg", imageAlt: "Aerial render of the BaseCamp CamSur building and grounds",
       video: facilitiesVideo(960, 540), videoPoster: facilitiesVideoFrame(960, 540),
       highlights: [
@@ -153,8 +153,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     href: "/membership",
     overview: page({
       href: "/membership", label: "Membership", tabLabel: "Overview",
-      summary: "Early rates, membership tiers and what each one includes.",
-      image: "/images/hero/hero-training.png", imageAlt: "Athlete training at BaseCamp CamSur", adminTab: "pricing",
+      summary: "Early rates, membership tiers, and what each one includes.",
+      image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled in the open-air gym", adminTab: "pricing",
     }),
     pages: [
       page({
@@ -164,58 +164,22 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       }),
       page({
         href: "/membership/launch-promotions", label: "Launch promotions", tabLabel: "Promotions",
-        summary: "Launch rates on test: introductory membership, weekend day pass and early-booking camps.",
+        summary: "Launch rates on test: introductory membership, weekend day pass, and early-booking camps.",
         image: "/images/programs/generated/strength-conditioning.png", imageAlt: "Athlete squatting a loaded barbell", adminTab: "pricing",
       }),
       page({
         href: "/membership/price-guide", label: "Passes, recovery & more", tabLabel: "Price guide",
-        summary: "Starting prices for packs, passes, yoga, recovery, camps and corporate bookings.",
+        summary: "Starting prices for packs, passes, yoga, recovery, camps, and corporate bookings.",
         image: "/images/programs/program-functional.png", imageAlt: "Functional training session", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/passes", label: "Class packs & day passes", tabLabel: "Passes",
-        summary: "Class packs, day passes and open-gym access.",
-        image: "/images/programs/program-strength.png", imageAlt: "Strength training session", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/recovery-pricing", label: "Recovery pricing",
-        summary: "Prices for recovery sessions, advanced recovery and yoga.",
-        image: "/images/programs/generated/recovery-mobility.png", imageAlt: "Mobility and recovery session", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/yoga", label: "Yoga pricing", tabLabel: "Yoga",
-        summary: "Single classes, yoga packs and the unlimited yoga add-on for members.",
-        image: "/images/destination/train.png", imageAlt: "Coach adjusting a seated stretch in the studio", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/camps", label: "Camp pricing", tabLabel: "Camps",
-        summary: "Day clinics, weekend camps and five-day immersive packages.",
-        image: "/images/destination/transform.png", imageAlt: "Athletes training with kettlebells", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/corporate", label: "Corporate pricing", tabLabel: "Corporate",
-        summary: "Pricing for teams, companies and group bookings.",
-        image: "/images/facilities/facility-exterior.jpg", imageAlt: "BaseCamp CamSur facility exterior", adminTab: "pricing",
-      }),
-      page({
-        href: "/membership/faq", label: "FAQ",
-        summary: "Answers on membership and booking, and the member platform.",
-        image: "/images/facilities/facility-detail.jpg", imageAlt: "Architectural detail at BaseCamp CamSur", adminTab: "pricing",
       }),
     ],
     menu: {
-      text: "Early rates, membership tiers, passes and recovery pricing.",
-      image: "/images/hero/hero-training.png", imageAlt: "Athlete training at BaseCamp CamSur",
+      text: "Early rates, membership tiers, passes, and recovery pricing.",
+      image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled in the open-air gym",
       highlights: [
         { href: "/membership/founding", label: "Founding members" },
         { href: "/membership/launch-promotions", label: "Launch promotions" },
         { href: "/membership/price-guide", label: "Passes, recovery & more" },
-        { href: "/membership/passes", label: "Class packs & day passes" },
-        { href: "/membership/recovery-pricing", label: "Recovery pricing" },
-        { href: "/membership/yoga", label: "Yoga pricing" },
-        { href: "/membership/camps", label: "Camp pricing" },
-        { href: "/membership/corporate", label: "Corporate pricing" },
-        { href: "/membership/faq", label: "FAQ" },
       ],
     },
   },
@@ -230,25 +194,30 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     }),
     pages: [
       page({
+        href: "/schedule/timetable", label: "Weekly timetable", tabLabel: "Timetable",
+        summary: "Pick your day, filter your session, and request a place.",
+        image: "/images/programs/stations/row.jpg", imageAlt: "Athlete on a rowing machine", adminTab: "schedule",
+      }),
+      page({
         href: "/schedule/events", label: "Events & night training", tabLabel: "Events",
-        summary: "Night training, competitions and the events calendar.",
+        summary: "Night training, competitions, and the events calendar.",
         image: "/images/programs/generated/endurance.png", imageAlt: "Endurance training session", adminTab: "schedule",
       }),
       page({
         href: "/schedule/book", label: "Book a session", tabLabel: "Book",
-        summary: "Request a class, appointment or camp place.",
+        summary: "Request a class, appointment, or camp place.",
         image: "/images/programs/generated/functional-training.png", imageAlt: "Functional training session", adminTab: "schedule",
       }),
     ],
     menu: {
-      text: "The weekly rhythm, events and booking.",
+      text: "The weekly rhythm, events, and booking.",
       image: "/images/programs/generated/personal-coaching.png", imageAlt: "Coach supporting an athlete during a training session",
       highlights: [
-        { href: "/schedule#rhythm", label: "Weekly rhythm" },
-        { href: "/schedule#timetable", label: "Timetable" },
+        { href: "/schedule/timetable", label: "Weekly timetable" },
         { href: "/schedule/events#night", label: "Night training" },
         { href: "/schedule/events", label: "Competitions & events" },
         { href: "/schedule/book", label: "Book a session" },
+        { href: "/schedule/book?service=appointment#book", label: "Recovery appointments" },
       ],
     },
   },
@@ -264,12 +233,12 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     pages: [
       page({
         href: "/visit/camps", label: "Camps & retreats", tabLabel: "Camps",
-        summary: "Training camps, retreat packages and long stays for travelers.",
+        summary: "Training camps, retreat packages, and extended stays for traveling athletes.",
         image: "/images/destination/thrive.png", imageAlt: "Athlete training on gymnastic rings", adminTab: "pricing",
       }),
       page({
         href: "/visit/why-camsur", label: "Why CamSur",
-        summary: "Why Camarines Sur, including Lago del Rey.",
+        summary: "Why athletes train in Camarines Sur, plus Lago del Rey.",
         image: "/images/facilities/facility-aerial.jpg", imageAlt: "Aerial view of the BaseCamp CamSur site", adminTab: "whyCamsur",
       }),
     ],
@@ -277,9 +246,9 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       text: "Getting to BaseCamp, and camps & retreats for travelers.",
       image: "/images/facilities/facility-landscape.jpg", imageAlt: "The CamSur landscape around BaseCamp",
       highlights: [
-        { href: "/visit#getting-there", label: "Getting there" },
+        { href: "/visit#find-us", label: "Getting there" },
         { href: "/visit/camps", label: "Camps & retreats" },
-        { href: "/visit/camps#long-stays", label: "Long stays" },
+        { href: "/visit/camps#long-stays", label: "Extended stays" },
         { href: "/visit/why-camsur", label: "Why CamSur" },
         { href: "/visit/why-camsur#lago-del-rey", label: "Lago del Rey" },
       ],
@@ -291,19 +260,24 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     href: "/about",
     overview: page({
       href: "/about", label: "About", tabLabel: "Overview",
-      summary: "The vision, brand pillars and what makes BaseCamp CamSur different.",
+      summary: "The vision, brand pillars, and what makes BaseCamp CamSur different.",
       image: "/images/facilities/facility-exterior.jpg", imageAlt: "BaseCamp CamSur facility exterior set against the CamSur landscape", adminTab: "story",
     }),
     pages: [
       page({
         href: "/about/design", label: "Design & place",
-        summary: "How the site is designed around performance, nature and place.",
+        summary: "How the site is designed around performance, nature, and place.",
         image: "/images/facilities/facility-background-a1-5-b.jpg", imageAlt: "Render of the BaseCamp CamSur site design", adminTab: "story",
       }),
       page({
         href: "/about/the-build", label: "The build",
-        summary: "Construction progress, build updates and what comes next.",
+        summary: "Construction progress, build updates, and what comes next.",
         image: "/images/facilities/facility-render-a1-3.jpg", imageAlt: "Render of the BaseCamp CamSur facility", adminTab: "story",
+      }),
+      page({
+        href: "/about/faq", label: "FAQ",
+        summary: "Answers on membership and booking, and the member platform.",
+        image: "/images/facilities/facility-detail.jpg", imageAlt: "Architectural detail at BaseCamp CamSur", adminTab: "pricing",
       }),
     ],
     menu: {
@@ -315,6 +289,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         { href: "/about/design", label: "Design & place" },
         { href: "/about/the-build", label: "The build" },
         { href: "/about#different", label: "What makes us different" },
+        { href: "/about/faq", label: "FAQ" },
         { href: "/contact", label: "Contact" },
       ],
     },
@@ -481,18 +456,19 @@ export const LEGACY_HASH_REDIRECTS: Readonly<Record<string, Readonly<Record<stri
     gallery: "/facilities/gallery",
   },
   "/membership": {
-    packs: "/membership/passes#packs",
-    "day-passes": "/membership/passes#day-passes",
-    "open-gym": "/membership/passes#open-gym",
-    "recovery-pricing": "/membership/recovery-pricing",
-    "advanced-recovery": "/membership/recovery-pricing#advanced-recovery",
-    yoga: "/membership/yoga",
-    corporate: "/membership/corporate",
-    faq: "/membership/faq",
-    platform: "/membership/faq#platform",
+    packs: "/membership/price-guide#packs",
+    "day-passes": "/membership/price-guide#day-passes",
+    "open-gym": "/membership/price-guide#open-gym",
+    "recovery-pricing": "/membership/price-guide#recovery-pricing",
+    "advanced-recovery": "/membership/price-guide#advanced-recovery",
+    yoga: "/membership/price-guide#yoga",
+    corporate: "/membership/price-guide#corporate",
+    faq: "/about/faq",
+    platform: "/about/faq#platform",
     "camps-pricing": "/visit/camps#camps-pricing",
   },
   "/schedule": {
+    timetable: "/schedule/timetable",
     night: "/schedule/events#night",
     competition: "/schedule/events#competition",
     events: "/schedule/events#events",

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
-import { FOUNDING_HREF, LOGIN_PATH, type SiteSection } from "@/content/sitemap";
+import MemberNavLink from "@/components/members/MemberNavLink";
+import { FOUNDING_HREF, type SiteSection } from "@/content/sitemap";
 
 // Hash links use plain Link so the browser lands on the anchor (ScrollTopLink forces top).
 function NavLink({ href, children }: { href: string; children: ReactNode }) {
@@ -53,7 +54,7 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
           </details>
         ))}
         <div className="nv-mobile-extras">
-          <ScrollTopLink href={LOGIN_PATH} className="nv-mobile-login" aria-label="Staff login">Login</ScrollTopLink>
+          <MemberNavLink className="nv-mobile-login" />
           <Link href={FOUNDING_HREF}>Become an early member</Link>
         </div>
       </div>

@@ -45,17 +45,17 @@ export const ZONES: { anchor: FacilityAnchor; label: string }[] = [
 
 export const ARRIVAL = {
   title: "Arrival & welcome.",
-  intro: "Parking, reception and initial views.",
+  intro: "Parking, reception, and initial views.",
   items: [
     {
       title: "Central lobby",
-      body: "Check in, orient your visit and get support before training or recovery.",
+      body: "Check in, orient your visit, and get support before training or recovery.",
       availability: "at-launch",
-      details: { audience: "Members, day guests and camp groups", access: "Included with every visit", booking: "No booking required", programs: ["All BaseCamp experiences"], technical: "Professional reception and information desk at the main arrival point." },
+      details: { audience: "Members, day guests, and camp groups", access: "Included with every visit", booking: "No booking required", programs: ["All BaseCamp experiences"], technical: "Professional reception and information desk at the main arrival point." },
     },
     {
       title: "Seamless zones",
-      body: "Move easily between training, recovery and social spaces throughout the day.",
+      body: "Move easily between training, recovery, and social spaces throughout the day.",
       availability: "at-launch",
       details: { audience: "All visitors", access: "Included with every visit", booking: "No booking required", programs: ["Training", "Recovery", "Camps"], technical: "Intuitive circulation connects the primary public zones." },
     },
@@ -77,7 +77,7 @@ export const TRAINING = {
       title: "Complete fitness gym",
       body: "Follow an independent strength plan or add focused accessory work around coached sessions.",
       availability: "at-launch",
-      details: { audience: "Independent athletes and coaching clients", access: "Eligible gym membership or pass", booking: "Open access during member hours", programs: ["Strength & Conditioning", "Personal Coaching"], technical: "Strength equipment, cardio machines and dedicated accessory-work zones." },
+      details: { audience: "Independent athletes and coaching clients", access: "Eligible gym membership or pass", booking: "Open access during member hours", programs: ["Strength & Conditioning", "Personal Coaching"], technical: "Strength equipment, cardio machines, and dedicated accessory-work zones." },
       image: "/images/programs/program-strength.png",
       imageAlt: "Strength training equipment in the gym",
     },
@@ -85,7 +85,7 @@ export const TRAINING = {
       title: "Expansive outdoor space",
       body: "Train speed, carries and conditioning at full scale in the CamSur environment.",
       availability: "at-launch",
-      details: { audience: "Endurance athletes, teams and large groups", access: "Eligible membership, pass or camp", booking: "Classes and group blocks require booking", programs: ["Endurance", "Functional Training"], technical: "673 m² for sprint work, sled pushes, carries and large-group programming." },
+      details: { audience: "Endurance athletes, teams, and large groups", access: "Eligible membership, pass, or camp", booking: "Classes and group blocks require booking", programs: ["Endurance", "Functional Training"], technical: "673 m² for sprint work, sled pushes, carries and large-group programming." },
       image: "/images/programs/program-endurance.png",
       imageAlt: "Outdoor conditioning session under tropical skies",
     },
@@ -133,18 +133,18 @@ export const RECOVERY = {
     title: "Core infrastructure",
     items: [
       { title: "Cold plunge pools", body: "Use cold immersion to reset between sessions and support post-training recovery.", availability: "planned", details: { audience: "Athletes and camp groups", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Dedicated cold-immersion infrastructure for structured recovery protocols." } },
-      { title: "Hot plunge pools", body: "Use heat for relaxation, circulation and contrast-therapy routines.", availability: "planned", details: { audience: "Recovery guests and training camps", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Hot-water infrastructure designed to pair with cold immersion." } },
+      { title: "Hot plunge pools", body: "Use heat for relaxation, circulation, and contrast-therapy routines.", availability: "planned", details: { audience: "Recovery guests and training camps", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Hot-water infrastructure designed to pair with cold immersion." } },
       { title: "Dedicated saunas", body: "Add controlled heat exposure to a deliberate recovery routine.", availability: "at-launch", details: { audience: "Members and recovery guests", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Dedicated heat facilities, with separate men's and women's areas planned." } },
-      { title: "Mobility & breathwork", body: "Restore range of motion, downshift and prepare for the next session.", availability: "at-launch", details: { audience: "All levels", access: "Eligible class or recovery access", booking: "Guided sessions require booking", programs: ["Recovery & Mobility"], technical: "Dedicated floor space and equipment for mobility, stretching and breathwork." } },
+      { title: "Mobility & breathwork", body: "Restore range of motion, downshift, and prepare for the next session.", availability: "at-launch", details: { audience: "All levels", access: "Eligible class or recovery access", booking: "Guided sessions require booking", programs: ["Recovery & Mobility"], technical: "Dedicated floor space and equipment for mobility, stretching and breathwork." } },
     ] satisfies FacilityItem[],
   },
   volume: {
     title: "Built for volume",
     items: [
       { title: "Entire second floor", body: "Recover without competing with the noise and movement of the training floor.", availability: "at-launch", details: { audience: "Members, visitors and camp groups", access: "Recovery pass or eligible plan", booking: "Individual modalities may require booking", programs: ["Recovery & Mobility", "Training Camps"], technical: "A dedicated wellness level with circulation planned for simultaneous use." } },
-      { title: "Multiple treatment rooms", body: "Book focused massage, bodywork and recovery treatments.", availability: "planned", details: { audience: "Athletes needing individual treatment", access: "Treatment add-on", booking: "Booking required", programs: ["Personal Coaching", "Recovery & Mobility"], technical: "Separate rooms for private hands-on treatment services." } },
+      { title: "Multiple treatment rooms", body: "Book focused massage, bodywork, and recovery treatments.", availability: "planned", details: { audience: "Athletes needing individual treatment", access: "Treatment add-on", booking: "Booking required", programs: ["Personal Coaching", "Recovery & Mobility"], technical: "Separate rooms for private hands-on treatment services." } },
       { title: "Hyperbaric chamber", body: "Access a specialist recovery modality following appropriate screening.", availability: "planned", details: { audience: "Screened recovery clients", access: "Specialist session add-on", booking: "Screening and booking required", programs: ["Recovery & Mobility"], technical: "Hyperbaric oxygen equipment remains part of the future facility plan." } },
-      { title: "Gradual cooling rooms", body: "Transition safely between heat, cold and rest during contrast protocols.", availability: "planned", details: { audience: "Contrast-therapy users", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Temperature-transition spaces supporting guided contrast routines." } },
+      { title: "Gradual cooling rooms", body: "Transition safely between heat, cold, and rest during contrast protocols.", availability: "planned", details: { audience: "Contrast-therapy users", access: "Recovery pass or eligible plan", booking: "Reserve a recovery slot", programs: ["Recovery & Mobility"], technical: "Temperature-transition spaces supporting guided contrast routines." } },
     ] satisfies FacilityItem[],
   },
   quote: "This isn't a hotel spa: it's built for high-volume training camps where dozens of athletes need simultaneous access.",
@@ -152,18 +152,18 @@ export const RECOVERY = {
   rituals: { title: "Recovery rituals", body: "Contrast therapy path: cold plunge → hot tub → rest. Guided breathwork sessions and structured recovery protocols. Make recovery systematic, not ad hoc." },
   launchEquipment: {
     title: "Launch recovery equipment",
-    items: ["Commercial ice bath (4–6 people)", "Outdoor-rated infrared sauna (6–8 people)", "Massage guns, foam rollers, resistance bands, stretching mats and yoga props"],
+    items: ["Commercial ice bath (4–6 people)", "Outdoor-rated infrared sauna (6–8 people)", "Massage guns, foam rollers, resistance bands, stretching mats, and yoga props"],
   },
-  pricingLink: { label: "See recovery pricing", href: "/membership/recovery-pricing" },
+  pricingLink: { label: "See recovery pricing", href: "/membership/price-guide#recovery-pricing" },
 };
 
 export const SOCIAL = {
   title: "Social & lounge.",
   items: [
-    { title: "Café & social hub", body: "Refuel, meet training partners and stay connected beyond the workout.", availability: "planned", details: { audience: "Members, visitors and companions", access: "Public areas; purchases separate", booking: "No booking for general use", programs: ["Events", "Training Camps"], technical: "Food, beverage and social seating planned around performance nutrition." } },
-    { title: "Yoga & movement studio", body: "Practise mobility and mind-body work away from the main training floor.", availability: "phase-2", details: { audience: "All levels", access: "Eligible class or recovery plan", booking: "Classes require booking", programs: ["Recovery & Mobility"], technical: "Dedicated studio space for yoga, mobility and complementary movement." } },
-    { title: "Events & workshops", body: "Learn new skills and connect through clinics, seminars and gatherings.", availability: "planned", details: { audience: "Members, teams and the local community", access: "Varies by event", booking: "Event registration required", programs: ["Events", "Workshops"], technical: "Flexible gathering areas support education and community programming." } },
-    { title: "Outdoor integration", body: "Move, rest and socialise across shaded landscaped areas.", availability: "at-launch", details: { audience: "All visitors", access: "Included with site access", booking: "No booking required", programs: ["All BaseCamp experiences"], technical: "Landscape links indoor, semi-covered and outdoor public spaces." } },
+    { title: "Café & social hub", body: "Refuel, meet training partners, and stay connected beyond the workout.", availability: "planned", details: { audience: "Members, visitors and companions", access: "Public areas; purchases separate", booking: "No booking for general use", programs: ["Events", "Training Camps"], technical: "Food, beverage and social seating planned around performance nutrition." } },
+    { title: "Yoga & movement studio", body: "Practice mobility and mind-body work away from the main training floor.", availability: "phase-2", details: { audience: "All levels", access: "Eligible class or recovery plan", booking: "Classes require booking", programs: ["Recovery & Mobility"], technical: "Dedicated studio space for yoga, mobility and complementary movement." } },
+    { title: "Events & workshops", body: "Learn new skills and connect through clinics, seminars, and gatherings.", availability: "planned", details: { audience: "Members, teams and the local community", access: "Varies by event", booking: "Event registration required", programs: ["Events", "Workshops"], technical: "Flexible gathering areas support education and community programming." } },
+    { title: "Outdoor integration", body: "Move, rest, and socialise across shaded landscaped areas.", availability: "at-launch", details: { audience: "All visitors", access: "Included with site access", booking: "No booking required", programs: ["All BaseCamp experiences"], technical: "Landscape links indoor, semi-covered and outdoor public spaces." } },
     { title: "Extended stays", body: "Settle into a complete training day instead of leaving immediately after a session.", availability: "at-launch", details: { audience: "Camp guests and long-stay visitors", access: "Included with eligible visit access", booking: "Camp stays require advance booking", programs: ["Training Camps", "Visitor Experiences"], technical: "Long-dwell spaces support repeat sessions, recovery and community time." } },
   ] satisfies FacilityItem[],
 };
@@ -196,8 +196,8 @@ export const SIGNATURE = {
   ].map((i) => ({ ...i, availability: "planned" as const })) satisfies FacilityItem[],
   av: {
     title: "Audio-visual",
-    body: "Large-format displays, programmable LEDs and stadium-quality audio.",
-    quote: "Design the sound, light and atmosphere to feel like a stadium, not a gym.",
+    body: "Large-format displays, programmable LEDs, and stadium-quality audio.",
+    quote: "Design the sound, light, and atmosphere to feel like a stadium, not a gym.",
   },
 };
 
@@ -231,7 +231,7 @@ export const GALLERY = {
 export const TRAINING_HERO: FacilityHero = {
   eyebrow: "Facilities · Train",
   title: "Training zones.",
-  intro: "Functional, strength and outdoor zones, a running loop through nature, and spaces designed for every kind of weather.",
+  intro: "Functional, strength, and outdoor zones, a running loop through nature, and spaces designed for every kind of weather.",
   image: "/images/facilities/facility-front.jpg",
   imageAlt: "Outdoor training area at BaseCamp CamSur",
 };

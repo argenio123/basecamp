@@ -14,7 +14,7 @@ import { ARRIVAL, DESIGN, FACILITIES_CTA, FACILITIES_HERO, ZONES } from "@/data/
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
 export const metadata: Metadata = {
   title: "Facilities",
-  description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level and spaces to stay longer.",
+  description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level, and spaces to stay longer.",
 };
 
 // One distinct photo per facilities tile (several sub-pages share the same building render).
@@ -62,7 +62,7 @@ export default async function FacilitiesPage() {
         <div className="fc-design-copy" data-reveal>
           <p className="eyebrow">{DESIGN.eyebrow}</p>
           <h2>{DESIGN.title}</h2>
-          <p className="fc-design-summary">See how tropical architecture, natural ventilation and landscape shape the complete BaseCamp experience.</p>
+          <p className="fc-design-summary">See how tropical architecture, natural ventilation, and landscape shape the complete BaseCamp experience.</p>
           <Link className="button button-dark" href="/about/design">Explore the design approach</Link>
         </div>
         <div className="fc-design-side" data-reveal data-reveal-delay="short">

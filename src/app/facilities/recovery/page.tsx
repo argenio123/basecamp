@@ -15,7 +15,7 @@ import { FACILITIES_CTA, RECOVERY, RECOVERY_HERO } from "@/data/facilities";
 
 export const metadata: Metadata = {
   title: "Recovery level",
-  description: "The BaseCamp CamSur recovery level: cold and hot plunge pools, saunas, contrast therapy and treatment rooms, with the launch status of every modality.",
+  description: "The BaseCamp CamSur recovery level: cold and hot plunge pools, saunas, contrast therapy, and treatment rooms, with the launch status of every modality.",
 };
 
 const DISCLAIMER_ID = "recovery-disclaimer";
@@ -34,10 +34,10 @@ export default async function FacilitiesRecoveryPage() {
       path="/facilities/recovery"
       hero={<PageHero {...RECOVERY_HERO} />}
       glance={{
-        summary: "An entire wellness level for cold, heat and contrast therapy, designed for training camps, with the launch status of every modality.",
+        summary: "An entire wellness level for cold, heat, and contrast therapy, designed for training camps, with the launch status of every modality.",
         facts: [statFact(c.home.stats.items, "floor"), total, launch, later],
       }}
-      related={["/membership/recovery-pricing", "/classes/recovery-mobility", "/facilities/lifestyle"]}
+      related={["/membership/price-guide#recovery-pricing", "/classes/recovery-mobility", "/facilities/lifestyle"]}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id="infrastructure" className="section">

@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/admin/login", destination: "/login", permanent: true },
+      { source: "/membership/faq", destination: "/about/faq", permanent: true },
+      { source: "/membership/passes", destination: "/membership/price-guide", permanent: true },
+      { source: "/membership/recovery-pricing", destination: "/membership/price-guide#recovery-pricing", permanent: true },
+      { source: "/membership/yoga", destination: "/membership/price-guide#yoga", permanent: true },
+      { source: "/membership/camps", destination: "/membership/price-guide#camps-pricing", permanent: true },
+      { source: "/membership/corporate", destination: "/membership/price-guide#corporate", permanent: true },
       { source: "/programs/crossfit-group", destination: "/classes/functional-training", permanent: true },
       { source: "/programs/foundations", destination: "/classes/functional-training", permanent: true },
       { source: "/programs/open-gym", destination: "/classes/strength-conditioning", permanent: true },

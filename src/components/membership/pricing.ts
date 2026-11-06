@@ -1,11 +1,9 @@
 // Pricing helpers for the Membership section (stage-3 §1). Pure and client-safe (no hooks, no server imports).
 // Every content price group is rendered on exactly one page, chosen by its anchor:
 //   /membership                   [tiers]
-//   /membership/passes            [packs] [day-passes] [open-gym] (+ any admin-added group with an unknown anchor)
-//   /membership/recovery-pricing  [recovery-pricing] [advanced-recovery]
-//   /membership/yoga              [yoga]
-//   /membership/corporate         [corporate]
-//   /membership/camps             [camps-pricing] (also shown on /visit/camps)
+//   /membership/price-guide       [packs] [day-passes] [open-gym] (+ any admin-added group with an unknown anchor)
+//   /membership/price-guide       [recovery-pricing] [advanced-recovery] [yoga] [corporate] [camps-pricing]
+//   (camp prices are also shown on /visit/camps)
 import { formatPhp } from "@/content/format";
 import type { Availability, Price, PriceGroup, PriceItem } from "@/content/types";
 
@@ -13,11 +11,11 @@ export type PricingPage = "overview" | "passes" | "recovery" | "yoga" | "corpora
 
 export const PRICING_PATHS: Readonly<Record<PricingPage, string>> = {
   overview: "/membership",
-  passes: "/membership/passes",
-  recovery: "/membership/recovery-pricing",
-  yoga: "/membership/yoga",
-  corporate: "/membership/corporate",
-  camps: "/membership/camps",
+  passes: "/membership/price-guide",
+  recovery: "/membership/price-guide",
+  yoga: "/membership/price-guide",
+  corporate: "/membership/price-guide",
+  camps: "/membership/price-guide",
 };
 
 const PAGE_BY_ANCHOR: Readonly<Record<string, PricingPage>> = {
@@ -50,7 +48,7 @@ export const groupsFor = (groups: readonly PriceGroup[], pageId: PricingPage) =>
 export function groupHref(group: Pick<PriceGroup, "id" | "anchor">): string {
   const pageId = pricingPageFor(group);
   const path = PRICING_PATHS[pageId];
-  if (pageId === "corporate" || pageId === "yoga" || pageId === "camps" || !group.anchor || group.anchor === "recovery-pricing") return path;
+  if (pageId === "overview" || !group.anchor) return path;
   return `${path}#${group.anchor}`;
 }
 

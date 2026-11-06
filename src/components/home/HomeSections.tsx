@@ -1,5 +1,4 @@
 import Image from "next/image";
-import EarlyAccessForm from "@/components/forms/EarlyAccessForm";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import { formatDateLabel } from "@/content/format";
 import type { SiteContent } from "@/content/types";
@@ -66,9 +65,6 @@ export function EarlyAccess({ c, titleClassName }: Props) {
               {founding.expiresOn && <p className="hm-early-expires">Early rates end {formatDateLabel(founding.expiresOn)}</p>}
             </div>
           )}
-        </div>
-        <div className="form-card hm-early-form" data-home-reveal data-home-reveal-delay="short">
-          <EarlyAccessForm source="/" />
         </div>
       </div>
       {testimonials.length > 0 && (

@@ -596,7 +596,7 @@ export const EDITOR_SCHEMA = {
             kind: "list", label: "Price groups", itemTitleKey: "title", maxItems: 16,
             fields: {
               id: id(),
-              anchor: text("Page anchor", { required: true, max: 60, format: "slug", help: "Where the group appears: tiers → /membership; packs, day-passes, open-gym → /membership/passes; recovery-pricing, advanced-recovery, yoga → /membership/recovery-pricing; corporate → /membership/corporate; camps-pricing → /visit/camps. Other anchors appear on /membership/passes." }),
+              anchor: text("Page anchor", { required: true, max: 60, format: "slug", help: "Where the group appears: tiers → /membership; packs, day-passes, open-gym → /membership/price-guide; recovery-pricing, advanced-recovery, yoga, corporate → /membership/price-guide; camps-pricing → /visit/camps. Other anchors appear on /membership/price-guide." }),
               title: title(), intro: area("Intro", { max: 400 }),
               audience: select("Audience", [{ value: "locals", label: "Locals" }, { value: "travellers", label: "Travelers" }, { value: "both", label: "Both" }]),
               items: {

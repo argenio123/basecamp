@@ -8,7 +8,7 @@ import SocialGallery from "@/components/SocialGallery";
 import HomeHeroMedia from "@/components/home/HomeHeroMedia";
 import Marquee from "@/components/features/Marquee";
 import { SECTION_FEATURES } from "@/data/features";
-import { EarlyAccess, TrainAndRecover } from "@/components/home/HomeSections";
+import { TrainAndRecover } from "@/components/home/HomeSections";
 import { getSiteContent } from "@/content/get";
 import { POSITIONING_LINE } from "@/data/brand";
 import { WORKOUT_TYPES } from "@/data/workout-types";
@@ -63,7 +63,7 @@ export default async function Home() {
           <div className="home-hero-shade" />
           <div className="home-hero-content">
             <div className="button-row home-hero-actions">
-              <Link href="#early-access" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</Link>
+              <Link href="/account/signup?next=%2F" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</Link>
               <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
             </div>
           </div>
@@ -120,7 +120,6 @@ export default async function Home() {
           destinations remain available through the navigation, programme pages and Schedule. */}
       <TrainAndRecover c={c} titleClassName={gretaros.className} />
       {c.home.social.enabled && <SocialGallery socials={c.settings.socials} titleClassName={gretaros.className} eyebrow={c.gallery.eyebrow} title={c.gallery.title} intro={c.gallery.intro} posts={c.gallery.posts} followHref={instagram?.url ?? ""} handle={instagram?.handle || undefined} />}
-      <EarlyAccess c={c} titleClassName={gretaros.className} />
     </>
   );
 }

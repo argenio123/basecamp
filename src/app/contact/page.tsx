@@ -11,7 +11,7 @@ import { directionsUrl } from "@/data/brand";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contact BaseCamp CamSur about membership, camps, corporate programs, partnerships or media, and find directions to the facility.",
+  description: "Contact BaseCamp CamSur about membership, camps, corporate programs, partnerships, or media, and find directions to the facility.",
 };
 
 const PHASE_STATUS = {
@@ -59,7 +59,7 @@ export default async function ContactPage() {
         <aside className="ct7-enquire-aside" data-reveal>
           <p className="eyebrow">Guided inquiry</p>
           <h2>Tell us where to begin.</h2>
-          <p>Membership, group travel and business requests need different details. Select a path and we&apos;ll keep it focused.</p>
+          <p>Membership, group travel, and business requests need different details. Select a path and we&apos;ll keep it focused.</p>
           <dl>
             <div><dt>Response</dt><dd>Within one business day</dd></div>
             <div><dt>Best for</dt><dd>Detailed or non-urgent requests</dd></div>
@@ -83,10 +83,10 @@ export default async function ContactPage() {
             <span>01 · Fastest</span><em className="ct7-channel-time">Quickest reply</em><h3>WhatsApp</h3><p>Quick questions and same-day visits.</p><strong>Open chat</strong>
           </a>}
           {contact.email && <a href={`mailto:${contact.email}`}>
-            <span>02 · Attachments</span><em className="ct7-channel-time">1 business day</em><h3>Email</h3><p>Proposals, press files and longer briefs.</p><strong>{contact.email}</strong>
+            <span>02 · Attachments</span><em className="ct7-channel-time">1 business day</em><h3>Email</h3><p>Proposals, press files, and longer briefs.</p><strong>{contact.email}</strong>
           </a>}
           <a href="#enquire">
-            <span>03 · Recommended</span><em className="ct7-channel-time">1 business day</em><h3>Guided form</h3><p>Membership, camps, corporate, partnerships and media.</p><strong>Choose an inquiry <b aria-hidden="true">↑</b></strong>
+            <span>03 · Recommended</span><em className="ct7-channel-time">1 business day</em><h3>Guided form</h3><p>Membership, camps, corporate, partnerships, and media.</p><strong>Choose an inquiry <b aria-hidden="true">↑</b></strong>
           </a>
         </div>
       </div>

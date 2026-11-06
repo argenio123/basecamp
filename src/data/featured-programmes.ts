@@ -47,7 +47,7 @@ export const FEATURED_PROGRAMMES: FeaturedProgramme[] = [
     level: "All levels",
     duration: 50,
     format: "Group",
-    about: "Varied, coach-led sessions built on the movements you use every day: squatting, hinging, pushing, pulling, carrying. Every workout scales, so beginners and experienced athletes train side by side.",
+    about: "Varied, coach-led sessions built on the movements you use every day: squatting, hinging, pushing, pulling, carrying. Every workout scales, so beginners, and experienced athletes train side by side.",
     whoFor: [
       "You want all-round fitness, not just one thing",
       "You enjoy variety and training with others",

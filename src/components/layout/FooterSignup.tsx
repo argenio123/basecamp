@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { submitWithoutReset } from "@/components/forms/FormStatus";
+import { LoginPrompt } from "@/components/members/MemberGate";
+import { useMemberHint } from "@/components/members/useMemberHint";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { trackLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/leads/actions";
@@ -12,6 +13,7 @@ import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
 /** Footer newsletter sign-up (kind=newsletter). Keeps the existing .footer-newsletter classes. */
 export default function FooterSignup() {
   const pathname = usePathname();
+  const member = useMemberHint();
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const emailError = state.fieldErrors?.email;
   const consentError = state.fieldErrors?.consent;
@@ -20,12 +22,14 @@ export default function FooterSignup() {
     if (state.status === "success") trackLead("newsletter");
   }, [state]);
 
-  if (pathname === "/") {
+  // Hidden on the member log-in / sign-up pages: the account form is already on the page.
+  if (pathname.startsWith("/account/")) return null;
+
+  if (!member) {
     return (
-      <div className="footer-newsletter footer-newsletter-link">
+      <div className="footer-newsletter">
         <p className="footer-label">Get early access</p>
-        <p>Membership benefits and opening updates are available in the signup section above.</p>
-        <Link href="#early-access" className="text-link light">Go to signup <span aria-hidden="true">↑</span></Link>
+        <LoginPrompt compact title="Log in to sign up" text="Create a free member account to join the early access list." />
       </div>
     );
   }

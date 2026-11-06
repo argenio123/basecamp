@@ -124,7 +124,7 @@ export default function AdminApp({ content, meta, leads, storage }: Props) {
               <div className="adm-panel-head">
                 <div>
                   <h1 id="adm-panel-title">Inbox</h1>
-                  <p className="adm-muted">Submissions from the early-access, footer, contact and booking forms. Personal data: handle with care.</p>
+                  <p className="adm-muted">Submissions from the early-access, footer, contact, and booking forms. Personal data: handle with care.</p>
                 </div>
               </div>
               <LeadsInbox leads={leads} />

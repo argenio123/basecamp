@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import MegaMenu from "@/components/nav/MegaMenu";
 import MobileNav from "@/components/nav/MobileNav";
+import MemberNavLink from "@/components/members/MemberNavLink";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import { LOGIN_PATH, type SiteSection } from "@/content/sitemap";
 
@@ -81,9 +82,7 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
           <ScrollTopLink className="button button-small header-cta" href="/contact">
             <span className="header-cta-label">{ctaLabel}</span>
           </ScrollTopLink>
-          <ScrollTopLink className="button button-small header-login" href={LOGIN_PATH} aria-label="Staff login">
-            Login
-          </ScrollTopLink>
+          <MemberNavLink className="button button-small header-login" />
         </div>
         <MobileNav sections={sections} />
       </div>

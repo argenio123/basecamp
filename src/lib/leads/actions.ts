@@ -3,6 +3,7 @@
 // Docs: 03-api-reference/01-directives/use-server.md, 02-guides/forms.md, 04-functions/headers.md.
 import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
+import { currentMemberId } from "@/lib/members/session";
 import { clientIp, createLimiter } from "@/lib/rateLimit";
 import { addLead } from "./store";
 import type { LeadKind, LeadResult } from "./types";
@@ -22,6 +23,8 @@ const WINDOW_MS = 10 * 60 * 1000;
 const limiter = createLimiter({ windowMs: WINDOW_MS, perKey: 8, global: 120 });
 
 export async function submitLead(_prev: LeadResult, formData: FormData): Promise<LeadResult> {
+  // Requests, inquiries, bookings and sign-ups need a member account (the forms also show a log-in prompt first).
+  if (!(await currentMemberId())) return { status: "error", message: "Please log in to your BaseCamp account to continue.", loginRequired: true };
   const result = validateLead(formData);
   if (result.ok && result.honeypot) return { status: "success", message: SUCCESS[kindOf(formData)] };
 
