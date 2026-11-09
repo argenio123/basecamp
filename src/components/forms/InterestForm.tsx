@@ -41,13 +41,13 @@ const INTENTS: Record<InquiryIntent, IntentConfig> = {
   "camp-group": {
     label: "Camps & groups",
     short: "Bring your crew",
-    description: "Training camps, retreats, coach-led groups, and longer stays.",
+    description: "Training camps, group trips, coach-led groups, and longer stays.",
     kind: "enquiry",
     submitLabel: "Send camp inquiry",
     successTitle: "Your camp brief is with us.",
     successBody: "We’ll review your dates and group needs before replying with the most relevant format.",
     nextHref: "/visit/camps",
-    nextLabel: "Explore camps and retreats",
+    nextLabel: "Explore camps and trips",
   },
   corporate: {
     label: "Corporate",

@@ -1,24 +1,36 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
 import Money from "@/components/membership/Money";
 
-/** Camp price cards from pricing group `camps` (spec §C.5.5). Server-safe. Each card requests a booking on /schedule/book. */
+/**
+ * Camp packages from pricing group `camps` (spec §C.5.5), as rows in the timetable / events style:
+ * length on the left, name + description + status, the price on the right, and a Request pill to /schedule/book.
+ * The featured package sits on Ink. Server-safe.
+ */
 export default function CampCards({ items, exchangeRate, enquiryLabel, requestLabel }: { items: PriceItem[]; exchangeRate: number; enquiryLabel: string; requestLabel: string }) {
   if (items.length === 0) return null;
   return (
-    <ul className="vt-camps" data-reveal="stagger">
-      {items.map((item) => {
+    <ul className="sd-ev-rows" data-reveal="stagger">
+      {items.map((item, i) => {
         const usd = formatUsd(item, exchangeRate);
         return (
-          <li key={item.id} className={item.featured ? "vt-camp-featured" : undefined}>
-            <div className="vt-badges"><StatusBadge availability={item.availability} /><span className="vt-note">{enquiryLabel}</span>{item.badge && <span className="vt-note">{item.badge}</span>}</div>
-            <h3>{item.name}</h3>
-            <p className="vt-camp-price"><strong><Money value={formatPhp(item.price)} /></strong>{item.unit && <span>{item.unit}</span>}</p>
-            {usd && <p className="vt-camp-usd">{usd}</p>}
-            {item.description && <p className="vt-camp-desc">{item.description}</p>}
-            <Link href={`/schedule/book?service=camp&item=${encodeURIComponent(item.id)}`} className="button button-dark">{requestLabel}</Link>
+          <li key={item.id} className={`sd-ev-row vt-pk${item.featured ? " vt-pk-featured" : ""}`} style={{ "--i": i } as CSSProperties}>
+            <Link href={`/schedule/book?service=camp&item=${encodeURIComponent(item.id)}`} aria-label={`${item.name}, ${formatPhp(item.price)} ${item.unit ?? ""}. ${requestLabel}`}>
+              <span className="sd-ev-when"><small>{item.badge || "Camp"}</small></span>
+              <span className="sd-ev-body">
+                <span className="sd-ev-title">{item.name}</span>
+                {item.description && <span className="sd-ev-desc">{item.description}</span>}
+                <span className="vt-pk-tags"><StatusBadge availability={item.availability} /><span className="vt-pk-note">{enquiryLabel}</span></span>
+              </span>
+              <span className="vt-pk-price">
+                <strong><Money value={formatPhp(item.price)} /></strong>
+                <small>{[item.unit, usd].filter(Boolean).join(" · ")}</small>
+              </span>
+              <span className="sd-ev-go" aria-hidden="true">{requestLabel}</span>
+            </Link>
           </li>
         );
       })}

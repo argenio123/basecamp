@@ -32,7 +32,7 @@ export default async function Footer() {
           <div className="footer-brand-mark">
             <ScrollTopLink href="/" className="footer-brand-link" aria-label="BaseCamp CamSur home">
               <Image
-                src="/images/brand/basecamp-white-logo.png"
+                src="/images/brand/basecamp-camsur-logo-white.png"
                 alt=""
                 width={1118}
                 height={982}

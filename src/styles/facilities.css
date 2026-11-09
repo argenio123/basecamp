@@ -14,8 +14,6 @@
 .fc-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .fc-note { color: var(--olive); font-size: 10px; font-weight: 700; letter-spacing: .12em; line-height: 1.2; text-transform: uppercase; }
 .section-dark .fc-note { color: var(--stone); }
-.fc-zone-deep { background: var(--paper-deep); }
-
 .fc-items { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 32px; margin: 56px 0 0; padding: 0; list-style: none; }
 .fc-items > * { min-width: 0; }
 .fc-items-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -51,16 +49,6 @@
 .fc-pillars li { padding-top: 24px; border-top: 1px solid var(--line); }
 .fc-pillars h3 { margin: 40px 0 12px; font-size: 22px; font-weight: 600; line-height: 1.15; letter-spacing: -.03em; }
 .fc-pillars p { margin: 0; color: var(--olive); font-size: 15px; line-height: 1.6; }
-
-/* ---------- Facilities overview: zone journey (01–05 → the zone's page; not sticky, the section tabs are) ---------- */
-.fc-journey { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 56px 0 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
-.fc-journey > * { min-width: 0; }
-.fc-journey li + li { border-left: 1px solid var(--line); }
-.fc-journey a { display: flex; flex-direction: column; gap: 8px; height: 100%; min-height: 132px; padding: 22px 20px 24px; font-size: 18px; font-weight: 600; line-height: 1.25; letter-spacing: -.02em; transition: background-color .2s ease; }
-.fc-journey a:hover, .fc-journey a:focus-visible { background: var(--paper); }
-.fc-journey a:focus-visible { outline: 2px solid var(--olive-dark); outline-offset: -2px; }
-.fc-journey .fc-index { margin-bottom: 4px; }
-.fc-journey a > span[aria-hidden] { margin-top: auto; color: var(--olive-dark); font-size: 16px; }
 
 /* ---------- Facilities: "See all" disclosure for long lists (stage-3 §6) ---------- */
 .fc-more { margin-top: 8px; }
@@ -172,19 +160,11 @@
 @media (max-width: 1040px) {
   .fc-items, .fc-items-3, .fc-items-5, .fc-pillars, .fc-recovery-grid, .fc-equip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fc-zone-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .fc-journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .fc-journey li:nth-child(4) { border-left: 0; }
-  .fc-journey li:nth-child(n+4) { border-top: 1px solid var(--line); }
   .fc-stats, .fc-recovery-infra { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .fc-recovery-infra { gap: 48px; }
 }
 
 @media (max-width: 760px) {
-  .fc-journey { grid-template-columns: minmax(0, 1fr); margin-top: 40px; }
-  .fc-journey li + li { border-left: 0; border-top: 1px solid var(--line); }
-  .fc-journey a { flex-direction: row; align-items: center; gap: 14px; min-height: 60px; padding: 14px 4px; font-size: 17px; }
-  .fc-journey .fc-index { margin-bottom: 0; }
-  .fc-journey a > span[aria-hidden] { margin: 0 0 0 auto; }
   .fc-items-2, .fc-items-3, .fc-zone-cards, .fc-recovery-grid, .fc-recovery-extras, .fc-fuel, .fc-av { grid-template-columns: minmax(0, 1fr); }
   .fc-items, .fc-pillars { margin-top: 44px; }
   .fc-pillars h3 { margin-top: 24px; }
@@ -208,19 +188,24 @@
   .fc-card-facts > div:nth-child(even) { padding-left: 0; border-left: 0; }
 }
 
-/* Facilities "Design" section: two columns (copy | pull quote + facility numbers). Numbers follow the brand book
-   data style (big Poppins numbers, mono labels) in Ink, since Signal on a light background is unreadable. */
-.fc-design { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 110px); align-items: start; }
-.fc-design .fc-design-summary { margin: 36px 0 28px; }
-.fc-design-side { display: grid; gap: clamp(36px, 4vw, 56px); padding-top: clamp(24px, 3vw, 44px); }
-.fc-design-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 3vw, 40px) clamp(24px, 3vw, 48px); margin: 0; }
-.fc-design-stats > div { display: flex; flex-direction: column; gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); }
-.fc-design-stats dt { color: var(--olive); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+/* Facilities "Design" section: full-bleed architecture render with a dark brand wash and Signal data. */
+.fc-design-section { position: relative; overflow: hidden; min-height: min(900px, 92vh); background: var(--ink); color: var(--white); isolation: isolate; }
+.fc-design-background { z-index: 0; object-position: center; }
+.fc-design-shade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(15,17,15,.96) 0%, rgba(15,17,15,.84) 48%, rgba(15,17,15,.68) 100%), linear-gradient(180deg, rgba(15,17,15,.34), rgba(15,17,15,.82)); }
+.fc-design { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 900px); gap: clamp(48px, 7vw, 92px); align-content: center; min-height: min(680px, 72vh); }
+.fc-design-section :is(.eyebrow, h2) { color: var(--signal); }
+.fc-design-copy { max-width: 760px; }
+.fc-design .fc-design-summary { max-width: 700px; margin: 32px 0 0; color: rgba(255,255,255,.88); font-size: clamp(18px, 1.55vw, 25px); line-height: 1.52; }
+.fc-design-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 80px); width: min(100%, 980px); margin: 0; }
+.fc-design-stats > div { display: flex; flex-direction: column; gap: 10px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.16); }
+.fc-design-stats dt { color: var(--signal); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
 .fc-design-stats dd { margin: 0; }
-.fc-design-stat-value { order: -1; color: var(--ink); font-family: var(--font-poppins), sans-serif; font-size: clamp(38px, 3.6vw, 60px); font-weight: 800; line-height: .92; letter-spacing: -.04em; }
-.fc-design-stat-detail { color: var(--olive); font-size: 15px; line-height: 1.45; }
+.fc-design-stat-value { order: -1; color: var(--signal); font-family: var(--font-poppins), sans-serif; font-size: clamp(48px, 5vw, 78px); font-weight: 500; line-height: .92; letter-spacing: -.05em; }
+.fc-design-stat-detail { color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.45; }
 @media (max-width: 900px) {
-  .fc-design { grid-template-columns: 1fr; }
+  .fc-design-section { min-height: auto; }
+  .fc-design { min-height: 0; }
+  .fc-design-shade { background: rgba(15,17,15,.82); }
 }
 @media (max-width: 520px) {
   .fc-design-stats { grid-template-columns: 1fr; }

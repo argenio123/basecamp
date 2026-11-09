@@ -1,24 +1,30 @@
+import Link from "next/link";
 import Money from "./Money";
 
 /**
  * Proposed launch promotions from the pricing deck (rates being tested; reviewed after the first 90 days).
  * `perks` lists what each offer includes (Athlete features, day-pass inclusions, early-booking terms).
+ * Each card ends with Purchase (or Book a camp), a member request: logged-out visitors are sent to the log-in
+ * first (proxy + RequestGate).
  */
 const PROMOS = [
   {
     tag: "Membership test", title: "Athlete membership", a: ["Standard", "Php 4,500"], b: ["Introductory", "Php 3,200"],
     note: "Standard monthly rate tested against an introductory rate.",
     perks: ["All coached group classes", "Unlimited open-gym access", "Programming for serious local athletes", "Community-focused training program"],
+    buy: { label: "Purchase", href: "/contact?interest=membership-local" },
   },
   {
     tag: "Visitor test", title: "Day pass", a: ["Standard", "Php 650"], b: ["Weekend", "Php 850"],
     note: "Standard day pass tested against a weekend rate.",
     perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays, and long weekends"],
+    buy: { label: "Purchase", href: "/contact?interest=day-pass" },
   },
   {
     tag: "Camps", title: "Early booking", a: ["Book ahead", "60+ days"], b: ["Discount", "20%"],
     note: "Proposed for camps booked at least 60 days in advance.",
     perks: ["20% off camp packages", "Day clinics, weekend camps, and five-day immersives", "Lock in your dates early", "Inquiry first: the team confirms dates and pricing"],
+    buy: { label: "Book a camp", href: "/schedule/book?service=camp" },
   },
 ] as const;
 
@@ -47,6 +53,9 @@ export default function LaunchPromos() {
                   {p.perks.map((perk) => <li key={perk}>{perk}</li>)}
                 </ul>
               </div>
+              <p className="mb-promo-actions">
+                <Link href={p.buy.href} className="mb-promo-buy">{p.buy.label}</Link>
+              </p>
             </li>
           ))}
         </ul>

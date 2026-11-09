@@ -24,6 +24,7 @@ const limiter = createLimiter({ windowMs: WINDOW_MS, perKey: 8, global: 120 });
 
 export async function submitLead(_prev: LeadResult, formData: FormData): Promise<LeadResult> {
   // Requests, inquiries, bookings and sign-ups need a member account (the forms also show a log-in prompt first).
+  // The Contact page itself is public and has no form: it lists the contact details.
   if (!(await currentMemberId())) return { status: "error", message: "Please log in to your BaseCamp account to continue.", loginRequired: true };
   const result = validateLead(formData);
   if (result.ok && result.honeypot) return { status: "success", message: SUCCESS[kindOf(formData)] };

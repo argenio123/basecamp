@@ -220,7 +220,7 @@ const pricingGroups: PriceGroup[] = [
   group("day-passes", "day-passes", "Drop-ins & day passes", "travellers", "at-launch", [
     ["drop-in-standard", "Standard Drop-In", 450, 600, { unit: "per session", usd: "≈ US$8–$10", description: "One training session. Higher pricing may apply on weekends and peak tourist periods." }],
     ["day-pass-standard", "Standard Day Pass", 650, null, { unit: "per day", usd: "≈ US$11", description: "Gym access plus one coached class. For hotel guests and day travelers.", featured: true, badge: "Best for day travelers" }],
-    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", badge: "Testing Php 850", description: "Saturdays, Sundays and long weekends. A Php 850 rate is also being tested." }],
+    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", badge: "Testing Php 850", description: "Saturdays, Sundays, and long weekends. A Php 850 rate is also being tested." }],
   ]),
   group("open-gym", "open-gym", "Open-gym-only passes", "both", "at-launch", [
     ["gym-day", "Day Pass", 300, null, { unit: "per day", usd: "≈ US$5", badge: "No classes", description: "Basic open-gym and equipment access." }],
@@ -254,9 +254,9 @@ const pricingGroups: PriceGroup[] = [
     ["nad", "NAD+ Music Therapy", 2800, null, { unit: "per experience", usd: "≈ US$48", description: "Proposed NAD+ infusion combined with therapeutic music." }],
   ]),
   group("camps", "camps-pricing", "Training camps & premium experiences", "travellers", "phase-2", [
-    ["camp-day-workshop", "Day Workshop or Clinic", 3500, 6000, { unit: "per person", usd: "≈ US$60–$105", badge: "Single day", description: "A single-day HYROX-style clinic, technique workshop or testing day.", features: ["Structured coaching", "Programmed training", "Performance assessment"] }],
+    ["camp-day-workshop", "Day Workshop or Clinic", 3500, 6000, { unit: "per person", usd: "≈ US$60–$105", badge: "Single day", description: "A single-day HYROX-style clinic, technique workshop, or testing day.", features: ["Structured coaching", "Programmed training", "Performance assessment"] }],
     ["camp-weekend-training", "Weekend Camp · Training Only", 7500, 12000, { unit: "per person", usd: "≈ US$130–$205", badge: "2 days · 1 night", description: "Elite coaching and structured programming.", features: ["Elite coaching", "Structured programming", "Accommodation not included"] }],
-    ["camp-weekend-all-inclusive", "Weekend Camp · All-Inclusive", 18000, 35000, { unit: "per person", usd: "≈ US$310–$600", badge: "2 days · 1 night", featured: true, description: "Training, stay and meals in one package.", features: ["Training and programming", "Villa Del Rey accommodation", "Meals included"] }],
+    ["camp-weekend-all-inclusive", "Weekend Camp · All-Inclusive", 18000, 35000, { unit: "per person", usd: "≈ US$310–$600", badge: "2 days · 1 night", featured: true, description: "Training, stay, and meals in one package.", features: ["Training and programming", "Villa Del Rey accommodation", "Meals included"] }],
     ["camp-week-immersive", "Five-Day Immersive", 60000, 120000, { unit: "per person", usd: "≈ US$1,035–$2,070", badge: "5 days", description: "Pricing varies with accommodation and coaching lineup.", features: ["Training", "Recovery", "Performance testing", "Nutrition guidance"] }],
   ], "Book 60+ days ahead for a proposed 20% early-booking discount. Inquiry only."),
   group("corporate", "corporate", "Corporate bookings", "both", "at-launch", [
@@ -273,7 +273,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     openingDate: "",
     contact: {
       addressLines: ["Capitol Complex, Pili, 4418", "Camarines Sur"], phoneDisplay: "0918-905-1234", phoneE164: "+639189051234",
-      email: "basecampcamsur@gmail.com", hours: "Opening hours to be announced", mapsQuery: "Capitol Complex, Pili, Camarines Sur", googleReviewsUrl: "",
+      email: "basecampcamsur@gmail.com", hours: "Opening hours to be announced", mapsQuery: "13.5961519,123.2456914", googleReviewsUrl: "",
     },
     socials: [
       { platform: "Instagram", url: "https://www.instagram.com/basecampcamsur/", handle: "@basecampcamsur" },
@@ -337,7 +337,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       enabled: true, eyebrow: "Why BaseCamp", title: "Not a gym. Not a resort. A new category.",
       intro: "Southeast Asia's Performance Playground: results-driven, but joyful.",
       items: [
-        { id: "prove-results", title: "Prove results", body: "Outcome-based, not experience-based: baseline testing on arrival and reassessment before you leave.", link: { label: "Learn more", href: "/classes/coaching#assessment" }, availability: "planned" },
+        { id: "prove-results", title: "Prove results", body: "Outcome-based, not experience-based: baseline testing on arrival and reassessment before you leave.", link: { label: "Learn more", href: "/classes" }, availability: "planned" },
         { id: "recovery-forward", title: "Recovery-forward", body: "Recovery is as important as training. Adaptation happens during recovery, not during training.", link: { label: "Learn more", href: "/facilities/recovery" }, availability: "at-launch" },
         { id: "own-the-night", title: "Own the night", body: "Weekly training under lights: Night Games, Friday Night Lights and night runs.", link: { label: "Learn more", href: "/schedule/events#night" }, availability: "planned" },
         { id: "competition", title: "Constant competition", body: "There's always something to train for, always a leaderboard to climb, always a challenge to attempt.", link: { label: "Learn more", href: "/schedule/events#competition" }, availability: "planned" },
@@ -381,7 +381,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         { id: "local", title: "Local fitness community", body: "CamSur residents seeking world-class training facilities and professional coaching.", link: { label: "Memberships", href: "/membership#tiers" } },
         { id: "domestic", title: "Domestic enthusiasts", body: "Filipino athletes from Manila and other cities seeking training destinations for weekends, training camps, and extended visits.", link: { label: "Camps & weekends", href: "/visit/camps" } },
         { id: "international", title: "International camps", body: "Global fitness communities organizing training camps and group trips.", link: { label: "Group camps", href: "/visit/camps" } },
-        { id: "corporate", title: "Corporate wellness", body: "Companies seeking unique venues for team off-sites, leadership development, and wellness programming that actually engages participants.", link: { label: "Corporate off-sites", href: "/classes/corporate" } },
+        { id: "corporate", title: "Corporate wellness", body: "Companies seeking unique venues for team off-sites, leadership development, and wellness programming that actually engages participants.", link: { label: "Corporate off-sites", href: "/membership/price-guide#corporate" } },
         { id: "nomads", title: "Digital nomads", body: "Remote workers seeking locations that support both productivity and fitness, staying for extended periods.", link: { label: "Long stays", href: "/visit/camps#long-stays" } },
       ],
     },
@@ -417,10 +417,10 @@ export const DEFAULT_CONTENT: SiteContent = {
     programmes,
     formats: [
       { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.png`, href: "/schedule/timetable" },
-      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/classes/functional-training" },
-      { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/classes/endurance" },
+      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/classes" },
+      { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/classes" },
       { id: "training-camps", title: "Training Camps", description: "Immersive multi-day experiences with accommodation and full programming", image: `${F}/facility-aerial.jpg`, href: "/visit/camps" },
-      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.png`, href: "/classes/corporate" },
+      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.png`, href: "/membership/price-guide#corporate" },
       { id: "community-comps", title: "Community Comps", description: "Regular competitions and events building local engagement", image: `${P}/program-coaching.png`, href: "/schedule/events#competition" },
     ],
     modalities: [
@@ -453,7 +453,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     assessment: {
       availability: planned,
-      promise: "Outcome-based retreats, not experience-based. Our aim: measurable improvement in fitness and health markers.",
+      promise: "Outcome-based trips, not experience-based. Our aim: measurable improvement in fitness and health markers.",
       steps: [
         { id: "vo2-lactate", title: "VO2 Max + Lactate Testing", description: "Baseline aerobic capacity on arrival." },
         { id: "body-composition", title: "Body Composition Analysis", description: "InBody scanning, with weekly scans on longer stays." },
@@ -538,7 +538,7 @@ export const DEFAULT_CONTENT: SiteContent = {
   // ---------- story (§B.11) ----------
   story: {
     positioning: {
-      notLine: "Not a gym. Not a retreat. Not a camp. Not a resort.",
+      notLine: "Not a gym. Not a spa. Not a camp. Not a resort.",
       headline: "BaseCamp CamSur = Southeast Asia's Performance Playground.",
       sub: "Where athletes, beginners, and travelers come to train, transform, and thrive: powered by nature, science, and community.",
       breakdown: [
@@ -549,11 +549,11 @@ export const DEFAULT_CONTENT: SiteContent = {
       ],
     },
     brandPillars: [
-      { id: "adventure", title: "Adventure", body: "Every experience should feel like exploration" },
-      { id: "recovery", title: "Recovery", body: "Training hard demands recovering properly" },
-      { id: "community", title: "Community", body: "Shared struggle creates unbreakable bonds" },
-      { id: "nature", title: "Nature", body: "The environment shapes the experience" },
-      { id: "performance", title: "Performance", body: "Results matter, progress is non-negotiable" },
+      { id: "adventure", title: "Adventure", body: "Every session should feel like exploring something new." },
+      { id: "recovery", title: "Recovery", body: "Hard training only pays off when you recover properly." },
+      { id: "community", title: "Community", body: "Shared effort builds bonds that last." },
+      { id: "nature", title: "Nature", body: "The landscape shapes every workout." },
+      { id: "performance", title: "Performance", body: "Results matter. Progress is tested, not guessed." },
     ],
     founders: {
       eyebrow: "Founders' vision", title: "Why this place. Why this approach.",

@@ -11,6 +11,9 @@ import { MEMBER_COOKIE, verifyMemberSession } from "@/lib/members/token";
 export function proxy(request: NextRequest) {
   // Member-only pages (request / inquire / purchase / book): send visitors to the member log-in, then back.
   if (!request.nextUrl.pathname.startsWith("/admin")) {
+    // The plain Contact page is public; a Contact link that carries a request (?interest=, ?enquiry=, ?program=…,
+    // used by Purchase / Inquire / Register interest buttons) needs a member log-in first, like booking.
+    if (request.nextUrl.pathname === "/contact" && request.nextUrl.search === "") return NextResponse.next();
     if (verifyMemberSession(request.cookies.get(MEMBER_COOKIE)?.value ?? "", Date.now())) return NextResponse.next();
     const login = new URL("/account/login", request.url);
     login.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);

@@ -35,7 +35,7 @@ export const INTEREST_OPTIONS = [
   { value: "membership-local", label: "Membership (local)" }, { value: "drop-in", label: "Drop-in / day pass / open gym" },
   { value: "schedule", label: "Class schedule and launch timetable" },
   { value: "yoga", label: "Yoga" }, { value: "recovery", label: "Recovery services" }, { value: "performance-testing", label: "Performance testing" },
-  { value: "day-clinic", label: "Day workshop / clinic" }, { value: "training-camp", label: "Training camp / retreat" },
+  { value: "day-clinic", label: "Day workshop / clinic" }, { value: "training-camp", label: "Training camp / trip" },
   { value: "hyrox", label: "HYROX-style program" }, { value: "competition-prep", label: "Competition prep" },
   { value: "corporate", label: "Corporate off-site / wellness" }, { value: "extended-stay", label: "Extended stay / digital nomad" },
   { value: "events", label: "Events & community comps" }, { value: "coach-group", label: "Coach bringing a group" },

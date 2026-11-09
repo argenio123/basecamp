@@ -69,7 +69,7 @@ export const HOME_PAGE: SitePage = {
 
 export const programmeHref = (slug: string) => `/classes/${slug}`;
 
-/** Programme slugs that would collide with the static /classes/coaching and /classes/corporate pages. */
+/** Programme slugs reserved for former static pages (Coaching, Corporate), so old links keep redirecting. */
 export const RESERVED_PROGRAMME_SLUGS: ReadonlySet<string> = new Set(["coaching", "corporate"]);
 
 const NUMBER_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
@@ -87,18 +87,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       summary: "Coach-led classes for strength, fitness, endurance, and recovery.",
       image: "/images/programs/program-functional.png", imageAlt: "Athlete training inside a modern functional fitness space", adminTab: "programmes",
     }),
-    pages: [
-      page({
-        href: "/classes/coaching", label: "Coaching & assessment", tabLabel: "Coaching",
-        summary: "Your starting assessment, mindset training, and the coaching team.",
-        image: "/images/programs/program-coaching.png", imageAlt: "Coach working one-to-one with an athlete", adminTab: "programmes",
-      }),
-      page({
-        href: "/classes/corporate", label: "Corporate classes", tabLabel: "Corporate",
-        summary: "Team off-sites, wellness, and group training for organizations.",
-        image: "/images/destination/transform.png", imageAlt: "Two athletes training with kettlebells", adminTab: "programmes",
-      }),
-    ],
+    // Class sub-pages are the station classes (/classes/styles/*); Coaching, Corporate and the programme detail pages were removed.
+    pages: [],
     // text and highlights are filled from content programmes by getSections()
     menu: { text: "", image: "/images/programs/classes-hero.jpg", imageAlt: "Athlete doing dumbbell lunges while a coach sets up a barbell in a brick-and-concrete gym", highlights: [] },
   },
@@ -214,10 +204,9 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       image: "/images/programs/generated/personal-coaching.png", imageAlt: "Coach supporting an athlete during a training session",
       highlights: [
         { href: "/schedule/timetable", label: "Weekly timetable" },
-        { href: "/schedule/events#night", label: "Night training" },
         { href: "/schedule/events", label: "Competitions & events" },
         { href: "/schedule/book", label: "Book a session" },
-        { href: "/schedule/book?service=appointment#book", label: "Recovery appointments" },
+        { href: "/schedule/book?service=appointment", label: "Recovery appointments" },
       ],
     },
   },
@@ -232,8 +221,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     }),
     pages: [
       page({
-        href: "/visit/camps", label: "Camps & retreats", tabLabel: "Camps",
-        summary: "Training camps, retreat packages, and extended stays for traveling athletes.",
+        href: "/visit/camps", label: "Camps & trips", tabLabel: "Camps",
+        summary: "Training camps, travel packages, and extended stays for traveling athletes.",
         image: "/images/destination/thrive.png", imageAlt: "Athlete training on gymnastic rings", adminTab: "pricing",
       }),
       page({
@@ -243,11 +232,10 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       }),
     ],
     menu: {
-      text: "Getting to BaseCamp, and camps & retreats for travelers.",
+      text: "Getting to BaseCamp, and camps & trips for travelers.",
       image: "/images/facilities/facility-landscape.jpg", imageAlt: "The CamSur landscape around BaseCamp",
       highlights: [
-        { href: "/visit#find-us", label: "Getting there" },
-        { href: "/visit/camps", label: "Camps & retreats" },
+        { href: "/visit/camps", label: "Camps & trips" },
         { href: "/visit/camps#long-stays", label: "Extended stays" },
         { href: "/visit/why-camsur", label: "Why CamSur" },
         { href: "/visit/why-camsur#lago-del-rey", label: "Lago del Rey" },
@@ -284,8 +272,6 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       text: "Southeast Asia's Performance Playground: the story and the build.",
       image: "/images/facilities/facility-exterior.jpg", imageAlt: "BaseCamp CamSur facility exterior set against the CamSur landscape",
       highlights: [
-        { href: "/about#vision", label: "Our vision" },
-        { href: "/about#pillars", label: "Brand pillars" },
         { href: "/about/design", label: "Design & place" },
         { href: "/about/the-build", label: "The build" },
         { href: "/about#different", label: "What makes us different" },
@@ -296,26 +282,15 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
   },
 };
 
-function programmePages(programmes: readonly ProgrammeRef[]): SitePage[] {
-  return programmes.filter((p) => !RESERVED_PROGRAMME_SLUGS.has(p.slug)).map((p) => ({
-    href: programmeHref(p.slug),
-    label: p.title,
-    summary: p.description,
-    image: p.image,
-    imageAlt: p.title,
-    adminTab: "programmes" as const,
-  }));
-}
-
-/** All six sections in nav order, with programme pages (content order) before Coaching and Corporate. */
-export function getSections(programmes: readonly ProgrammeRef[]): SiteSection[] {
+/** All six sections in nav order. The Classes menu lists the station classes; programme detail pages were removed, so `programmes` is kept only for callers. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature kept for existing callers
+export function getSections(_programmes: readonly ProgrammeRef[]): SiteSection[] {
   return SECTION_IDS.map((id) => {
     const s = STATIC_SECTIONS[id];
     if (id !== "programs") return { ...s, pages: [...s.pages], menu: { ...s.menu, highlights: [...s.menu.highlights] } };
-    const progPages = programmePages(programmes);
     return {
       ...s,
-      pages: [...progPages, ...s.pages],
+      pages: [...s.pages],
       menu: {
         ...s.menu,
         text: `${NUMBER_WORDS[WORKOUT_TYPES.length] ?? WORKOUT_TYPES.length} HYROX-style stations, each with a weekly coached class.`,
@@ -435,15 +410,15 @@ export const LEGACY_HASH_REDIRECTS: Readonly<Record<string, Readonly<Record<stri
   },
   "/classes": {
     disciplines: "/classes#disciplines",
-    modalities: "/classes/functional-training#inside",
-    formats: "/classes/functional-training#inside",
-    signature: "/classes/endurance#inside",
-    fusion: "/classes/recovery-mobility#inside",
-    assessment: "/classes/coaching#assessment",
-    mindset: "/classes/coaching#mindset",
-    coaches: "/classes/coaching#coaches",
-    "wellness-partners": "/classes/personal-coaching#inside",
-    corporate: "/classes/corporate",
+    modalities: "/classes",
+    formats: "/classes",
+    signature: "/classes",
+    fusion: "/classes",
+    assessment: "/classes",
+    mindset: "/classes",
+    coaches: "/classes",
+    "wellness-partners": "/classes",
+    corporate: "/membership/price-guide#corporate",
   },
   "/facilities": {
     "training-zones": "/facilities/training#training-zones",

@@ -114,11 +114,11 @@ export const FEATURED_PROGRAMME_OUTCOMES: Readonly<Record<string, string>> = {
 };
 
 export const TRAINING_PATHWAYS = [
-  { id: "start", label: "Start", text: "Learn the movements and build a repeatable training rhythm.", href: "/classes/functional-training" },
-  { id: "build", label: "Build", text: "Develop strength, movement quality and work capacity.", href: "/classes/strength-conditioning" },
-  { id: "perform", label: "Perform", text: "Train with intent around a goal, sport or personal benchmark.", href: "/classes/personal-coaching" },
-  { id: "compete", label: "Compete", text: "Prepare for endurance events and fitness racing under fatigue.", href: "/classes/endurance" },
-  { id: "recover", label: "Recover", text: "Restore range, regulate load and arrive ready for the next session.", href: "/classes/recovery-mobility" },
+  { id: "start", label: "Start", text: "Learn the movements and build a repeatable training rhythm.", href: "/classes" },
+  { id: "build", label: "Build", text: "Develop strength, movement quality and work capacity.", href: "/classes" },
+  { id: "perform", label: "Perform", text: "Train with intent around a goal, sport or personal benchmark.", href: "/classes" },
+  { id: "compete", label: "Compete", text: "Prepare for endurance events and fitness racing under fatigue.", href: "/classes" },
+  { id: "recover", label: "Recover", text: "Restore range, regulate load and arrive ready for the next session.", href: "/classes" },
 ] as const;
 
 export const FIRST_WEEK = [
@@ -388,7 +388,7 @@ export const EVENT_KIND_GROUPS: { kind: CalendarEvent["kind"]; label: string }[]
 export const PLATFORM_CARDS: StaticItem[] = [
   { id: "booking", title: "Class & facility booking", description: "Reservations for daily classes, open gym slots and facility access." },
   { id: "membership", title: "Membership management", description: "Subscriptions, payments and member communications in one place." },
-  { id: "camps", title: "Camp reservations", description: "Booking for multi-day training camps and retreat packages." },
+  { id: "camps", title: "Camp reservations", description: "Booking for multi-day training camps and travel packages." },
   { id: "tracking", title: "Performance tracking", description: "Log workouts, track progress and see your improvement over time." },
 ];
 export const PLATFORM_COMING_SOON = ["Member app", "Online payments (cards, digital wallets, multi-currency)", "SMS reminders", "Virtual classes", "Daily WOD preview"] as const;

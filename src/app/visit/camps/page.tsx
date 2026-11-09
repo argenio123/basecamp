@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import CampCards from "@/components/visit/CampCards";
-import VisitItems from "@/components/visit/VisitItems";
 import { getSiteContent } from "@/content/get";
 import { CAMPS, CAMPS_CTA, CAMPS_GLANCE, CAMPS_HERO, CAMPS_META, LONG_STAYS } from "@/data/visit";
 
@@ -27,30 +27,46 @@ export default async function CampsPage() {
       path="/visit/camps"
       hero={<PageHero {...CAMPS_HERO} />}
       glance={{ summary: CAMPS_GLANCE.summary, statement: true }}
-      related={["/visit/why-camsur", "/classes/coaching", "/membership/price-guide"]}
+      related={["/visit/why-camsur", "/membership/price-guide"]}
       cta={<CtaBand eyebrow={CAMPS_CTA.eyebrow} />}
     >
-      <section id="camps" className="section shell">
-        <div className="split-heading light-split" data-reveal>
-          <div><p className="eyebrow">{CAMPS.eyebrow}</p><h2>{CAMPS.title}</h2></div>
-          <div><p>{CAMPS.intro}</p><p>{CAMPS.assessment.text}. <Link href={CAMPS.assessment.href} className="vt-inline-link">{CAMPS.assessment.label}</Link></p></div>
-        </div>
-        <div className="vt-row-head" data-reveal><h3 className="vt-subhead">{CAMPS.typesTitle}</h3></div>
-        <VisitItems items={CAMPS.types} cols={5} note={CAMPS.enquiryLabel} label={CAMPS.typesTitle} />
-        <div className="vt-who" data-reveal>
-          <h3 className="vt-subhead">{CAMPS.whoTitle}</h3>
-          <ul className="vt-chips" aria-label={CAMPS.whoTitle}>{CAMPS.who.map((w) => <li key={w}>{w}</li>)}</ul>
-          <Link href={CAMPS.cta.href} className="button button-dark">{CAMPS.cta.label}</Link>
+      <section id="camps" className="section sd-ev">
+        <div className="shell">
+          <div className="sd-tt-head sd-tt-head-light" data-reveal>
+            <div><p className="sd-tt-eyebrow">{CAMPS.eyebrow}</p><h2>{CAMPS.title}</h2></div>
+            <p>{CAMPS.intro} {CAMPS.assessment.text}.</p>
+          </div>
+          <h3 className="sd-ev-subhead" data-reveal>{CAMPS.typesTitle}</h3>
+          <ul className="sd-ev-rows" aria-label={CAMPS.typesTitle} data-reveal="stagger">
+            {CAMPS.types.map((t, i) => (
+              <li className="sd-ev-row sd-ev-row-static vt-type" key={t.title} style={{ "--i": i } as CSSProperties}>
+                <div>
+                  <span className="sd-ev-when"><strong>{String(i + 1).padStart(2, "0")}</strong></span>
+                  <span className="sd-ev-body">
+                    <span className="sd-ev-title">{t.title}</span>
+                    {t.body && <span className="sd-ev-desc">{t.body}</span>}
+                  </span>
+                  <span className="vt-pk-tags"><StatusBadge availability={t.availability} /><span className="vt-pk-note">{CAMPS.enquiryLabel}</span></span>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="vt-who-board" data-reveal>
+            <div>
+              <p className="sd-tt-eyebrow">{CAMPS.whoTitle}</p>
+              <ul aria-label={CAMPS.whoTitle}>{CAMPS.who.map((w) => <li key={w}>{w}</li>)}</ul>
+            </div>
+            <Link href={CAMPS.cta.href} className="vt-who-cta">{CAMPS.cta.label}</Link>
+          </div>
         </div>
       </section>
 
       {campItems.length > 0 && (
-        <section id="camps-pricing" className="section vt-deep">
+        <section id="camps-pricing" className="section sd-ev sd-ev-band">
           <div className="shell">
-            <div className="nv-block-head" data-reveal>
-              <p className="eyebrow">{CAMPS.pricesTitle}</p>
-              <h2>{campGroup?.title}</h2>
-              {campGroup?.intro && <p className="nv-block-intro">{campGroup.intro}</p>}
+            <div className="sd-tt-head sd-tt-head-light" data-reveal>
+              <div><p className="sd-tt-eyebrow">{CAMPS.pricesTitle}</p><h2>{campGroup?.title}</h2></div>
+              {campGroup?.intro && <p>{campGroup.intro}</p>}
             </div>
             <CampCards items={campItems} exchangeRate={c.settings.exchangeRate} enquiryLabel={CAMPS.enquiryLabel} requestLabel={CAMPS.requestLabel} />
             <p className="vt-pricing-link" data-reveal><Link href={CAMPS.pricingEnquiry.href} className="text-link">{CAMPS.pricingEnquiry.label}</Link></p>

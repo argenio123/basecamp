@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 };
 
 /** "More schedule" links: the same four links as the Schedule menu highlights, each with its own photo. */
-const MORE_SCHEDULE = ["/schedule/timetable", "/schedule/events#night", "/schedule/events", "/schedule/book", "/schedule/book?service=appointment#book"] as const;
+const MORE_SCHEDULE = ["/schedule/timetable", "/schedule/events#night", "/schedule/events", "/schedule/book", "/schedule/book?service=appointment"] as const;
 const MORE_SCHEDULE_CARDS = {
   "/schedule/timetable": { label: "Weekly timetable", summary: "Pick your day, filter your session, and request a place.", image: "/images/programs/stations/row.jpg", imageAlt: "Athlete on a rowing machine" },
   "/schedule/events#night": { label: "Night training", summary: "Night Games, Friday Night Lights and night runs under the lights.", image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running on a curved treadmill in the open-air gym" },
   "/schedule/events": { label: "Competitions & events", summary: "Time trials, community comps, festivals and the events calendar.", image: "/images/programs/stations/wall-ball-squat.jpg", imageAlt: "Athlete squatting with a wall ball" },
   "/schedule/book": { label: "Book a session", summary: "Request a class, appointment or camp place.", image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled" },
-  "/schedule/book?service=appointment#book": { label: "Recovery appointments", summary: "Sauna, ice bath, sports massage and physiotherapy by appointment.", image: "/images/programs/generated/recovery-mobility.png", imageAlt: "Coach guiding a mobility stretch" },
+  "/schedule/book?service=appointment": { label: "Recovery appointments", summary: "Sauna, ice bath, sports massage and physiotherapy by appointment.", image: "/images/programs/generated/recovery-mobility.png", imageAlt: "Coach guiding a mobility stretch" },
 };
 
 // Overview: four blocks between hero and footer: At a glance · [hours by zone] · Explore (Timetable, Events, Book) · CTA.
@@ -35,7 +35,7 @@ export default async function SchedulePage() {
   const zones = [
     { id: "classes", label: "Coached classes", title: "Class timetable", hours: phase === "live" ? "See the timetable" : "Times confirmed before opening", items: ["Sunrise and evening group classes", "HYROX-style stations and coached sessions", "Friday Night Lights under the lights"], link: { href: "/schedule/timetable", label: "View the timetable" } },
     { id: "open-gym", label: "Open gym", title: "Athlete hours", hours, items: ["Self-directed training during staffed hours", "Rigs, platforms, cardio and strength equipment", "Included in every membership tier"], link: { href: "/membership/price-guide#open-gym", label: "Open-gym passes" } },
-    { id: "recovery", label: "Recovery & appointments", title: "By appointment", hours, items: ["Sauna and ice bath sessions", "Sports massage and physiotherapy", "1:1 coaching and assessments"], link: { href: "/schedule/book?service=appointment#book", label: "Request an appointment" } },
+    { id: "recovery", label: "Recovery & appointments", title: "By appointment", hours, items: ["Sauna and ice bath sessions", "Sports massage and physiotherapy", "1:1 coaching and assessments"], link: { href: "/schedule/book?service=appointment", label: "Request an appointment" } },
   ];
 
   return (

@@ -15,8 +15,9 @@ type HeaderProps = { ctaLabel: string; sections: SiteSection[] };
 export default function Header({ ctaLabel, sections }: HeaderProps) {
   const pathname = usePathname();
   const isLandingPage = pathname === "/";
-  // Pages that open with a full-bleed image hero (every section overview and sub-route) get the transparent overlay header
-  const hasHeroOverlay = isLandingPage || pathname === "/contact" || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
+  // Pages that open with a full-bleed image hero (every section overview and sub-route, and the member log-in /
+  // sign-up pages with their gym photo) get the transparent overlay header
+  const hasHeroOverlay = isLandingPage || pathname === "/contact" || pathname.startsWith("/account/") || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
           }}
         >
           <Image
-            src="/images/brand/basecamp-white-logo.png"
+            src="/images/brand/basecamp-camsur-logo-white.png"
             alt=""
             width={1118}
             height={982}

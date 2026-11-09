@@ -149,7 +149,7 @@ export const EDITOR_SCHEMA = {
               phoneE164: text("Phone (international format)", { max: 20, format: "e164", help: "Used for tap-to-call, e.g. +639189051234." }),
               email: text("Email", { max: 254, format: "email", required: true }),
               hours: text("Opening hours", { max: 160 }),
-              mapsQuery: text("Google Maps search", { max: 160, required: true, help: "Used for the map embed and the Get directions link." }),
+              mapsQuery: text("Google Maps search", { max: 160, required: true, help: "A place name or exact coordinates (lat,lng). Used for the map embed and the Get directions link." }),
               googleReviewsUrl: url("Google reviews URL"),
             },
           },
@@ -743,7 +743,7 @@ export const EDITOR_SCHEMA = {
     previewPath: "/about",
     groups: [
       {
-        title: "Coaches", anchor: "/classes/coaching#coaches", help: "Shown on Classes › Coaching once at least one coach is added.",
+        title: "Coaches", anchor: "/classes", help: "Coach profiles (the Coaching page was removed; kept for future use).",
         fields: {
           coaches: {
             kind: "list", label: "Coaches", itemTitleKey: "name", maxItems: 24,

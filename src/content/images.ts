@@ -1,8 +1,8 @@
 // Every image an editor may pick (spec §B.15). Keep in sync with public/images.
 export const IMAGE_LIBRARY: readonly string[] = [
   "/images/brand/basecamp-green-logo.png",
-  "/images/brand/basecamp-logo.png",
-  "/images/brand/basecamp-white-logo.png",
+  "/images/brand/basecamp-camsur-logo-black.png",
+  "/images/brand/basecamp-camsur-logo-white.png",
   "/images/destination/thrive.png",
   "/images/destination/train.png",
   "/images/destination/transform.png",

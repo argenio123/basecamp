@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import ItemList from "@/components/facilities/ItemList";
-import PillarTiles from "@/components/features/PillarTiles";
+import Image from "next/image";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
+import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
-import { FACILITY_ANCHORS } from "@/content/constants";
 import { getSiteContent } from "@/content/get";
-import { currentHrefFor, findPage } from "@/content/sitemap";
+import { findPage } from "@/content/sitemap";
 import { facilitiesVideo } from "@/data/brand";
-import { ARRIVAL, DESIGN, FACILITIES_CTA, FACILITIES_HERO, ZONES } from "@/data/facilities";
+import { DESIGN, FACILITIES_CTA, FACILITIES_HERO } from "@/data/facilities";
 
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
 export const metadata: Metadata = {
@@ -17,17 +15,32 @@ export const metadata: Metadata = {
   description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level, and spaces to stay longer.",
 };
 
-// One distinct photo per facilities tile (several sub-pages share the same building render).
-const PILLAR_IMAGES: Record<string, string> = {
-  "/facilities/training": "/images/programs/program-functional.png",
-  "/facilities/recovery": "/images/programs/program-recovery.png",
-  "/facilities/lifestyle": "/images/facilities/facility-landscape.jpg",
-  "/facilities/gallery": "/images/facilities/facility-aerial-render.jpg",
+// The overview uses the latest interior renders as one visual family. The hero remains the
+// architectural walkthrough; these cards let visitors see the spaces they can actually use.
+const FACILITY_PREVIEWS: Record<string, { description: string; image: string; imageAlt: string }> = {
+  "/facilities/training": {
+    description: "A complete fitness gym and dedicated functional training floor.",
+    image: "/images/facilities/1st floor- gym area-v2.png",
+    imageAlt: "Rendered interior of the BaseCamp gym with cardio and strength equipment",
+  },
+  "/facilities/recovery": {
+    description: "Contrast therapy, treatment rooms, and a recovery level built for volume.",
+    image: "/images/facilities/2F Plunge.png",
+    imageAlt: "Rendered BaseCamp recovery level with hot and cold plunge pools",
+  },
+  "/facilities/lifestyle": {
+    description: "Food, movement, and social spaces designed for a full day at BaseCamp.",
+    image: "/images/facilities/1st floor- cafeteria-v2.png",
+    imageAlt: "Rendered BaseCamp cafeteria with communal tables and warm timber finishes",
+  },
+  "/facilities/gallery": {
+    description: "Walk through the training, recovery, and shared spaces in detail.",
+    image: "/images/facilities/1st floor- crossfit area-v2.png",
+    imageAlt: "Rendered BaseCamp functional training area with rigs and open floor space",
+  },
 };
 
-const zoneNo = (i: number) => String(i + 1).padStart(2, "0");
-
-// Stage-3 §1 overview: At a glance · [design] · [arrival] · cards → 4 sub-pages · CTA.
+// Facilities overview: hero, at-a-glance statement, facility categories, design, and CTA.
 // Static rule (spec §0.17): only awaits the cached getSiteContent() ('use cache' + cacheTag, see
 // node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-cache.md), so the page prerenders.
 // Legacy #anchors (e.g. /facilities#recovery) are forwarded by the root layout's <HashForwarder />.
@@ -41,6 +54,7 @@ const FACILITIES_HERO_VIDEO = {
 export default async function FacilitiesPage() {
   const c = await getSiteContent();
   const stats = c.home.stats.items;
+  const facilityPages = findPage("/facilities", c.programmes.featured)?.section.pages ?? [];
 
   return (
     <OverviewTemplate
@@ -55,20 +69,34 @@ export default async function FacilitiesPage() {
       marquee={false}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
-      <PillarTiles eyebrow="Explore" title="Train. Recover. Stay." items={(findPage("/facilities", c.programmes.featured)?.section.pages ?? []).map((pg) => ({ title: pg.label, href: pg.href, image: PILLAR_IMAGES[pg.href] ?? pg.image }))} />
-      {/* Design: headline + summary on the left; the pull quote and the facility numbers (same content as the
-          homepage "Train & recover" stats, restyled for a light section) on the right. */}
-      <section id="design" className="section shell fc-design">
-        <div className="fc-design-copy" data-reveal>
-          <p className="eyebrow">{DESIGN.eyebrow}</p>
-          <h2>{DESIGN.title}</h2>
-          <p className="fc-design-summary">See how tropical architecture, natural ventilation, and landscape shape the complete BaseCamp experience.</p>
-          <Link className="button button-dark" href="/about/design">Explore the design approach</Link>
-        </div>
-        <div className="fc-design-side" data-reveal data-reveal-delay="short">
-          <blockquote className="fc-pull">{DESIGN.quote}</blockquote>
+      <ScheduleExplore
+        eyebrow="Explore the facility"
+        title="Train. Recover. Stay."
+        intro="One connected environment for focused work, deliberate recovery, and the time between sessions."
+        items={facilityPages.flatMap((page) => {
+          const preview = FACILITY_PREVIEWS[page.href];
+          return preview ? [{ href: page.href, label: page.label, summary: preview.description, image: preview.image, imageAlt: preview.imageAlt }] : [];
+        })}
+      />
+      {/* Design: the facility render becomes the section canvas; the headline and homepage facility stats sit
+          above a dark wash for the same image-led treatment used across the brand. */}
+      <section id="design" className="section fc-design-section">
+        <Image
+          src="/images/facilities/facility-front.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="cover-image fc-design-background"
+        />
+        <div className="fc-design-shade" aria-hidden="true" />
+        <div className="shell fc-design">
+          <div className="fc-design-copy" data-reveal>
+            <p className="eyebrow eyebrow-light">Train &amp; recover</p>
+            <h2>{DESIGN.title}</h2>
+            <p className="fc-design-summary">Training spaces are deliberately open and visible: a training ecosystem where effort is celebrated and community is built through shared work.</p>
+          </div>
           {stats.length > 0 && (
-            <dl className="fc-design-stats">
+            <dl className="fc-design-stats" data-reveal data-reveal-delay="short">
               {stats.map((stat) => (
                 <div key={stat.id}>
                   <dt>{stat.label}</dt>
@@ -81,24 +109,6 @@ export default async function FacilitiesPage() {
         </div>
       </section>
 
-      <section id="zones" className="section fc-zone-deep" aria-labelledby="fc-journey-title">
-        <div className="shell">
-          <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone journey</p><h2 id="fc-journey-title">From arrival to the lounge.</h2></div><p>Five zones, in the order you move through them.</p></div>
-          <ol className="fc-journey" data-reveal="stagger">
-            {ZONES.map((z, i) => {
-              const href = z.anchor === FACILITY_ANCHORS.arrival ? `#${z.anchor}` : currentHrefFor("/facilities", z.anchor);
-              return <li key={z.anchor}><Link href={href}><span className="fc-index">{zoneNo(i)}</span><span className="fc-journey-label">{z.label}</span><span aria-hidden="true">{href.startsWith("#") ? "↓" : "→"}</span></Link></li>;
-            })}
-          </ol>
-        </div>
-      </section>
-
-      <section id={FACILITY_ANCHORS.arrival} className="section">
-        <div className="shell">
-          <div className="split-heading light-split" data-reveal><div><p className="eyebrow">Zone 01</p><h2>{ARRIVAL.title}</h2></div><p>{ARRIVAL.intro}</p></div>
-          <ItemList items={ARRIVAL.items} cols={2} />
-        </div>
-      </section>
     </OverviewTemplate>
   );
 }

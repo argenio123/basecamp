@@ -71,13 +71,13 @@ export const LAGO = {
 
 // ---------- /visit/camps ----------
 export const CAMPS_META = {
-  title: "Camps & Retreats",
-  description: "Training camps, retreats, and long stays at BaseCamp CamSur: day clinics, weekend and week-long immersive camps with lodging at Villa Del Rey, and long stays for remote workers. Inquiry only.",
+  title: "Camps & Trips",
+  description: "Training camps, group trips, and long stays at BaseCamp CamSur: day clinics, weekend and week-long immersive camps with lodging at Villa Del Rey, and long stays for remote workers. Inquiry only.",
 };
 
 export const CAMPS_HERO = {
   title: "Train hard. Stay longer.",
-  intro: "Training camps and retreats for athletes, coaches, and their communities, plus long stays for remote workers and fitness nomads.",
+  intro: "Training camps and group trips for athletes, coaches, and their communities, plus long stays for remote workers and fitness nomads.",
   image: "/images/destination/transform.png",
   imageAlt: "Athletes training together with kettlebells at BaseCamp CamSur",
 };
@@ -88,9 +88,9 @@ export const CAMPS_GLANCE = {
 
 export const CAMPS = {
   eyebrow: "Camps",
-  title: "Camps & retreats.",
+  title: "Camps & trips.",
   intro: "Athletes plan their year around training camps here. Coaches bring their communities for immersive experiences.",
-  assessment: { text: "Every camp is designed to start with baseline testing and end with a checkout reassessment", label: "How assessment works", href: "/classes/coaching#assessment" },
+  assessment: { text: "Every camp is designed to start with baseline testing and end with a checkout reassessment" },
   requestLabel: "Request this camp",
   pricesTitle: "Camp packages",
   typesTitle: "Camp types",
@@ -99,7 +99,7 @@ export const CAMPS = {
   types: [
     { title: "30-day transformation programs" },
     { title: "Multi-sport camps", body: "CrossFit-style competition training, HYROX-style preparation, triathlon, OCR" },
-    { title: "Mindfulness + trail running retreats" },
+    { title: "Mindfulness + trail running trips" },
     { title: "Longevity Lite" },
     { title: "Weekend all-inclusive", body: "Lodging at Villa Del Rey with meals" },
   ].map((i) => ({ ...i, availability: "phase-2" as const })) satisfies VisitItem[],
@@ -118,4 +118,4 @@ export const LONG_STAYS = {
   cta: { label: "Register interest", href: "/contact?interest=extended-stay" },
 };
 
-export const CAMPS_CTA = { eyebrow: "Camps & retreats" };
+export const CAMPS_CTA = { eyebrow: "Camps & trips" };

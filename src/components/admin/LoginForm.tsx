@@ -13,7 +13,7 @@ export default function LoginForm({ configured }: { configured: boolean }) {
   return (
     <div className="adm-login">
       <div className="adm-login-card">
-        <Image src="/images/brand/basecamp-logo.png" alt="BaseCamp CamSur" width={814} height={866} className="adm-login-logo" preload />
+        <Image src="/images/brand/basecamp-camsur-logo-black.png" alt="BaseCamp CamSur" width={1118} height={982} className="adm-login-logo" preload />
         <h1>Sign in</h1>
         {configured ? (
           <form action={formAction} className="adm-login-form">

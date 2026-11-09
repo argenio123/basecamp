@@ -35,7 +35,7 @@ export default async function WorkoutStylePage({ params }: { params: Promise<Par
   const ALL_STYLES = { href: "/classes#workout-types", label: "All training styles" };
   const detail = WORKOUT_DETAILS[style.slug];
   const station = String(currentIndex + 1).padStart(2, "0");
-  const requestHref = `/schedule/book?service=class&item=${encodeURIComponent(style.slug)}#book`;
+  const requestHref = `/schedule/book?service=class&item=${encodeURIComponent(style.slug)}`;
 
   return (
     <>

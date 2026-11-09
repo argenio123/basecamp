@@ -57,7 +57,7 @@ export const PROBLEM = {
   short: "Athletes train across disciplines, value recovery as much as performance, and seek real community. No destination in Southeast Asia yet delivers all three in one place.",
   gaps: [
     { title: "Urban gyms fall short", body: "Crowded, indoor environments offering repetitive programming without the space, natural elements, or infrastructure serious athletes need." },
-    { title: "Wellness retreats miss the mark", body: "Passive experiences focused on relaxation rather than performance, lacking the training intensity and programming hybrid athletes demand." },
+    { title: "Wellness resorts miss the mark", body: "Passive experiences focused on relaxation rather than performance, lacking the training intensity and programming hybrid athletes demand." },
     { title: "Sports tourism is fragmented", body: "Disconnected experiences requiring athletes to patch together training facilities, recovery options, and accommodation across multiple locations." },
   ] satisfies Item[],
 };

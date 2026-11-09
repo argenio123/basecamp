@@ -74,8 +74,10 @@ type DetailTemplateProps = {
   /** Last breadcrumb label override. */
   crumbLabel?: string;
   /** 2–3 related pages (any public path, #hash allowed). Default: next sibling sub-pages. */
-  related?: readonly string[];
+  related?: readonly string[] | false;
   relatedTitle?: string;
+  /** Set false to hide the scrolling section statement on a detail page. */
+  marquee?: boolean;
   /** Optional programme-specific actions placed after related cards and before the CTA. */
   afterRelated?: ReactNode;
   cta?: ReactNode;
@@ -84,15 +86,15 @@ type DetailTemplateProps = {
 };
 
 /** Detail page order: hero → breadcrumbs → at a glance → content → related → CTA → previous/next (right above the footer). */
-export function DetailTemplate({ path, hero, glance, crumbLabel, related, relatedTitle, afterRelated, cta, children }: DetailTemplateProps) {
+export function DetailTemplate({ path, hero, glance, crumbLabel, related, relatedTitle, marquee = true, afterRelated, cta, children }: DetailTemplateProps) {
   return (
     <>
       {hero}
       {!NO_BREADCRUMBS.has(sectionKeyFor(path)) && !MEMBERSHIP_STYLE_PAGES.has(path) && <Breadcrumbs current={path} label={crumbLabel} />}
       <AtAGlance ghost={SECTION_FEATURES[sectionKeyFor(path)].ghost} {...glance} />
       {children}
-      {showsMarquee(path) && <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />}
-      {!NO_RELATED.has(sectionKeyFor(path)) && !MEMBERSHIP_STYLE_PAGES.has(path) && <RelatedLinks current={path} hrefs={related} title={relatedTitle} />}
+      {marquee && showsMarquee(path) && <Marquee text={SECTION_FEATURES[sectionKeyFor(path)].marquee} tone="stone" />}
+      {related !== false && !NO_RELATED.has(sectionKeyFor(path)) && !MEMBERSHIP_STYLE_PAGES.has(path) && <RelatedLinks current={path} hrefs={related} title={relatedTitle} />}
       {afterRelated}
       {cta}
       <PrevNext current={path} />

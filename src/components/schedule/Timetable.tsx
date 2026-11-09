@@ -106,7 +106,7 @@ function Slot({ slot, date, index }: { slot: TimetableEntry; date?: Date; index:
 
   return (
     <li className="sd-app-slot" data-category={slot.category} style={{ "--i": index } as CSSProperties}>
-      <Link href={`/schedule/book?service=class&item=${encodeURIComponent(slot.id)}#book`} aria-label={`${WEEKDAY_LABEL[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}. Request this session`}>
+      <Link href={`/schedule/book?service=class&item=${encodeURIComponent(slot.id)}`} aria-label={`${WEEKDAY_LABEL[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}. Request this session`}>
         <span className="sd-app-time">
           <strong>{t.label}</strong>
           {t.part && <small>{t.part}</small>}

@@ -20,7 +20,7 @@ export const MEMBERSHIP_GAINS: Readonly<Record<string, readonly Gain[]>> = {
   ],
   "/membership/price-guide": [
     { title: "Every price in one place", detail: "Packs, passes, open gym, yoga, recovery, camps, and corporate bookings, each with its starting price." },
-    { title: "Pick by how you train", detail: "Locals lean on memberships and class packs; travelers choose day passes, retreats, and camps." },
+    { title: "Pick by how you train", detail: "Locals lean on memberships and class packs; travelers choose day passes, trips, and camps." },
     { title: "Straight to the details", detail: "Every row links to its full price page, so you can compare options in a click." },
   ],
   "/about/faq": [

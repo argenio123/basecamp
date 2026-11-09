@@ -70,16 +70,16 @@ export const TRAINING = {
       body: "Build strength, skill and conditioning in a coach-led performance environment.",
       availability: "at-launch",
       details: { audience: "Group-training athletes and camps", access: "Eligible class or gym membership", booking: "Book coached sessions", programs: ["Functional Training", "Strength & Conditioning"], technical: "Full-spec rigs, platforms and competition-grade equipment for high-intensity programming." },
-      image: "/images/programs/generated/functional-training.png",
-      imageAlt: "Athletes training in a functional fitness zone",
+      image: "/images/facilities/1st floor- crossfit area-v2.png",
+      imageAlt: "Architectural render of the dedicated CrossFit-style training area",
     },
     {
       title: "Complete fitness gym",
       body: "Follow an independent strength plan or add focused accessory work around coached sessions.",
       availability: "at-launch",
       details: { audience: "Independent athletes and coaching clients", access: "Eligible gym membership or pass", booking: "Open access during member hours", programs: ["Strength & Conditioning", "Personal Coaching"], technical: "Strength equipment, cardio machines, and dedicated accessory-work zones." },
-      image: "/images/programs/program-strength.png",
-      imageAlt: "Strength training equipment in the gym",
+      image: "/images/facilities/1st floor- gym area-v2.png",
+      imageAlt: "Architectural render of the fitness gym and strength equipment",
     },
     {
       title: "Expansive outdoor space",
@@ -216,15 +216,23 @@ export const ALL_WEATHER = {
 export const GALLERY = {
   eyebrow: "Gallery",
   title: "Built to be filmed",
-  body: "Every angle works for photography and video, making BaseCamp inherently shareable.",
+  body: "Step inside the first-floor training, welcome, work, and changing spaces planned for BaseCamp CamSur.",
   images: [
-    { src: "/images/facilities/facility-exterior.jpg", alt: "Exterior rendering of BaseCamp CamSur", wide: true },
-    { src: "/images/facilities/facility-front.jpg", alt: "Front approach to the BaseCamp CamSur facility" },
-    { src: "/images/facilities/facility-detail.jpg", alt: "Architectural detail of the BaseCamp CamSur facility" },
-    { src: "/images/facilities/facility-render-a1-2.jpg", alt: "Architectural rendering of the BaseCamp CamSur training building" },
-    { src: "/images/facilities/facility-render-a1-3.jpg", alt: "Architectural rendering of BaseCamp CamSur in its landscape" },
+    { src: "/images/facilities/1st floor- lobby-v2.png", alt: "Architectural render of the BaseCamp lobby and reception", wide: true },
+    { src: "/images/facilities/1st floor- gym area-v2.png", alt: "Architectural render of the BaseCamp fitness gym" },
+    { src: "/images/facilities/1st floor- crossfit area-v2.png", alt: "Architectural render of the BaseCamp CrossFit-style training area" },
+    { src: "/images/facilities/1st floor- cafeteria-v2.png", alt: "Architectural render of the BaseCamp cafeteria and communal seating" },
+    { src: "/images/facilities/1st floor- yoga-v2.png", alt: "Architectural render of the BaseCamp yoga and movement studio" },
+    { src: "/images/facilities/1st floor- office area-v2.png", alt: "Architectural render of the BaseCamp office area" },
+    { src: "/images/facilities/1st floor- cctv room.jpg", alt: "Architectural render of the BaseCamp CCTV operations room" },
+    { src: "/images/facilities/1st floor- men's locker room-v2.png", alt: "Architectural render of the men's locker room" },
+    { src: "/images/facilities/1st floor- men's shower room-v2.png", alt: "Architectural render of the men's shower room" },
+    { src: "/images/facilities/1st floor- men's rest room-v2.png", alt: "Architectural render of the men's restroom" },
+    { src: "/images/facilities/1st floor- women's locker room-v2.png", alt: "Architectural render of the women's locker room" },
+    { src: "/images/facilities/1st floor- women's rest room-v2.png", alt: "Architectural render of the women's restroom" },
+    { src: "/images/facilities/1st floor- toilet room-v2.png", alt: "Architectural render of an accessible first-floor restroom" },
   ],
-  quote: "Designed as a destination, not a stopover.",
+  quote: "Every room supports the complete training day.",
 };
 
 /* ---------- Stage-3 sub-page heroes (copy shortened from the sections each page holds) ---------- */
@@ -232,32 +240,32 @@ export const TRAINING_HERO: FacilityHero = {
   eyebrow: "Facilities · Train",
   title: "Training zones.",
   intro: "Functional, strength, and outdoor zones, a running loop through nature, and spaces designed for every kind of weather.",
-  image: "/images/facilities/facility-front.jpg",
-  imageAlt: "Outdoor training area at BaseCamp CamSur",
+  image: "/images/facilities/1st floor- crossfit area-v2.png",
+  imageAlt: "Architectural render of the BaseCamp CrossFit-style training area",
 };
 
 export const RECOVERY_HERO: FacilityHero = {
   eyebrow: "Facilities · Recover",
   title: RECOVERY.title,
   intro: RECOVERY.sub,
-  image: "/images/programs/program-recovery.png",
-  imageAlt: "Recovery session at BaseCamp CamSur",
+  image: "/images/facilities/2F Plunge.png",
+  imageAlt: "Architectural render of the BaseCamp recovery level and plunge pools",
 };
 
 export const LIFESTYLE_HERO: FacilityHero = {
   eyebrow: "Facilities · Thrive",
   title: "Spaces to stay longer.",
   intro: "The social lounge, a performance food culture and signature spaces that make it impossible to post a boring photo.",
-  image: "/images/facilities/facility-render-a1-2.jpg",
-  imageAlt: "Render of the BaseCamp CamSur lounge spaces",
+  image: "/images/facilities/1st floor- cafeteria-v2.png",
+  imageAlt: "Architectural render of the BaseCamp cafeteria and social space",
 };
 
 export const GALLERY_HERO: FacilityHero = {
   eyebrow: "Facilities · Gallery",
   title: `${GALLERY.title}.`,
   intro: GALLERY.body,
-  image: "/images/facilities/facility-exterior.jpg",
-  imageAlt: "Exterior rendering of BaseCamp CamSur",
+  image: "/images/facilities/1st floor- lobby-v2.png",
+  imageAlt: "Architectural render of the BaseCamp lobby and reception",
 };
 
 /** How many signature spaces show before "See all" (stage-3 §6: long lists show the first 3–6). */

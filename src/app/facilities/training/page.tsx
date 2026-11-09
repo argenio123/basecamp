@@ -31,7 +31,7 @@ export default async function FacilitiesTrainingPage() {
         summary: "Three training zones with 673 square meters outdoors, a planned running loop through nature and design that works in every kind of weather.",
         facts: [statFact(stats, "sqm"), statFact(stats, "zones"), lanes && { label: lanes.title, value: "Planned" }],
       }}
-      related={["/classes/endurance", "/facilities/recovery", "/membership/price-guide"]}
+      related={["/classes", "/facilities/recovery", "/membership/price-guide"]}
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <section id={FACILITY_ANCHORS.training} className="section">
