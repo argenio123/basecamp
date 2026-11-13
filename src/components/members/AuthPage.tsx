@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense, type CSSProperties } from "react";
 import AuthReplay from "./AuthReplay";
 import AuthSlides from "./AuthSlides";
@@ -36,7 +35,6 @@ export default function AuthPage({ mode }: { mode: "login" | "signup" }) {
               <MemberAuthForm mode={mode} />
             </Suspense>
           </div>
-          <p className="mb-auth-staff">Staff? <Link href="/login">Staff sign-in</Link></p>
         </div>
       </div>
     </section>
