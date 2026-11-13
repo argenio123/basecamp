@@ -341,7 +341,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         { id: "recovery-forward", title: "Recovery-forward", body: "Recovery is as important as training. Adaptation happens during recovery, not during training.", link: { label: "Learn more", href: "/facilities/recovery" }, availability: "at-launch" },
         { id: "own-the-night", title: "Own the night", body: "Weekly training under lights: Night Games, Friday Night Lights and night runs.", link: { label: "Learn more", href: "/schedule/events#night" }, availability: "planned" },
         { id: "competition", title: "Constant competition", body: "There's always something to train for, always a leaderboard to climb, always a challenge to attempt.", link: { label: "Learn more", href: "/schedule/events#competition" }, availability: "planned" },
-        { id: "food", title: "Performance food", body: "Filipino food isn't just delicious: it's performance fuel.", link: { label: "Learn more", href: "/facilities/lifestyle#fuel" }, availability: "planned" },
+        { id: "food", title: "Performance food", body: "Filipino food isn't just delicious: it's performance fuel.", link: { label: "Learn more", href: "/facilities/lifestyle" }, availability: "planned" },
         { id: "multi-sport", title: "Multi-sport village", body: "Southeast Asia's first Multi-Sport Training Village: stay for weeks without repeating a session.", link: { label: "Learn more", href: "/classes#disciplines" }, availability: "at-launch" },
       ],
     },

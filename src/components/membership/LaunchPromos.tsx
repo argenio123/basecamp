@@ -12,7 +12,7 @@ const PROMOS = [
     tag: "Membership test", title: "Athlete membership", a: ["Standard", "Php 4,500"], b: ["Introductory", "Php 3,200"],
     note: "Standard monthly rate tested against an introductory rate.",
     perks: ["All coached group classes", "Unlimited open-gym access", "Programming for serious local athletes", "Community-focused training program"],
-    buy: { label: "Purchase", href: "/contact?interest=membership-local" },
+    buy: { label: "Purchase", href: "/membership/join?tier=athlete" },
   },
   {
     tag: "Visitor test", title: "Day pass", a: ["Standard", "Php 650"], b: ["Weekend", "Php 850"],

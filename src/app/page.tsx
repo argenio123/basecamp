@@ -6,7 +6,9 @@ import HomeScrollReveal from "@/components/HomeScrollReveal";
 import ProgramCoverflow from "@/components/ProgramCoverflow";
 import SocialGallery from "@/components/SocialGallery";
 import HomeHeroMedia from "@/components/home/HomeHeroMedia";
+import HomeOfferModal from "@/components/home/HomeOfferModal";
 import Marquee from "@/components/features/Marquee";
+import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import { SECTION_FEATURES } from "@/data/features";
 import { TrainAndRecover } from "@/components/home/HomeSections";
 import { getSiteContent } from "@/content/get";
@@ -49,6 +51,8 @@ const destinationPillars = [
   },
 ];
 
+const showHomeHeroActions = false;
+
 // Static: only awaits the cached getSiteContent() (spec §0.17; docs 01-directives/use-cache.md).
 export default async function Home() {
   const c = await getSiteContent();
@@ -57,16 +61,19 @@ export default async function Home() {
   return (
     <>
       <HomeScrollReveal />
+      <HomeOfferModal offer={c.settings.founding} />
       <div className="sticky-hero-curtain">
         <section className="home-hero">
           <HomeHeroMedia />
           <div className="home-hero-shade" />
-          <div className="home-hero-content">
-            <div className="button-row home-hero-actions">
-              <Link href="/account/signup?next=%2F" className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</Link>
-              <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
+          {showHomeHeroActions && (
+            <div className="home-hero-content">
+              <div className="button-row home-hero-actions">
+                <EarlyAccessLink className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</EarlyAccessLink>
+                <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
+              </div>
             </div>
-          </div>
+          )}
           <div className={`hero-index shell ${gretaros.className}`}><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
         </section>
 

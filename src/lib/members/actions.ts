@@ -75,6 +75,7 @@ export async function logIn(_prev: AuthResult, formData: FormData): Promise<Auth
   redirect(safeNext(formData.get("next"), "/"));
 }
 
+/** No-JS fallback for the log-out form: clears the session and redirects. */
 export async function logOut(formData: FormData): Promise<void> {
   await clearMemberCookies();
   redirect(safeNext(formData.get("next"), "/"));

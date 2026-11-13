@@ -42,7 +42,7 @@ export default async function MembershipPage() {
         statement: true,
       }}
       cta={<>
-        <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/contact?interest=membership-local" className="mb-cta-expanded" />
+        <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/membership/join" className="mb-cta-expanded" />
       </>}
     >
       {tiers.length > 0 && (

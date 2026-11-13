@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import EarlyAccessLink from "@/components/members/EarlyAccessLink";
+import { MEMBERSHIP_JOIN_PATH } from "@/content/constants";
 
 /**
  * Closing call to action (ritebali.com "Start Your Journey"): full-width photo with a dark wash, centered heading
@@ -10,7 +12,7 @@ export default function CtaBand({
   title = "Move with purpose.",
   body = "Join the early access list for early-member rates, exclusive updates and priority access.",
   label = "Get early access",
-  href = "/contact",
+  href = MEMBERSHIP_JOIN_PATH,
   image = "/images/facilities/facility-background-a1-5-b.jpg",
   className,
 }: { eyebrow?: string; title?: string; body?: string; label?: string; href?: string; image?: string; className?: string }) {
@@ -22,7 +24,9 @@ export default function CtaBand({
         {eyebrow && <p className="eyebrow eyebrow-light">{eyebrow}</p>}
         <h2>{title}</h2>
         {body && <p>{body}</p>}
-        <Link href={href} className="button button-light ft-pill">{label}</Link>
+        {href.startsWith(MEMBERSHIP_JOIN_PATH)
+          ? <EarlyAccessLink href={href} className="button button-light ft-pill">{label}</EarlyAccessLink>
+          : <Link href={href} className="button button-light ft-pill">{label}</Link>}
       </div>
     </section>
   );

@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/admin/login", destination: "/login", permanent: true },
+      // The facility gallery page was removed; old links land on the Facilities overview.
+      { source: "/facilities/gallery", destination: "/facilities", permanent: true },
       { source: "/membership/faq", destination: "/about/faq", permanent: true },
       { source: "/membership/passes", destination: "/membership/price-guide", permanent: true },
       { source: "/membership/recovery-pricing", destination: "/membership/price-guide#recovery-pricing", permanent: true },

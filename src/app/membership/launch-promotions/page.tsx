@@ -20,7 +20,7 @@ export default function LaunchPromotionsPage() {
       glance={{ summary: "Introductory rates.\nWeekend passes.\nEarly-bird camps.", statement: true }}
       related={["/membership/founding", "/membership#tiers", "/membership/price-guide"]}
       cta={<>
-        <CtaBand eyebrow="Launch promotions" title="Lock in a launch rate." label="Register interest" href="/contact?interest=membership-local" />
+        <CtaBand eyebrow="Launch promotions" title="Lock in a launch rate." label="Register interest" href="/membership/join" />
       </>}
     >
       <LaunchPromos />

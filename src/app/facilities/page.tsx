@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
@@ -7,7 +6,7 @@ import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
 import { facilitiesVideo } from "@/data/brand";
-import { DESIGN, FACILITIES_CTA, FACILITIES_HERO } from "@/data/facilities";
+import { FACILITIES_CTA, FACILITIES_HERO } from "@/data/facilities";
 
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
 export const metadata: Metadata = {
@@ -19,28 +18,23 @@ export const metadata: Metadata = {
 // architectural walkthrough; these cards let visitors see the spaces they can actually use.
 const FACILITY_PREVIEWS: Record<string, { description: string; image: string; imageAlt: string }> = {
   "/facilities/training": {
-    description: "A complete fitness gym and dedicated functional training floor.",
+    description: "CrossFit-style area, gym and yoga studio.",
     image: "/images/facilities/1st floor- gym area-v2.png",
     imageAlt: "Rendered interior of the BaseCamp gym with cardio and strength equipment",
   },
   "/facilities/recovery": {
-    description: "Contrast therapy, treatment rooms, and a recovery level built for volume.",
+    description: "Plunge pools, hyperbaric and therapy rooms.",
     image: "/images/facilities/2F Plunge.png",
     imageAlt: "Rendered BaseCamp recovery level with hot and cold plunge pools",
   },
   "/facilities/lifestyle": {
-    description: "Food, movement, and social spaces designed for a full day at BaseCamp.",
+    description: "Lobby, café, work area and lockers.",
     image: "/images/facilities/1st floor- cafeteria-v2.png",
     imageAlt: "Rendered BaseCamp cafeteria with communal tables and warm timber finishes",
   },
-  "/facilities/gallery": {
-    description: "Walk through the training, recovery, and shared spaces in detail.",
-    image: "/images/facilities/1st floor- crossfit area-v2.png",
-    imageAlt: "Rendered BaseCamp functional training area with rigs and open floor space",
-  },
 };
 
-// Facilities overview: hero, at-a-glance statement, facility categories, design, and CTA.
+// Facilities overview: hero, at-a-glance statement, facility categories, and CTA.
 // Static rule (spec §0.17): only awaits the cached getSiteContent() ('use cache' + cacheTag, see
 // node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-cache.md), so the page prerenders.
 // Legacy #anchors (e.g. /facilities#recovery) are forwarded by the root layout's <HashForwarder />.
@@ -53,7 +47,6 @@ const FACILITIES_HERO_VIDEO = {
 
 export default async function FacilitiesPage() {
   const c = await getSiteContent();
-  const stats = c.home.stats.items;
   const facilityPages = findPage("/facilities", c.programmes.featured)?.section.pages ?? [];
 
   return (
@@ -72,42 +65,12 @@ export default async function FacilitiesPage() {
       <ScheduleExplore
         eyebrow="Explore the facility"
         title="Train. Recover. Stay."
-        intro="One connected environment for focused work, deliberate recovery, and the time between sessions."
+        intro="Two floors. One connected space."
         items={facilityPages.flatMap((page) => {
           const preview = FACILITY_PREVIEWS[page.href];
           return preview ? [{ href: page.href, label: page.label, summary: preview.description, image: preview.image, imageAlt: preview.imageAlt }] : [];
         })}
       />
-      {/* Design: the facility render becomes the section canvas; the headline and homepage facility stats sit
-          above a dark wash for the same image-led treatment used across the brand. */}
-      <section id="design" className="section fc-design-section">
-        <Image
-          src="/images/facilities/facility-front.jpg"
-          alt=""
-          fill
-          sizes="100vw"
-          className="cover-image fc-design-background"
-        />
-        <div className="fc-design-shade" aria-hidden="true" />
-        <div className="shell fc-design">
-          <div className="fc-design-copy" data-reveal>
-            <p className="eyebrow eyebrow-light">Train &amp; recover</p>
-            <h2>{DESIGN.title}</h2>
-            <p className="fc-design-summary">Training spaces are deliberately open and visible: a training ecosystem where effort is celebrated and community is built through shared work.</p>
-          </div>
-          {stats.length > 0 && (
-            <dl className="fc-design-stats" data-reveal data-reveal-delay="short">
-              {stats.map((stat) => (
-                <div key={stat.id}>
-                  <dt>{stat.label}</dt>
-                  <dd className="fc-design-stat-value">{stat.value}</dd>
-                  {stat.detail && <dd className="fc-design-stat-detail">{stat.detail}</dd>}
-                </div>
-              ))}
-            </dl>
-          )}
-        </div>
-      </section>
 
     </OverviewTemplate>
   );

@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import FooterGate from "@/components/layout/FooterGate";
 import Header from "@/components/layout/Header";
 import HashForwarder from "@/components/nav/HashForwarder";
+import OfferActivityTracker from "@/components/home/OfferActivityTracker";
 import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
 import CopyGuard from "@/components/ui/CopyGuard";
@@ -88,6 +89,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <HeroReplay />
         <CopyGuard />
         <HashForwarder />
+        <OfferActivityTracker />
         <AdminQuickEdit />
         <JsonLd />
         {gaId && (

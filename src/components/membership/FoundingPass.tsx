@@ -63,7 +63,7 @@ export default function FoundingPass({ founding, exchangeRate }: { founding: Fou
               </div>
             )}
             <div className="mb-fp-actions">
-              <Link href="/contact?interest=membership-local" className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>
+              <Link href="/membership/join" className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>
               <FoundingCounter founding={founding} showBar className="mb-fp-counter" />
               {expires && expires !== "To be announced" && <p className="mb-fp-expiry">Offer ends {expires}</p>}
             </div>

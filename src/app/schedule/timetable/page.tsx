@@ -29,7 +29,7 @@ export default async function TimetablePage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero title="Find your rhythm." intro="Browse the week, filter your session, and request a place in two taps." image="/images/programs/stations/row.jpg" imageAlt="Athlete on a rowing machine at BaseCamp CamSur" />}
+      hero={<PageHero title="Find your rhythm." intro="Browse the week, filter your session, and request a place in two taps." image="/images/programs/stations/row.jpg" imageAlt="Athlete on a rowing machine at BaseCamp CamSur" imagePosition="72% center" />}
       glance={{ summary: "Pick your day.\nFilter your session.\nRequest your place.", statement: true }}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >

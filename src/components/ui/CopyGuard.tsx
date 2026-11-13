@@ -25,7 +25,13 @@ export default function CopyGuard() {
     const root = document.documentElement;
     root.classList.add("copy-guard");
 
-    const block = (event: Event) => event.preventDefault();
+    const block = (event: Event) => {
+      const target = event.target;
+      // The member login's email and password inputs are the one public-page exception. The marker is applied
+      // only in login mode, so sign-up and every other form keep the global clipboard restriction.
+      if (target instanceof Element && target.closest('[data-login-clipboard="true"]')) return;
+      event.preventDefault();
+    };
     BLOCKED_EVENTS.forEach((type) => document.addEventListener(type, block));
 
     return () => {

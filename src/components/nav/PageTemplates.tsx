@@ -9,14 +9,14 @@ import RelatedLinks from "./RelatedLinks";
 import SubpageCards, { type SubpageCardsProps } from "./SubpageCards";
 
 /** Sections whose pages (overview and sub-pages) show no scrolling marquee banner. */
-const NO_MARQUEE = new Set(["membership", "schedule", "visit", "about"]);
+const NO_MARQUEE = new Set(["membership", "schedule", "visit", "about", "facilities"]);
 const showsMarquee = (path: string) => !NO_MARQUEE.has(sectionKeyFor(path));
 /** Sections whose sub-pages show no breadcrumb bar under the hero. */
-const NO_BREADCRUMBS = new Set(["membership", "visit", "about", "schedule"]);
+const NO_BREADCRUMBS = new Set(["membership", "visit", "about", "schedule", "facilities"]);
 /** Pages outside those sections that keep the Membership page style (FAQ moved from Membership to About). */
 const MEMBERSHIP_STYLE_PAGES = new Set(["/about/faq"]);
 /** Sections whose sub-pages show no "Related" cards. */
-const NO_RELATED = new Set(["membership", "visit", "about", "schedule"]);
+const NO_RELATED = new Set(["membership", "visit", "about", "schedule", "facilities"]);
 
 type GlanceProps = ComponentProps<typeof AtAGlance>;
 

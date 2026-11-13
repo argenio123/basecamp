@@ -201,7 +201,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
               <p className="eyebrow eyebrow-light">Highlights</p>
               <ul className="nv-panel-list">
                 {section.menu.highlights.map((h) => (
-                  <li key={h.href}><NavLink href={h.href} onClick={() => close()} isCurrent={!h.href.includes("#") && pathname === h.href}><span className="nv-panel-label">{h.label}</span></NavLink></li>
+                  <li key={h.label}><NavLink href={h.href} onClick={() => close()} isCurrent={!h.href.includes("#") && pathname === h.href}><span className="nv-panel-label">{h.label}</span></NavLink></li>
                 ))}
               </ul>
             </div>

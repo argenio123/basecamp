@@ -2,7 +2,7 @@
 // stats come from `home.stats`. Zone 6 (storage & staff) is never public (spec §0.9).
 // Stage 3 (§1): /facilities = design + arrival; /facilities/training = training zones, running loop,
 // all-weather; /facilities/recovery = recovery; /facilities/lifestyle = social lounge, fuel, signature
-// spaces; /facilities/gallery = gallery.
+// spaces. (The /facilities/gallery page was removed; it redirects to /facilities.)
 import type { Availability } from "@/content/types";
 import { FACILITY_ANCHORS, FACILITY_ANCHOR_LABEL, type FacilityAnchor } from "@/content/constants";
 
@@ -237,7 +237,7 @@ export const GALLERY = {
 
 /* ---------- Stage-3 sub-page heroes (copy shortened from the sections each page holds) ---------- */
 export const TRAINING_HERO: FacilityHero = {
-  eyebrow: "Facilities · Train",
+  eyebrow: "",
   title: "Training zones.",
   intro: "Functional, strength, and outdoor zones, a running loop through nature, and spaces designed for every kind of weather.",
   image: "/images/facilities/1st floor- crossfit area-v2.png",
@@ -245,7 +245,7 @@ export const TRAINING_HERO: FacilityHero = {
 };
 
 export const RECOVERY_HERO: FacilityHero = {
-  eyebrow: "Facilities · Recover",
+  eyebrow: "",
   title: RECOVERY.title,
   intro: RECOVERY.sub,
   image: "/images/facilities/2F Plunge.png",
@@ -253,22 +253,42 @@ export const RECOVERY_HERO: FacilityHero = {
 };
 
 export const LIFESTYLE_HERO: FacilityHero = {
-  eyebrow: "Facilities · Thrive",
+  eyebrow: "",
   title: "Spaces to stay longer.",
   intro: "The social lounge, a performance food culture and signature spaces that make it impossible to post a boring photo.",
   image: "/images/facilities/1st floor- cafeteria-v2.png",
   imageAlt: "Architectural render of the BaseCamp cafeteria and social space",
 };
 
-export const GALLERY_HERO: FacilityHero = {
-  eyebrow: "Facilities · Gallery",
-  title: `${GALLERY.title}.`,
-  intro: GALLERY.body,
-  image: "/images/facilities/1st floor- lobby-v2.png",
-  imageAlt: "Architectural render of the BaseCamp lobby and reception",
-};
-
 /** How many signature spaces show before "See all" (stage-3 §6: long lists show the first 3–6). */
 export const SIGNATURE_PREVIEW = 6;
 
 export const FACILITIES_CTA = { eyebrow: "Come and see", title: "Experience the space.", body: "Join early access to receive preview and tour announcements when they become available.", label: "Register for previews" };
+
+/* ---------- Interior rooms: the only spaces shown on /facilities (1st floor = the v2 renders, 2nd floor = recovery level) ---------- */
+export type Room = { title: string; body: string; image: string; imageAlt: string };
+const f1 = (name: string) => `/images/facilities/1st floor- ${name}-v2.png`;
+const f2 = (name: string) => `/images/facilities/2F ${name}.png`;
+
+export const ROOMS = {
+  crossfit: { title: "CrossFit-style area", body: "Rigs, platforms, open floor.", image: f1("crossfit area"), imageAlt: "Render of the BaseCamp CrossFit-style training area" },
+  gym: { title: "Fitness gym", body: "Strength and cardio, open access.", image: f1("gym area"), imageAlt: "Render of the BaseCamp fitness gym" },
+  yoga: { title: "Yoga studio", body: "Stretch, breathe, reset.", image: f1("yoga"), imageAlt: "Render of the BaseCamp yoga and movement studio" },
+  lobby: { title: "Lobby", body: "Check in and meet up.", image: f1("lobby"), imageAlt: "Render of the BaseCamp lobby and reception" },
+  cafe: { title: "Café", body: "Refuel after training.", image: f1("cafeteria"), imageAlt: "Render of the BaseCamp cafeteria" },
+  work: { title: "Work area", body: "Laptop time between sessions.", image: f1("office area"), imageAlt: "Render of the BaseCamp work area" },
+  lockersW: { title: "Women's lockers", body: "Store, change, go.", image: f1("women's locker room"), imageAlt: "Render of the women's locker room" },
+  lockersM: { title: "Men's lockers", body: "Store, change, go.", image: f1("men's locker room"), imageAlt: "Render of the men's locker room" },
+  showers: { title: "Showers", body: "Rinse off and reset.", image: f1("men's shower room"), imageAlt: "Render of the shower room" },
+  plunge: { title: "Plunge pools", body: "Hot and cold, side by side.", image: f2("Plunge"), imageAlt: "Render of the hot and cold plunge pools" },
+  hyperbaric: { title: "Hyperbaric chamber", body: "Oxygen therapy, screened first.", image: f2("New Hyperbaric"), imageAlt: "Render of the hyperbaric chamber room" },
+  therapy: { title: "Therapy rooms", body: "Massage and bodywork.", image: f2("Therapy"), imageAlt: "Render of a treatment room" },
+  recoveryLounge: { title: "Recovery lounge", body: "Rest between sessions.", image: f2("New Lobby"), imageAlt: "Render of the recovery-level lounge" },
+  recoveryShowers: { title: "Recovery showers", body: "Right on the recovery level.", image: f2("Shower"), imageAlt: "Render of the recovery-level showers" },
+} satisfies Record<string, Room>;
+
+/** Gallery order: first floor, then the recovery level. */
+export const INTERIOR_GALLERY: Room[] = [
+  ROOMS.lobby, ROOMS.crossfit, ROOMS.gym, ROOMS.yoga, ROOMS.cafe, ROOMS.work, ROOMS.lockersW, ROOMS.lockersM, ROOMS.showers,
+  ROOMS.recoveryLounge, ROOMS.plunge, ROOMS.hyperbaric, ROOMS.therapy, ROOMS.recoveryShowers,
+];

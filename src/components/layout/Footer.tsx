@@ -62,7 +62,7 @@ export default async function Footer() {
               <p className="footer-label"><ScrollTopLink href={href} className="footer-label-link">{label}</ScrollTopLink></p>
               <div className="footer-nav-links">
                 {links.map(([linkLabel, href]) => (
-                  <FooterLink key={href} href={href}>{linkLabel}</FooterLink>
+                  <FooterLink key={linkLabel} href={href}>{linkLabel}</FooterLink>
                 ))}
               </div>
             </div>
@@ -90,7 +90,7 @@ export default async function Footer() {
             <summary className="footer-label">{label}<span aria-hidden="true" /></summary>
             <div className="footer-nav-links">
               {links.map(([linkLabel, href]) => (
-                <FooterLink key={href} href={href}>{linkLabel}</FooterLink>
+                <FooterLink key={linkLabel} href={href}>{linkLabel}</FooterLink>
               ))}
             </div>
           </details>

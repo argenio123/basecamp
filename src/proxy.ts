@@ -28,4 +28,4 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
-export const config = { matcher: ["/admin", "/admin/:path*", "/contact", "/schedule/book"] };
+export const config = { matcher: ["/admin", "/admin/:path*", "/account", "/account/settings", "/contact", "/schedule/book", "/membership/join"] };

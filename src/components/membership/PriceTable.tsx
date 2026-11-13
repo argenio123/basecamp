@@ -1,5 +1,6 @@
 import Link from "next/link";
 import StatusBadge from "@/components/ui/StatusBadge";
+import { membershipJoinHref, TIER_OPTIONS } from "@/content/constants";
 import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
 import { isMedicalBlock, type PriceBlockData } from "./pricing";
@@ -27,7 +28,7 @@ export function TierCards({ items, exchangeRate }: { items: PriceItem[]; exchang
             {(item.perUnit || item.validity) && <p className="mb-meta">{[item.perUnit, item.validity].filter(Boolean).join(" · ")}</p>}
             {item.description && <p className="mb-tier-desc">{item.description}</p>}
             {item.features.length > 0 && <ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul>}
-            <Link href="/contact?interest=membership-local" className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>Join {item.name}</Link>
+            <Link href={membershipJoinHref(TIER_OPTIONS.some((t) => t.value === item.id) ? item.id : undefined)} className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>Join {item.name}</Link>
           </li>
         );
       })}

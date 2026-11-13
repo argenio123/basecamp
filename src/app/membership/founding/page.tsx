@@ -23,7 +23,7 @@ export default async function FoundingPage() {
       glance={{ summary: "Founding rates.\nPriority access.\nA seat at launch.", statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions", "/about/faq"]}
       cta={<>
-        <CtaBand eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href="/contact?interest=membership-local" />
+        <CtaBand eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href="/membership/join" />
       </>}
     >
       <FoundingPass founding={founding} exchangeRate={settings.exchangeRate} />

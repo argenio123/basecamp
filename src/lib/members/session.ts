@@ -30,7 +30,7 @@ export async function setMemberCookies(memberId: string): Promise<void> {
   store.set(MEMBER_HINT_COOKIE, "1", { httpOnly: false, secure: secure(), sameSite: "lax", path: "/", maxAge: MAX_AGE });
 }
 
-/** Server Actions only. */
+/** Server Actions and the /account/logout route handler only. */
 export async function clearMemberCookies(): Promise<void> {
   const store = await cookies();
   store.set(MEMBER_COOKIE, "", { httpOnly: true, secure: secure(), sameSite: "lax", path: "/", maxAge: 0 });

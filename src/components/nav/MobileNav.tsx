@@ -49,7 +49,7 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
             </summary>
             <ul className="nv-mobile-links">
               <li><NavLink href={section.href}>{section.label} overview</NavLink></li>
-              {section.menu.highlights.map((h) => <li key={h.href}><NavLink href={h.href}>{h.label}</NavLink></li>)}
+              {section.menu.highlights.map((h) => <li key={h.label}><NavLink href={h.href}>{h.label}</NavLink></li>)}
             </ul>
           </details>
         ))}

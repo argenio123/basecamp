@@ -1,0 +1,159 @@
+/* Membership application flow (/membership/join): one question per screen.
+   Cover (copy + facts + photo) → single-pick questions (progress bar, option cards, Back / Continue) → contact.
+   BaseCamp palette: Ink surface, white type, Signal-lime accents; display face for headings. */
+
+.jf-page { min-height: 100svh; padding: calc(var(--header-height, 106px) + clamp(48px, 6vw, 84px)) 0 clamp(64px, 8vw, 112px); background: radial-gradient(circle at 85% 0%, rgba(198,244,50,.06), transparent 40%), var(--ink); color: var(--white); }
+.jf { scroll-margin-top: calc(var(--header-height, 106px) + 24px); }
+.jf h1, .jf h2 { margin: 0; color: var(--white); font: 400 clamp(40px, 4.4vw, 68px)/.95 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; }
+.jf h2 { font-size: clamp(32px, 3.2vw, 48px); }
+.jf :is(h1, h2):focus { outline: none; }
+.jf-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.jf a { color: inherit; }
+
+/* Cover */
+.jf-intro { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: clamp(32px, 4vw, 64px); align-items: stretch; }
+.jf-intro-copy { display: grid; gap: clamp(20px, 2.4vw, 28px); max-width: 620px; }
+.jf-lead { margin: 0; color: rgba(255,255,255,.76); font-size: clamp(16px, 1.25vw, 19px); line-height: 1.6; }
+.jf-start-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.jf-alt { margin: 0; color: rgba(255,255,255,.62); font-size: 14px; line-height: 1.5; }
+.jf-alt a { color: var(--white); font-weight: 600; text-decoration: none; }
+.jf-alt a:hover, .jf-alt a:focus-visible { color: var(--signal); }
+.jf-facts { display: grid; margin: 4px 0 0; padding: 0; list-style: none; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; overflow: hidden; }
+.jf-facts li { display: grid; gap: 6px; padding: 18px 22px; }
+.jf-facts li + li { border-top: 1px solid rgba(255,255,255,.12); }
+.jf-facts li { gap: 8px; padding: 22px 24px; }
+.jf-facts strong { color: var(--white); font: 600 clamp(20px, 1.6vw, 24px)/1.25 var(--font-poppins), sans-serif; }
+.jf-facts span { color: rgba(255,255,255,.66); font-size: clamp(15px, 1.1vw, 16.5px); line-height: 1.55; }
+.jf-intro-media { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; margin: 0; }
+.jf-intro-media > div { position: relative; min-height: 420px; width: 100%; overflow: hidden; border-radius: 20px; background: #20231d; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.jf-intro-media .cover-image { object-position: center; }
+.jf-intro-media figcaption { color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.5; }
+
+/* Buttons */
+.jf-start { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--signal); color: var(--ink); cursor: pointer; font: 700 14px/1 var(--font-poppins), sans-serif; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease; }
+.jf-start span { font-size: 20px; line-height: 0; }
+.jf-start:hover, .jf-start:focus-visible { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(198,244,50,.2); }
+.jf-start:focus-visible, .jf-back:focus-visible, .jf-option:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.jf-start:disabled { opacity: .6; cursor: progress; transform: none; box-shadow: none; }
+.jf-back { display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 22px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: transparent; color: var(--white); cursor: pointer; font: 600 14px/1 var(--font-poppins), sans-serif; transition: border-color .25s ease, background-color .25s ease; }
+.jf-back span { font-size: 20px; line-height: 0; }
+.jf-back:hover { border-color: var(--white); background: rgba(255,255,255,.06); }
+
+/* Question screens */
+.jf-stage { width: min(100%, 640px); margin-inline: auto; }
+.jf-progress { display: flex; align-items: center; gap: 14px; margin-bottom: clamp(26px, 3vw, 40px); }
+.jf-progress > span { position: relative; flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.14); overflow: hidden; }
+.jf-progress i { position: absolute; inset: 0 auto 0 0; background: var(--signal); border-radius: inherit; transition: width .5s cubic-bezier(.22, 1, .36, 1); }
+.jf-progress em { color: rgba(255,255,255,.55); font: 400 12px/1 var(--font-geist-mono), monospace; font-style: normal; letter-spacing: .14em; white-space: nowrap; }
+.jf-q { display: grid; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; animation: jf-in .45s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes jf-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.jf-hint { margin: -4px 0 4px; color: rgba(255,255,255,.62); font-size: 15.5px; line-height: 1.55; }
+.jf-options { display: grid; gap: 10px; }
+.jf-option { display: flex; align-items: flex-start; gap: 16px; width: 100%; padding: 18px 20px; border: 1px solid rgba(255,255,255,.18); border-radius: 14px; background: rgba(255,255,255,.03); color: var(--white); cursor: pointer; text-align: left; text-decoration: none; font: inherit; transition: border-color .25s ease, background-color .25s ease, transform .25s ease; }
+.jf-option i { flex: none; width: 12px; height: 12px; margin-top: 5px; border-radius: 50%; background: rgba(255,255,255,.22); transition: background-color .25s ease, box-shadow .25s ease; }
+.jf-option > span { display: grid; gap: 4px; min-width: 0; }
+.jf-option strong { font: 500 16.5px/1.35 var(--font-poppins), sans-serif; overflow-wrap: anywhere; }
+.jf-option small { color: rgba(255,255,255,.58); font-size: 13.5px; line-height: 1.5; }
+.jf-option:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.06); }
+.jf-option[aria-checked="true"] { border-color: var(--signal); background: rgba(198,244,50,.1); }
+.jf-option[aria-checked="true"] i { background: var(--signal); box-shadow: 0 0 0 4px rgba(198,244,50,.22); }
+.jf-aside { display: grid; gap: 10px; margin-top: 14px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); }
+.jf-aside > p { margin: 0 0 2px; color: rgba(255,255,255,.5); font: 400 11px/1.3 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
+.jf-option--link i { border-radius: 3px; transform: rotate(45deg) scale(.8); }
+.jf-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: clamp(16px, 2vw, 26px); }
+.jf-pick { color: rgba(255,255,255,.45); font-size: 13.5px; }
+
+/* Grouped options (booking: classes / timetable sessions / not sure) */
+.jf-groups { display: grid; gap: 18px; }
+.jf-group { display: grid; gap: 10px; }
+.jf-group:first-child .jf-group-label { display: none; }
+.jf-group + .jf-group { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+.jf-group-label { margin: 0; color: rgba(255,255,255,.5); font: 400 11px/1.3 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
+.jf-options--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.jf-options--grid .jf-option { padding: 14px 16px; }
+.jf-options--grid .jf-option strong { font-size: 15px; }
+
+/* Multi-select add-ons */
+.jf-ticks { display: flex; flex-wrap: wrap; gap: 10px; min-width: 0; margin: 6px 0 0; padding: 0; border: 0; }
+.jf-ticks legend { margin-bottom: 10px; padding: 0; color: rgba(255,255,255,.8); font: 500 14px/1.3 var(--font-poppins), sans-serif; }
+.jf-tick { position: relative; cursor: pointer; }
+.jf-tick input { position: absolute; opacity: 0; pointer-events: none; }
+.jf-tick span { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 18px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: var(--white); font: 500 14.5px/1.2 var(--font-poppins), sans-serif; transition: border-color .25s ease, background-color .25s ease; }
+.jf-tick span::before { content: "+"; color: rgba(255,255,255,.55); font-size: 18px; line-height: 1; }
+.jf-tick:hover span { border-color: rgba(255,255,255,.5); }
+.jf-tick input:checked + span { border-color: var(--signal); background: rgba(198,244,50,.12); }
+.jf-tick input:checked + span::before { content: "✓"; color: var(--signal); font-size: 14px; }
+.jf-tick input:focus-visible + span { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+/* Contact screen */
+.jf-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.jf-field { display: grid; gap: 8px; min-width: 0; color: rgba(255,255,255,.8); font: 500 14px/1.3 var(--font-poppins), sans-serif; }
+.jf-field small { color: rgba(255,255,255,.45); font-weight: 400; }
+.jf-field--wide { grid-column: 1 / -1; }
+.jf-field :is(input, textarea) { width: 100%; min-height: 50px; padding: 13px 16px; border: 1px solid rgba(255,255,255,.2); border-radius: 12px; background: rgba(255,255,255,.04); color: var(--white); font: 400 16px/1.4 var(--font-poppins), sans-serif; transition: border-color .2s ease, box-shadow .2s ease; }
+.jf-field textarea { resize: vertical; }
+.jf-field input:is([type="date"], [type="number"]) { color-scheme: dark; }
+.jf-field :is(input, textarea)::placeholder { color: rgba(255,255,255,.35); }
+.jf-field :is(input, textarea):focus { outline: none; border-color: var(--signal); box-shadow: 0 0 0 3px rgba(198,244,50,.18); }
+.jf-field [aria-invalid="true"] { border-color: #ff8a73; }
+.jf-check { display: flex; align-items: flex-start; gap: 12px; margin-top: 4px; color: rgba(255,255,255,.8); font-size: 14.5px; line-height: 1.5; cursor: pointer; }
+.jf-check input { flex: none; width: 20px; height: 20px; margin-top: 1px; accent-color: var(--signal); }
+.jf .ui-field-error, .jf-error { color: #ff8a73; font-size: 13.5px; }
+.jf-error { margin: 0; padding: 12px 16px; border: 1px solid rgba(255,138,115,.4); border-radius: 12px; background: rgba(255,138,115,.08); }
+.jf .ui-privacy-note { color: rgba(255,255,255,.5); font-size: 13px; }
+
+/* Sent */
+.jf-done { display: grid; justify-items: center; gap: 16px; width: min(100%, 560px); margin: clamp(20px, 6vh, 80px) auto 0; text-align: center; }
+.jf-done-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--signal); color: var(--ink); font-size: 28px; font-weight: 700; }
+.jf-done p { margin: 0; color: rgba(255,255,255,.72); line-height: 1.6; }
+.jf-done-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+
+/* Tablet & phone */
+@media (max-width: 900px) {
+  .jf-intro { grid-template-columns: 1fr; }
+  .jf-intro-media { position: static; order: -1; }
+  .jf-intro-media { grid-template-rows: auto; }
+  .jf-intro-media > div { aspect-ratio: 16 / 9; min-height: 0; }
+}
+@media (max-width: 560px) {
+  .jf-fields, .jf-options--grid { grid-template-columns: 1fr; }
+  .jf-option { padding: 16px; gap: 12px; }
+  .jf-start-row { align-items: stretch; flex-direction: column; }
+  .jf-intro .jf-start { width: 100%; }
+  .jf-nav .jf-back, .jf-nav .jf-start { min-height: 46px; padding-inline: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jf-q { animation: none; }
+  .jf-progress i, .jf-option, .jf-start { transition: none; }
+}
+
+/* Continue: always shown, disabled until an option is picked. */
+.jf-next { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.jf-start:disabled { opacity: .35; cursor: not-allowed; transform: none; box-shadow: none; }
+@media (max-width: 560px) {
+  .jf-next { flex-direction: column-reverse; align-items: flex-end; gap: 6px; }
+}
+
+/* Dropdown (booking: timetable sessions) */
+.jf-select-group { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+.jf-groups + .jf-select-group, .jf-select-group + .jf-groups { margin-top: 2px; }
+.jf-select { position: relative; }
+.jf-select::after { content: ""; position: absolute; top: 50%; right: 20px; width: 9px; height: 9px; border-right: 2px solid rgba(255,255,255,.7); border-bottom: 2px solid rgba(255,255,255,.7); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.jf-select select { width: 100%; min-height: 56px; padding: 14px 52px 14px 20px; border: 1px solid rgba(255,255,255,.18); border-radius: 14px; background: rgba(255,255,255,.03); color: var(--white); color-scheme: dark; cursor: pointer; font: 500 16px/1.35 var(--font-poppins), sans-serif; appearance: none; transition: border-color .25s ease, background-color .25s ease; }
+.jf-select select:hover { border-color: rgba(255,255,255,.5); }
+.jf-select select:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.jf-select.is-selected select { border-color: var(--signal); background: rgba(198,244,50,.1); }
+.jf-select select option, .jf-select select optgroup { background: var(--ink); color: var(--white); }
+.jf-select-group + .jf-groups .jf-group:first-child { padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+.jf-select-group + .jf-groups .jf-group:first-child .jf-group-label { display: block; }
+
+/* Field alignment: fields never stretch to match a neighbour (e.g. when only one shows an error);
+   label + "Optional" on one line; one error style everywhere, directly under its control. */
+.jf-fields { align-items: start; row-gap: 18px; }
+.jf-field { align-content: start; }
+.jf-label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.jf-label small { font-size: 12.5px; }
+.jf .ui-field-error { display: block; margin: 0; color: #ff8a73; font: 500 13px/1.4 var(--font-poppins), sans-serif; letter-spacing: 0; text-transform: none; }
+.jf-field .ui-field-error { margin-top: -2px; }
+.jf-check + .ui-field-error { margin: -6px 0 0 32px; }
+.jf-error { font: 500 14px/1.45 var(--font-poppins), sans-serif; }

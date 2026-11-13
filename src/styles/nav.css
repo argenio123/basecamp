@@ -72,6 +72,8 @@
 .nv-mobile-extras { display: grid; gap: 0; padding-top: 12px; }
 .nv-mobile-extras a { display: flex; align-items: center; min-height: 48px; }
 .nv-mobile-extras .nv-mobile-login { justify-content: center; min-height: 46px; margin-bottom: 8px; border: 1px solid var(--ink); font-size: 12px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.nv-mobile-login .mb-account-icon { display: none; }
+.nv-mobile-login .mb-account-label { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
 
 /* ---------- Breadcrumbs ---------- */
 .nv-breadcrumbs { background: var(--paper); border-bottom: 1px solid var(--line); }
@@ -182,3 +184,6 @@
   .nv-card, .nv-related-card, .nv-prevnext-link, .nv-trigger::after, .nv-desktop-nav .nv-panel-list a { transition: none; }
   .nv-card:hover, .nv-related-card:hover { transform: none; }
 }
+
+/* Facilities previous/next: dark band holding the shared Classes pager (.pr-style-pager--dark, programs.css). */
+.nv-pn-band { padding-block: clamp(28px, 3vw, 44px); background: var(--ink); }

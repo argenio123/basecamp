@@ -13,9 +13,33 @@ const HASH = "bc:members:v1";
 const FILE = "members.json";
 const MAX_MEMBERS = 20000;
 const scryptAsync = promisify(scrypt) as (password: string, salt: Buffer, keylen: number) => Promise<Buffer>;
+const DEMO_ID = "demo-member-2026";
 
 const normalise = (email: string) => email.trim().toLowerCase();
 const readFileMembers = () => readJsonFile<Member[]>(FILE, []).then((m) => (Array.isArray(m) ? m : []));
+
+let demoMemberPromise: Promise<Member | null> | null = null;
+
+/** A convenient local login that is never enabled in production. */
+function configuredDemoMember(): Promise<Member | null> {
+  if (process.env.NODE_ENV === "production") return Promise.resolve(null);
+  if (demoMemberPromise) return demoMemberPromise;
+  demoMemberPromise = (async () => {
+    const email = normalise(process.env.MEMBER_DEMO_EMAIL ?? "");
+    const password = process.env.MEMBER_DEMO_PASSWORD ?? "";
+    if (!email || password.length < 12) return null;
+    return {
+      id: DEMO_ID,
+      email,
+      firstName: (process.env.MEMBER_DEMO_FIRST_NAME ?? "BaseCamp").trim(),
+      lastName: (process.env.MEMBER_DEMO_LAST_NAME ?? "Member").trim(),
+      phone: "",
+      passwordHash: await hashPassword(password),
+      createdAt: "2026-01-01T00:00:00.000Z",
+    };
+  })();
+  return demoMemberPromise;
+}
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16);
@@ -33,6 +57,8 @@ export async function passwordMatches(password: string, stored: string): Promise
 
 export async function findMemberByEmail(email: string): Promise<Member | null> {
   const key = normalise(email);
+  const demo = await configuredDemoMember();
+  if (demo?.email === key) return demo;
   const mode = driver();
   if (mode === "readonly") return null;
   if (mode === "upstash") {
@@ -43,6 +69,8 @@ export async function findMemberByEmail(email: string): Promise<Member | null> {
 }
 
 export async function findMemberById(id: string): Promise<Member | null> {
+  const demo = await configuredDemoMember();
+  if (demo?.id === id) return demo;
   const mode = driver();
   if (mode === "readonly") return null;
   if (mode === "upstash") {
@@ -59,6 +87,8 @@ export async function findMemberById(id: string): Promise<Member | null> {
 export async function createMember(input: { email: string; firstName: string; lastName: string; phone: string; password: string }): Promise<Member | null> {
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
+  const demo = await configuredDemoMember();
+  if (demo?.email === normalise(input.email)) return null;
   const member: Member = {
     id: randomUUID(), email: normalise(input.email), firstName: input.firstName.trim(), lastName: input.lastName.trim(),
     phone: input.phone.trim(), passwordHash: await hashPassword(input.password), createdAt: new Date().toISOString(),

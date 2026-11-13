@@ -122,7 +122,6 @@
 .section-dark .fc-recovery-price-label { color: rgba(255,255,255,.62); }
 .fc-recovery-medical { display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; color: var(--olive); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; }
 .section-dark .fc-recovery-card, .section-dark .fc-recovery-price { border-color: rgba(255,255,255,.16); }
-#modalities .fc-recovery-card { border-color: rgba(198,244,50,.42); background: var(--ink); }
 .section-dark .fc-recovery-card p, .section-dark .fc-recovery-medical { color: var(--stone); }
 .section-dark .fc-recovery-card .fc-recovery-detail { color: var(--stone); }
 .section-dark .fc-recovery-card .fc-recovery-price p { color: var(--white); }
@@ -209,4 +208,291 @@
 }
 @media (max-width: 520px) {
   .fc-design-stats { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Facilities system: four shared layouts on every /facilities page
+   (hero, navbar and footer excluded):
+     1. Statement band    AtAGlance `statement` (page template)
+     2. Card grid         .fc-sec--light / .fc-sec--stone + .fc-grid / ItemList
+     3. Dark feature band .fc-sec--dark
+     4. Photo grid        .fc-gallery-grid, ScheduleExplore, PhotoStrip
+   Rhythm: content sections alternate light -> stone, and the last one is the dark band.
+   Every card (ItemList items, zone cards, equipment, fuel, rituals, recovery modalities, stats, AV)
+   shares one skin, driven by the section's tone tokens.
+   ========================================================================== */
+.fc-sec { --fc-bg: var(--paper); --fc-card-bg: var(--white); --fc-card-line: rgba(21,23,19,.1); --fc-title: var(--ink); --fc-text: var(--olive); --fc-accent: var(--olive-dark); background: var(--fc-bg); color: var(--fc-title); }
+.fc-sec--stone { --fc-bg: var(--stone); }
+.fc-sec.fc-sec--dark { --fc-bg: var(--ink); background: var(--ink); --fc-card-bg: rgba(255,255,255,.055); --fc-card-line: rgba(255,255,255,.13); --fc-title: var(--white); --fc-text: rgba(255,255,255,.7); --fc-accent: var(--signal); }
+
+/* Section heading: numbered eyebrow + title, optional intro on the right, hairline underneath. */
+.fc-sec-head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 20px clamp(32px, 6vw, 96px); align-items: end; padding-bottom: clamp(28px, 3vw, 40px); border-bottom: 1px solid var(--fc-card-line); }
+.fc-sec-head > * { min-width: 0; }
+.fc-sec-eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 20px; color: var(--fc-accent); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+.fc-sec-head h2 { margin: 0; color: var(--fc-title); }
+.fc-sec-intro { display: grid; justify-items: start; gap: 16px; }
+html main .fc-sec-intro p { margin: 0; color: var(--fc-text); font-size: 17px; line-height: 1.6; }
+
+/* Card grids */
+.fc-grid { display: grid; gap: 16px; margin: clamp(36px, 4vw, 56px) 0 0; padding: 0; list-style: none; }
+.fc-grid > * { min-width: 0; }
+.fc-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fc-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fc-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.fc-sec .fc-items { gap: 16px; margin-top: clamp(36px, 4vw, 56px); }
+.fc-sec .fc-grid + .fc-items, .fc-sec .fc-items + .fc-items { margin-top: 16px; }
+
+/* The one card skin */
+.fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card, .fc-stat-list > li) {
+  display: flex; flex-direction: column; align-items: flex-start; min-height: 0; padding: clamp(22px, 2vw, 28px);
+  overflow: hidden; border: 0; border-radius: var(--radius-card, 24px); background: var(--fc-card-bg);
+  box-shadow: inset 0 0 0 1px var(--fc-card-line); color: var(--fc-title);
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease;
+}
+.fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card):hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--fc-accent), 0 18px 40px rgba(21,23,19,.1); }
+.fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card) h3 { margin: 0 0 10px; color: var(--fc-title); font-size: clamp(19px, 1.5vw, 22px); font-weight: 600; line-height: 1.2; letter-spacing: -.02em; }
+.fc-sec :is(.fc-card, .fc-card-body) > .ui-status-badge + h3 { margin-top: 16px; }
+.fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card, .fc-card-body) > p, .fc-sec .fc-av p { margin: 0 0 12px; color: var(--fc-text); font-size: 15px; line-height: 1.6; }
+.fc-sec .fc-items .fc-badges { margin-top: auto; padding-top: 12px; }
+.fc-sec .fc-items .fc-facility-card .fc-badges { order: -1; margin: 0 0 16px; padding: 0; }
+.fc-sec .fc-note { color: var(--fc-accent); }
+
+/* Image card (training zones) */
+.fc-sec .fc-card--media { padding: 0; }
+.fc-card-media { width: 100%; min-height: 0; aspect-ratio: 4 / 3; border-radius: 0; }
+.fc-card-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; width: 100%; padding: clamp(22px, 2vw, 28px); }
+
+/* Lists and facts inside cards */
+.fc-card-list { width: 100%; margin: 4px 0 0; padding: 0; list-style: none; }
+.fc-card-list li { padding: 10px 0; border-bottom: 1px solid var(--fc-card-line); color: var(--fc-text); font-size: 15px; line-height: 1.45; }
+.fc-card-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.fc-sec .fc-card-facts { border-top-color: var(--fc-card-line); }
+.fc-sec .fc-card-facts > div { border-color: var(--fc-card-line); }
+.fc-sec .fc-card-facts dt, .fc-sec .fc-card-technical strong { color: var(--fc-accent); }
+.fc-sec .fc-card-facts dd { color: var(--fc-title); }
+.fc-sec .fc-card-technical { color: var(--fc-text); }
+
+/* Recovery modality cards on the dark band */
+.fc-sec .fc-recovery-grid { gap: 16px; }
+.fc-sec .fc-recovery-card { min-height: 300px; }
+.fc-sec .fc-recovery-card p, .fc-sec .fc-recovery-card .fc-recovery-detail, .fc-sec .fc-recovery-medical, .fc-sec .fc-recovery-price small, .fc-sec .fc-recovery-price-label { color: var(--fc-text); }
+.fc-sec .fc-recovery-card .fc-recovery-price p { color: var(--fc-title); }
+.fc-sec :is(.fc-recovery-price, .fc-recovery-card .fc-recovery-detail) { border-color: var(--fc-card-line); }
+
+/* Stats, pull quotes, chips, sub-heads */
+.fc-sec .fc-stats { margin-top: 16px; gap: 16px; align-items: stretch; }
+.fc-sec .fc-stat-list { gap: 16px; }
+.fc-sec .fc-stat-list > li { gap: 8px; }
+.fc-sec .fc-stat-list strong { color: var(--fc-title); }
+.fc-sec .fc-stat-list .fc-stat-label { color: var(--fc-accent); font: 400 11px/1.3 var(--font-geist-mono), monospace; letter-spacing: .16em; }
+.fc-sec .fc-stat-list span { color: var(--fc-text); }
+.fc-sec .fc-stats .fc-pull { align-self: center; }
+.fc-sec .fc-pull { padding-left: 24px; border-left: 3px solid var(--signal); color: var(--fc-title); }
+.fc-sec .fc-pull-wide { margin-block: clamp(40px, 5vw, 64px) 0; }
+.fc-sec .fc-chips { margin-top: 16px; }
+.fc-sec .fc-chips li { border: 0; background: var(--fc-card-bg); box-shadow: inset 0 0 0 1px var(--fc-card-line); color: var(--fc-title); }
+.fc-sec .fc-subhead { margin: 0; color: var(--fc-accent); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; }
+.fc-sec .fc-recovery-infra { gap: 16px clamp(24px, 3vw, 40px); margin-top: clamp(36px, 4vw, 56px); }
+.fc-sec .fc-recovery-infra .fc-items { margin-top: 16px; }
+.fc-sec .fc-disclaimer { border-left-color: var(--signal); color: var(--fc-text); }
+.fc-sec .fc-more summary { color: var(--fc-title); }
+
+/* AV feature card: copy + pull quote side by side */
+.fc-sec .fc-av { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 16px; padding: clamp(24px, 3vw, 40px); }
+.fc-sec .fc-av h3 { margin-top: 16px; }
+
+/* Photo grid */
+.fc-sec .fc-gallery-grid { margin: clamp(36px, 4vw, 56px) 0 0; }
+
+@media (max-width: 1040px) {
+  .fc-grid-3, .fc-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .fc-sec-head { grid-template-columns: minmax(0, 1fr); }
+  .fc-grid-2, .fc-grid-3, .fc-sec .fc-av { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .fc-grid-4 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card) { transition: none; }
+  .fc-sec :is(.fc-card, .fc-items > li, .fc-recovery-card):hover { transform: none; }
+}
+
+/* ---------- Facilities system: pills + motion ---------- */
+/* Short labels instead of long lists (equipment, all-weather features). */
+.fc-pills { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; margin: 6px 0 0; padding: 0; list-style: none; }
+.fc-pills > li { padding: 8px 14px; border-radius: 999px; background: var(--fc-bg); box-shadow: inset 0 0 0 1px var(--fc-card-line); color: var(--fc-title); font-size: 13px; line-height: 1.3; transition: background-color .25s ease, color .25s ease, box-shadow .25s ease; }
+.fc-pills > li:hover { background: var(--signal); box-shadow: inset 0 0 0 1px var(--signal); color: var(--ink); }
+.fc-pills--lg { gap: 12px; margin-top: clamp(36px, 4vw, 56px); }
+.fc-pills--lg > li { padding: 16px 24px; background: var(--fc-card-bg); font-size: clamp(16px, 1.3vw, 19px); font-weight: 600; letter-spacing: -.01em; }
+
+/* Heading hairline is drawn as a line that can animate. */
+.fc-sec-head { position: relative; border-bottom: 0; }
+.fc-sec-head::after { content: ""; position: absolute; inset: auto 0 0; height: 1px; background: var(--fc-card-line); transform-origin: left; }
+
+/* Image cards: the photo zooms gently on hover. */
+.fc-card-media img { transition: transform .9s cubic-bezier(.22, 1, .36, 1); }
+.fc-card--media:hover .fc-card-media img { transform: scale(1.06); }
+
+/* Scroll reveal (only once SiteReveal has armed the page; reduced-motion users see everything static). */
+.reveal-ready .fc-sec-head[data-reveal]::after { transform: scaleX(0); transition: transform 1.1s cubic-bezier(.22, 1, .36, 1) .15s; }
+.reveal-ready .fc-sec-head[data-reveal][data-reveal-visible="true"]::after { transform: scaleX(1); }
+/* Photos open like a drawer (top to bottom) and settle from a slight zoom as their card rises. */
+.reveal-ready .fc-grid[data-reveal="stagger"] .fc-card-media { clip-path: inset(0 0 100% 0); transition: clip-path 1s cubic-bezier(.22, 1, .36, 1) .1s; }
+.reveal-ready .fc-grid[data-reveal="stagger"] .fc-card-media img { transform: scale(1.18); }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] .fc-card-media { clip-path: inset(0); }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] .fc-card-media img { transform: none; transition-duration: 1.4s; }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] .fc-card--media:hover .fc-card-media img { transform: scale(1.06); transition-duration: .9s; }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] > :nth-child(2) .fc-card-media { transition-delay: .18s; }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] > :nth-child(3) .fc-card-media { transition-delay: .26s; }
+.reveal-ready .fc-grid[data-reveal="stagger"][data-reveal-visible="true"] > :nth-child(4) .fc-card-media { transition-delay: .34s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-pills > li, .fc-card-media img { transition: none; }
+  .fc-card--media:hover .fc-card-media img { transform: none; }
+}
+
+/* ---------- Facilities system: tabbed single-section layout (training floor) ---------- */
+.fc-sec .fc-card.fc-card--media { padding: 0; }
+.fc-tabs { margin-top: clamp(32px, 3.5vw, 48px); }
+.fc-tabs-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px; border-radius: 999px; background: var(--fc-card-bg); box-shadow: inset 0 0 0 1px var(--fc-card-line); width: fit-content; max-width: 100%; scroll-margin-top: 120px; }
+.fc-tab { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 24px; border: 0; border-radius: 999px; background: transparent; color: var(--fc-title); font: 700 12px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: background-color .3s ease, color .3s ease; }
+.fc-tab:hover { background: var(--fc-bg); }
+.fc-tab[aria-selected="true"] { background: var(--ink); color: var(--white); }
+.fc-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* One grid for every tab; cards hold their content in .fc-card-body. */
+.fc-tabgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 24px 0 0; padding: 0; list-style: none; }
+.fc-tabgrid > * { min-width: 0; }
+.fc-tabgrid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.fc-tabgrid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fc-tabgrid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Zones: three photo cards on top, the planned spaces as two wide cards below. */
+.fc-tabgrid--media { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.fc-tabgrid--media > .fc-card--media { grid-column: span 2; }
+.fc-tabgrid--media > :not(.fc-card--media) { grid-column: span 3; }
+.fc-sec .fc-tabgrid .fc-card { padding: 0; }
+.fc-tabgrid .fc-card-body > p { margin-bottom: 0; }
+.fc-tabgrid .fc-card-body > .ui-status-badge { margin-bottom: 14px; }
+.fc-tabgrid .fc-card-body > .ui-status-badge + h3 { margin-top: 0; }
+
+/* Tab change: cards drop in one after another, like drawers sliding open. */
+@keyframes fc-drawer-in {
+  from { opacity: 0; clip-path: inset(0 0 100% 0 round var(--radius-card, 24px)); transform: translateY(-18px); }
+  to { opacity: 1; clip-path: inset(0 0 0 0 round var(--radius-card, 24px)); transform: none; }
+}
+.fc-tabgrid--animate > li { animation: fc-drawer-in .75s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i, 0) * 70ms); }
+
+@media (max-width: 1040px) {
+  .fc-tabgrid, .fc-tabgrid--5, .fc-tabgrid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fc-tabgrid--media { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fc-tabgrid--media > .fc-card--media, .fc-tabgrid--media > :not(.fc-card--media) { grid-column: auto; }
+  .fc-tabgrid--media > .fc-card--media:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .fc-tabs-bar { width: 100%; border-radius: 22px; }
+  .fc-tab { flex: 1 1 calc(50% - 8px); justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+  .fc-tabgrid, .fc-tabgrid--5, .fc-tabgrid--3, .fc-tabgrid--2, .fc-tabgrid--media { grid-template-columns: minmax(0, 1fr); }
+  .fc-tabgrid--media > .fc-card--media:first-child { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-tabgrid--animate > li { animation: none; }
+  .fc-tab { transition: none; }
+}
+
+/* Fixed-height tab area: every panel sits in the same grid cell, so the section is always as tall as the
+   tallest tab and the page below never moves when switching tabs. */
+.fc-tabs-panels { display: grid; }
+.fc-tabs-panels > .fc-tabs-panel { grid-area: 1 / 1; min-width: 0; }
+.fc-tabs-panel[data-active="false"] { visibility: hidden; pointer-events: none; }
+/* Each tab's cards stretch to fill the whole fixed-height area (no empty band under shorter tabs). */
+.fc-tabs-panels > .fc-tabs-panel { display: flex; flex-direction: column; }
+.fc-tabs-panel > .fc-tabgrid { flex: 1; align-content: stretch; grid-auto-rows: 1fr; }
+.fc-tabgrid--media { grid-auto-rows: auto; grid-template-rows: auto; }
+.fc-tabgrid > .fc-card { height: 100%; }
+/* Photo-led tabs (every card has an image): the photo grows to fill the free height (cropped, never
+   distorted) and the copy keeps its natural size, so the fixed area is covered without stretched blanks. */
+.fc-tabgrid:not(.fc-tabgrid--media) > .fc-card--media .fc-card-media { flex: 1 1 auto; aspect-ratio: auto; min-height: 200px; }
+.fc-tabgrid > .fc-card--media .fc-card-body { flex: 0 0 auto; }
+/* Interior-only pages: 6-room panels in three columns, single-group pages without a tab bar, recovery footnote. */
+.fc-tabgrid--6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fc-tabs-bar[hidden] { display: none; }
+.fc-tabs-bar[hidden] + .fc-tabs-panels .fc-tabgrid { margin-top: 0; }
+.fc-tabs-foot { display: grid; justify-items: start; gap: 12px; margin-top: 28px; }
+.fc-tabs-foot .fc-disclaimer { margin: 0; }
+@media (max-width: 1040px) { .fc-tabgrid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .fc-tabgrid--6 { grid-template-columns: minmax(0, 1fr); } }
+/* Larger room photos (easier to see for older visitors): at least a 4:3 frame at the card width, never under 320px. */
+.fc-tabgrid:not(.fc-tabgrid--media) > .fc-card--media .fc-card-media { min-height: clamp(320px, 32vw, 560px); }
+@media (max-width: 600px) {
+  .fc-tabgrid:not(.fc-tabgrid--media) > .fc-card--media .fc-card-media { min-height: 0; aspect-ratio: 4 / 3; flex: 0 0 auto; }
+}
+
+/* ---------- Facilities: full-bleed room showcase (one interior render per slide) ---------- */
+/* Fills the visible screen on every browser: 100vh for older engines, 100svh where supported (mobile toolbars never cover it). */
+.fc-show { position: relative; isolation: isolate; width: 100%; height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; background: var(--ink); color: var(--white); }
+.fc-show:focus-within { outline: none; }
+.fc-show-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 1s ease, visibility 0s linear 1s; }
+.fc-show-slide.is-active { z-index: 1; opacity: 1; visibility: visible; transition: opacity 1s ease, visibility 0s; }
+.fc-show-image { object-fit: cover; transform: scale(1.08); transition: transform 1.6s cubic-bezier(.22, 1, .36, 1); }
+.fc-show-slide.is-active .fc-show-image { transform: scale(1); }
+.fc-show-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15,17,15,.78) 0%, rgba(15,17,15,.42) 42%, rgba(15,17,15,0) 70%), linear-gradient(0deg, rgba(15,17,15,.72) 0%, rgba(15,17,15,0) 55%); }
+
+/* Copy, bottom-left */
+.fc-show-copy { position: absolute; left: clamp(20px, 5vw, 80px); bottom: clamp(40px, 7vh, 88px); z-index: 2; display: grid; justify-items: start; gap: 18px; width: min(680px, calc(100% - 140px)); }
+.fc-show-copy > * { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .9s cubic-bezier(.22, 1, .36, 1); }
+.fc-show-slide.is-active .fc-show-copy > * { opacity: 1; transform: none; }
+.fc-show-slide.is-active .fc-show-copy > :nth-child(2) { transition-delay: .08s; }
+.fc-show-slide.is-active .fc-show-copy > :nth-child(3) { transition-delay: .16s; }
+.fc-show-slide.is-active .fc-show-copy > :nth-child(4) { transition-delay: .24s; }
+.fc-show-slide.is-active .fc-show-copy > :nth-child(5) { transition-delay: .32s; }
+.fc-show-eyebrow { margin: 0; color: var(--signal); font: 700 13px/1.2 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
+/* Room titles use the site display face (the "SKIERG" / "DIRECT LINES." headline font). */
+html main .fc-show-copy h3 { max-width: 14ch; margin: 0; color: var(--white); font: 400 clamp(38px, 4.6vw, 76px)/.95 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; overflow-wrap: normal; }
+.fc-nowrap { white-space: nowrap; }
+html main .fc-show-body { margin: 0; color: rgba(255,255,255,.9); font-size: clamp(19px, 1.6vw, 24px); line-height: 1.45; }
+.fc-show-points { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 0; padding: 0; list-style: none; }
+.fc-show-points li { display: inline-flex; align-items: center; gap: 10px; color: var(--white); font-size: clamp(16px, 1.25vw, 19px); }
+.fc-show-points li::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: var(--signal); }
+.fc-show-cta { display: inline-flex; align-items: center; min-height: 54px; margin-top: 6px; padding: 0 30px; border: 1px solid var(--signal); border-radius: 999px; color: var(--white); font: 700 13px/1 var(--font-poppins), sans-serif; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: background-color .3s ease, color .3s ease; }
+.fc-show-cta:hover, .fc-show-cta:focus-visible { background: var(--signal); color: var(--ink); outline: none; }
+
+/* Vertical dot rail on the right; the room name appears beside the dot on hover/focus. */
+.fc-show-rail { position: absolute; top: 50%; right: clamp(16px, 2.6vw, 40px); z-index: 3; display: grid; gap: 6px; transform: translateY(-50%); }
+.fc-show-dot { position: relative; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.fc-show-dot::before { content: ""; width: 10px; height: 10px; border-radius: 999px; background: rgba(255,255,255,.75); transition: transform .3s ease, background-color .3s ease, box-shadow .3s ease; }
+.fc-show-dot:hover::before { background: var(--white); transform: scale(1.3); }
+.fc-show-dot[aria-current="true"]::before { background: var(--signal); box-shadow: 0 0 0 5px rgba(198,244,50,.28); transform: scale(1.3); }
+.fc-show-dot:focus-visible { outline: 2px solid var(--signal); outline-offset: 0; border-radius: 999px; }
+.fc-show-dot-label { position: absolute; right: 42px; top: 50%; padding: 8px 14px; border-radius: 999px; background: rgba(15,17,15,.86); color: var(--white); font: 600 14px/1 var(--font-poppins), sans-serif; white-space: nowrap; opacity: 0; transform: translate(8px, -50%); pointer-events: none; transition: opacity .25s ease, transform .3s ease; }
+.fc-show-dot:hover .fc-show-dot-label, .fc-show-dot:focus-visible .fc-show-dot-label { opacity: 1; transform: translate(0, -50%); }
+
+/* Arrows + counter, bottom-right */
+.fc-show-arrows { position: absolute; right: clamp(16px, 2.6vw, 40px); bottom: clamp(40px, 7vh, 88px); z-index: 3; display: flex; gap: 10px; }
+.fc-show-arrow { display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; background: rgba(15,17,15,.45); color: var(--white); font-size: 30px; line-height: 1; cursor: pointer; backdrop-filter: blur(6px); transition: background-color .3s ease, color .3s ease, border-color .3s ease; }
+.fc-show-arrow:hover, .fc-show-arrow:focus-visible { border-color: var(--signal); background: var(--signal); color: var(--ink); outline: none; }
+.fc-show-count { position: absolute; right: clamp(16px, 2.6vw, 40px); bottom: calc(clamp(40px, 7vh, 88px) + 74px); z-index: 3; margin: 0; color: rgba(255,255,255,.7); font: 400 14px/1 var(--font-geist-mono), monospace; letter-spacing: .12em; }
+.fc-show-count strong { color: var(--white); font-weight: 700; }
+
+.fc-show-foot { display: grid; justify-items: start; gap: 12px; padding-block: 32px 8px; }
+.fc-show-foot .fc-disclaimer { margin: 0; }
+
+@media (max-width: 760px) {
+  .fc-show { min-height: 480px; }
+  .fc-show-shade { background: linear-gradient(0deg, rgba(15,17,15,.9) 0%, rgba(15,17,15,.5) 50%, rgba(15,17,15,.1) 100%); }
+  .fc-show-copy { left: 18px; right: 18px; bottom: 100px; width: auto; gap: 14px; }
+  html main .fc-show-copy h3 { max-width: none; font-size: clamp(28px, 8vw, 44px); }
+  .fc-show-rail { top: auto; bottom: 30px; left: 18px; right: auto; display: flex; flex-wrap: wrap; gap: 0; transform: none; max-width: calc(100% - 150px); }
+  .fc-show-dot { width: 28px; height: 28px; }
+  .fc-show-dot-label { display: none; }
+  .fc-show-arrows { bottom: 24px; right: 18px; }
+  .fc-show-arrow { width: 50px; height: 50px; }
+  .fc-show-count { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-show-slide, .fc-show-slide.is-active, .fc-show-image, .fc-show-copy > * { transition: none; }
+  .fc-show-image { transform: none; }
 }

@@ -21,7 +21,7 @@ export default function FoundingBand({ founding, showBenefits = true }: { foundi
           {showBenefits && founding.benefits.length > 0 && <ul className="mb-founding-benefits">{founding.benefits.map((b) => <li key={b}>{b}</li>)}</ul>}
           <FoundingCounter founding={founding} showBar className="mb-founding-counter" />
           {expires && expires !== "To be announced" && <p className="mb-founding-expiry">Offer ends {expires}</p>}
-          <Link href="/contact?interest=membership-local" className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>
+          <Link href="/membership/join" className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>
         </div>
       </div>
     </section>

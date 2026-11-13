@@ -7,6 +7,8 @@ export const MEMBER_LOGIN_PATH = "/account/login";
 export const MEMBER_SIGNUP_PATH = "/account/signup";
 /** Client-readable hint cookie name (mirrors MEMBER_HINT_COOKIE in token.ts, which is server-only). */
 export const MEMBER_HINT = "bc_member";
+/** sessionStorage flag set on log-out: the home page then skips the full offer modal and shows only the small prompt. */
+export const LOGGED_OUT_KEY = "basecamp:logged-out";
 
 /** "/account/login?next=/contact%3Finterest%3Dyoga" */
 export const loginHref = (next: string) => `${MEMBER_LOGIN_PATH}?next=${encodeURIComponent(next)}`;

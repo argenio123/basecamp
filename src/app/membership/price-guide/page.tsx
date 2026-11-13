@@ -26,7 +26,7 @@ export default async function PriceGuidePage() {
       glance={{ summary: "Packs and day passes.\nYoga and recovery.\nCamps and teams.", statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions"]}
       cta={<>
-        <CtaBand eyebrow="Price guide" title="Need help choosing?" label="Talk to us" href="/contact?interest=membership-local" />
+        <CtaBand eyebrow="Price guide" title="Need help choosing?" label="Talk to us" href="/membership/join" />
       </>}
     >
       <FromPrices id="from-prices" groups={otherGroups} eyebrow="Price guide" title="Passes, recovery and more." intro={AUDIENCE_INTRO} />
