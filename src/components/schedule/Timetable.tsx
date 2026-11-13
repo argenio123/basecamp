@@ -273,6 +273,8 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   const [now, setNow] = useState<Date | null>(null);
   const [selected, setSelected] = useState<Date | null>(null);
   const [view, setView] = useState<"week" | "month">("week");
+  // Set once the visitor switches Week / Month, so the flip-in plays on a switch and not on the first page load.
+  const [flipped, setFlipped] = useState(false);
   const [filter, setFilter] = useState<Category | "all">("all");
   const [part, setPart] = useState<Part | "all">("all");
   const [, bump] = useReducer((x: number) => x + 1, 0);
@@ -365,6 +367,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   const switchView = (next: "week" | "month") => {
     if (next === view) return;
     setView(next);
+    setFlipped(true);
     const focus = selected ?? today;
     if (!focus) return;
     if (next === "week") { pendingWeek.current = mondayOf(focus); bump(); } else { pendingMonth.current = firstOfMonth(focus); bump(); }
@@ -415,18 +418,18 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   const dayPast = selected ? isPast(selected) : false;
 
   return (
-    <div className="sd-timetable sd-app">
+    <div className="sd-timetable sd-app" data-flip={flipped ? "" : undefined}>
       {status && (
-        <p className="sd-app-status-line">
+        <p className="sd-app-status-line" data-reveal>
           <span className="sd-app-status" data-tone="preview"><i aria-hidden="true" />Preview</span>
           <span>{status}</span>
           {statusHref && statusLabel && <Link href={statusHref}>{statusLabel}</Link>}
         </p>
       )}
 
-      <div className="sd-app-month">
+      <div className="sd-app-month" data-reveal data-reveal-delay="short">
         <div className="sd-app-month-title" aria-live="polite">
-          <h3>{(view === "week" ? labels?.title : monthTitle) ?? " "}</h3>
+          <h3 key={view}>{(view === "week" ? labels?.title : monthTitle) ?? " "}</h3>
           {view === "week" && labels && <span>Week of {labels.range}</span>}
         </div>
         <div className="sd-cal-controls">
@@ -444,14 +447,15 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
         </div>
       </div>
 
+      <div className="sd-cal-reveal" data-reveal data-reveal-delay="medium">
       {view === "week" ? (
         <div ref={weekRef} className={`sd-app-days sd-cal-strip${weekScroll.grabbing ? " is-grabbing" : ""}`} role="tablist" aria-label="Days"
           onScroll={onWeekScroll} {...weekScroll.handlers}>
           {days
-            ? days.map((date) => {
+            ? days.map((date, i) => {
               const d = weekdayOf(date);
               return (
-                <button key={date.toDateString()} type="button" role="tab" aria-selected={!!selected && sameDay(selected, date)} aria-controls="sd-day-panel"
+                <button key={date.toDateString()} type="button" role="tab" style={{ "--col": i % 7 } as CSSProperties} aria-selected={!!selected && sameDay(selected, date)} aria-controls="sd-day-panel"
                   aria-label={`${longDate(date)}${isPast(date) ? ", past" : ""}`}
                   data-today={isToday(date) ? "" : undefined} data-past={isPast(date) ? "" : undefined}
                   onClick={() => setSelected(date)}>
@@ -480,7 +484,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
                   {WEEKDAYS.map((d) => <span key={d} role="columnheader">{d}</span>)}
                 </div>
                 {Array.from({ length: grid.length / 7 }, (_, w) => (
-                  <div className="sd-cal-row" role="row" key={w}>
+                  <div className="sd-cal-row" role="row" key={w} style={{ "--row": w + 1 } as CSSProperties}>
                     {grid.slice(w * 7, w * 7 + 7).map((date) => {
                       const count = daySlots(weekdayOf(date)).length;
                       return (
@@ -502,8 +506,9 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
           })}
         </div>
       )}
+      </div>
 
-      <div className="sd-app-filterset">
+      <div className="sd-app-filterset" data-reveal>
         {categories.length > 1 && (
           <div className="sd-app-filters" role="toolbar" aria-label={partsRepeat ? "Filter by session" : "Filter by discipline"}>
             <span className="sd-app-filter-label">{partsRepeat ? "Session" : "Discipline"}</span>
@@ -529,10 +534,10 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
           {dayPast && <em className="sd-app-past-tag">Past</em>}
         </p>
         {list.length
-          ? <ul>{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} />)}</ul>
+          ? <ul data-reveal="stagger">{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} />)}</ul>
           : <p className="sd-slot-empty">No sessions match these filters</p>}
       </div>
-      <p className="sd-caption">{TIMETABLE_CAPTION}</p>
+      <p className="sd-caption" data-reveal>{TIMETABLE_CAPTION}</p>
     </div>
   );
 }

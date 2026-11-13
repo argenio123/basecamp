@@ -24,7 +24,7 @@ export default async function PrevNext({ current }: { current: string }) {
   return (
     <section className="nv-pn-band">
       <div className="shell">
-        <nav className="pr-style-pager pr-style-pager--dark" aria-label={`${section.label} pages`}>
+        <nav className="pr-style-pager pr-style-pager--dark" data-reveal="stagger" aria-label={`${section.label} pages`}>
           <Link className="pr-style-pager-link pr-style-pager-prev" href={left.href} rel={left.rel}>
             <span><i aria-hidden="true">‹</i> {left.dir}</span>
             <strong>{left.label}</strong>

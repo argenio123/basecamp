@@ -1827,3 +1827,17 @@ html main .ct11-head > p:not(.sd-tt-eyebrow) { grid-area: intro; justify-self: e
   #timetable .sd-cal-months { column-gap: 16px; }
 }
 #timetable .sd-app-days button:not([aria-selected="true"]) em[data-empty] { color: rgba(255,255,255,.3); }
+
+/* Week / Month switch: a calendar card-flip (plays only after the visitor switches, see data-flip).
+   Week -> Month: the month's rows flip down one after another. Month -> Week: the day tiles turn over left to right.
+   Only the contents of tiles / panels move, never the tiles themselves: drag-scroll measures tile positions. */
+@media (prefers-reduced-motion: no-preference) {
+  #timetable [data-flip] .sd-cal-month { perspective: 900px; }
+  #timetable [data-flip] .sd-cal-row { transform-origin: 50% 0; backface-visibility: hidden; animation: sd-cal-flip-down .5s cubic-bezier(.2, .9, .3, 1.15) both; animation-delay: calc(var(--row, 0) * 55ms); }
+  #timetable [data-flip] .sd-cal-strip button { perspective: 500px; }
+  #timetable [data-flip] .sd-cal-strip button > * { backface-visibility: hidden; animation: sd-cal-turn .5s cubic-bezier(.2, .9, .3, 1.15) both; animation-delay: calc(var(--col, 0) * 45ms); }
+  #timetable [data-flip] .sd-app-month h3 { transform-origin: 50% 100%; animation: sd-cal-title .45s cubic-bezier(.2, .9, .3, 1.15) both; }
+}
+@keyframes sd-cal-flip-down { from { transform: rotateX(-92deg); } to { transform: none; } }
+@keyframes sd-cal-turn { from { transform: rotateY(92deg); } to { transform: none; } }
+@keyframes sd-cal-title { from { transform: rotateX(92deg); } to { transform: none; } }
