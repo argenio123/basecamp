@@ -3,6 +3,9 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { membershipJoinHref, TIER_OPTIONS } from "@/content/constants";
 import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
+import { PAYABLE_GROUP_IDS } from "@/lib/payments/catalog";
+import { payHref } from "@/lib/payments/types";
+import "@/components/payments/payments.css";
 import { isMedicalBlock, type PriceBlockData } from "./pricing";
 import Money from "./Money";
 
@@ -10,11 +13,14 @@ import Money from "./Money";
 // Prices are shown verbatim from content (spec §B.7); the USD string uses the item's own figure when set (§B.6).
 
 /** Monthly memberships as tier cards. The featured card carries the --olive-dark border and its badge. */
-export function TierCards({ items, exchangeRate }: { items: PriceItem[]; exchangeRate: number }) {
+/**
+ * `cta={false}` leaves out the "Join …" buttons. `ctaLabel` replaces "Join <name>" and `ctaHref` wraps the plan's
+ * join link, which opens the plan's online checkout (log-in / sign-up pages: "Sign up to join" → sign-up, then checkout).
+ */
+export function TierCards({ items, cta = true, ctaLabel, ctaHref }: { items: PriceItem[]; exchangeRate?: number; cta?: boolean; ctaLabel?: string; ctaHref?: (joinPath: string) => string }) {
   return (
     <ul className="mb-tiers" data-reveal="stagger">
       {items.map((item) => {
-        const usd = formatUsd(item, exchangeRate);
         return (
           <li key={item.id} className="mb-tier" data-featured={item.featured ? "" : undefined}>
             <div className="mb-tier-tags">
@@ -24,11 +30,13 @@ export function TierCards({ items, exchangeRate }: { items: PriceItem[]; exchang
             </div>
             <h3 className="mb-tier-name">{item.name}</h3>
             <p className="mb-tier-price"><strong><Money value={formatPhp(item.price)} /></strong>{item.unit && <span>{item.unit}</span>}</p>
-            {usd && <p className="mb-tier-usd">{usd}</p>}
             {(item.perUnit || item.validity) && <p className="mb-meta">{[item.perUnit, item.validity].filter(Boolean).join(" · ")}</p>}
             {item.description && <p className="mb-tier-desc">{item.description}</p>}
             {item.features.length > 0 && <ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul>}
-            <Link href={membershipJoinHref(TIER_OPTIONS.some((t) => t.value === item.id) ? item.id : undefined)} className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>Join {item.name}</Link>
+            {cta && (() => {
+              const join = membershipJoinHref(TIER_OPTIONS.some((t) => t.value === item.id) ? item.id : undefined);
+              return <Link href={ctaHref ? ctaHref(join) : join} className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>{ctaLabel ?? `Join ${item.name}`}</Link>;
+            })()}
           </li>
         );
       })}
@@ -37,7 +45,8 @@ export function TierCards({ items, exchangeRate }: { items: PriceItem[]; exchang
 }
 
 /** Every other group: responsive definition-list rows (stacked cards on mobile). */
-export function PriceList({ items, exchangeRate }: { items: PriceItem[]; exchangeRate: number }) {
+/** `buy` adds a "Buy online" link to rows with a price (groups that can be paid online). */
+export function PriceList({ items, exchangeRate, buy = false }: { items: PriceItem[]; exchangeRate: number; buy?: boolean }) {
   return (
     <dl className="mb-list" data-reveal="stagger">
       {items.map((item) => {
@@ -63,6 +72,7 @@ export function PriceList({ items, exchangeRate }: { items: PriceItem[]; exchang
             )}
             {item.description && <dd className="mb-row-desc">{item.description}</dd>}
             {item.features.length > 0 && <dd className="mb-row-features"><ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul></dd>}
+            {buy && item.price && item.availability !== "planned" && <dd className="mb-row-buy"><Link href={payHref(item.id)} className="py-buy">{item.price.max != null ? "Pay deposit online" : "Buy online"}</Link></dd>}
           </div>
         );
       })}
@@ -92,7 +102,7 @@ export function PriceBlock({ block, exchangeRate, disclaimer, hidden, hiddenGrou
           </div>
           {group.id === "memberships"
             ? <TierCards items={group.items} exchangeRate={exchangeRate} />
-            : <PriceList items={group.items} exchangeRate={exchangeRate} />}
+            : <PriceList items={group.items} exchangeRate={exchangeRate} buy={PAYABLE_GROUP_IDS.includes(group.id)} />}
         </div>
       ))}
       {isMedicalBlock(block) && disclaimer && <p className="mb-disclaimer" data-reveal>{disclaimer}</p>}

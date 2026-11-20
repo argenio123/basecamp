@@ -73,6 +73,7 @@ export default function AdminApp({ content, meta, leads, storage }: Props) {
         <p className="adm-topbar-title">BaseCamp CamSur · Content admin</p>
         <span className="adm-storage" data-storage={storage}>{STORAGE_LABEL[storage]}</span>
         <div className="adm-topbar-actions">
+          <a className="adm-topbar-link" href="/admin/payments">Payments</a>
           <a className="adm-topbar-link" href="/" target="_blank" rel="noopener noreferrer">View site ↗</a>
           <form action={logoutAction}>
             <button type="submit" className="adm-topbar-link">Log out</button>

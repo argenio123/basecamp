@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AuthPage from "@/components/members/AuthPage";
+import AuthCard from "@/components/members/AuthCard";
 
 export const metadata: Metadata = {
   title: "Member log in",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function MemberLoginPage() {
-  return <AuthPage mode="login" />;
+  return <AuthCard mode="login" />;
 }

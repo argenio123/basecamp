@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { foundingItemId } from "@/lib/payments/founding-link";
+import { payHref } from "@/lib/payments/types";
 import FoundingPass from "@/components/membership/FoundingPass";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
@@ -23,7 +25,7 @@ export default async function FoundingPage() {
       glance={{ summary: "Founding rates.\nPriority access.\nA seat at launch.", statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions", "/about/faq"]}
       cta={<>
-        <CtaBand eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href="/membership/join" />
+        <CtaBand eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} />
       </>}
     >
       <FoundingPass founding={founding} exchangeRate={settings.exchangeRate} />

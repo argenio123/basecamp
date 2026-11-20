@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { foundingItemId } from "@/lib/payments/founding-link";
+import { payHref } from "@/lib/payments/types";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import { formatDateLabel } from "@/content/format";
 import type { FoundingOffer } from "@/content/types";
@@ -21,7 +23,7 @@ export default function FoundingBand({ founding, showBenefits = true }: { foundi
           {showBenefits && founding.benefits.length > 0 && <ul className="mb-founding-benefits">{founding.benefits.map((b) => <li key={b}>{b}</li>)}</ul>}
           <FoundingCounter founding={founding} showBar className="mb-founding-counter" />
           {expires && expires !== "To be announced" && <p className="mb-founding-expiry">Offer ends {expires}</p>}
-          <Link href="/membership/join" className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>
+          <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>
         </div>
       </div>
     </section>

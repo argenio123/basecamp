@@ -6,7 +6,7 @@ import type { ReactNode, Ref } from "react";
 import { MEMBER_HINT, loginHref } from "@/lib/members/types";
 import "@/styles/join-flow.css";
 
-// Building blocks for the one-question-per-screen forms (/membership/join, /schedule/book):
+// Building blocks for the one-question-per-screen forms (/schedule/book):
 // cover screen, progress bar, single-pick option cards and the Back / Continue row. Styles: src/styles/join-flow.css.
 
 /**

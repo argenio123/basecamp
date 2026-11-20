@@ -19,7 +19,7 @@ const priceOptions = (groups: PriceGroup[], ids: string[]) => groups
   .flatMap((g) => g.items.filter((i) => i.visible))
   .map((i) => ({ value: i.id, label: i.price ? `${i.name} · ${formatPhp(i.price)}` : i.name }));
 
-// Booking request: one question per screen, same format as /membership/join (cover → service → program/session →
+// Booking request: one question per screen, one-question-per-screen (cover → service → program/session →
 // time → details → contact). Member-only (src/proxy.ts). Static under cacheComponents: reads only the cached
 // getSiteContent(); ?service= / ?item= are read client-side inside <Suspense> (docs: use-search-params.md).
 export default async function ScheduleBookPage() {

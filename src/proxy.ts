@@ -9,7 +9,7 @@ import { MEMBER_COOKIE, verifyMemberSession } from "@/lib/members/token";
 // The sign-in page lives at /login (outside the matcher); next.config.ts permanently redirects /admin/login → /login,
 // and config redirects run before Proxy.
 export function proxy(request: NextRequest) {
-  // Member-only pages (request / inquire / purchase / book): send visitors to the member log-in, then back.
+  // Member-only pages (request / inquire / purchase / book / pay): send visitors to the member log-in, then back.
   if (!request.nextUrl.pathname.startsWith("/admin")) {
     // The plain Contact page is public; a Contact link that carries a request (?interest=, ?enquiry=, ?program=…,
     // used by Purchase / Inquire / Register interest buttons) needs a member log-in first, like booking.
@@ -28,4 +28,4 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
-export const config = { matcher: ["/admin", "/admin/:path*", "/account", "/account/settings", "/contact", "/schedule/book", "/membership/join"] };
+export const config = { matcher: ["/admin", "/admin/:path*", "/account", "/account/settings", "/contact", "/schedule/book", "/account/payments", "/pay", "/pay/:path*"] };

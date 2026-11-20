@@ -12,13 +12,13 @@ const PROMOS = [
     tag: "Membership test", title: "Athlete membership", a: ["Standard", "Php 4,500"], b: ["Introductory", "Php 3,200"],
     note: "Standard monthly rate tested against an introductory rate.",
     perks: ["All coached group classes", "Unlimited open-gym access", "Programming for serious local athletes", "Community-focused training program"],
-    buy: { label: "Purchase", href: "/membership/join?tier=athlete" },
+    buy: { label: "Purchase", href: "/pay?item=athlete" },
   },
   {
     tag: "Visitor test", title: "Day pass", a: ["Standard", "Php 650"], b: ["Weekend", "Php 850"],
     note: "Standard day pass tested against a weekend rate.",
     perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays, and long weekends"],
-    buy: { label: "Purchase", href: "/contact?interest=day-pass" },
+    buy: { label: "Purchase", href: "/pay?item=day-pass-standard" },
   },
   {
     tag: "Camps", title: "Early booking", a: ["Book ahead", "60+ days"], b: ["Discount", "20%"],

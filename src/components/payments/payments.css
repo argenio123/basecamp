@@ -1,0 +1,180 @@
+/* Online payments: checkout (/pay), success / cancelled, account payments, admin payments, and Buy / Pay links on
+   price tables. Prefix: py-. Imported by the payment components and pages. */
+
+.py-page { min-height: 100svh; padding: calc(var(--header-height, 106px) + clamp(40px, 6vw, 80px)) 0 clamp(64px, 8vw, 110px); background: radial-gradient(circle at 85% 0%, rgba(198,244,50,.07), transparent 40%), var(--ink); color: var(--white); }
+.py-card { display: grid; justify-items: start; gap: 16px; max-width: 640px; }
+.py-eyebrow { margin: 0; color: var(--signal); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+html main .py-card h1, html main .py-admin h1 { margin: 0; color: var(--white); font: 400 clamp(40px, 5vw, 72px)/.92 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.03em; text-transform: uppercase; }
+.py-lead { margin: 0; max-width: 560px; color: rgba(255,255,255,.76); font-size: 17px; line-height: 1.6; }
+.py-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--signal); color: var(--ink); font: 800 30px/1 var(--font-poppins), sans-serif; }
+.py-mark--wait { background: rgba(255,255,255,.12); color: var(--white); }
+
+.py-summary { display: grid; gap: 10px; width: 100%; margin-top: 8px; padding: 22px 24px; border-radius: 18px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.py-summary > div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.py-summary span { color: rgba(255,255,255,.7); font: 400 12px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.py-summary strong { color: var(--signal); font: 400 clamp(32px, 4vw, 48px)/1 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; }
+.py-note { margin: 0; color: rgba(255,255,255,.66); font-size: 14px; line-height: 1.55; }
+.py-methods { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.py-methods li { padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--white); font: 600 13px/1 var(--font-poppins), sans-serif; }
+.py-methods li::before { content: none !important; }
+
+.py-form { display: grid; gap: 10px; width: 100%; }
+.py-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--signal); color: var(--ink); cursor: pointer; font: 800 14px/1 var(--font-poppins), sans-serif; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; transition: transform .25s ease, box-shadow .25s ease; }
+.py-button span { font-size: 18px; }
+.py-button:hover:not(:disabled), .py-button:focus-visible { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(198,244,50,.25); }
+.py-button:disabled { opacity: .6; cursor: progress; }
+.py-button--link { width: auto; }
+.py-error { margin: 0; padding: 12px 14px; border-radius: 12px; background: rgba(255,120,100,.14); color: #ffd2c8; font-size: 14px; line-height: 1.5; }
+.py-test { margin: 0; padding: 6px 12px; border-radius: 999px; background: rgba(198,244,50,.14); color: var(--signal); font: 700 12px/1.3 var(--font-poppins), sans-serif; letter-spacing: .04em; }
+.py-fine { margin: 0; color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.55; }
+.py-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 6px; }
+.py-link { color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+.py-receipt { display: grid; width: 100%; margin: 6px 0 0; border-radius: 18px; background: var(--white); color: var(--ink); overflow: hidden; }
+.py-receipt > div { display: flex; justify-content: space-between; gap: 16px; padding: 13px 20px; border-top: 1px solid var(--line); }
+.py-receipt > div:first-child { border-top: 0; }
+.py-receipt dt { color: var(--olive); font: 400 12px/1.5 var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
+.py-receipt dd { margin: 0; font-weight: 600; text-align: right; }
+
+/* Account > Payments */
+.py-member { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-bottom: 18px; padding: 22px 24px; border-radius: 18px; background: var(--ink); color: var(--white); }
+.py-member > div:first-child { display: grid; gap: 4px; }
+.py-member span { color: var(--signal); font: 400 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+.py-member strong { font: 400 clamp(24px, 2.4vw, 32px)/1 var(--font-display), var(--font-poppins), sans-serif; text-transform: uppercase; }
+.py-member small { color: rgba(255,255,255,.7); font-size: 14px; }
+.py-member .py-form { width: auto; }
+.py-member .py-button { width: auto; min-height: 50px; }
+.py-empty { margin: 18px 0 0; color: var(--olive); }
+.py-history { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+.py-history li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px 18px; padding: 16px 18px; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.py-history li::before { content: none !important; }
+.py-history li > div { display: grid; gap: 4px; }
+.py-history strong { font-weight: 600; }
+.py-history small { color: var(--olive); font-size: 13px; }
+.py-history .py-link { grid-column: 1 / -1; justify-self: start; font-size: 14px; }
+.py-amount { font-weight: 700; }
+.py-status { padding: 5px 10px; border-radius: 999px; background: var(--paper); color: var(--olive); font: 700 11px/1.2 var(--font-poppins), sans-serif; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+[data-status="paid"] .py-status { background: var(--ink); color: var(--signal); }
+
+/* Admin > Payments */
+.py-admin { display: grid; gap: 20px; padding: 32px clamp(16px, 4vw, 48px); background: var(--paper); min-height: 100vh; }
+html main .py-admin h1 { color: var(--ink); font-size: clamp(36px, 4vw, 56px); }
+.py-admin .py-eyebrow { color: var(--olive); }
+.py-admin-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; }
+.py-admin-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.py-admin-stats > div { display: grid; gap: 6px; padding: 16px 18px; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.py-admin-stats span { color: var(--olive); font: 400 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.py-admin-stats strong { font-size: 24px; }
+.py-table-wrap { overflow-x: auto; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.py-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.py-table th { padding: 12px 14px; color: var(--olive); font: 400 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .12em; text-align: left; text-transform: uppercase; border-bottom: 1px solid var(--line); }
+.py-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.py-table td small { display: block; margin-top: 2px; color: var(--olive); font-size: 12px; }
+.py-table code { font-size: 12px; }
+
+/* "Buy" / "Pay" links on price tables (membership tiers, price rows, camp packages). */
+.py-buy { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font: 700 12px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.py-buy::after { content: "→"; font-size: 15px; transition: transform .2s ease; }
+.py-buy:hover::after, .py-buy:focus-visible::after { transform: translateX(3px); }
+.py-buy:hover, .py-buy:focus-visible { text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.mb-tier .py-buy { align-self: center; margin-top: -2px; }
+.mb-tier[data-featured] .py-buy { color: var(--signal); }
+.mb-row-buy { grid-column: 4; grid-row: 2; align-self: start; }
+.vt-pk-pay { margin: 10px 0 4px 22px; }
+
+.mb-px-buy { flex: none; align-self: center; padding: 6px 12px; border-radius: 999px; background: var(--signal); color: var(--ink); font: 800 11px/1 var(--font-poppins), sans-serif; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; transition: transform .2s ease; }
+.mb-px-buy:hover, .mb-px-buy:focus-visible { transform: translateY(-1px); }
+
+@media (max-width: 760px) {
+  .py-admin-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .py-history li { grid-template-columns: minmax(0, 1fr) auto; }
+  .py-history .py-status { grid-column: 1 / -1; justify-self: start; }
+  .mb-row-buy { grid-column: auto; grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .py-button, .py-buy::after { transition: none; } }
+
+/* ---------- Checkout (/pay): info column + order summary card ---------- */
+.py-checkout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, 460px); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.py-checkout-info { display: grid; justify-items: start; gap: 18px; }
+html main .py-checkout h1 { margin: 0; color: var(--white); font: 400 clamp(44px, 5.4vw, 80px)/.9 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.03em; text-transform: uppercase; }
+.py-block { display: grid; gap: 12px; width: 100%; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.12); }
+html main .py-block h2, html main .py-checkout-side h2 { margin: 0; color: var(--signal); font: 400 12px/1.3 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+.py-included { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; margin: 0; padding: 0; list-style: none; }
+.py-included li { position: relative; padding-left: 26px; color: rgba(255,255,255,.86); font-size: 15px; line-height: 1.45; }
+.py-included li::before { content: "\2713" !important; position: absolute; left: 0; top: 0; color: var(--signal); font-weight: 800; }
+.py-method-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.py-method-list li { display: grid; gap: 4px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.py-method-list li::before { content: none !important; }
+.py-method-list strong { color: var(--white); font: 700 15px/1.2 var(--font-poppins), sans-serif; }
+.py-method-list span { color: rgba(255,255,255,.62); font-size: 13.5px; line-height: 1.45; }
+.py-how { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: how; }
+.py-how li { position: relative; padding-left: 36px; color: rgba(255,255,255,.78); font-size: 15px; line-height: 1.5; counter-increment: how; }
+.py-how li::before { content: counter(how) !important; position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(198,244,50,.16); color: var(--signal); font: 800 12px/1 var(--font-poppins), sans-serif; }
+
+.py-checkout-side { position: sticky; top: calc(var(--header-height, 106px) + 20px); display: grid; gap: 14px; padding: 24px; border-radius: 22px; background: var(--white); color: var(--ink); box-shadow: 0 30px 70px rgba(0,0,0,.4); }
+html main .py-checkout-side h2 { color: var(--olive); }
+.py-checkout-side .py-link { justify-self: start; color: var(--ink); font-size: 14px; }
+.py-panel { display: grid; gap: 16px; }
+.py-lines { display: grid; margin: 0; }
+.py-lines > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+.py-lines > div:first-child { border-top: 0; }
+.py-lines dt { flex: none; color: var(--olive); font-size: 14px; }
+.py-lines dd { margin: 0; color: var(--ink); font-size: 14.5px; font-weight: 600; text-align: right; }
+.py-lines dd small { display: block; color: var(--olive); font-size: 12px; font-weight: 500; }
+.py-lines-sub { margin-top: 6px; border-top: 2px solid var(--ink) !important; }
+.py-lines-discount dd { color: #3d7a12; }
+.py-muted { color: var(--olive); font-weight: 500; }
+.py-promo-remove { margin-left: 6px; padding: 0; border: 0; background: none; color: var(--ink); font: 600 12px/1 var(--font-poppins), sans-serif; text-decoration: underline; cursor: pointer; }
+.py-lines-total { padding-top: 14px !important; border-top: 2px solid var(--ink) !important; }
+.py-lines-total dt { color: var(--ink); font: 800 13px/1.2 var(--font-poppins), sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.py-lines-total dd { font: 400 clamp(24px, 2.3vw, 32px)/1 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+.py-lines dd { overflow-wrap: anywhere; }
+.py-promo { display: grid; gap: 8px; }
+.py-promo label { color: var(--ink); font: 700 11px/1 var(--font-poppins), sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.py-promo > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.py-promo input { min-width: 0; height: 46px; padding: 0 14px; border: 1px solid #c9c6bd; border-radius: 10px; background: var(--white); color: var(--ink); font: 600 15px/1 var(--font-poppins), sans-serif; letter-spacing: .06em; }
+.py-promo input:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(21,23,19,.12); }
+.py-promo button { height: 46px; padding: 0 18px; border: 0; border-radius: 10px; background: var(--ink); color: var(--white); font: 700 12px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.py-promo button:disabled { opacity: .45; cursor: default; }
+.py-promo-msg { margin: 0; color: #a1281c; font-size: 13px; }
+.py-checkout-side .py-error { background: #fbe9e5; color: #8c2a1c; }
+.py-checkout-side .py-test { justify-self: start; background: rgba(198,244,50,.3); color: var(--ink); }
+.py-secure { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--olive); font-size: 13px; }
+.py-secure svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+@media (max-width: 960px) {
+  .py-checkout { grid-template-columns: 1fr; }
+  .py-checkout-side { position: static; }
+}
+@media (max-width: 560px) {
+  .py-included, .py-method-list { grid-template-columns: 1fr; }
+}
+
+/* Ways to pay: a white logo tile beside each method. */
+.py-method-list li { grid-template-columns: 64px minmax(0, 1fr); align-items: center; column-gap: 14px; }
+.py-method-logo { display: flex; align-items: center; justify-content: center; gap: 4px; width: 64px; height: 44px; padding: 0 6px; border-radius: 10px; background: var(--white); }
+.py-method-logo img { width: 26px; height: 26px; }
+.py-method-logo b { font: 800 14px/1 var(--font-poppins), sans-serif; letter-spacing: -.02em; white-space: nowrap; }
+.py-method-text { display: grid; gap: 4px; }
+.py-method-logo img:only-child { width: 46px; height: 46px; }
+/* The site header already reserves its own height above <main>, so only a small gap here. */
+.py-page { padding-top: clamp(24px, 3vw, 40px); }
+
+/* PayPal button (PayPal's own gold, as on its checkout buttons). */
+.py-button--paypal { background: #ffc439; color: #003087; }
+.py-button--paypal:hover:not(:disabled), .py-button--paypal:focus-visible { box-shadow: 0 14px 30px rgba(255,196,57,.3); }
+.py-method-logo img[src*="paypal"] { width: 30px; height: 30px; }
+
+/* Larger labels on the checkout (eyebrow, section titles, summary labels). */
+.py-checkout .py-eyebrow { font-size: 14px; }
+html main .py-block h2, html main .py-checkout-side h2 { font-size: 15px; letter-spacing: .14em; }
+.py-lines dt { font-size: 15.5px; }
+.py-lines dd { font-size: 16px; }
+.py-lines-total dt { font-size: 15px; }
+.py-promo label { font-size: 13px; }
+.py-secure { font-size: 14px; }
+.py-lines .py-lines-total dd { font-size: clamp(24px, 2.3vw, 32px); }
+
+
+/* Founding-member rate note under the total. */
+.py-founding-note { margin: 0; padding: 10px 14px; border-radius: 10px; background: rgba(198,244,50,.3); color: var(--ink); font: 700 13px/1.4 var(--font-poppins), sans-serif; }

@@ -128,9 +128,8 @@ export default function MemberNavLink({ className, signedInHref = "/account", si
       </Link>
     );
   }
-  // On the log-in page offer sign-up (and vice versa) instead of a link to the page itself.
-  if (pathname === MEMBER_LOGIN_PATH) return <Link href={MEMBER_SIGNUP_PATH} className={className} data-member-state="signed-out" aria-label="Create a member account">Sign up</Link>;
-  if (pathname === MEMBER_SIGNUP_PATH) return <Link href={MEMBER_LOGIN_PATH} className={className} data-member-state="signed-out" aria-label="Member login">Login</Link>;
+  // The log-in and sign-up pages have their own Log in / Sign up tabs on the card, so no header button there.
+  if (pathname === MEMBER_LOGIN_PATH || pathname === MEMBER_SIGNUP_PATH) return null;
   return (
     <Link href={loginHref(pathname)} className={className} data-member-state="signed-out" aria-label="Member login">
       Login

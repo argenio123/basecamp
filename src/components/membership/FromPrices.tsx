@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { formatPhp } from "@/content/format";
 import type { PriceGroup } from "@/content/types";
+import { PAYABLE_GROUP_IDS } from "@/lib/payments/catalog";
+import { payHref } from "@/lib/payments/types";
 import FromPricesGrid, { type FromPriceCard, type FromPriceGroup } from "./FromPricesGrid";
 import { audienceLabel, blockAvailability, blockItems, fromPrice, isMedicalBlock, toBlocks, type PriceBlockData } from "./pricing";
 
@@ -48,15 +50,23 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
   const cards = toBlocks(groups).flatMap((block): (FromPriceCard & { group: string })[] => {
     const price = fromPrice(blockItems(block));
     if (!price) return [];
+    // Items in groups sold online get a Buy link (not planned services, not items without a price).
+    const payableIds = new Set(block.groups.filter((g) => PAYABLE_GROUP_IDS.includes(g.id)).flatMap((g) => g.items.map((i) => i.id)));
+    const canPay = (i: { id: string; price: { min: number } | null; availability: string }) => payableIds.has(i.id) && !!i.price && i.availability !== "planned";
+    // "Purchase" opens checkout for the item the "From" price refers to (the cheapest one that can be paid online);
+    // categories with nothing payable online (corporate, planned services) get "Inquire" to the contact form.
+    const buyable = blockItems(block).filter(canPay).sort((x, y) => x.price!.min - y.price!.min);
+    const purchase = buyable[0] ? { href: payHref(buyable[0].id), label: "Purchase" } : { href: `/contact?interest=${PURCHASE_INTEREST[block.anchor] ?? "membership-local"}`, label: "Inquire" };
     return [{
       key: block.key, anchor: block.anchor, title: block.groups[0].title,
-      href: `/contact?interest=${PURCHASE_INTEREST[block.anchor] ?? "membership-local"}`,
+      href: purchase.href, ctaLabel: purchase.label,
       audience: audienceKey(block), audienceText: audienceLabel(block), availability: blockAvailability(block),
       price: price.label, unit: price.unit, group: GROUP_OF[block.anchor] ?? "train",
       note: isMedicalBlock(block) && disclaimer ? disclaimer : "",
       items: blockItems(block).map((item) => ({
         id: item.id, name: item.name, badge: item.badge, description: item.description, featured: item.featured,
         availability: item.availability, price: formatPhp(item.price), unit: item.unit,
+        pay: canPay(item) ? payHref(item.id) : "",
       })),
     }];
   });

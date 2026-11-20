@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { foundingItemId } from "@/lib/payments/founding-link";
+import { payHref } from "@/lib/payments/types";
 import { benefitFromText } from "@/components/features/BenefitCards";
 import GainList, { type Gain } from "@/components/programs/GainList";
 import FoundingCounter from "@/components/ui/FoundingCounter";
@@ -63,7 +65,7 @@ export default function FoundingPass({ founding, exchangeRate }: { founding: Fou
               </div>
             )}
             <div className="mb-fp-actions">
-              <Link href="/membership/join" className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>
+              <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>
               <FoundingCounter founding={founding} showBar className="mb-fp-counter" />
               {expires && expires !== "To be announced" && <p className="mb-fp-expiry">Offer ends {expires}</p>}
             </div>

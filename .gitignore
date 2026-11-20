@@ -50,3 +50,6 @@ next-env.d.ts
 
 # local scratch files
 /tmp/
+
+# editor settings
+/.vscode/

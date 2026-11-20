@@ -42,9 +42,11 @@ export const INTEREST_OPTIONS = [
 ] as const;
 export const PERSONA_OPTIONS = [{ value: "local", label: "Local athlete (CamSur / Bicol)" }, { value: "domestic", label: "Manila / domestic traveler" }, { value: "international", label: "International visitor" }] as const;
 /** Membership application form; every membership / early-access button points here. */
-export const MEMBERSHIP_JOIN_PATH = "/membership/join";
+/** Where "Join" / early-access buttons without a plan go: the membership plans, each with its pay link. */
+export const MEMBERSHIP_PLANS_PATH = "/membership#tiers";
 /** Join link, optionally preselecting a plan (?tier=local-basic | athlete | premium). */
-export const membershipJoinHref = (tier?: string) => (tier ? `${MEMBERSHIP_JOIN_PATH}?tier=${encodeURIComponent(tier)}` : MEMBERSHIP_JOIN_PATH);
+/** "Join" for a plan: straight to its online checkout (/pay); no plan: the plans list. */
+export const membershipJoinHref = (tier?: string) => (tier ? `/pay?item=${encodeURIComponent(tier)}` : MEMBERSHIP_PLANS_PATH);
 export const TIER_OPTIONS = [{ value: "local-basic", label: "Local Basic" }, { value: "athlete", label: "Athlete" }, { value: "premium", label: "Premium" }, { value: "unsure", label: "Not sure yet" }] as const;
 export const ENQUIRY_TYPES = [{ value: "general", label: "General inquiry" }, { value: "corporate", label: "Corporate / team booking" }, { value: "partnership", label: "Partnership / ambassador" }, { value: "camp-group", label: "Camp or group booking" }, { value: "media", label: "Media" }] as const;
 export const BOOKING_SERVICES = [{ value: "class", label: "Class or open gym" }, { value: "appointment", label: "Recovery or 1:1 appointment" }, { value: "camp", label: "Camp or package" }, { value: "corporate", label: "Corporate / group session" }] as const;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AuthPage from "@/components/members/AuthPage";
+import AuthCard from "@/components/members/AuthCard";
 
 export const metadata: Metadata = {
   title: "Create a member account",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function MemberSignupPage() {
-  return <AuthPage mode="signup" />;
+  return <AuthCard mode="signup" />;
 }

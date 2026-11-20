@@ -57,11 +57,14 @@ const showHomeHeroActions = false;
 export default async function Home() {
   const c = await getSiteContent();
   const instagram = c.settings.socials.find((s) => s.platform === "Instagram" && s.url);
+  // Cheapest visible monthly membership, for the offer modal's "As low as" headline.
+  const memberPrices = (c.pricing.groups.find((g) => g.id === "memberships")?.items ?? []).filter((i) => i.visible && i.price).map((i) => i.price!.min);
+  const lowestMembership = memberPrices.length ? Math.min(...memberPrices) : null;
 
   return (
     <>
       <HomeScrollReveal />
-      <HomeOfferModal offer={c.settings.founding} />
+      <HomeOfferModal offer={c.settings.founding} fromPrice={lowestMembership} />
       <div className="sticky-hero-curtain">
         <section className="home-hero">
           <HomeHeroMedia />

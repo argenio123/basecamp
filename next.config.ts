@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       // The facility gallery page was removed; old links land on the Facilities overview.
       { source: "/facilities/gallery", destination: "/facilities", permanent: true },
       { source: "/membership/faq", destination: "/about/faq", permanent: true },
+      // The membership application was replaced by online checkout: a plan goes to its /pay page, otherwise the plans.
+      { source: "/membership/join", has: [{ type: "query", key: "tier", value: "(?<tier>local-basic|athlete|premium)" }], destination: "/pay?item=:tier", permanent: false },
+      { source: "/membership/join", destination: "/membership#tiers", permanent: false },
       { source: "/membership/passes", destination: "/membership/price-guide", permanent: true },
       { source: "/membership/recovery-pricing", destination: "/membership/price-guide#recovery-pricing", permanent: true },
       { source: "/membership/yoga", destination: "/membership/price-guide#yoga", permanent: true },

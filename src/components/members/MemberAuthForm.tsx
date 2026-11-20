@@ -8,20 +8,21 @@ import { INITIAL_AUTH_RESULT, loginHref, signupHref, type AuthResult } from "@/l
 
 const RESET_EMAIL = "basecampcamsur@gmail.com";
 
-/**
- * Outlined field with a floating label (Gmail-style): the label sits inside the box and moves up when the field
- * is focused or filled. Password fields get a Show / Hide toggle.
- */
+/** Labelled field: a small caps label above an outlined box. Password fields get an eye icon to show / hide it. */
 function Field({ id, label, error, type = "text", allowClipboard = false, ...input }: { id: string; label: string; error?: string; allowClipboard?: boolean } & React.InputHTMLAttributes<HTMLInputElement>) {
   const [show, setShow] = useState(false);
   const isPassword = type === "password";
   return (
     <div className={`mb-auth-field${error ? " has-error" : ""}`}>
-      <input id={id} type={isPassword && show ? "text" : type} placeholder=" " aria-invalid={error ? true : undefined} aria-describedby={error ? `${id}-err` : undefined} data-login-clipboard={allowClipboard ? "true" : undefined} {...input} />
       <label htmlFor={id}>{label}</label>
+      <input id={id} type={isPassword && show ? "text" : type} placeholder=" " aria-invalid={error ? true : undefined} aria-describedby={error ? `${id}-err` : undefined} data-login-clipboard={allowClipboard ? "true" : undefined} {...input} />
       {isPassword && (
-        <button type="button" className="mb-auth-eye" onClick={() => setShow((s) => !s)} aria-pressed={show} aria-controls={id}>
-          {show ? "Hide" : "Show"}
+        <button type="button" className="mb-auth-eye" onClick={() => setShow((s) => !s)} aria-pressed={show} aria-controls={id} aria-label={show ? "Hide password" : "Show password"} title={show ? "Hide password" : "Show password"}>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+            <circle cx="12" cy="12" r="3" />
+            {show && <path d="M3 3l18 18" />}
+          </svg>
         </button>
       )}
       {error && <small id={`${id}-err`} className="mb-auth-error">{error}</small>}
@@ -29,7 +30,7 @@ function Field({ id, label, error, type = "text", allowClipboard = false, ...inp
   );
 }
 
-/** Member log-in or sign-up form (Facebook / Gmail pattern); returns to ?next= (same-site paths only, checked on the server). */
+/** Member log-in or sign-up form; returns to ?next= (same-site paths only, checked on the server). */
 export default function MemberAuthForm({ mode }: { mode: "login" | "signup" }) {
   const params = useSearchParams();
   const next = params.get("next") ?? "/account";
@@ -74,10 +75,10 @@ export default function MemberAuthForm({ mode }: { mode: "login" | "signup" }) {
       {login && (
         <a className="mb-auth-forgot" href={`mailto:${RESET_EMAIL}?subject=${encodeURIComponent("Reset my BaseCamp password")}`}>Forgot password?</a>
       )}
-      <div className="mb-auth-divider" role="separator"><span>or</span></div>
-      <Link className="mb-auth-alt" href={login ? signupHref(next) : loginHref(next)}>
-        {login ? "Create new account" : "Log in to an existing account"}
-      </Link>
+      <p className="mb-auth-switch">
+        {login ? "New to BaseCamp? " : "Already have an account? "}
+        <Link href={login ? signupHref(next) : loginHref(next)} replace>{login ? "Create an account" : "Log in"}</Link>
+      </p>
     </form>
   );
 }

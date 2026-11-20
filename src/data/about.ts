@@ -23,7 +23,7 @@ export const ABOUT_GLANCE = {
 export const DESIGN_HERO = {
   eyebrow: "",
   title: "Built for performance.",
-  intro: "A facility shaped by performance, nature, and place: open-air training, lakes and jungle, and architecture that belongs to the landscape.",
+  intro: "Architecture shaped by training and the landscape.",
   image: "/images/programs/classes-hero.jpg",
   imageAlt: "Athletes training in a brick-and-concrete gym",
 };
@@ -98,49 +98,42 @@ export const EDGE = {
 };
 
 export const PERFORMANCE_NATURE = {
-  eyebrow: "Performance nature",
+  eyebrow: "Designed for outdoors",
   title: "The Outdoor Performance Lab.",
-  sub: "Where nature isn't scenery, it's your training partner.",
-  image: "/images/programs/program-endurance.png",
-  imageAlt: "Athlete running outdoors on an endurance session",
+  sub: "Built so nature does part of the coaching.",
   items: [
-    { title: "Trail-based conditioning", body: "Purpose-built trails for interval training, hill repeats, and technical running. Varying terrain develops agility, strength, and mental toughness together." },
-    { title: "Lake running + water circuits", body: "Shallow-water resistance work along the lake edge, deep-water running for low-impact conditioning, and swimming built into cross-training circuits." },
-    { title: "Obstacle + terrain integration", body: "Logs, rocks, and hills built into workout design: climbing, jumping and crawling through real landscape rather than artificial gym obstacles." },
-    { title: "HYROX-style lakeside events", body: "Racing through nature, rather than inside warehouses. Race-style courses set against lake and mountain scenery." },
-    { title: "Multi-element workouts", body: "Sessions that combine mud, forest, mountain, and water, for a unique training stimulus and mental challenge." },
+    { title: "Trail loops", body: "Intervals, hills, and technical running." },
+    { title: "Lake edge", body: "Shallow-water work and swim circuits." },
+    { title: "Real terrain", body: "Logs, rocks, and hills, not gym props." },
+    { title: "Race courses", body: "HYROX-style lakeside events." },
   ] satisfies Item[],
 };
 
-export const PLACE = {
-  eyebrow: "The place",
-  title: "Lakes and jungle.",
-  lead: "While others do beaches, CamSur offers the freshwater and forest alternative. Cooler temperatures, calmer waters, mountain backdrops: a different kind of paradise.",
-  image: "/images/facilities/facility-background-a1-5-b.jpg",
-  imageAlt: "Architectural render of BaseCamp CamSur's open-air training areas",
-  items: [
-    { title: "Lago Del Rey", body: "A protected lake for paddle training, open water swimming, and water-based conditioning, all year round and without ocean hazards." },
-    { title: "CamSur Watersports Complex", body: "The region's established wakeboarding and water-sports hub, close to BaseCamp." },
-    { title: "Villa Del Rey lodging", body: "Nearby lodging for camps, weekends, and longer training blocks." },
-    { title: "Mountains, lakes, forests", body: "CamSur's natural assets are the raw materials for nature-first training." },
-    { title: "Philippine warmth and accessibility", body: "A fresh alternative to Bali, accessible from Manila, with an established hospitality ecosystem." },
-    { title: "Nature immersion", body: "The natural environment treated as a core wellness modality, alongside structured training." },
-  ] satisfies Item[],
-  link: { label: "Plan your visit", href: "/visit" },
+/** /about/design floor plan: the ground-floor top view with numbered zones (pin x / y in % of the image). */
+export const FLOOR_PLAN = {
+  eyebrow: "The layout",
+  title: "One floor, every zone.",
+  intro: "The ground floor from above.",
+  image: "/images/facilities/top view.png",
+  imageAlt: "Top-down render of the BaseCamp CamSur ground floor with its training, locker, and studio zones",
+  width: 5504,
+  height: 3072,
+  zones: [
+    { label: "Functional training area", x: 20, y: 34 },
+    { label: "Locker rooms & showers", x: 41, y: 52 },
+    { label: "Strength & cardio floor", x: 62, y: 40 },
+    { label: "Café bar", x: 63, y: 78 },
+    { label: "Lounge & reception", x: 80, y: 55 },
+    { label: "Yoga studio", x: 77.5, y: 76 },
+    { label: "Stairs to the recovery floor", x: 81, y: 22 },
+  ],
 };
 
 export const DESIGN = {
-  eyebrow: "Design",
+  eyebrow: "How it's built",
   title: "Grown from the landscape.",
-  intro: "A facility that feels as though it grew organically from the landscape, rather than being imposed upon it.",
-  pillars: [
-    { title: "Modern Tropical", body: "Architecture that responds to climate, while maintaining contemporary aesthetic and professional presence" },
-    { title: "Glass-Forward Design", body: "Breathable spaces with natural light and sightlines that create energy and openness" },
-    { title: "Material Contrast", body: "Steel structure with warm wood accents balancing industrial performance with natural comfort" },
-    { title: "Integrated Landscape", body: "Palm trees and native planting woven into the architecture rather than added around it" },
-  ] satisfies Item[],
-  chips: ["Tropical brutalist (raw concrete, natural timber, local stone)", "Shade-first", "Open-air", "No “mall gym” feel"],
-  quote: "Looks premium. Feels athletic. Films beautifully.",
+  body: "Looks premium. Feels athletic.",
+  pillars: ["Modern tropical", "Glass-forward", "Steel + warm wood", "Planted, not added"],
   image: "/images/facilities/facility-render-a1-3.jpg",
   imageAlt: "Architectural render of the BaseCamp CamSur facility",
 };

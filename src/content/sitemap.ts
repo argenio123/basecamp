@@ -155,11 +155,6 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         summary: "Starting prices for packs, passes, yoga, recovery, camps, and corporate bookings.",
         image: "/images/programs/program-functional.png", imageAlt: "Functional training session", adminTab: "pricing",
       }),
-      page({
-        href: "/membership/join", label: "Join membership", tabLabel: "Join",
-        summary: "Apply for a membership: choose a plan and share your goals.",
-        image: "/images/membership/generated/launch-promotions-hero-basecamp-interior.png", imageAlt: "Members training inside the BaseCamp training hall", adminTab: "pricing",
-      }),
     ],
     menu: {
       text: "Early rates, membership tiers, passes, and recovery pricing.",
@@ -168,7 +163,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         { href: "/membership/founding", label: "Founding members" },
         { href: "/membership/launch-promotions", label: "Launch promotions" },
         { href: "/membership/price-guide", label: "Passes, recovery & more" },
-        { href: "/membership/join", label: "Join membership" },
+        { href: "/membership#tiers", label: "Choose a plan" },
       ],
     },
   },
@@ -232,7 +227,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     ],
     menu: {
       text: "Getting to BaseCamp, and camps & trips for travelers.",
-      image: "/images/facilities/facility-landscape.jpg", imageAlt: "The CamSur landscape around BaseCamp",
+      // Same picture as the /visit hero (VISIT_HERO in src/data/visit.ts).
+      image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
       highlights: [
         { href: "/visit/camps", label: "Camps & trips" },
         { href: "/visit/camps#long-stays", label: "Extended stays" },
@@ -269,7 +265,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     ],
     menu: {
       text: "Southeast Asia's Performance Playground: the story and the build.",
-      image: "/images/facilities/facility-exterior.jpg", imageAlt: "BaseCamp CamSur facility exterior set against the CamSur landscape",
+      // Same picture as the /about hero (src/app/about/page.tsx).
+      image: "/images/facilities/facility-aerial-render.jpg", imageAlt: "Aerial view of the BaseCamp CamSur building, lawns, and parking",
       highlights: [
         { href: "/about/design", label: "Design & place" },
         { href: "/about/the-build", label: "The build" },

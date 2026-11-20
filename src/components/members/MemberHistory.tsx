@@ -32,7 +32,7 @@ export default function MemberHistory({ items }: { items: MemberActivity[] }) {
       ) : (
         <div className="ma-history-empty">
           <div><span>Nothing here yet</span><h3>Your requests will collect here.</h3><p>Bookings, enquiries, membership requests, purchases, and Early Access signups will appear after you submit them.</p></div>
-          <div><Link href="/schedule/book">Book a session</Link><Link href="/membership/join">Join membership</Link></div>
+          <div><Link href="/schedule/book">Book a session</Link><Link href="/membership#tiers">Choose a plan</Link></div>
         </div>
       )}
     </section>
