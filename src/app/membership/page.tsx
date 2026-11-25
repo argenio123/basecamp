@@ -8,6 +8,7 @@ import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
+import "./membership.css";
 
 
 

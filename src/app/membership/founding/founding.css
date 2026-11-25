@@ -1,0 +1,7 @@
+/* Founding page: the big headings ("Founding members" on the pass, "Claim your founding spot." in the closing band)
+   use the display face (Gretaros) like the hero and the at-a-glance statement, instead of the membership section's
+   Poppins h2 style. Only the typeface changes; sizes and spacing stay as they were. */
+html[data-route="page"] main :is(h2.mb-fp-name, .cta-band.ft-cta--display h2) {
+  font-family: var(--font-display), var(--font-poppins), sans-serif !important;
+  font-weight: 400 !important;
+}

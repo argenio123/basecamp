@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
-export type ExploreItem = { href: string; label: string; summary: string; image: string; imageAlt: string };
+export type ExploreItem = { href: string; label: string; summary: string; image: string; imageAlt: string; flipImage?: boolean };
 
 const CYCLE_MS = 4500;
 
@@ -14,7 +14,9 @@ const CYCLE_MS = 4500;
  * the visitor hovers, focuses or taps; hovering or focusing a row makes it active. The photo cross-fades (fade in /
  * fade out). Reduced motion: no auto-cycle, instant switch. On phones each row shows its own photo.
  */
-export default function ScheduleExplore({ eyebrow, title, intro, items }: { eyebrow: string; title: string; intro: string; items: ExploreItem[] }) {
+export default function ScheduleExplore({ eyebrow, title, intro, items, fitImages = false, variant = "split" }: { eyebrow: string; title: string; intro: string; items: ExploreItem[]; fitImages?: boolean; /** "stage": the photo fills the whole section edge to edge, with the copy and a numbered tile grid laid over it. */ variant?: "split" | "stage" }) {
+  const stage = variant === "stage";
+  const pad = (n: number) => String(n).padStart(2, "0");
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [cycleKey, setCycleKey] = useState(0);
@@ -33,7 +35,7 @@ export default function ScheduleExplore({ eyebrow, title, intro, items }: { eyeb
   const pick = (i: number) => { setActive(i); setCycleKey((k) => k + 1); };
 
   return (
-    <section className="section sd-explore" aria-labelledby="sd-explore-title">
+    <section className={`section sd-explore${fitImages ? " sd-explore--fit" : ""}${stage ? " sd-explore--stage" : ""}`} aria-labelledby="sd-explore-title">
       <div className="shell sd-explore-grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
         <div className="sd-explore-copy">
           <div className="sd-explore-head" data-reveal>
@@ -45,12 +47,13 @@ export default function ScheduleExplore({ eyebrow, title, intro, items }: { eyeb
             {items.map((item, i) => (
               <li key={item.href} className={i === active ? "is-active" : undefined} style={{ "--sd-cycle": `${CYCLE_MS}ms` } as CSSProperties}>
                 <Link href={item.href} onMouseEnter={() => pick(i)} onFocus={() => pick(i)}>
-                  <span className="sd-explore-inline" aria-hidden="true">
+                  <span className={`sd-explore-inline${item.flipImage ? " is-flipped" : ""}`} aria-hidden="true">
                     <Image src={item.image} alt="" fill sizes="100vw" className="cover-image" />
                   </span>
+                  {stage && <span className="sd-explore-num" aria-hidden="true">{pad(i + 1)}</span>}
                   <span className="sd-explore-label">{item.label}</span>
                   <span className="sd-explore-summary">{item.summary}</span>
-                  <span className="sd-explore-cta">Explore</span>
+                  {!stage && <span className="sd-explore-cta">Explore</span>}
                 </Link>
                 <span className="sd-explore-bar" aria-hidden="true">
                   <span key={i === active ? `${cycleKey}-${active}` : "idle"} data-run={i === active && !paused ? "" : undefined} />
@@ -63,8 +66,8 @@ export default function ScheduleExplore({ eyebrow, title, intro, items }: { eyeb
         {/* The photo opens the active link. Keyboard and screen-reader users reach the same pages through the list. */}
         <Link href={items[active]?.href ?? "#"} className="sd-explore-media" aria-hidden="true" tabIndex={-1} data-reveal data-reveal-delay="short">
           {items.map((item, i) => (
-            <figure key={item.href} className={i === active ? "is-active" : undefined}>
-              <Image src={item.image} alt="" fill sizes="(max-width: 900px) 100vw, 50vw" className="cover-image" />
+            <figure key={item.href} className={`${i === active ? "is-active" : ""}${item.flipImage ? " is-flipped" : ""}`.trim()}>
+              <Image src={item.image} alt="" fill sizes={stage ? "100vw" : "(max-width: 900px) 100vw, 50vw"} className="cover-image" />
             </figure>
           ))}
         </Link>

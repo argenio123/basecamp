@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
 import HomeScrollReveal from "@/components/HomeScrollReveal";
@@ -7,6 +6,7 @@ import ProgramCoverflow from "@/components/ProgramCoverflow";
 import SocialGallery from "@/components/SocialGallery";
 import HomeHeroMedia from "@/components/home/HomeHeroMedia";
 import HomeOfferModal from "@/components/home/HomeOfferModal";
+import DestinationPillars from "@/components/home/DestinationPillars";
 import Marquee from "@/components/features/Marquee";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import { SECTION_FEATURES } from "@/data/features";
@@ -32,21 +32,21 @@ const destinationPillars = [
     title: "TRAIN",
     description: "Purpose-built performance training zones combining CrossFit, functional fitness, and endurance programming in a world-class outdoor environment.",
     href: "/facilities/training",
-    image: "/images/destination/train.png",
+    image: "/images/destination/generated/train-basecamp-v2.png",
     imagePosition: "center",
   },
   {
     title: "TRANSFORM",
     description: "Comprehensive recovery infrastructure featuring contrast therapy, cold plunge pools, saunas, and dedicated wellness facilities.",
     href: "/facilities/recovery",
-    image: "/images/destination/transform.png",
+    image: "/images/destination/generated/transform-basecamp-v2.png",
     imagePosition: "center",
   },
   {
     title: "THRIVE",
     description: "A thriving community ecosystem where athletes connect, grow, and belong. Designed for long stays and lasting impact.",
     href: "/facilities/lifestyle",
-    image: "/images/destination/thrive.png",
+    image: "/images/destination/generated/thrive-basecamp-v2.png",
     imagePosition: "right center",
   },
 ];
@@ -88,33 +88,7 @@ export default async function Home() {
               &amp; wellness destination
             </h1>
             <p className="destination-summary" data-home-reveal data-home-reveal-delay="short">Basecamp CamSur represents a bold new category in sports tourism: an integrated destination where elite performance training, evidence-based recovery, and authentic lifestyle converge to create transformative experiences.</p>
-            <div className="destination-pillars">
-              {destinationPillars.map(({ title, description, href, image, imagePosition }, index) => (
-                <Link
-                  href={href}
-                  className="destination-pillar"
-                  aria-label={`Learn more about ${title.toLowerCase()}`}
-                  data-home-reveal
-                  data-home-reveal-delay={index === 0 ? "medium" : index === 1 ? "long" : "longer"}
-                  key={title}
-                >
-                  <span className="destination-pillar-media" aria-hidden="true">
-                    <Image
-                      src={image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 760px) calc(100vw - 36px), 33vw"
-                      className={`destination-pillar-image${title === "THRIVE" ? " destination-pillar-image--thrive" : ""}`}
-                      style={{ objectPosition: imagePosition }}
-                    />
-                  </span>
-                  <span className="destination-pillar-content">
-                    <span className="destination-pillar-copy">{description}</span>
-                    <span className={`${gretaros.className} destination-pillar-title`}>{title}</span>
-                  </span>
-                </Link>
-              ))}
-            </div>
+            <DestinationPillars destinations={destinationPillars} titleClassName={gretaros.className} />
           </div>
         </section>
       </div>

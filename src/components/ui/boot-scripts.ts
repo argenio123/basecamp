@@ -5,6 +5,12 @@
 export const ROUTE_SCOPE_SCRIPT = `(function(){var p=location.pathname,d=document.documentElement.dataset;d.route=p==="/"?"home":p==="/login"||p.indexOf("/admin")===0?"admin":"page";d.section=p.split("/")[1]||"home";})();`;
 
 /**
+ * Gives motion and media layouts one mutually-exclusive device profile before first paint. Keeping the tiers on
+ * <html> prevents overlapping media queries from combining mobile and tablet animations during orientation changes.
+ */
+export const DEVICE_PROFILE_SCRIPT = `(function(){var r=document.documentElement,m=matchMedia("(max-width: 600px)"),t=matchMedia("(max-width: 1040px)");function s(){r.dataset.device=m.matches?"mobile":t.matches?"tablet":"desktop";}s();if(m.addEventListener){m.addEventListener("change",s);t.addEventListener("change",s);}else{m.addListener(s);t.addListener(s);}})();`;
+
+/**
  * Starts the scroll-reveal hidden pose before first paint, so content already on screen after a refresh plays its
  * entrance once SiteReveal takes over (instead of painting visible, hiding and re-showing in one flicker).
  * Skipped for the admin and under prefers-reduced-motion. If SiteReveal never claims the page

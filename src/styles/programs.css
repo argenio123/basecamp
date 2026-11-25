@@ -464,6 +464,8 @@
 
 /* ---------- Classes refresh: finder, pathways and comparison ---------- */
 .pr-editorial-hero { position: relative; display: grid; min-height: min(900px, 92svh); overflow: hidden; color: var(--white); background: var(--ink); isolation: isolate; }
+.pr-editorial-media { position: absolute; inset: 0; }
+.pr-editorial-media.is-flipped { transform: scaleX(-1); }
 .pr-editorial-image, .pr-editorial-shade { position: absolute; inset: 0; }
 .pr-editorial-image { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) contrast(1.08); transform: scale(1.025); animation: pr-hero-image .8s cubic-bezier(.22, 1, .36, 1) both; }
 .pr-editorial-shade { z-index: 1; background: linear-gradient(90deg, rgba(10,12,9,.88) 0%, rgba(10,12,9,.5) 55%, rgba(10,12,9,.25) 100%), linear-gradient(0deg, rgba(10,12,9,.76), transparent 58%); }

@@ -125,8 +125,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       highlights: [
         { href: "/facilities/training", label: "Training zones" },
         { href: "/facilities/recovery", label: "Recovery" },
-        { href: "/facilities/lifestyle", label: "Social lounge" },
-        { href: "/facilities/lifestyle", label: "Lockers & showers" },
+        { href: "/facilities/lifestyle", label: "Lounge, café & lockers" },
       ],
     },
   },
@@ -143,17 +142,17 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       page({
         href: "/membership/founding", label: "Founding members", tabLabel: "Founding",
         summary: "A proposed 30% off your first six months or a locked lifetime rate, plus founding perks.",
-        image: "/images/programs/program-endurance.png", imageAlt: "Coach guiding a barbell squat", adminTab: "pricing",
+        image: "/images/membership/generated/founding-members-community.png", imageAlt: "Founding gym members gathering together after their first workout", adminTab: "pricing",
       }),
       page({
         href: "/membership/launch-promotions", label: "Launch promotions", tabLabel: "Promotions",
         summary: "Launch rates on test: introductory membership, weekend day pass, and early-booking camps.",
-        image: "/images/programs/generated/strength-conditioning.png", imageAlt: "Athlete squatting a loaded barbell", adminTab: "pricing",
+        image: "/images/membership/generated/launch-promotions-hero-basecamp-interior.png", imageAlt: "BaseCamp CamSur gym interior", adminTab: "pricing",
       }),
       page({
         href: "/membership/price-guide", label: "Passes, recovery & more", tabLabel: "Price guide",
         summary: "Starting prices for packs, passes, yoga, recovery, camps, and corporate bookings.",
-        image: "/images/programs/program-functional.png", imageAlt: "Functional training session", adminTab: "pricing",
+        image: "/images/membership/generated/price-guide-gym-reception-v2.png", imageAlt: "BaseCamp CamSur gym reception", adminTab: "pricing",
       }),
     ],
     menu: {
@@ -183,8 +182,8 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
         image: "/images/programs/stations/row.jpg", imageAlt: "Athlete on a rowing machine", adminTab: "schedule",
       }),
       page({
-        href: "/schedule/events", label: "Events & night training", tabLabel: "Events",
-        summary: "Night training, competitions, and the events calendar.",
+        href: "/schedule/events", label: "Competitions & events", tabLabel: "Events",
+        summary: "Weekly competitions and leaderboards.",
         image: "/images/programs/generated/endurance.png", imageAlt: "Endurance training session", adminTab: "schedule",
       }),
       page({
@@ -216,13 +215,13 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     pages: [
       page({
         href: "/visit/camps", label: "Camps & trips", tabLabel: "Camps",
-        summary: "Training camps, travel packages, and extended stays for traveling athletes.",
-        image: "/images/destination/thrive.png", imageAlt: "Athlete training on gymnastic rings", adminTab: "pricing",
+        summary: "Training camps and group trips for traveling athletes.",
+        image: "/images/visit/generated/basecamp-camp-group.png", imageAlt: "BaseCamp camp guests relaxing with their coach between training blocks", adminTab: "pricing",
       }),
       page({
         href: "/visit/why-camsur", label: "Why CamSur",
-        summary: "Why athletes train in Camarines Sur, plus Lago del Rey.",
-        image: "/images/facilities/facility-aerial.jpg", imageAlt: "Aerial view of the BaseCamp CamSur site", adminTab: "whyCamsur",
+        summary: "Freshwater, forest, and mountain training in Camarines Sur.",
+        image: "/images/visit/generated/why-camsur-basecamp-community.png", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge", adminTab: "whyCamsur",
       }),
     ],
     menu: {
@@ -231,9 +230,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
       highlights: [
         { href: "/visit/camps", label: "Camps & trips" },
-        { href: "/visit/camps#long-stays", label: "Extended stays" },
         { href: "/visit/why-camsur", label: "Why CamSur" },
-        { href: "/visit/why-camsur#lago-del-rey", label: "Lago del Rey" },
       ],
     },
   },
@@ -436,13 +433,13 @@ export const LEGACY_HASH_REDIRECTS: Readonly<Record<string, Readonly<Record<stri
     corporate: "/membership/price-guide#corporate",
     faq: "/about/faq",
     platform: "/about/faq#platform",
-    "camps-pricing": "/visit/camps#camps-pricing",
+    "camps-pricing": "/membership/price-guide#camps-pricing",
   },
   "/schedule": {
     timetable: "/schedule/timetable",
-    night: "/schedule/events#night",
+    night: "/schedule/events",
     competition: "/schedule/events#competition",
-    events: "/schedule/events#events",
+    events: "/schedule/events",
     book: "/schedule/book",
     platform: "/schedule/book#platform",
   },

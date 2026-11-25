@@ -5,8 +5,12 @@ import { useEffect, useRef } from "react";
 export type HeroVideoSource = {
   /** Desktop file (≈1920px wide). */
   src: string;
-  /** Lighter file for screens up to 900px wide. */
+  /** Smallest file for phone screens up to 600px wide. */
   mobileSrc?: string;
+  /** Mid-sized file for tablet screens up to 1040px wide. */
+  tabletSrc?: string;
+  /** Still frame shown while the selected video buffers. */
+  poster?: string;
 };
 
 /**
@@ -14,7 +18,7 @@ export type HeroVideoSource = {
  * a refresh shows only the video (over the dark hero background), never a still picture first.
  * With prefers-reduced-motion the video is paused on its first frame once the page is interactive.
  */
-export default function HeroVideo({ src, mobileSrc }: HeroVideoSource) {
+export default function HeroVideo({ src, mobileSrc, tabletSrc, poster }: HeroVideoSource) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -33,8 +37,9 @@ export default function HeroVideo({ src, mobileSrc }: HeroVideoSource) {
   }, []);
 
   return (
-    <video ref={ref} className="page-hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1}>
-      {mobileSrc && <source src={mobileSrc} media="(max-width: 900px)" type="video/mp4" />}
+    <video ref={ref} className="page-hero-video" autoPlay muted loop playsInline preload="auto" poster={poster} aria-hidden="true" tabIndex={-1}>
+      {mobileSrc && <source src={mobileSrc} media="(max-width: 600px)" type="video/mp4" />}
+      {tabletSrc && <source src={tabletSrc} media="(max-width: 1040px)" type="video/mp4" />}
       <source src={src} type="video/mp4" />
     </video>
   );

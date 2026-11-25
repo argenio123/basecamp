@@ -97,18 +97,6 @@ export const EDGE = {
   closing: "This is wellness 2.0, where feeling good is backed by objective data and genuine performance improvement.",
 };
 
-export const PERFORMANCE_NATURE = {
-  eyebrow: "Designed for outdoors",
-  title: "The Outdoor Performance Lab.",
-  sub: "Built so nature does part of the coaching.",
-  items: [
-    { title: "Trail loops", body: "Intervals, hills, and technical running." },
-    { title: "Lake edge", body: "Shallow-water work and swim circuits." },
-    { title: "Real terrain", body: "Logs, rocks, and hills, not gym props." },
-    { title: "Race courses", body: "HYROX-style lakeside events." },
-  ] satisfies Item[],
-};
-
 /** /about/design floor plan: the ground-floor top view with numbered zones (pin x / y in % of the image). */
 export const FLOOR_PLAN = {
   eyebrow: "The layout",
@@ -119,23 +107,14 @@ export const FLOOR_PLAN = {
   width: 5504,
   height: 3072,
   zones: [
-    { label: "Functional training area", x: 20, y: 34 },
-    { label: "Locker rooms & showers", x: 41, y: 52 },
-    { label: "Strength & cardio floor", x: 62, y: 40 },
-    { label: "Café bar", x: 63, y: 78 },
-    { label: "Lounge & reception", x: 80, y: 55 },
-    { label: "Yoga studio", x: 77.5, y: 76 },
-    { label: "Stairs to the recovery floor", x: 81, y: 22 },
+    { label: "Functional training area", description: "Open turf and rigs for functional workouts.", x: 20, y: 34 },
+    { label: "Locker rooms & showers", description: "Changing spaces, showers, and daily essentials.", x: 41, y: 52 },
+    { label: "Strength & cardio floor", description: "Free weights and cardio equipment in one zone.", x: 62, y: 40 },
+    { label: "Café bar", description: "Coffee, shakes, and quick post-session refuels.", x: 63, y: 78 },
+    { label: "Lounge & reception", description: "A relaxed welcome and community meeting point.", x: 80, y: 55 },
+    { label: "Yoga studio", description: "A calm space for yoga, mobility, and breathwork.", x: 77.5, y: 76 },
+    { label: "Stairs to the recovery floor", description: "Direct access to dedicated recovery spaces.", x: 81, y: 22 },
   ],
-};
-
-export const DESIGN = {
-  eyebrow: "How it's built",
-  title: "Grown from the landscape.",
-  body: "Looks premium. Feels athletic.",
-  pillars: ["Modern tropical", "Glass-forward", "Steel + warm wood", "Planted, not added"],
-  image: "/images/facilities/facility-render-a1-3.jpg",
-  imageAlt: "Architectural render of the BaseCamp CamSur facility",
 };
 
 export const BUILD = {

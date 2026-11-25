@@ -13,10 +13,8 @@ export const metadata: Metadata = VISIT_META;
 
 /** Summary + image for each Visit menu highlight, so this list mirrors the navbar / footer highlights. */
 const HIGHLIGHT_DETAILS: Record<string, { summary: string; image: string; imageAlt: string }> = {
-  "/visit/camps": { summary: "Training camps, travel packages, and group trips for traveling athletes.", image: "/images/destination/thrive.png", imageAlt: "Athlete training on gymnastic rings" },
-  "/visit/camps#long-stays": { summary: "Stay for weeks or months: training, co-working, and recovery in one place.", image: "/images/destination/train.png", imageAlt: "Coach guiding a stretching session with residences outside" },
-  "/visit/why-camsur": { summary: "Why athletes choose Camarines Sur: cooler lakes, forest, and room to train.", image: "/images/facilities/facility-aerial.jpg", imageAlt: "Aerial view of the BaseCamp CamSur site" },
-  "/visit/why-camsur#lago-del-rey": { summary: "Paddle training, open-water swimming, and conditioning on a protected lake.", image: "/images/facilities/facility-landscape.jpg", imageAlt: "The CamSur landscape around BaseCamp" },
+  "/visit/camps": { summary: "Training camps, travel packages, and group trips for traveling athletes.", image: "/images/visit/generated/camps-and-trips-arrival.png", imageAlt: "Training camp guests arriving with travel bags and meeting their coach" },
+  "/visit/why-camsur": { summary: "Why athletes choose Camarines Sur: cooler lakes, forest, and room to train.", image: "/images/visit/generated/why-camsur-basecamp-community.png", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge" },
 };
 
 // Overview (stage-3 §1/§7): hero → section tabs → at a glance → sub-page cards (Camps, Why CamSur) → getting there + map → CTA.
@@ -37,9 +35,10 @@ export default async function VisitPage() {
       cta={<CtaBand eyebrow={VISIT_CTA.eyebrow} />}
     >
       <ScheduleExplore
+        fitImages
         eyebrow="Plan your visit"
-        title="Camps & CamSur."
-        intro="Training camps, group trips, and extended stays, plus why Camarines Sur is the place to train."
+        title="Train & Travel."
+        intro="Training camps and group trips, plus why Camarines Sur is built for training."
         items={(findPage("/visit", [])?.section.menu?.highlights ?? []).flatMap((h) => {
           const d = HIGHLIGHT_DETAILS[h.href];
           return d ? [{ href: h.href, label: h.label, ...d }] : [];

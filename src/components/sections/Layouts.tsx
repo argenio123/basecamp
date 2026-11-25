@@ -115,10 +115,10 @@ export function Tiles({ id, eyebrow, title, intro, items, badge }: {
   );
 }
 
-/** A plan image with numbered markers (x / y in % of the image) and a matching numbered legend. */
+/** A plan image with numbered hotspots that reveal the zone details on hover or focus. */
 export function Plan({ id, look = "band", eyebrow, title, intro, image, imageAlt, width, height, zones }: {
   id?: string; look?: Tone; eyebrow: string; title: string; intro?: string; image: string; imageAlt: string;
-  width: number; height: number; zones: { label: string; x: number; y: number }[];
+  width: number; height: number; zones: { label: string; description: string; x: number; y: number }[];
 }) {
   return (
     <section id={id} className={`section sd-ev${tone(look)}`}>
@@ -127,10 +127,32 @@ export function Plan({ id, look = "band", eyebrow, title, intro, image, imageAlt
         <div className="lx-plan">
           <figure className="lx-plan-map" data-reveal style={{ aspectRatio: `${width} / ${height}` }}>
             <Image src={image} alt={imageAlt} fill sizes="(max-width: 1000px) 100vw, 70vw" className="cover-image" />
-            {zones.map((z, n) => <span key={z.label} className="lx-plan-pin" style={{ left: `${z.x}%`, top: `${z.y}%` }} aria-hidden="true">{n + 1}</span>)}
+            <ol className="lx-plan-labels" aria-label="Floor plan zones">
+              {zones.map((z, n) => (
+                <li
+                  key={z.label}
+                  className="lx-plan-pin"
+                  data-align={z.x > 72 ? "end" : "start"}
+                  style={{ left: `${z.x}%`, top: `${z.y}%` }}
+                >
+                  <button type="button" aria-label={`${n + 1}. ${z.label}. ${z.description}`}>
+                    <span>{n + 1}</span>
+                    <span className="lx-plan-pin-copy">
+                      <strong>{z.label}</strong>
+                      <small>{z.description}</small>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
           </figure>
-          <ol className="lx-plan-legend" data-reveal="stagger">
-            {zones.map((z, n) => <li key={z.label}><span>{n + 1}</span>{z.label}</li>)}
+          <ol className="lx-plan-device-legend" aria-label="Floor plan zone details">
+            {zones.map((z, n) => (
+              <li key={z.label}>
+                <span>{n + 1}</span>
+                <div><strong>{z.label}</strong><p>{z.description}</p></div>
+              </li>
+            ))}
           </ol>
         </div>
       </div>

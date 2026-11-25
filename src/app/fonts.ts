@@ -11,3 +11,4 @@ export const gretaros = localFont({
   style: "normal",
   variable: "--font-display",
 });
+

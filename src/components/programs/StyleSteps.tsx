@@ -11,7 +11,8 @@ export type StyleStep = { title: string; body: string; image: string };
  * scroll frame, so it advances and reverses smoothly in both directions without skipping. Hover also activates a
  * step. On phones each step shows its own photo inline instead.
  */
-export default function StyleSteps({ steps, className }: { steps: StyleStep[]; className: string }) {
+export default function StyleSteps({ steps, className, caption }: { steps: StyleStep[]; className: string; /** Photo caption prefix; defaults to "Illustrative session view · {className}". */ caption?: string }) {
+  const captionPrefix = caption ?? `Illustrative session view · ${className}`;
   const [active, setActive] = useState(0);
   const items = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -47,7 +48,7 @@ export default function StyleSteps({ steps, className }: { steps: StyleStep[]; c
         {steps.map((step, i) => (
           <figure key={step.title} className={i === active ? "is-active" : undefined}>
             <Image src={step.image} alt="" fill sizes="(max-width: 900px) 100vw, 55vw" className="cover-image" />
-            <figcaption>Illustrative session view · {className} · {step.title}</figcaption>
+            <figcaption>{captionPrefix} · {step.title}</figcaption>
           </figure>
         ))}
       </div>

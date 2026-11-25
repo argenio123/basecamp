@@ -697,3 +697,272 @@ html[data-route="page"] main :is(.page-hero, .pr-editorial-hero, .ab-editorial-h
 html[data-route="page"] main .page-hero.page-hero--ratio { display: flex; align-items: flex-end; padding-top: calc(var(--header-height) + 60px); }
 html[data-route="page"] main .page-hero.page-hero--ratio .page-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
 html[data-route="page"] main .pr-editorial-hero--full-image .pr-editorial-image { object-fit: cover; }
+
+/* ---------- Explicit device profiles ----------
+   DEVICE_PROFILE_SCRIPT assigns exactly one tier before first paint. These rules sit last so mobile, tablet and
+   desktop never combine animation directions, prompt layouts or hero focal points at overlapping breakpoints. */
+@keyframes device-prompt-mobile-in {
+  from { opacity: 0; transform: translate3d(0, 36px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes device-prompt-mobile-out {
+  from { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 0; transform: translate3d(0, 26px, 0); }
+}
+@keyframes device-prompt-tablet-in {
+  from { opacity: 0; transform: translate3d(0, 24px, 0) scale(.96); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes device-prompt-tablet-out {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to { opacity: 0; transform: translate3d(0, 18px, 0) scale(.98); }
+}
+@keyframes device-hero-mobile-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes device-hero-tablet-in {
+  from { opacity: 0; transform: translateY(24px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+:where(picture, figure, video, img, svg, canvas, iframe) { max-inline-size: 100%; }
+:where(picture, figure, [class$="-media"]) { min-inline-size: 0; }
+:where(.home-hero-video, .page-hero-video) { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+html[data-device="mobile"] :is(.home-hero-video, .page-hero-video),
+html[data-device="tablet"] :is(.home-hero-video, .page-hero-video) {
+  object-fit: contain;
+  object-position: center;
+  background: var(--ink);
+}
+html[data-device="mobile"][data-route="page"] main .page-hero.page-hero--ratio .page-hero-video,
+html[data-device="tablet"][data-route="page"] main .page-hero.page-hero--ratio .page-hero-video { object-fit: contain; object-position: center; }
+html[data-device="desktop"] .home-hero-video { object-position: center 60%; }
+
+html[data-device="mobile"] .home-scroll-prompt {
+  right: 14px !important;
+  bottom: 58px !important;
+  width: calc(100vw - 28px);
+  max-width: none;
+  padding: 22px;
+}
+html[data-device="mobile"] .home-scroll-prompt > div { display: grid; grid-template-columns: 1fr; }
+html[data-device="mobile"] .home-scroll-prompt :is(.home-scroll-prompt-primary, .home-scroll-prompt-login) { width: 100%; }
+html[data-device="mobile"] .home-scroll-prompt[data-visible="true"] { animation-name: device-prompt-mobile-in; animation-duration: .46s; }
+html[data-device="mobile"] .home-scroll-prompt[data-visible="false"] { animation-name: device-prompt-mobile-out; animation-duration: .28s; }
+
+html[data-device="tablet"] .home-scroll-prompt {
+  right: 20px !important;
+  bottom: 58px !important;
+  width: min(460px, calc(100vw - 40px));
+  max-width: 460px;
+  padding: 24px;
+}
+html[data-device="tablet"] .home-scroll-prompt > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-device="tablet"] .home-scroll-prompt :is(.home-scroll-prompt-primary, .home-scroll-prompt-login) { width: 100%; }
+html[data-device="tablet"] .home-scroll-prompt[data-visible="true"] { animation-name: device-prompt-tablet-in; animation-duration: .56s; }
+html[data-device="tablet"] .home-scroll-prompt[data-visible="false"] { animation-name: device-prompt-tablet-out; animation-duration: .32s; }
+
+html[data-device="desktop"] .home-scroll-prompt[data-visible="true"] { animation-name: home-scroll-prompt-in; }
+html[data-device="desktop"] .home-scroll-prompt[data-visible="false"] { animation-name: home-scroll-prompt-out; }
+
+html[data-device="mobile"] .home-offer-dialog { transform: translateY(72px); }
+html[data-device="tablet"] .home-offer-dialog { transform: translateY(26px) scale(.93); }
+html[data-device] .home-offer-modal[data-open="true"] .home-offer-dialog { transform: none; }
+
+html[data-device="mobile"] :is(.home-hero-content, .page-hero-content > *) { animation-name: device-hero-mobile-in; animation-duration: .58s; }
+html[data-device="tablet"] :is(.home-hero-content, .page-hero-content > *) { animation-name: device-hero-tablet-in; animation-duration: .78s; }
+html[data-device="desktop"] :is(.home-hero-content, .page-hero-content > *) { animation-name: hero-copy-in; }
+
+html[data-device="mobile"].home-reveal-ready [data-home-reveal] { transform: translateY(16px); transition-duration: .48s, .56s; }
+html[data-device="mobile"].home-reveal-ready [data-home-reveal][data-home-reveal-direction="up"] { transform: translateY(-16px); }
+html[data-device="tablet"].home-reveal-ready [data-home-reveal] { transform: translateY(30px) scale(.99); transition-duration: .62s, .78s; }
+html[data-device="tablet"].home-reveal-ready [data-home-reveal][data-home-reveal-direction="up"] { transform: translateY(-30px) scale(.99); }
+
+html[data-device="mobile"].reveal-ready [data-reveal]:not([data-reveal="stagger"]),
+html[data-device="mobile"].reveal-ready [data-reveal="stagger"] > * { transform: translateY(14px); transition-duration: .48s, .56s; }
+html[data-device="mobile"].reveal-ready [data-reveal][data-reveal-direction="up"]:not([data-reveal="stagger"]),
+html[data-device="mobile"].reveal-ready [data-reveal="stagger"][data-reveal-direction="up"] > * { transform: translateY(-14px); }
+html[data-device="tablet"].reveal-ready [data-reveal]:not([data-reveal="stagger"]),
+html[data-device="tablet"].reveal-ready [data-reveal="stagger"] > * { transform: translateY(26px) scale(.99); transition-duration: .62s, .78s; }
+html[data-device="tablet"].reveal-ready [data-reveal][data-reveal-direction="up"]:not([data-reveal="stagger"]),
+html[data-device="tablet"].reveal-ready [data-reveal="stagger"][data-reveal-direction="up"] > * { transform: translateY(-26px) scale(.99); }
+
+html[data-device].home-reveal-ready [data-home-reveal][data-home-reveal-visible="true"],
+html[data-device].reveal-ready [data-reveal][data-reveal-visible="true"]:not([data-reveal="stagger"]),
+html[data-device].reveal-ready [data-reveal="stagger"][data-reveal-visible="true"] > * { transform: none; }
+
+html[data-device="tablet"] .destination-pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html[data-device="tablet"] .destination-pillar:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); min-height: 420px; aspect-ratio: .82; }
+html[data-device="mobile"] .destination-pillars { grid-template-columns: 1fr; }
+html[data-device="mobile"] .destination-pillar { min-height: 420px; aspect-ratio: .9; }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-device] :is(.home-scroll-prompt[data-visible], .home-hero-content, .page-hero-content > *) { animation: none; transform: none; }
+  html[data-device] .home-offer-dialog { transform: none; }
+  html[data-device].home-reveal-ready [data-home-reveal],
+  html[data-device].reveal-ready [data-reveal]:not([data-reveal="stagger"]),
+  html[data-device].reveal-ready [data-reveal="stagger"] > * { transition: none; }
+}
+
+/* ---------- Module-wide device contracts ----------
+   Desktop/laptop keeps each module's authored animation. Phone and tablet use their own mutually-exclusive entry
+   motion and collection layouts. Content that was previously hover-only gets a persistent device presentation. */
+@keyframes device-module-mobile-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes device-module-tablet-in {
+  from { opacity: 0; transform: translateY(26px) scale(.975); }
+  to { opacity: 1; transform: none; }
+}
+
+html[data-device="mobile"] {
+  --device-section-space: 64px;
+  --device-card-radius: 18px;
+}
+html[data-device="tablet"] {
+  --device-section-space: 88px;
+  --device-card-radius: 22px;
+}
+html[data-device="desktop"] {
+  --device-section-space: clamp(88px, 8vw, 132px);
+  --device-card-radius: 24px;
+}
+
+html[data-device="mobile"] :is(.shell, .header-shell) { width: min(1280px, calc(100% - 28px)); }
+html[data-device="tablet"] :is(.shell, .header-shell) { width: min(1280px, calc(100% - 48px)); }
+html:is([data-device="mobile"], [data-device="tablet"]) main .section:not(.sd-explore--stage):not(.sd-booking-choices) { padding-block: var(--device-section-space); }
+
+/* Collection modules: one column on phones, two on tablets, authored desktop grids on laptops/desktops. */
+html[data-device="mobile"] main :is(
+  .destination-pillars, .nv-cards, .nv-related-list, .hm-events-grid, .hm-quote-grid, .hm-member-prices,
+  .pr-card-grid-3, .pr-card-grid-4, .pr-program-grid, .pr-plan-grid, .pr-class-grid, .pr-workout-card-grid,
+  .fc-items, .fc-items-2, .fc-items-3, .fc-items-5, .fc-pillars, .fc-zone-cards, .fc-recovery-grid,
+  .fc-recovery-extras, .fc-fuel, .fc-equip-grid, .fc-stat-list, .fc-grid-2, .fc-grid-3, .fc-grid-4,
+  .fc-tabgrid, .fc-tabgrid--2, .fc-tabgrid--3, .fc-tabgrid--5, .fc-tabgrid--6, .fc-tabgrid--media,
+  .mb-tiers, .mb-promos-grid, .ab-diff-grid, .ab-build-grid, .ab-proof, .ab-place-list,
+  .ab-design-pillars, .ct9-topics, .ct11-cards, .bd-checks, .ma-actions, .ma-summary,
+  .lx-cards, .lx-tiles, .lx-stats
+) { grid-template-columns: minmax(0, 1fr); }
+
+html[data-device="tablet"] main :is(
+  .destination-pillars, .nv-cards, .nv-related-list, .hm-events-grid, .hm-quote-grid, .hm-member-prices,
+  .pr-card-grid-3, .pr-card-grid-4, .pr-program-grid, .pr-plan-grid, .pr-class-grid, .pr-workout-card-grid,
+  .fc-items, .fc-items-2, .fc-items-3, .fc-items-5, .fc-pillars, .fc-zone-cards, .fc-recovery-grid,
+  .fc-recovery-extras, .fc-fuel, .fc-equip-grid, .fc-stat-list, .fc-grid-2, .fc-grid-3, .fc-grid-4,
+  .fc-tabgrid, .fc-tabgrid--2, .fc-tabgrid--3, .fc-tabgrid--5, .fc-tabgrid--6, .fc-tabgrid--media,
+  .mb-tiers, .mb-promos-grid, .ab-diff-grid, .ab-build-grid, .ab-proof, .ab-place-list,
+  .ab-design-pillars, .ct9-topics, .ct11-cards, .bd-checks, .ma-actions, .ma-summary,
+  .lx-cards, .lx-tiles, .lx-stats
+) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+html[data-device="tablet"] main :is(.mb-tier, .mb-promo-card):last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* Phone modules are compact and stacked; tablet cards retain more breathing room and side-by-side actions. */
+html[data-device="mobile"] main :is(.nv-card, .pr-tile, .fc-card, .lx-card-copy, .ma-action) { border-radius: var(--device-card-radius); }
+html[data-device="mobile"] main :is(.button-row, .home-offer-buttons) { align-items: stretch; flex-direction: column; }
+html[data-device="mobile"] main :is(.button-row, .home-offer-buttons) > * { width: 100%; }
+html[data-device="tablet"] main :is(.button-row, .home-offer-buttons) { align-items: center; flex-direction: row; }
+
+/* Persist names, labels and descriptions on non-hover devices. */
+html:is([data-device="mobile"], [data-device="tablet"]) .social-rail-overlay { opacity: 1; background: linear-gradient(180deg, transparent 48%, rgba(21,23,19,.86) 100%); }
+html:is([data-device="mobile"], [data-device="tablet"]) .program-coverflow-card[data-offset="0"] .program-coverflow-description { max-height: 160px; margin-top: 14px; opacity: 1; transform: none; }
+html:is([data-device="mobile"], [data-device="tablet"]) .sd-explore--stage .sd-explore-summary { max-height: 3.2em; margin-top: 8px; opacity: 1; transform: none; }
+html:is([data-device="mobile"], [data-device="tablet"]) .pr-workout-card-flow { display: flex; max-height: 100px; }
+html:is([data-device="mobile"], [data-device="tablet"]) .pr-workout-card-flow li { opacity: 1; transform: none; }
+html:is([data-device="mobile"], [data-device="tablet"]) .sd-ev-compete--short .sd-ev-desc { display: block; }
+html:is([data-device="mobile"], [data-device="tablet"]) .mb-auth .mb-auth-lead { display: block; }
+html:is([data-device="mobile"], [data-device="tablet"]) .mb-auth .mb-auth-perks { display: grid; }
+html:is([data-device="mobile"], [data-device="tablet"]) .ma-settings-sidebar nav a small,
+html:is([data-device="mobile"], [data-device="tablet"]) .ct10-num,
+html:is([data-device="mobile"], [data-device="tablet"]) #timetable :is(.sd-app-days em, .sd-cal-month small) { display: initial; }
+html:is([data-device="mobile"], [data-device="tablet"]) .fc-show-dot[aria-current="true"] .fc-show-dot-label { display: block; opacity: 1; transform: translate(0, -50%); }
+
+/* The numbered plan stays readable while the complete text moves into a device-specific legend below it. */
+.lx-plan-device-legend { display: none; margin: 0; padding: 0; list-style: none; }
+html:is([data-device="mobile"], [data-device="tablet"]) .lx-plan-device-legend {
+  display: grid;
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+}
+html[data-device="mobile"] .lx-plan-device-legend { grid-template-columns: minmax(0, 1fr); }
+html[data-device="tablet"] .lx-plan-device-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html:is([data-device="mobile"], [data-device="tablet"]) .lx-plan-device-legend li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; padding: 18px; background: var(--white); }
+html:is([data-device="mobile"], [data-device="tablet"]) .lx-plan-device-legend li > span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--signal); color: var(--ink); font: 800 12px/1 var(--font-poppins), sans-serif; }
+html:is([data-device="mobile"], [data-device="tablet"]) .lx-plan-device-legend strong { display: block; font: 700 14px/1.25 var(--font-poppins), sans-serif; }
+html:is([data-device="mobile"], [data-device="tablet"]) .lx-plan-device-legend p { margin: 4px 0 0; color: var(--olive); font-size: 13px; line-height: 1.45; }
+
+/* Module animation restriction: mobile rises; tablet rises and settles; desktop/laptop keeps authored motion. */
+html[data-device="mobile"] main :is(
+  .pr-editorial-hero h1, .pr-editorial-foot, .ab-editorial-kicker, .ab-editorial-hero h1,
+  .ab-editorial-hero-foot, .ab-simple-hero-content h1, .jf-q, .jf-intro-copy > *, .jf-facts li,
+  .jf-intro-media figcaption, .mb-auth[data-anim] .mb-auth-eyebrow, .mb-auth[data-anim] .mb-auth-title,
+  .mb-auth[data-anim] .mb-auth-lead, .mb-auth[data-anim] .mb-auth-perks li, .mb-auth[data-anim] .mb-auth-card,
+  .ma-hero-copy, .ma-profile-card, .ma-action, .ma-history, .ma-settings, .fc-tabgrid--animate > li,
+  #timetable .sd-app-dayname, #timetable .sd-app-slot
+) { animation-name: device-module-mobile-in; }
+
+html[data-device="tablet"] main :is(
+  .pr-editorial-hero h1, .pr-editorial-foot, .ab-editorial-kicker, .ab-editorial-hero h1,
+  .ab-editorial-hero-foot, .ab-simple-hero-content h1, .jf-q, .jf-intro-copy > *, .jf-facts li,
+  .jf-intro-media figcaption, .mb-auth[data-anim] .mb-auth-eyebrow, .mb-auth[data-anim] .mb-auth-title,
+  .mb-auth[data-anim] .mb-auth-lead, .mb-auth[data-anim] .mb-auth-perks li, .mb-auth[data-anim] .mb-auth-card,
+  .ma-hero-copy, .ma-profile-card, .ma-action, .ma-history, .ma-settings, .fc-tabgrid--animate > li,
+  #timetable .sd-app-dayname, #timetable .sd-app-slot
+) { animation-name: device-module-tablet-in; }
+
+html[data-device="mobile"] .social-modal-card:is(.is-opening, .is-forward, .is-backward) { animation-name: device-module-mobile-in; }
+html[data-device="tablet"] .social-modal-card:is(.is-opening, .is-forward, .is-backward) { animation-name: device-module-tablet-in; }
+html[data-device="mobile"] .fc-show-copy > * { transform: translateY(16px); transition-duration: .45s, .55s; }
+html[data-device="tablet"] .fc-show-copy > * { transform: translateY(24px) scale(.98); transition-duration: .55s, .72s; }
+html:is([data-device="mobile"], [data-device="tablet"]) .fc-show-slide.is-active .fc-show-copy > * { transform: none; }
+
+/* Destination cards: one tap follows the link. Mobile/tablet keep only a short physical press response. */
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .18s ease;
+}
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar::after,
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:hover::after {
+  background: linear-gradient(180deg, rgba(21,23,19,.03) 34%, rgba(21,23,19,.78) 100%);
+}
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar-copy,
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:hover .destination-pillar-copy {
+  top: auto;
+  right: clamp(22px, 5cqi, 40px);
+  bottom: 108px;
+  left: clamp(22px, 5cqi, 40px);
+  max-width: 34ch;
+  font-size: clamp(14px, 3.8cqi, 18px);
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+}
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar-title,
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:hover .destination-pillar-title,
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:nth-child(1) .destination-pillar-title,
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:nth-child(3) .destination-pillar-title {
+  right: 16px;
+  bottom: 28px;
+  left: 16px;
+  color: var(--signal);
+  font-size: clamp(42px, 14cqi, 82px);
+  white-space: nowrap;
+  opacity: .92;
+  transform: none;
+}
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:nth-child(2) .destination-pillar-title {
+  font-size: clamp(34px, 10.5cqi, 64px);
+}
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:hover .destination-pillar-image { filter: saturate(.9) contrast(1.03); opacity: 1; transform: scale(1.01); }
+html:is([data-device="mobile"], [data-device="tablet"]) .destination-pillar:active { transform: scale(.985); }
+
+@media (prefers-reduced-motion: reduce) {
+  html:is([data-device="mobile"], [data-device="tablet"]) main *,
+  html:is([data-device="mobile"], [data-device="tablet"]) main *::before,
+  html:is([data-device="mobile"], [data-device="tablet"]) main *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}

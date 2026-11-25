@@ -1,6 +1,4 @@
-import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import AccountSettingsNav from "@/components/members/AccountSettingsNav";
 import AccountForms from "@/components/members/AccountForms";
@@ -16,13 +14,6 @@ export const metadata: Metadata = {
 
 export const instant = false;
 
-const QUICK_ACTIONS = [
-  { label: "Book a session", href: "/schedule/book", icon: "calendar" },
-  { label: "View timetable", href: "/schedule/timetable", icon: "clock" },
-  { label: "Choose a plan", href: "/membership#tiers", icon: "bolt" },
-  { label: "Payments", href: "/account/payments", icon: "card" },
-] as const;
-
 const GOALS: Record<string, string> = {
   strength: "Build strength",
   conditioning: "Improve conditioning",
@@ -30,13 +21,6 @@ const GOALS: Record<string, string> = {
   recovery: "Prioritize recovery",
   competition: "Prepare to compete",
 };
-
-function ActionIcon({ name }: { name: "calendar" | "clock" | "bolt" | "card" }) {
-  if (name === "card") return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2" /><path d="M3 10h18M7 15h4" /></svg>;
-  if (name === "calendar") return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" /></svg>;
-  if (name === "clock") return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></svg>;
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-7 12h6l-1 8 7-12h-6l1-8Z" /></svg>;
-}
 
 export default async function MemberAccountPage() {
   const member = await currentMember();
@@ -66,18 +50,6 @@ export default async function MemberAccountPage() {
             </div>
 
             <AccountForms email={member.email} profile={profile} />
-
-            <section className="ma-member-shortcuts" aria-labelledby="member-shortcuts-title">
-              <header><p>Member shortcuts</p><h2 id="member-shortcuts-title">What would you like to do?</h2></header>
-              <div className="ma-actions" aria-label="Member quick actions">
-                {QUICK_ACTIONS.map((action, index) => (
-                  <Link href={action.href} className="ma-action" key={action.href} style={{ "--i": index } as CSSProperties}>
-                    <span className="ma-action-icon"><ActionIcon name={action.icon} /></span>
-                    <span><strong>{action.label}</strong></span>
-                  </Link>
-                ))}
-              </div>
-            </section>
           </div>
         </div>
       </div>

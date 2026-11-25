@@ -13,6 +13,7 @@ type ClassesEditorialHeroProps = {
   minimalMeta?: boolean;
   /** Size the hero to the photo's own 1920×1072 frame on desktop so the whole image shows (no top/bottom crop). */
   fullImage?: boolean;
+  flipImage?: boolean;
 };
 
 const VARIANT_LABEL: Record<ClassesEditorialHeroProps["variant"], string> = {
@@ -24,10 +25,12 @@ const VARIANT_LABEL: Record<ClassesEditorialHeroProps["variant"], string> = {
   team: "Group format",
 };
 
-export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, image, imageAlt, variant, stat, statLabel, minimalMeta = false, fullImage = false }: ClassesEditorialHeroProps) {
+export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, image, imageAlt, variant, stat, statLabel, minimalMeta = false, fullImage = false, flipImage = false }: ClassesEditorialHeroProps) {
   return (
     <section className={`pr-editorial-hero pr-editorial-hero-${variant}${fullImage ? " pr-editorial-hero--full-image" : ""}`} aria-labelledby="pr-editorial-title">
-      <Image src={image} alt={imageAlt} fill priority sizes="100vw" className="pr-editorial-image" />
+      <div className={`pr-editorial-media${flipImage ? " is-flipped" : ""}`}>
+        <Image src={image} alt={imageAlt} fill priority sizes="100vw" className="pr-editorial-image" />
+      </div>
       <span className="pr-editorial-shade" aria-hidden="true" />
       <div className="shell pr-editorial-inner">
         {!minimalMeta && <div className="pr-editorial-kicker"><span>{chapter}</span><p>{eyebrow}</p><strong>{VARIANT_LABEL[variant]}</strong></div>}

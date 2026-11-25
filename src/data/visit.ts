@@ -1,5 +1,5 @@
 // Static visit copy (spec §C.5, deck pp.53–58, 66). Editable data: `whyCamsur`, `settings.contact`, pricing group `camps`.
-// Stage 3 (§1): /visit = getting there + map; /visit/camps = camps + camps pricing + long stays; /visit/why-camsur = why CamSur + Lago Del Rey.
+// Stage 3 (§1): /visit = getting there + map; /visit/camps = camps + pricing; /visit/why-camsur = destination reasons + lake training.
 import type { Availability } from "@/content/types";
 
 export type VisitItem = { title: string; body?: string; availability?: Availability };
@@ -40,14 +40,14 @@ export const VISIT_CTA = { eyebrow: "Plan your visit" };
 // ---------- /visit/why-camsur ----------
 export const WHY_META = {
   title: "Why CamSur",
-  description: "Why train in Camarines Sur: the freshwater and forest alternative to Bali and Phuket, with a year-round tropical climate and water training on Lago Del Rey.",
+  description: "Train year-round in Camarines Sur, with freshwater lakes, forest trails, and mountain terrain.",
 };
 
 export const WHY_HERO = {
   title: "Train where nature pushes back.",
   intro: "Lakes, forest, and mountains, not beaches.",
-  image: "/images/programs/generated/recovery-mobility.png",
-  imageAlt: "Coach guiding a mobility session in the open-air gym with tropical hills behind",
+  image: "/images/visit/generated/why-camsur-basecamp-community.png",
+  imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge",
 };
 
 export const WHY_GLANCE = {
@@ -55,88 +55,65 @@ export const WHY_GLANCE = {
   eyebrow: "Why CamSur",
 };
 
-/** Four reasons as big words + one line (short versions of the deck's why-CamSur reasons). */
+export const WHY_STATS_INTRO = "CamSur combines reliable outdoor conditions, freshwater training, mountain terrain, and practical access through nearby regional airports.";
+
+/** Four reasons as big words with a concise explanation of the training benefit. */
 export const WHY_STATS = [
-  { value: "365", label: "Days of outdoor training a year." },
-  { value: "Lakes", label: "Freshwater and forest, not beach." },
-  { value: "Cooler", label: "Calmer water, mountain backdrops." },
-  { value: "Manila", label: "A short flight to Naga or Legazpi." },
+  { value: "365", label: "Train outdoors throughout the year, with warm weather and long usable training days." },
+  { value: "Lakes", label: "Freshwater supports open-water swimming, paddling, wakeboarding, and low-impact conditioning." },
+  { value: "Cooler", label: "Calmer mornings and mountain air make longer endurance sessions more comfortable." },
+  { value: "Nearby", label: "Fly through Naga or Legazpi, then continue by road to BaseCamp in Pili." },
 ];
 
-export const LAGO = {
-  eyebrow: "Lago Del Rey",
-  title: "Train on the water.",
-  body: "A protected lake for year-round water training.",
-  note: "Partner experiences",
-  chips: ["Paddle training", "Open-water swims", "Wakeboarding at CWC", "Trails", "Triathlon courses", "Sunrise hikes"],
-  image: "/images/programs/generated/functional-training.png",
-  imageAlt: "Athlete driving a sled in the open-air gym with the lake and mountains behind",
-};
-
-/** Bali vs Phuket vs CamSur, as three dark tiles. */
+/** Three concise reasons to choose CamSur. */
 export const WHY_CONTRAST = {
-  eyebrow: "The difference",
-  title: "Feel good. Train hard. Prove it.",
+  eyebrow: "Why it works",
+  title: "Built for training.",
+  intro: "The landscape adds useful training variety without pulling athletes far away from BaseCamp.",
   items: [
-    { title: "Bali", body: "Feel good: leave relaxed." },
-    { title: "Phuket", body: "Train hard: leave exhausted." },
-    { title: "CamSur", body: "Prove results: leave with the data." },
+    { title: "Freshwater", body: "Calm inland water creates a controlled setting for open-water swims, paddle sessions, and recovery days." },
+    { title: "Mountains", body: "Nearby trails and sustained climbs add elevation, technical terrain, and aerobic variety to every camp." },
+    { title: "Year-round", body: "CamSur's tropical climate keeps outdoor sessions practical across the seasons, from sunrise conditioning to evening runs." },
   ],
 };
 
 // ---------- /visit/camps ----------
 export const CAMPS_META = {
   title: "Camps & Trips",
-  description: "Training camps, group trips, and long stays at BaseCamp CamSur: day clinics, weekend and week-long immersive camps with lodging at Villa Del Rey, and long stays for remote workers. Inquiry only.",
+  description: "Weekend camps, week-long training trips, and CamSur field trips at BaseCamp CamSur.",
 };
 
 export const CAMPS_HERO = {
   title: "Train hard. Stay longer.",
   intro: "Train, recover, and stay together.",
-  image: "/images/membership/generated/launch-promotions-hero-basecamp-interior.png",
-  imageAlt: "A group of athletes training together around a sled at BaseCamp CamSur",
+  image: "/images/visit/generated/camps-and-trips-arrival.png",
+  imageAlt: "Training camp guests arriving with travel bags and meeting their coach",
 };
 
 export const CAMPS_GLANCE = {
-  summary: "One-day clinics.\nWeek-long camps.\nStays that last months.",
+  summary: "Weekend camps.\nWeek-long trips.\nCamSur field trips.",
 };
 
-/** Camp types (phase 2, inquiry only) as photo cards; each line says what the camper gets. */
+/** Why camp at BaseCamp (phase 2, inquiry only): the class-page step layout, one photo per benefit. */
 export const CAMPS = {
-  eyebrow: "Camps",
-  title: "Pick your camp.",
-  intro: "Phase 2 · inquiry only.",
-  tag: "Phase 2 · Inquiry",
-  types: [
-    { title: "Weekend all-inclusive", body: "Train, eat, and sleep at Villa Del Rey. Nothing to plan.", image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled in the open-air gym" },
-    { title: "Multi-sport camps", body: "Race-ready prep for HYROX-style, CrossFit-style, triathlon, and OCR.", image: "/images/programs/generated/strength-conditioning.png", imageAlt: "Athlete squatting a loaded barbell in the open-air gym" },
-    { title: "30-day transformation", body: "A month of coaching with before-and-after testing.", image: "/images/destination/transform.png", imageAlt: "Athletes training together with kettlebells" },
-    { title: "Trail + mindfulness trips", body: "Run the trails, then reset your head.", image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running in the open-air gym with mountains behind" },
+  eyebrow: "Why camp at BaseCamp · 4 benefits",
+  title: "More than a training trip.",
+  caption: "BaseCamp camps & trips · Phase 2 inquiry",
+  benefits: [
+    { title: "Coached from day one", body: "Every training block is planned and led by a BaseCamp coach.", image: "/images/visit/generated/basecamp-camp-group.png" },
+    { title: "Recovery on site", body: "Sauna, ice bath, massage, and physio between sessions.", image: "/images/facilities/2F Plunge.png" },
+    { title: "CamSur on your doorstep", body: "Trails, mountains, and fresh water close to camp.", image: "/images/visit/generated/why-camsur-lake-training.png" },
+    { title: "Train as one crew", body: "Train, eat, and stay together with your group.", image: "/images/membership/generated/founding-members-community.png" },
   ],
   flowEyebrow: "The camp experience",
-  flowTitle: "Test. Train. Retest.",
+  flowTitle: "Train. Explore. Recover.",
+  flowNote: "Every camp follows the same rhythm, from the day you arrive to your last recovery session.",
   flow: [
-    { value: "Test", label: "Baseline testing on day one." },
-    { value: "Train", label: "Coached blocks built for your goal." },
-    { value: "Recover", label: "Heat, ice, and therapy zones." },
-    { value: "Retest", label: "Leave with your results." },
+    { value: "Arrive", label: "Meet your coach and settle in." },
+    { value: "Train", label: "Coached sessions at BaseCamp." },
+    { value: "Explore", label: "Run trails and swim fresh water." },
+    { value: "Recover", label: "Unwind with heat, ice, and therapy." },
   ],
-  pricesTitle: "Camp packages",
-  enquiryLabel: "Inquiry only",
-  requestLabel: "Request this camp",
-  pricingEnquiry: { label: "Inquire about camps", href: "/contact?interest=training-camp" },
-};
-
-/** Groups + long stays, as one photo + text section (#long-stays). */
-export const LONG_STAYS = {
-  eyebrow: "Groups & long stays",
-  title: "Bring your crew. Stay for months.",
-  body: "Coaches bring their communities. Remote workers base themselves here.",
-  who: ["Coaches & their crews", "International groups", "Weekenders", "Digital nomads"],
-  availability: "planned" as Availability,
-  image: "/images/destination/train.png",
-  imageAlt: "Coach guiding a stretching session in a studio with residences outside",
-  cta: { label: "Inquire about a group camp", href: "/contact?enquiry=camp-group" },
 };
 
 export const CAMPS_CTA = { eyebrow: "Camps & trips" };

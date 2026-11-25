@@ -9,7 +9,7 @@ import OfferActivityTracker from "@/components/home/OfferActivityTracker";
 import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
 import CopyGuard from "@/components/ui/CopyGuard";
-import { RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
+import { DEVICE_PROFILE_SCRIPT, RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
 import HeroReplay from "@/components/ui/HeroReplay";
 import RouteScope from "@/components/ui/RouteScope";
 import RouteScrollReset from "@/components/ui/RouteScrollReset";
@@ -71,6 +71,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: DEVICE_PROFILE_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: ROUTE_SCOPE_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: RELOAD_TO_TOP_SCRIPT }} />

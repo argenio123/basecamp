@@ -5,7 +5,7 @@ import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
-import { facilitiesVideo } from "@/data/brand";
+import { facilitiesVideo, facilitiesVideoFrame } from "@/data/brand";
 import { FACILITIES_CTA, FACILITIES_HERO } from "@/data/facilities";
 
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
@@ -42,7 +42,9 @@ const FACILITY_PREVIEWS: Record<string, { description: string; image: string; im
 // The hero box (fitVideo) is 16:9 like the video, so nothing is cropped.
 const FACILITIES_HERO_VIDEO = {
   src: facilitiesVideo(1920, 1080),
-  mobileSrc: facilitiesVideo(1280, 720),
+  mobileSrc: facilitiesVideo(960, 540),
+  tabletSrc: facilitiesVideo(1280, 720),
+  poster: facilitiesVideoFrame(1280, 720),
 };
 
 export default async function FacilitiesPage() {

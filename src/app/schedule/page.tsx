@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
@@ -12,18 +13,20 @@ export const metadata: Metadata = {
   description: "The weekly rhythm at BaseCamp CamSur: morning classes, open gym, private sessions, and evening programming. Preview the timetable and hours by zone, then see events, or request a session.",
 };
 
-/** "More schedule" links: the same four links as the Schedule menu highlights, each with its own photo. */
-const MORE_SCHEDULE = ["/schedule/timetable", "/schedule/events#night", "/schedule/events", "/schedule/book", "/schedule/book?service=appointment"] as const;
+/** Timetable and events stay in the image-switching explorer; booking actions have their own section below. */
+const MORE_SCHEDULE = ["/schedule/timetable", "/schedule/events"] as const;
 const MORE_SCHEDULE_CARDS = {
-  "/schedule/timetable": { label: "Weekly timetable", summary: "Pick a day and request a place.", image: "/images/programs/stations/row.jpg", imageAlt: "Athlete on a rowing machine" },
-  "/schedule/events#night": { label: "Night training", summary: "Training under the lights.", image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running on a curved treadmill in the open-air gym" },
-  "/schedule/events": { label: "Competitions & events", summary: "Weekly comps and the calendar.", image: "/images/programs/stations/wall-ball-squat.jpg", imageAlt: "Athlete squatting with a wall ball" },
-  "/schedule/book": { label: "Book a session", summary: "Request a class or camp place.", image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled" },
-  "/schedule/book?service=appointment": { label: "Recovery appointments", summary: "Sauna, ice bath, massage, physio.", image: "/images/programs/generated/recovery-mobility.png", imageAlt: "Coach guiding a mobility stretch" },
+  "/schedule/timetable": { label: "Weekly timetable", summary: "Pick a day and request a place.", image: "/images/schedule/generated/timetable-class-briefing.png", imageAlt: "Coach briefing gym members beside a weekly session board and wall clock" },
+  "/schedule/events": { label: "Competitions & events", summary: "Weekly comps and leaderboards.", image: "/images/schedule/generated/gym-competition-night.png", imageAlt: "Athletes racing weighted sleds during a gym competition" },
 };
 
+const BOOKING_OPTIONS = [
+  { href: "/schedule/book", eyebrow: "Classes & camps", label: "Book a session", summary: "Request a coached class, camp place, or private session." },
+  { href: "/schedule/book?service=appointment", eyebrow: "Recovery", label: "Recovery appointments", summary: "Request sauna, ice bath, massage, physio, or 1:1 support." },
+] as const;
+
 // Overview: four blocks between hero and footer: At a glance · [hours by zone] · Explore (Timetable, Events, Book) · CTA.
-// Static under cacheComponents: reads only the cached getSiteContent(). Legacy #night/#competition/#events/#book/
+// Static under cacheComponents: reads only the cached getSiteContent(). Legacy #competition/#events/#book/
 // #platform links are forwarded to the sub-pages by the root-layout HashForwarder (LEGACY_HASH_REDIRECTS).
 export default async function SchedulePage() {
   const c = await getSiteContent();
@@ -70,10 +73,41 @@ export default async function SchedulePage() {
       </section>
       <ScheduleExplore
         eyebrow="More schedule"
-        title="Events & booking."
-        intro="Timetable, events, and booking."
+        title="Timetable & events."
+        intro="Plan the week and see what is coming up."
         items={MORE_SCHEDULE.map((href) => ({ href, ...MORE_SCHEDULE_CARDS[href] }))}
       />
+      <section className="section sd-booking-choices" aria-labelledby="sd-booking-title">
+        <div className="shell sd-booking-frame">
+          <div className="sd-booking-media" data-reveal>
+            <Image
+              src="/images/schedule/generated/booking-cover-1263x1090-v2.png"
+              alt="An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"
+              fill
+              sizes="(max-width: 900px) 100vw, 55vw"
+              className="cover-image"
+            />
+          </div>
+          <div className="sd-booking-copy" data-reveal data-reveal-delay="short">
+            <div>
+              <p className="sd-booking-eyebrow">Book at BaseCamp</p>
+              <h2 id="sd-booking-title">Choose your next move.</h2>
+              <p className="sd-booking-intro">Classes, camps, and recovery use one quick request. Pick where you want to begin.</p>
+            </div>
+            <div className="sd-booking-actions">
+              {BOOKING_OPTIONS.map((option) => (
+                <Link href={option.href} className="sd-booking-action" key={option.href}>
+                  <span className="sd-booking-action-copy">
+                    <small>{option.eyebrow}</small>
+                    <strong>{option.label}</strong>
+                    <span>{option.summary}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </OverviewTemplate>
   );
 }

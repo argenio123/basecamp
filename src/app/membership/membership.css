@@ -1,0 +1,6 @@
+/* Membership overview: the "More membership." heading uses the display face (Gretaros), like its category titles and
+   the at-a-glance statement, instead of the membership section's Poppins h2 style. Only the typeface changes. */
+html[data-route="page"][data-section="membership"] main .sd-explore h2#sd-explore-title {
+  font-family: var(--font-display), var(--font-poppins), sans-serif !important;
+  font-weight: 400 !important;
+}

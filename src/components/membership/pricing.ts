@@ -3,7 +3,6 @@
 //   /membership                   [tiers]
 //   /membership/price-guide       [packs] [day-passes] [open-gym] (+ any admin-added group with an unknown anchor)
 //   /membership/price-guide       [recovery-pricing] [advanced-recovery] [yoga] [corporate] [camps-pricing]
-//   (camp prices are also shown on /visit/camps)
 import { formatPhp } from "@/content/format";
 import type { Availability, Price, PriceGroup, PriceItem } from "@/content/types";
 
