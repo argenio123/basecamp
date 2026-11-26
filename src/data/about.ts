@@ -102,7 +102,7 @@ export const FLOOR_PLAN = {
   eyebrow: "The layout",
   title: "One floor, every zone.",
   intro: "The ground floor from above.",
-  image: "/images/facilities/top view.png",
+  image: "/images/facilities/top view.webp",
   imageAlt: "Top-down render of the BaseCamp CamSur ground floor with its training, locker, and studio zones",
   width: 5504,
   height: 3072,

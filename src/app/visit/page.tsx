@@ -13,8 +13,8 @@ export const metadata: Metadata = VISIT_META;
 
 /** Summary + image for each Visit menu highlight, so this list mirrors the navbar / footer highlights. */
 const HIGHLIGHT_DETAILS: Record<string, { summary: string; image: string; imageAlt: string }> = {
-  "/visit/camps": { summary: "Training camps, travel packages, and group trips for traveling athletes.", image: "/images/visit/generated/camps-and-trips-arrival.png", imageAlt: "Training camp guests arriving with travel bags and meeting their coach" },
-  "/visit/why-camsur": { summary: "Why athletes choose Camarines Sur: cooler lakes, forest, and room to train.", image: "/images/visit/generated/why-camsur-basecamp-community.png", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge" },
+  "/visit/camps": { summary: "Training camps, travel packages, and group trips for traveling athletes.", image: "/images/visit/generated/camps-and-trips-arrival.webp", imageAlt: "Training camp guests arriving with travel bags and meeting their coach" },
+  "/visit/why-camsur": { summary: "Why athletes choose Camarines Sur: cooler lakes, forest, and room to train.", image: "/images/visit/generated/why-camsur-basecamp-community.webp", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge" },
 };
 
 // Overview (stage-3 §1/§7): hero → section tabs → at a glance → sub-page cards (Camps, Why CamSur) → getting there + map → CTA.

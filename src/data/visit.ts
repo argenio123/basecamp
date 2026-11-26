@@ -13,7 +13,7 @@ export const VISIT_META = {
 export const VISIT_HERO = {
   title: "Come train with us.",
   intro: "BaseCamp CamSur is in Pili, Camarines Sur, accessible from Manila. Here's how to find us.",
-  image: "/images/programs/generated/endurance.png",
+  image: "/images/programs/generated/endurance.webp",
   imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
 };
 
@@ -46,7 +46,7 @@ export const WHY_META = {
 export const WHY_HERO = {
   title: "Train where nature pushes back.",
   intro: "Lakes, forest, and mountains, not beaches.",
-  image: "/images/visit/generated/why-camsur-basecamp-community.png",
+  image: "/images/visit/generated/why-camsur-basecamp-community.webp",
   imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge",
 };
 
@@ -86,7 +86,7 @@ export const CAMPS_META = {
 export const CAMPS_HERO = {
   title: "Train hard. Stay longer.",
   intro: "Train, recover, and stay together.",
-  image: "/images/visit/generated/camps-and-trips-arrival.png",
+  image: "/images/visit/generated/camps-and-trips-arrival.webp",
   imageAlt: "Training camp guests arriving with travel bags and meeting their coach",
 };
 
@@ -100,10 +100,10 @@ export const CAMPS = {
   title: "More than a training trip.",
   caption: "BaseCamp camps & trips · Phase 2 inquiry",
   benefits: [
-    { title: "Coached from day one", body: "Every training block is planned and led by a BaseCamp coach.", image: "/images/visit/generated/basecamp-camp-group.png" },
-    { title: "Recovery on site", body: "Sauna, ice bath, massage, and physio between sessions.", image: "/images/facilities/2F Plunge.png" },
-    { title: "CamSur on your doorstep", body: "Trails, mountains, and fresh water close to camp.", image: "/images/visit/generated/why-camsur-lake-training.png" },
-    { title: "Train as one crew", body: "Train, eat, and stay together with your group.", image: "/images/membership/generated/founding-members-community.png" },
+    { title: "Coached from day one", body: "Every training block is planned and led by a BaseCamp coach.", image: "/images/visit/generated/basecamp-camp-group.webp" },
+    { title: "Recovery on site", body: "Sauna, ice bath, massage, and physio between sessions.", image: "/images/facilities/2F Plunge.webp" },
+    { title: "CamSur on your doorstep", body: "Trails, mountains, and fresh water close to camp.", image: "/images/visit/generated/why-camsur-lake-training.webp" },
+    { title: "Train as one crew", body: "Train, eat, and stay together with your group.", image: "/images/membership/generated/founding-members-community.webp" },
   ],
   flowEyebrow: "The camp experience",
   flowTitle: "Train. Explore. Recover.",

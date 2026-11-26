@@ -37,7 +37,7 @@ export default async function MembershipPage() {
       path="/membership"
       quote={false}
       cards={false}
-      hero={<PageHero title="Choose access that fits how you train." intro={pricing.intro} image="/images/programs/generated/functional-training.png" imageAlt="Athlete driving a weighted sled in the BaseCamp CamSur open-air gym" />}
+      hero={<PageHero title="Choose access that fits how you train." intro={pricing.intro} image="/images/programs/generated/functional-training.webp" imageAlt="Athlete driving a weighted sled in the BaseCamp CamSur open-air gym" />}
       glance={{
         summary: "Monthly memberships.\nFlexible passes.\nRecovery on demand.",
         statement: true,

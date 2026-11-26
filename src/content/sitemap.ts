@@ -62,7 +62,7 @@ export const HOME_PAGE: SitePage = {
   href: "/",
   label: "Home",
   summary: "Southeast Asia's Performance Playground in Camarines Sur.",
-  image: "/images/hero/hero-training.png",
+  image: "/images/hero/hero-training.webp",
   imageAlt: "Athlete training at BaseCamp CamSur",
   adminTab: "home",
 };
@@ -85,7 +85,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     overview: page({
       href: "/classes", label: "Classes", tabLabel: "Overview",
       summary: "Coach-led classes for strength, fitness, endurance, and recovery.",
-      image: "/images/programs/program-functional.png", imageAlt: "Athlete training inside a modern functional fitness space", adminTab: "programmes",
+      image: "/images/programs/program-functional.webp", imageAlt: "Athlete training inside a modern functional fitness space", adminTab: "programmes",
     }),
     // Class sub-pages are the station classes (/classes/styles/*); Coaching, Corporate and the programme detail pages were removed.
     pages: [],
@@ -105,17 +105,17 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       page({
         href: "/facilities/training", label: "Training zones", tabLabel: "Training",
         summary: "CrossFit-style area, gym and yoga studio.",
-        image: "/images/facilities/1st floor- crossfit area-v2.png", imageAlt: "Render of the BaseCamp CrossFit-style training area", adminTab: "home",
+        image: "/images/facilities/1st floor- crossfit area-v2.webp", imageAlt: "Render of the BaseCamp CrossFit-style training area", adminTab: "home",
       }),
       page({
         href: "/facilities/recovery", label: "Recovery",
         summary: "Plunge pools, hyperbaric and therapy rooms.",
-        image: "/images/facilities/2F Plunge.png", imageAlt: "Render of the BaseCamp plunge pools", adminTab: "recovery",
+        image: "/images/facilities/2F Plunge.webp", imageAlt: "Render of the BaseCamp plunge pools", adminTab: "recovery",
       }),
       page({
         href: "/facilities/lifestyle", label: "Lounge, café & lockers", tabLabel: "Lifestyle",
         summary: "Lobby, café, work area and lockers.",
-        image: "/images/facilities/1st floor- cafeteria-v2.png", imageAlt: "Render of the BaseCamp café", adminTab: "recovery",
+        image: "/images/facilities/1st floor- cafeteria-v2.webp", imageAlt: "Render of the BaseCamp café", adminTab: "recovery",
       }),
     ],
     menu: {
@@ -136,28 +136,28 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     overview: page({
       href: "/membership", label: "Membership", tabLabel: "Overview",
       summary: "Early rates, membership tiers, and what each one includes.",
-      image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled in the open-air gym", adminTab: "pricing",
+      image: "/images/programs/generated/functional-training.webp", imageAlt: "Athlete driving a weighted sled in the open-air gym", adminTab: "pricing",
     }),
     pages: [
       page({
         href: "/membership/founding", label: "Founding members", tabLabel: "Founding",
         summary: "A proposed 30% off your first six months or a locked lifetime rate, plus founding perks.",
-        image: "/images/membership/generated/founding-members-community.png", imageAlt: "Founding gym members gathering together after their first workout", adminTab: "pricing",
+        image: "/images/membership/generated/founding-members-community.webp", imageAlt: "Founding gym members gathering together after their first workout", adminTab: "pricing",
       }),
       page({
         href: "/membership/launch-promotions", label: "Launch promotions", tabLabel: "Promotions",
         summary: "Launch rates on test: introductory membership, weekend day pass, and early-booking camps.",
-        image: "/images/membership/generated/launch-promotions-hero-basecamp-interior.png", imageAlt: "BaseCamp CamSur gym interior", adminTab: "pricing",
+        image: "/images/membership/generated/launch-promotions-hero-basecamp-interior.webp", imageAlt: "BaseCamp CamSur gym interior", adminTab: "pricing",
       }),
       page({
         href: "/membership/price-guide", label: "Passes, recovery & more", tabLabel: "Price guide",
         summary: "Starting prices for packs, passes, yoga, recovery, camps, and corporate bookings.",
-        image: "/images/membership/generated/price-guide-gym-reception-v2.png", imageAlt: "BaseCamp CamSur gym reception", adminTab: "pricing",
+        image: "/images/membership/generated/price-guide-gym-reception-v2.webp", imageAlt: "BaseCamp CamSur gym reception", adminTab: "pricing",
       }),
     ],
     menu: {
       text: "Early rates, membership tiers, passes, and recovery pricing.",
-      image: "/images/programs/generated/functional-training.png", imageAlt: "Athlete driving a weighted sled in the open-air gym",
+      image: "/images/programs/generated/functional-training.webp", imageAlt: "Athlete driving a weighted sled in the open-air gym",
       highlights: [
         { href: "/membership/founding", label: "Founding members" },
         { href: "/membership/launch-promotions", label: "Launch promotions" },
@@ -173,7 +173,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     overview: page({
       href: "/schedule", label: "Schedule", tabLabel: "Overview",
       summary: "The weekly rhythm and the timetable.",
-      image: "/images/programs/generated/personal-coaching.png", imageAlt: "Coach supporting an athlete during a training session", adminTab: "schedule",
+      image: "/images/programs/generated/personal-coaching.webp", imageAlt: "Coach supporting an athlete during a training session", adminTab: "schedule",
     }),
     pages: [
       page({
@@ -184,17 +184,17 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       page({
         href: "/schedule/events", label: "Competitions & events", tabLabel: "Events",
         summary: "Weekly competitions and leaderboards.",
-        image: "/images/programs/generated/endurance.png", imageAlt: "Endurance training session", adminTab: "schedule",
+        image: "/images/programs/generated/endurance.webp", imageAlt: "Endurance training session", adminTab: "schedule",
       }),
       page({
         href: "/schedule/book", label: "Book a session", tabLabel: "Book",
         summary: "Request a class, appointment, or camp place.",
-        image: "/images/programs/generated/functional-training.png", imageAlt: "Functional training session", adminTab: "schedule",
+        image: "/images/programs/generated/functional-training.webp", imageAlt: "Functional training session", adminTab: "schedule",
       }),
     ],
     menu: {
       text: "The weekly rhythm, events, and booking.",
-      image: "/images/programs/generated/personal-coaching.png", imageAlt: "Coach supporting an athlete during a training session",
+      image: "/images/programs/generated/personal-coaching.webp", imageAlt: "Coach supporting an athlete during a training session",
       highlights: [
         { href: "/schedule/timetable", label: "Weekly timetable" },
         { href: "/schedule/events", label: "Competitions & events" },
@@ -216,18 +216,18 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
       page({
         href: "/visit/camps", label: "Camps & trips", tabLabel: "Camps",
         summary: "Training camps and group trips for traveling athletes.",
-        image: "/images/visit/generated/basecamp-camp-group.png", imageAlt: "BaseCamp camp guests relaxing with their coach between training blocks", adminTab: "pricing",
+        image: "/images/visit/generated/basecamp-camp-group.webp", imageAlt: "BaseCamp camp guests relaxing with their coach between training blocks", adminTab: "pricing",
       }),
       page({
         href: "/visit/why-camsur", label: "Why CamSur",
         summary: "Freshwater, forest, and mountain training in Camarines Sur.",
-        image: "/images/visit/generated/why-camsur-basecamp-community.png", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge", adminTab: "whyCamsur",
+        image: "/images/visit/generated/why-camsur-basecamp-community.webp", imageAlt: "Athletes and visitors gathering inside the BaseCamp CamSur cafeteria and lounge", adminTab: "whyCamsur",
       }),
     ],
     menu: {
       text: "Getting to BaseCamp, and camps & trips for travelers.",
       // Same picture as the /visit hero (VISIT_HERO in src/data/visit.ts).
-      image: "/images/programs/generated/endurance.png", imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
+      image: "/images/programs/generated/endurance.webp", imageAlt: "Athlete running on a curved treadmill in the open-air gym with mountains behind",
       highlights: [
         { href: "/visit/camps", label: "Camps & trips" },
         { href: "/visit/why-camsur", label: "Why CamSur" },

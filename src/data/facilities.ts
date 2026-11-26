@@ -70,7 +70,7 @@ export const TRAINING = {
       body: "Build strength, skill and conditioning in a coach-led performance environment.",
       availability: "at-launch",
       details: { audience: "Group-training athletes and camps", access: "Eligible class or gym membership", booking: "Book coached sessions", programs: ["Functional Training", "Strength & Conditioning"], technical: "Full-spec rigs, platforms and competition-grade equipment for high-intensity programming." },
-      image: "/images/facilities/1st floor- crossfit area-v2.png",
+      image: "/images/facilities/1st floor- crossfit area-v2.webp",
       imageAlt: "Architectural render of the dedicated CrossFit-style training area",
     },
     {
@@ -78,7 +78,7 @@ export const TRAINING = {
       body: "Follow an independent strength plan or add focused accessory work around coached sessions.",
       availability: "at-launch",
       details: { audience: "Independent athletes and coaching clients", access: "Eligible gym membership or pass", booking: "Open access during member hours", programs: ["Strength & Conditioning", "Personal Coaching"], technical: "Strength equipment, cardio machines, and dedicated accessory-work zones." },
-      image: "/images/facilities/1st floor- gym area-v2.png",
+      image: "/images/facilities/1st floor- gym area-v2.webp",
       imageAlt: "Architectural render of the fitness gym and strength equipment",
     },
     {
@@ -86,7 +86,7 @@ export const TRAINING = {
       body: "Train speed, carries and conditioning at full scale in the CamSur environment.",
       availability: "at-launch",
       details: { audience: "Endurance athletes, teams, and large groups", access: "Eligible membership, pass, or camp", booking: "Classes and group blocks require booking", programs: ["Endurance", "Functional Training"], technical: "673 m² for sprint work, sled pushes, carries and large-group programming." },
-      image: "/images/programs/program-endurance.png",
+      image: "/images/programs/program-endurance.webp",
       imageAlt: "Outdoor conditioning session under tropical skies",
     },
   ] satisfies FacilityZone[],
@@ -218,19 +218,19 @@ export const GALLERY = {
   title: "Built to be filmed",
   body: "Step inside the first-floor training, welcome, work, and changing spaces planned for BaseCamp CamSur.",
   images: [
-    { src: "/images/facilities/1st floor- lobby-v2.png", alt: "Architectural render of the BaseCamp lobby and reception", wide: true },
-    { src: "/images/facilities/1st floor- gym area-v2.png", alt: "Architectural render of the BaseCamp fitness gym" },
-    { src: "/images/facilities/1st floor- crossfit area-v2.png", alt: "Architectural render of the BaseCamp CrossFit-style training area" },
-    { src: "/images/facilities/1st floor- cafeteria-v2.png", alt: "Architectural render of the BaseCamp cafeteria and communal seating" },
-    { src: "/images/facilities/1st floor- yoga-v2.png", alt: "Architectural render of the BaseCamp yoga and movement studio" },
-    { src: "/images/facilities/1st floor- office area-v2.png", alt: "Architectural render of the BaseCamp office area" },
+    { src: "/images/facilities/1st floor- lobby-v2.webp", alt: "Architectural render of the BaseCamp lobby and reception", wide: true },
+    { src: "/images/facilities/1st floor- gym area-v2.webp", alt: "Architectural render of the BaseCamp fitness gym" },
+    { src: "/images/facilities/1st floor- crossfit area-v2.webp", alt: "Architectural render of the BaseCamp CrossFit-style training area" },
+    { src: "/images/facilities/1st floor- cafeteria-v2.webp", alt: "Architectural render of the BaseCamp cafeteria and communal seating" },
+    { src: "/images/facilities/1st floor- yoga-v2.webp", alt: "Architectural render of the BaseCamp yoga and movement studio" },
+    { src: "/images/facilities/1st floor- office area-v2.webp", alt: "Architectural render of the BaseCamp office area" },
     { src: "/images/facilities/1st floor- cctv room.jpg", alt: "Architectural render of the BaseCamp CCTV operations room" },
-    { src: "/images/facilities/1st floor- men's locker room-v2.png", alt: "Architectural render of the men's locker room" },
-    { src: "/images/facilities/1st floor- men's shower room-v2.png", alt: "Architectural render of the men's shower room" },
-    { src: "/images/facilities/1st floor- men's rest room-v2.png", alt: "Architectural render of the men's restroom" },
-    { src: "/images/facilities/1st floor- women's locker room-v2.png", alt: "Architectural render of the women's locker room" },
-    { src: "/images/facilities/1st floor- women's rest room-v2.png", alt: "Architectural render of the women's restroom" },
-    { src: "/images/facilities/1st floor- toilet room-v2.png", alt: "Architectural render of an accessible first-floor restroom" },
+    { src: "/images/facilities/1st floor- men's locker room-v2.webp", alt: "Architectural render of the men's locker room" },
+    { src: "/images/facilities/1st floor- men's shower room-v2.webp", alt: "Architectural render of the men's shower room" },
+    { src: "/images/facilities/1st floor- men's rest room-v2.webp", alt: "Architectural render of the men's restroom" },
+    { src: "/images/facilities/1st floor- women's locker room-v2.webp", alt: "Architectural render of the women's locker room" },
+    { src: "/images/facilities/1st floor- women's rest room-v2.webp", alt: "Architectural render of the women's restroom" },
+    { src: "/images/facilities/1st floor- toilet room-v2.webp", alt: "Architectural render of an accessible first-floor restroom" },
   ],
   quote: "Every room supports the complete training day.",
 };
@@ -240,7 +240,7 @@ export const TRAINING_HERO: FacilityHero = {
   eyebrow: "",
   title: "Training zones.",
   intro: "Functional, strength, and outdoor zones, a running loop through nature, and spaces designed for every kind of weather.",
-  image: "/images/facilities/1st floor- crossfit area-v2.png",
+  image: "/images/facilities/1st floor- crossfit area-v2.webp",
   imageAlt: "Architectural render of the BaseCamp CrossFit-style training area",
 };
 
@@ -248,7 +248,7 @@ export const RECOVERY_HERO: FacilityHero = {
   eyebrow: "",
   title: RECOVERY.title,
   intro: RECOVERY.sub,
-  image: "/images/facilities/2F Plunge.png",
+  image: "/images/facilities/2F Plunge.webp",
   imageAlt: "Architectural render of the BaseCamp recovery level and plunge pools",
 };
 
@@ -256,7 +256,7 @@ export const LIFESTYLE_HERO: FacilityHero = {
   eyebrow: "",
   title: "Spaces to stay longer.",
   intro: "The social lounge, a performance food culture and signature spaces that make it impossible to post a boring photo.",
-  image: "/images/facilities/1st floor- cafeteria-v2.png",
+  image: "/images/facilities/1st floor- cafeteria-v2.webp",
   imageAlt: "Architectural render of the BaseCamp cafeteria and social space",
 };
 
@@ -267,8 +267,8 @@ export const FACILITIES_CTA = { eyebrow: "Come and see", title: "Experience the 
 
 /* ---------- Interior rooms: the only spaces shown on /facilities (1st floor = the v2 renders, 2nd floor = recovery level) ---------- */
 export type Room = { title: string; body: string; image: string; imageAlt: string };
-const f1 = (name: string) => `/images/facilities/1st floor- ${name}-v2.png`;
-const f2 = (name: string) => `/images/facilities/2F ${name}.png`;
+const f1 = (name: string) => `/images/facilities/1st floor- ${name}-v2.webp`;
+const f2 = (name: string) => `/images/facilities/2F ${name}.webp`;
 
 export const ROOMS = {
   crossfit: { title: "CrossFit-style area", body: "Rigs, platforms, open floor.", image: f1("crossfit area"), imageAlt: "Render of the BaseCamp CrossFit-style training area" },

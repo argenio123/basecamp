@@ -65,7 +65,7 @@ export default async function AboutBuildPage() {
                 : <div className="bd-countdown"><BuildCountdown openingDate={c.settings.openingDate} /></div>)}
             </div>
           </div>
-          {b.enabled && b.launchVideoUrl && <video className="ab-build-video" controls preload="none" poster="/images/hero/hero-training.png" src={b.launchVideoUrl} data-reveal />}
+          {b.enabled && b.launchVideoUrl && <video className="ab-build-video" controls preload="none" poster="/images/hero/hero-training.webp" src={b.launchVideoUrl} data-reveal />}
           {updates.length > 0 && (
             <ol className="sd-ev-rows" data-reveal="stagger">
               {updates.map((u, n) => (

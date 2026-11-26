@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 /** Timetable and events stay in the image-switching explorer; booking actions have their own section below. */
 const MORE_SCHEDULE = ["/schedule/timetable", "/schedule/events"] as const;
 const MORE_SCHEDULE_CARDS = {
-  "/schedule/timetable": { label: "Weekly timetable", summary: "Pick a day and request a place.", image: "/images/schedule/generated/timetable-class-briefing.png", imageAlt: "Coach briefing gym members beside a weekly session board and wall clock" },
-  "/schedule/events": { label: "Competitions & events", summary: "Weekly comps and leaderboards.", image: "/images/schedule/generated/gym-competition-night.png", imageAlt: "Athletes racing weighted sleds during a gym competition" },
+  "/schedule/timetable": { label: "Weekly timetable", summary: "Pick a day and request a place.", image: "/images/schedule/generated/timetable-class-briefing.webp", imageAlt: "Coach briefing gym members beside a weekly session board and wall clock" },
+  "/schedule/events": { label: "Competitions & events", summary: "Weekly comps and leaderboards.", image: "/images/schedule/generated/gym-competition-night.webp", imageAlt: "Athletes racing weighted sleds during a gym competition" },
 };
 
 const BOOKING_OPTIONS = [
@@ -45,7 +45,7 @@ export default async function SchedulePage() {
       path="/schedule"
       quote={false}
       cards={false}
-      hero={<PageHero title="Train from sunrise to night." intro="Classes, open gym, and recovery from sunrise to night." image="/images/programs/generated/personal-coaching.png" imageAlt="Coach supporting an athlete during a training session" imagePosition="35% center" />}
+      hero={<PageHero title="Train from sunrise to night." intro="Classes, open gym, and recovery from sunrise to night." image="/images/programs/generated/personal-coaching.webp" imageAlt="Coach supporting an athlete during a training session" imagePosition="35% center" />}
       glance={{
         summary: "Sunrise classes.\nOpen gym hours.\nTraining under lights.",
         statement: true,
@@ -81,7 +81,7 @@ export default async function SchedulePage() {
         <div className="shell sd-booking-frame">
           <div className="sd-booking-media" data-reveal>
             <Image
-              src="/images/schedule/generated/booking-cover-1263x1090-v2.png"
+              src="/images/schedule/generated/booking-cover-1263x1090-v2.webp"
               alt="An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"
               fill
               sizes="(max-width: 900px) 100vw, 55vw"

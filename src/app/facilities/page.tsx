@@ -19,17 +19,17 @@ export const metadata: Metadata = {
 const FACILITY_PREVIEWS: Record<string, { description: string; image: string; imageAlt: string }> = {
   "/facilities/training": {
     description: "CrossFit-style area, gym and yoga studio.",
-    image: "/images/facilities/1st floor- gym area-v2.png",
+    image: "/images/facilities/1st floor- gym area-v2.webp",
     imageAlt: "Rendered interior of the BaseCamp gym with cardio and strength equipment",
   },
   "/facilities/recovery": {
     description: "Plunge pools, hyperbaric and therapy rooms.",
-    image: "/images/facilities/2F Plunge.png",
+    image: "/images/facilities/2F Plunge.webp",
     imageAlt: "Rendered BaseCamp recovery level with hot and cold plunge pools",
   },
   "/facilities/lifestyle": {
     description: "Lobby, café, work area and lockers.",
-    image: "/images/facilities/1st floor- cafeteria-v2.png",
+    image: "/images/facilities/1st floor- cafeteria-v2.webp",
     imageAlt: "Rendered BaseCamp cafeteria with communal tables and warm timber finishes",
   },
 };
