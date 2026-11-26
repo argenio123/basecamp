@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+// Admin-only styles (adm- prefix): loaded on /admin/** and /login instead of every page.
+import "@/styles/admin.css";
 
 // Admin shell (spec §D.3). Reads no cookies: the session is checked inside the page's Suspense boundary.
 // The site header and footer hide themselves on /admin routes.

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import LoginForm from "@/components/admin/LoginForm";
 import { adminConfigured } from "@/lib/auth/token";
+// Admin-only styles (adm- prefix); /login sits outside app/admin, so it imports them itself.
+import "@/styles/admin.css";
 
 // Staff sign-in (stage-3 §8), moved from /admin/login; next.config.ts permanently redirects the old URL here.
 // Static sign-in page; the form action checks configuration and credentials again on every request.
