@@ -393,4 +393,7 @@ export const PLATFORM_CARDS: StaticItem[] = [
 ];
 export const PLATFORM_COMING_SOON = ["Member app", "Online payments (cards, digital wallets, multi-currency)", "SMS reminders", "Virtual classes", "Daily WOD preview"] as const;
 
-export const BOOKING_NOTE = "Requests are confirmed by our team by email or phone. Online payment and instant confirmation are coming soon.";
+/** Booking cover note. `paymentsLive`: memberships, passes and camps can already be paid online (src/lib/payments/status.ts). */
+export const bookingNote = (paymentsLive: boolean) => paymentsLive
+  ? "Requests are confirmed by our team by email or phone. Memberships, passes and camps can already be paid online from the price guide."
+  : "Requests are confirmed by our team by email or phone. Online payment and instant confirmation are coming soon.";

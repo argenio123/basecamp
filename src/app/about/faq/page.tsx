@@ -4,13 +4,15 @@ import type { CSSProperties } from "react";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
+import { JsonLdScript } from "@/components/seo/JsonLd";
 import { getSiteContent } from "@/content/get";
+import { paymentsLive } from "@/lib/payments/status";
 
 const PATH = "/about/faq";
 
-/** What the member platform will add (shown as tiles). */
+/** What the member platform will add (shown as tiles). `live`: already available once real online payment is on. */
 const PLATFORM = [
-  { title: "Online sign-up", body: "Join, pay, and manage your membership without visiting the desk." },
+  { live: true, title: "Online sign-up", body: "Join, pay, and manage your membership without visiting the desk." },
   { title: "Class waitlists", body: "Book classes and join a waitlist when a session is full." },
   { title: "Guest-pass tracking", body: "See and share the guest passes included with your plan." },
   { title: "Priority booking", body: "Premium members book ahead of everyone else." },
@@ -29,6 +31,9 @@ const pad = (i: number) => String(i + 1).padStart(2, "0");
 export default async function MembershipFaqPage() {
   const { settings, pricing } = await getSiteContent();
   const { faq } = pricing;
+  // Once real online payment is on, joining and paying online is live: drop it from the coming-soon list.
+  const live = paymentsLive();
+  const platform = live ? PLATFORM.filter((p) => !("live" in p && p.live)) : PLATFORM;
 
   return (
     <DetailTemplate
@@ -37,6 +42,7 @@ export default async function MembershipFaqPage() {
       glance={{ summary: "Packs and passes.\nThe founding offer.\nThe member platform.", statement: true }}
       cta={<CtaBand eyebrow="Still unsure?" title="Ask us anything." body="Send a question and the BaseCamp CamSur team will reply." label="Contact us" href="/contact" />}
     >
+      {faq.length > 0 && <JsonLdScript data={{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })) }} />}
       {faq.length > 0 && (
         <section id="faq" className="section sd-ev">
           <div className="shell">
@@ -62,11 +68,11 @@ export default async function MembershipFaqPage() {
         <div className="shell">
           <div className="sd-tt-head" data-reveal>
             <div><p className="sd-tt-eyebrow">Member platform · Coming soon</p><h2>Your membership, online.</h2></div>
-            <p>Everything below arrives with the BaseCamp member platform. Until then, the team handles it for you.</p>
+            <p>{live ? "You can already create an account and pay online. Everything below arrives next; until then, the team handles it for you." : "Everything below arrives with the BaseCamp member platform. Until then, the team handles it for you."}</p>
           </div>
           <div className="sd-ev-board">
             <ol className="sd-ev-tiles" data-reveal="stagger">
-              {PLATFORM.map((p, n) => (
+              {platform.map((p, n) => (
                 <li key={p.title}><span className="sd-ev-num">{pad(n)}</span><h3>{p.title}</h3><p>{p.body}</p></li>
               ))}
             </ol>
