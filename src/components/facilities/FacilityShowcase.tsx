@@ -74,10 +74,12 @@ export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSl
           aria-hidden={i !== active}
           inert={i !== active}
         >
-          <Image src={s.image} alt={s.imageAlt} fill sizes="100vw" className="fc-show-image" priority={i === 0} />
+          <Image src={s.image} alt={s.imageAlt} fill sizes="100vw" className="fc-show-image" preload={i === 0} />
           <div className="fc-show-shade" aria-hidden="true" />
-          {/* Room name and its short description over the photo. */}
+          {/* Room name and its short description over the photo. The tag is honest about what the image is:
+              every room here is an architectural render of the building under construction. */}
           <div className="fc-show-copy">
+            <p className="fc-show-tag">Concept render</p>
             <h3>{keepHyphens(s.title)}</h3>
             {s.body && <p className="fc-show-body">{s.body}</p>}
           </div>

@@ -22,7 +22,7 @@ export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance"
 
   return (
     <section id={id} className={`nv-glance${ghost ? " ft-ghost-host" : ""}`} aria-labelledby={id ? `${id}-title` : undefined}>
-      {ghost && <span className="ft-ghost ft-ghost--glance" aria-hidden="true">{ghost}</span>}
+      {ghost && <span className="ft-ghost ft-ghost--glance" aria-hidden="true" data-ghost={ghost} />}
       <div className="shell nv-glance-inner">
         <div className="nv-glance-main" data-reveal>
           <p className="eyebrow" id={id ? `${id}-title` : undefined}>{eyebrow}</p>

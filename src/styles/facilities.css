@@ -449,6 +449,7 @@ html main .fc-sec-intro p { margin: 0; color: var(--fc-text); font-size: 17px; l
 .fc-show-slide.is-active .fc-show-copy > :nth-child(3) { transition-delay: .16s; }
 .fc-show-slide.is-active .fc-show-copy > :nth-child(4) { transition-delay: .24s; }
 .fc-show-slide.is-active .fc-show-copy > :nth-child(5) { transition-delay: .32s; }
+.fc-show-tag { margin: 0 0 -6px; padding: 7px 11px; border: 1px solid rgba(255,255,255,.32); border-radius: 999px; background: rgba(15,17,15,.42); color: rgba(255,255,255,.82); font: 600 11px/1 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; backdrop-filter: blur(6px); }
 .fc-show-eyebrow { margin: 0; color: var(--signal); font: 700 13px/1.2 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
 /* Room titles use the site display face (the "SKIERG" / "DIRECT LINES." headline font). */
 html main .fc-show-copy h3 { max-width: 14ch; margin: 0; color: var(--white); font: 400 clamp(38px, 4.6vw, 76px)/.95 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; overflow-wrap: normal; }

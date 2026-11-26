@@ -113,7 +113,7 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
             alt=""
             width={1118}
             height={982}
-            priority
+            preload
             className="header-brand-logo"
           />
         </ScrollTopLink>

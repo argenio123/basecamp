@@ -12,10 +12,10 @@ import { useEffect, useState } from "react";
  */
 const SLIDES = [
   { src: "/images/programs/stations/sled-pull.jpg", flip: false },
-  { src: "/images/programs/generated/endurance.png", flip: true },
+  { src: "/images/programs/generated/endurance.webp", flip: true },
   { src: "/images/programs/stations/farmers-carry.jpg", flip: false },
   { src: "/images/programs/stations/sled-push-man.jpg", flip: true },
-  { src: "/images/programs/generated/strength-conditioning.png", flip: true },
+  { src: "/images/programs/generated/strength-conditioning.webp", flip: true },
 ] as const;
 
 /** Time each photo stays on screen. */
@@ -40,7 +40,7 @@ export default function AuthSlides() {
     <div className="mb-auth-slides" aria-hidden="true">
       {SLIDES.map((slide, i) => (
         <div key={slide.src} className={`mb-auth-slide${i === active ? " is-active" : ""}${i === leaving ? " is-leaving" : ""}${slide.flip ? " is-flipped" : ""}`}>
-          <Image src={slide.src} alt="" fill priority={i === 0} sizes="100vw" className="mb-auth-bg" />
+          <Image src={slide.src} alt="" fill preload={i === 0} sizes="100vw" className="mb-auth-bg" />
         </div>
       ))}
     </div>

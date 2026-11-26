@@ -11,7 +11,7 @@ export default function CoachCarousel({ coaches, title = "The team" }: { coaches
   return (
     <section className="section ft-team section-dark">
       <div className="shell ft-ghost-wrap">
-        <span className="ft-ghost" aria-hidden="true">{title.toUpperCase()}</span>
+        <span className="ft-ghost" aria-hidden="true" data-ghost={title.toUpperCase()} />
         <h2 className="ft-team-title" data-reveal>{title}</h2>
       </div>
       <ul className="ft-team-row" data-reveal="stagger">

@@ -29,7 +29,7 @@ export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, i
   return (
     <section className={`pr-editorial-hero pr-editorial-hero-${variant}${fullImage ? " pr-editorial-hero--full-image" : ""}`} aria-labelledby="pr-editorial-title">
       <div className={`pr-editorial-media${flipImage ? " is-flipped" : ""}`}>
-        <Image src={image} alt={imageAlt} fill priority sizes="100vw" className="pr-editorial-image" />
+        <Image src={image} alt={imageAlt} fill preload sizes="100vw" className="pr-editorial-image" />
       </div>
       <span className="pr-editorial-shade" aria-hidden="true" />
       <div className="shell pr-editorial-inner">
