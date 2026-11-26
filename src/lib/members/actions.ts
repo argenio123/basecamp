@@ -3,25 +3,22 @@
 // 04-functions/redirect.md.
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { clientIp, createLimiter } from "@/lib/rateLimit";
+import { clientIp } from "@/lib/rateLimit";
+import { createSharedLimiter } from "@/lib/sharedLimiter";
 import { StorageUnavailableError } from "@/lib/storage/driver";
 import { clearMemberCookies, setMemberCookies } from "./session";
 import { createMember, findMemberByEmail, passwordMatches } from "./store";
 import { membersConfigured, safeNext } from "./token";
 import type { AuthResult } from "./types";
 
-// Best-effort, per-instance limits: 10 attempts per 10 minutes per client IP.
-const limiter = createLimiter({ windowMs: 10 * 60 * 1000, perKey: 10, global: 300 });
+// Shared across instances via Redis (per-instance when Redis is absent or down): 10 attempts per 10 minutes per client IP.
+const limiter = createSharedLimiter({ name: "member-auth", windowMs: 10 * 60 * 1000, perKey: 10, global: 300 });
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
 const UNAVAILABLE = "Member accounts aren't available right now. Please email basecampcamsur@gmail.com.";
 
 async function limited(): Promise<boolean> {
-  const ip = clientIp(await headers());
-  const now = Date.now();
-  if (limiter.blocked(ip, now)) return true;
-  limiter.hit(ip, now);
-  return false;
+  return limiter.take(clientIp(await headers()));
 }
 
 export async function signUp(_prev: AuthResult, formData: FormData): Promise<AuthResult> {

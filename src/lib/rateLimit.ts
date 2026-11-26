@@ -1,4 +1,5 @@
-// In-memory, per-instance sliding-window limiter shared by the login and lead actions. Pure; no Next imports.
+// In-memory, per-instance sliding-window limiter. Actions use it through sharedLimiter.ts, which counts in Redis when
+// Upstash is configured and falls back to this (locally, or when Redis fails). Pure; no Next imports.
 
 /**
  * Best-effort client IP. Prefers x-real-ip, then the rightmost x-forwarded-for hop: an appending proxy

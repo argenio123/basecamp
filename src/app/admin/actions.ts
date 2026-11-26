@@ -18,7 +18,8 @@ import { adminConfigured, passwordMatches } from "@/lib/auth/token";
 import { clearSessionCookies, requireAdmin, setSessionCookies } from "@/lib/auth/session";
 import { deleteLead, updateLead } from "@/lib/leads/store";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/leads/types";
-import { clientIp, createLimiter } from "@/lib/rateLimit";
+import { clientIp } from "@/lib/rateLimit";
+import { createSharedLimiter } from "@/lib/sharedLimiter";
 import { StorageUnavailableError } from "@/lib/storage/driver";
 
 const MAX_PAYLOAD = 300 * 1024;
@@ -33,26 +34,28 @@ function invalidateContent() {
   revalidatePath("/", "layout");
 }
 
-// ---------- login (in-memory, per-instance: 5 failures per 15 minutes per IP, 30 across all IPs) ----------
-// The global cap bounds brute force even when the client rotates spoofed forwarding headers.
+// ---------- login (shared via Redis, per-instance without it: 5 failures per 15 minutes per IP, 200 across all IPs) ----------
+// The global cap bounds brute force even when the client rotates spoofed forwarding headers. It is site-wide once
+// Redis is on, so it is set high enough that a stranger can't cheaply lock the owner out (200 guesses per 15 min is
+// still nothing against a long random password), while a real brute-force run is still capped.
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const LOGIN_LIMIT = 5;
-const loginFailures = createLimiter({ windowMs: LOGIN_WINDOW_MS, perKey: LOGIN_LIMIT, global: 30 });
+const loginFailures = createSharedLimiter({ name: "admin-login", windowMs: LOGIN_WINDOW_MS, perKey: LOGIN_LIMIT, global: 200 });
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
   if (!adminConfigured()) return { error: "Sign-in isn't set up yet. Please ask the person who manages the website to finish the setup." };
   const ip = clientIp(await headers());
   const now = Date.now();
-  if (loginFailures.blocked(ip, now)) return { error: "Too many attempts. Try again later." };
+  if (await loginFailures.blocked(ip, now)) return { error: "Too many attempts. Try again later." };
 
   const password = formData.get("password");
   if (typeof password !== "string" || !password || password.length > 512 || !passwordMatches(password)) {
-    loginFailures.hit(ip, now);
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    return { error: loginFailures.blocked(ip, now) ? "Too many attempts. Try again later." : "Incorrect password." };
+    // Counting and the blocked check are one Redis call; the delay runs alongside it.
+    const [nowBlocked] = await Promise.all([loginFailures.hit(ip, now), new Promise((resolve) => setTimeout(resolve, 600))]);
+    return { error: nowBlocked ? "Too many attempts. Try again later." : "Incorrect password." };
   }
 
-  loginFailures.clear(ip);
+  await loginFailures.clear(ip, now);
   await setSessionCookies();
   redirect("/admin");
 }

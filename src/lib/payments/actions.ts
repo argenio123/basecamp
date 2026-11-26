@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 import { getSiteContent } from "@/content/get";
 import { currentMember } from "@/lib/members/session";
 import { loginHref } from "@/lib/members/types";
-import { clientIp, createLimiter } from "@/lib/rateLimit";
+import { clientIp } from "@/lib/rateLimit";
+import { createSharedLimiter } from "@/lib/sharedLimiter";
 import { findPayable } from "./catalog";
 import { createCheckoutSession, paymongoConfigured, paymongoTestMode } from "./paymongo";
 import { createPaypalOrder, paypalConfigured, paypalTestMode } from "./paypal";
@@ -19,9 +20,10 @@ import { payHref, type Payment } from "./types";
 
 export type CheckoutResult = { status: "idle" | "error"; message: string };
 
-const limiter = createLimiter({ windowMs: 10 * 60_000, perKey: 10, global: 300 });
+// Shared across instances via Redis (per-instance when Redis is absent or down).
+const limiter = createSharedLimiter({ name: "checkout", windowMs: 10 * 60_000, perKey: 10, global: 300 });
 /** Promo checks, limited so codes can't be guessed by trying many. */
-const promoLimiter = createLimiter({ windowMs: 10 * 60_000, perKey: 15, global: 600 });
+const promoLimiter = createSharedLimiter({ name: "promo", windowMs: 10 * 60_000, perKey: 15, global: 600 });
 
 async function siteOrigin(): Promise<string> {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "");
@@ -37,8 +39,7 @@ export async function previewPromo(itemId: string, code: string): Promise<PromoR
   const member = await currentMember();
   if (!member) return { ok: false, message: "Log in to use a promo code." };
   const key = `${member.id}:${clientIp(await headers())}`;
-  if (promoLimiter.blocked(key, Date.now())) return { ok: false, message: "Too many tries. Please wait a few minutes." };
-  promoLimiter.hit(key, Date.now());
+  if (await promoLimiter.take(key)) return { ok: false, message: "Too many tries. Please wait a few minutes." };
   const payable = findPayable(await getSiteContent(), String(itemId).slice(0, 80));
   if (!payable) return { ok: false, message: "This item can't be paid online." };
   return applyPromo(String(code).slice(0, 40), payable.item.id, payable.amount);
@@ -52,8 +53,7 @@ export async function startCheckout(_prev: CheckoutResult, form: FormData): Prom
   const provider = form.get("provider") === "paypal" ? "paypal" : "paymongo";
   if (!(provider === "paypal" ? paypalConfigured() : paymongoConfigured())) return { status: "error", message: `${provider === "paypal" ? "PayPal" : "Online payment"} isn't switched on yet. Please try another way to pay or contact the team.` };
   const ip = clientIp(await headers());
-  if (limiter.blocked(`${member.id}:${ip}`, Date.now())) return { status: "error", message: "Too many payment attempts. Please wait a few minutes and try again." };
-  limiter.hit(`${member.id}:${ip}`, Date.now());
+  if (await limiter.take(`${member.id}:${ip}`)) return { status: "error", message: "Too many payment attempts. Please wait a few minutes and try again." };
 
   const content = await getSiteContent();
   const payable = findPayable(content, itemId);
