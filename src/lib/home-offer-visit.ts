@@ -3,7 +3,8 @@
 //   1. the first time a new tab opens the homepage,
 //   2. the first time another browser opens the homepage (its own storage),
 //   3. on the next full load (reload / reopen) of the homepage after the visitor was idle for 15 minutes or more.
-// Otherwise it stays hidden: once per tab, apart from the idle rule.
+// Otherwise it stays hidden: once per tab, apart from the idle rule. A due modal waits for the visitor to engage
+// (HomeOfferModal) and only counts as seen once it actually opens, so leaving or reloading first doesn't use it up.
 
 const SEEN_KEY = "basecamp:home-offer-seen";
 const LAST_ACTIVE_KEY = "basecamp:last-active";
@@ -28,13 +29,17 @@ export function recordActivity(now = Date.now(), markIdle = true) {
 /** A full load of a page other than the homepage: an idle mark no longer applies to a later homepage visit. */
 export function clearIdleMark() { remove(IDLE_KEY); }
 
-/** Decide on a full load of the homepage whether the modal shows, and record the visit. */
+/** Decide on a full load of the homepage whether the modal is due, and record the visit (the idle mark is spent). */
 export function takeOfferVisit(now = Date.now()) {
   const last = Number(read(LAST_ACTIVE_KEY));
   const idle = read(IDLE_KEY) === "1" || (!!last && now - last >= OFFER_IDLE_MS);
   const show = read(SEEN_KEY) !== "1" || idle;
-  write(SEEN_KEY, "1");
+  // An idle return re-shows a seen offer: clear the flag so it stays due until it actually opens.
+  if (idle) remove(SEEN_KEY);
   remove(IDLE_KEY);
   write(LAST_ACTIVE_KEY, String(now));
   return show;
 }
+
+/** The modal has opened: hide it for the rest of this tab (apart from the idle rule). */
+export function markOfferSeen() { write(SEEN_KEY, "1"); }
