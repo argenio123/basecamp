@@ -23,15 +23,17 @@ function publicStatus(lead: Lead): Pick<MemberActivity, "status" | "statusLabel"
   return { status: "received", statusLabel: "Received" };
 }
 
-function describe(lead: Lead): Pick<MemberActivity, "category" | "eyebrow" | "title" | "detail"> {
+// `own`: the member sent it while logged in. Anyone can send a request with any email, so free text (booking item,
+// enquiry message) is only shown back for the member's own requests: a stranger can't plant a message in their history.
+function describe(lead: Lead, own: boolean): Pick<MemberActivity, "category" | "eyebrow" | "title" | "detail"> {
   if (lead.kind === "booking") {
     const service = lead.booking?.service ? words(lead.booking.service) : "Session";
-    const item = lead.booking?.item ? words(lead.booking.item) : "BaseCamp session";
+    const item = own && lead.booking?.item ? words(lead.booking.item) : "BaseCamp session";
     return { category: "booking", eyebrow: "Booking", title: `${service} request`, detail: item };
   }
   if (lead.kind === "enquiry") {
     const subject = lead.enquiryType ? words(lead.enquiryType) : "General";
-    return { category: "enquiry", eyebrow: "Enquiry", title: `${subject} enquiry`, detail: lead.message || "Your request was sent to the BaseCamp team." };
+    return { category: "enquiry", eyebrow: "Enquiry", title: `${subject} enquiry`, detail: (own && lead.message) || "Your request was sent to the BaseCamp team." };
   }
   if (lead.kind === "newsletter") {
     return { category: "updates", eyebrow: "Updates", title: "BaseCamp updates", detail: "Signed up for BaseCamp news and opening updates." };
@@ -44,12 +46,12 @@ function describe(lead: Lead): Pick<MemberActivity, "category" | "eyebrow" | "ti
   return { category: "early-access", eyebrow: "Early access", title: "Early access signup", detail: "Joined the priority list for rates, releases, and opening updates." };
 }
 
-export async function getMemberActivity(email: string): Promise<MemberActivity[]> {
+export async function getMemberActivity(email: string, memberId: string): Promise<MemberActivity[]> {
   const key = email.trim().toLowerCase();
   const leads = (await listLeads()).filter((lead) => lead.email.trim().toLowerCase() === key);
   return leads.slice(0, 12).map((lead) => ({
     id: lead.id,
-    ...describe(lead),
+    ...describe(lead, lead.memberId === memberId),
     ...publicStatus(lead),
     createdAt: lead.createdAt,
     dateLabel: DATE.format(new Date(lead.createdAt)),

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
-import RequestGate from "@/components/members/RequestGate";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import PageHero from "@/components/sections/PageHero";
 import AtAGlance from "@/components/ui/AtAGlance";
@@ -43,7 +42,7 @@ function ContactIcon({ name }: { name: ContactIconName }) {
 /**
  * Contact page (no form, no map): hero → statement → Direct lines action cards
  * → Quick answers (list + photo) → Follow us (Ink tiles). `#enquire` stays on the direct-lines section so older
- * links that pointed at the form land on the contact details. Request links (?interest=…) need a log-in first.
+ * links that pointed at the form land on the contact details.
  */
 export default async function ContactPage() {
   const c = await getSiteContent();
@@ -62,7 +61,6 @@ export default async function ContactPage() {
     contact.hours && { label: "Hours", value: contact.hours, icon: "hours", href: "/schedule", action: "Schedule" },
   ].filter(Boolean) as Line[];
   return <>
-    <Suspense fallback={null}><RequestGate /></Suspense>
     <PageHero title="Let's connect." intro="Email, call, or message us. We reply within one business day." image="/images/facilities/facility-landscape.jpg" imageAlt="BaseCamp CamSur set within the CamSur landscape" imagePosition="center 80%" />
 
     <AtAGlance summary={"Ask anything.\nWe answer fast.\nThen come train."} statement />

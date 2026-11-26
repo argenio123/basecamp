@@ -4,8 +4,8 @@ import Money from "./Money";
 /**
  * Proposed launch promotions from the pricing deck (rates being tested; reviewed after the first 90 days).
  * `perks` lists what each offer includes (Athlete features, day-pass inclusions, early-booking terms).
- * Each card ends with Purchase (or Book a camp), a member request: logged-out visitors are sent to the log-in
- * first (proxy + RequestGate).
+ * Each card ends with Purchase (checkout: logged-out visitors log in first, via the proxy) or Book a camp (a
+ * public request).
  */
 const PROMOS = [
   {

@@ -3,8 +3,6 @@
 import { usePathname } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { submitWithoutReset } from "@/components/forms/FormStatus";
-import { LoginPrompt } from "@/components/members/MemberGate";
-import { useMemberHint } from "@/components/members/useMemberHint";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { trackLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/leads/actions";
@@ -13,7 +11,6 @@ import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
 /** Footer newsletter sign-up (kind=newsletter). Keeps the existing .footer-newsletter classes. */
 export default function FooterSignup() {
   const pathname = usePathname();
-  const member = useMemberHint();
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const emailError = state.fieldErrors?.email;
   const consentError = state.fieldErrors?.consent;
@@ -24,15 +21,6 @@ export default function FooterSignup() {
 
   // Hidden on the member log-in / sign-up pages: the account form is already on the page.
   if (pathname.startsWith("/account/")) return null;
-
-  if (!member) {
-    return (
-      <div className="footer-newsletter">
-        <p className="footer-label">Get early access</p>
-        <LoginPrompt compact title="Log in to sign up" text="Create a free member account to join the early access list." />
-      </div>
-    );
-  }
 
   return (
     <form className="footer-newsletter" action={formAction} onSubmit={submitWithoutReset(formAction)} noValidate>

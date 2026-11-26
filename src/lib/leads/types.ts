@@ -10,9 +10,10 @@ export type Lead = {
   interests: string[]; enquiryType: "" | "general" | "corporate" | "partnership" | "camp-group" | "media";
   message: string; source: string;
   booking: null | LeadBooking;
+  /** Member account that sent it while logged in. Absent for anonymous requests: their email is unverified. */
+  memberId?: string;
 };
-/** `loginRequired`: the visitor must log in to a member account before submitting. */
-export type LeadResult = { status: "idle" | "success" | "error"; message: string; fieldErrors?: Record<string, string>; loginRequired?: boolean };
+export type LeadResult = { status: "idle" | "success" | "error"; message: string; fieldErrors?: Record<string, string> };
 
 export const LEAD_KINDS: readonly LeadKind[] = ["early-access", "enquiry", "booking", "newsletter"];
 export const LEAD_STATUSES: readonly LeadStatus[] = ["new", "contacted", "closed"];

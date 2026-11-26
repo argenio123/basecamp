@@ -1,27 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import type { ReactNode, Ref } from "react";
-import { MEMBER_HINT, loginHref } from "@/lib/members/types";
 import "@/styles/join-flow.css";
 
 // Building blocks for the one-question-per-screen forms (/schedule/book):
 // cover screen, progress bar, single-pick option cards and the Back / Continue row. Styles: src/styles/join-flow.css.
-
-/**
- * The cover's Start button: members go straight to the first question; visitors are sent to log in (or create an
- * account) and come back to this form with ?start=1, which opens it on the first question.
- */
-export function useStartOrLogin(start: () => void) {
-  const router = useRouter();
-  return () => {
-    if (document.cookie.split("; ").some((c) => c === `${MEMBER_HINT}=1`)) { start(); return; }
-    const url = new URL(window.location.href);
-    url.searchParams.set("start", "1");
-    router.push(loginHref(`${url.pathname}${url.search}`));
-  };
-}
 
 export type FlowChoice = { value: string; label: string; hint?: string };
 export type FlowContact = { phoneDisplay: string; phoneHref: string; email: string };

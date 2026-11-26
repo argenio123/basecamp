@@ -19,7 +19,7 @@ export default async function MemberHistoryPage() {
   const member = await currentMember();
   if (!member) redirect(loginHref("/account/history"));
 
-  const [profile, activity] = await Promise.all([getMemberProfile(member), getMemberActivity(member.email)]);
+  const [profile, activity] = await Promise.all([getMemberProfile(member), getMemberActivity(member.email, member.id)]);
   const completeFields = [profile.firstName, profile.phone, profile.goal, profile.experience, profile.preferredTime, profile.contactPreference].filter(Boolean).length;
   const completion = Math.round((completeFields / 6) * 100);
   const name = [profile.firstName, profile.lastName].filter(Boolean).join(" ");

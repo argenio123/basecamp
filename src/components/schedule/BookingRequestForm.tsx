@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { FieldError, fieldA11y, submitWithoutReset } from "@/components/forms/FormStatus";
-import { FlowCover, FlowNav, useStartOrLogin, FlowOptions, FlowProgress, FlowQuestion, type FlowChoice, type FlowContact } from "@/components/forms/StepFlow";
+import { FlowCover, FlowNav, FlowOptions, FlowProgress, FlowQuestion, type FlowChoice, type FlowContact } from "@/components/forms/StepFlow";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { BOOKING_ADDONS, BOOKING_SERVICES, PREFERRED_TIMES } from "@/content/constants";
 import type { TimetableSlot } from "@/content/types";
@@ -30,7 +30,7 @@ export type BookingFormContent = {
   disclaimer: string;
 };
 
-type Props = { content: BookingFormContent; initialService?: string | null; initialItem?: string | null; autoStart?: boolean };
+type Props = { content: BookingFormContent; initialService?: string | null; initialItem?: string | null };
 
 const SERVICE_VALUES = BOOKING_SERVICES.map((s) => s.value) as readonly string[];
 const isService = (v: string | null | undefined): v is Service => !!v && SERVICE_VALUES.includes(v);
@@ -81,14 +81,14 @@ const SESSIONS = "Timetable sessions";
  */
 export default function BookingRequestForm(props: Props) {
   const [formKey, setFormKey] = useState(0);
-  // "Start over" after sending returns to the cover screen, even when the form opened on the first question.
-  return <BookingFlow key={formKey} {...props} autoStart={formKey === 0 && props.autoStart} onReset={() => setFormKey((k) => k + 1)} />;
+  // "Start over" after sending remounts the flow on the cover screen.
+  return <BookingFlow key={formKey} {...props} onReset={() => setFormKey((k) => k + 1)} />;
 }
 
-function BookingFlow({ content, initialService, initialItem, autoStart, onReset }: Props & { onReset: () => void }) {
+function BookingFlow({ content, initialService, initialItem, onReset }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const [initial] = useState(() => resolveInitial(content, initialService, initialItem));
-  const [step, setStep] = useState<Step>(autoStart ? "service" : "intro");
+  const [step, setStep] = useState<Step>("intro");
   const [service, setService] = useState<Service | "">(initial.service);
   const [item, setItem] = useState(initial.item);
   const [groupNote, setGroupNote] = useState("");
@@ -99,11 +99,11 @@ function BookingFlow({ content, initialService, initialItem, autoStart, onReset 
   const index = STEPS.indexOf(step);
 
   useEffect(() => {
-    // On load, only an auto-started form (opened on its first question) takes focus and scrolls to the question.
-    if (firstRender.current) { firstRender.current = false; if (!autoStart) return; }
+    // Leave focus alone on load; move it to the new question when the step changes.
+    if (firstRender.current) { firstRender.current = false; return; }
     headingRef.current?.focus({ preventScroll: true });
     headingRef.current?.closest(".jf")?.scrollIntoView({ block: "start", behavior: "smooth" });
-  }, [step, autoStart]);
+  }, [step]);
 
   useEffect(() => {
     if (state.status === "success") trackLead("booking");
@@ -111,7 +111,6 @@ function BookingFlow({ content, initialService, initialItem, autoStart, onReset 
 
   const next = () => setStep(STEPS[Math.min(index + 1, STEPS.length - 1)]);
   const back = () => setStep(STEPS[Math.max(index - 1, 0)]);
-  const startOrLogin = useStartOrLogin(next);
 
   const groups = service ? optionGroups(service, content) : [];
   const slot = service === "class" ? content.slots.find((s) => s.id === item) : undefined;
@@ -167,7 +166,7 @@ function BookingFlow({ content, initialService, initialItem, autoStart, onReset 
           image={content.image}
           imageAlt="An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"
           caption="Sessions run from sunrise to night at BaseCamp CamSur, Pili."
-          onStart={startOrLogin}
+          onStart={next}
         />
       ) : (
         <div className="jf-stage">
