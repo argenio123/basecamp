@@ -25,10 +25,22 @@ const GROUP_OF: Readonly<Record<string, string>> = {
   "recovery-pricing": "recover", "advanced-recovery": "recover",
   "camps-pricing": "camps", corporate: "camps",
 };
-/** Contact-form interest each category's "Purchase" button pre-selects (values from INTEREST_OPTIONS). */
-const PURCHASE_INTEREST: Readonly<Record<string, string>> = {
-  packs: "membership-local", "day-passes": "drop-in", "open-gym": "drop-in", yoga: "yoga",
-  "recovery-pricing": "recovery", "advanced-recovery": "recovery", "camps-pricing": "training-camp", corporate: "corporate",
+const ACTION_LABEL: Readonly<Record<string, string>> = {
+  packs: "Get a Book",
+  "day-passes": "Get a Book",
+  "open-gym": "Get a Book",
+  yoga: "Get a Book",
+  "recovery-pricing": "Get a Book",
+  "advanced-recovery": "Get a Book",
+  "camps-pricing": "Get a Book",
+  corporate: "Inquire",
+};
+const CONTACT_INTEREST: Readonly<Record<string, string>> = {
+  yoga: "yoga",
+  "recovery-pricing": "recovery",
+  "advanced-recovery": "recovery",
+  "camps-pricing": "training-camp",
+  corporate: "corporate",
 };
 const GROUPS = [
   { id: "train", label: "Train" },
@@ -50,23 +62,22 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
   const cards = toBlocks(groups).flatMap((block): (FromPriceCard & { group: string })[] => {
     const price = fromPrice(blockItems(block));
     if (!price) return [];
-    // Items in groups sold online get a Buy link (not planned services, not items without a price).
-    const payableIds = new Set(block.groups.filter((g) => PAYABLE_GROUP_IDS.includes(g.id)).flatMap((g) => g.items.map((i) => i.id)));
-    const canPay = (i: { id: string; price: { min: number } | null; availability: string }) => payableIds.has(i.id) && !!i.price && i.availability !== "planned";
-    // "Purchase" opens checkout for the item the "From" price refers to (the cheapest one that can be paid online);
-    // categories with nothing payable online (corporate, planned services) get "Inquire" to the contact form.
-    const buyable = blockItems(block).filter(canPay).sort((x, y) => x.price!.min - y.price!.min);
-    const purchase = buyable[0] ? { href: payHref(buyable[0].id), label: "Purchase" } : { href: `/contact?interest=${PURCHASE_INTEREST[block.anchor] ?? "membership-local"}`, label: "Inquire" };
+    const payableIds = new Set(block.groups.filter((group) => PAYABLE_GROUP_IDS.includes(group.id)).flatMap((group) => group.items.map((item) => item.id)));
+    const buyable = blockItems(block)
+      .filter((item) => payableIds.has(item.id) && item.price && item.availability !== "planned")
+      .sort((a, b) => a.price!.min - b.price!.min);
+    const href = buyable[0]
+      ? payHref(buyable[0].id)
+      : `/contact?interest=${CONTACT_INTEREST[block.anchor] ?? "membership-local"}`;
     return [{
       key: block.key, anchor: block.anchor, title: block.groups[0].title,
-      href: purchase.href, ctaLabel: purchase.label,
+      href, ctaLabel: ACTION_LABEL[block.anchor] ?? "Get a Book",
       audience: audienceKey(block), audienceText: audienceLabel(block), availability: blockAvailability(block),
       price: price.label, unit: price.unit, group: GROUP_OF[block.anchor] ?? "train",
       note: isMedicalBlock(block) && disclaimer ? disclaimer : "",
       items: blockItems(block).map((item) => ({
         id: item.id, name: item.name, badge: item.badge, description: item.description, featured: item.featured,
         availability: item.availability, price: formatPhp(item.price), unit: item.unit,
-        pay: canPay(item) ? payHref(item.id) : "",
       })),
     }];
   });

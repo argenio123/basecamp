@@ -32,22 +32,22 @@ const destinationPillars = [
     title: "TRAIN",
     description: "Purpose-built performance training zones combining CrossFit, functional fitness, and endurance programming in a world-class outdoor environment.",
     href: "/facilities/training",
-    image: "/images/destination/generated/train-basecamp-v2.png",
+    image: "/images/facilities/1st floor- crossfit area-v2.webp",
     imagePosition: "center",
   },
   {
     title: "TRANSFORM",
     description: "Comprehensive recovery infrastructure featuring contrast therapy, cold plunge pools, saunas, and dedicated wellness facilities.",
     href: "/facilities/recovery",
-    image: "/images/destination/generated/transform-basecamp-v2.png",
+    image: "/images/facilities/2F Plunge.webp",
     imagePosition: "center",
   },
   {
     title: "THRIVE",
     description: "A thriving community ecosystem where athletes connect, grow, and belong. Designed for long stays and lasting impact.",
     href: "/facilities/lifestyle",
-    image: "/images/destination/generated/thrive-basecamp-v2.png",
-    imagePosition: "right center",
+    image: "/images/facilities/1st floor- cafeteria-v2.webp",
+    imagePosition: "center",
   },
 ];
 

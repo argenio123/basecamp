@@ -16,6 +16,8 @@
 .ft-ghost-host > .shell { position: relative; z-index: 1; }
 .ft-ghost { position: absolute; z-index: 0; color: rgba(21,23,19,.07); font-size: clamp(84px, 15vw, 250px); font-weight: 800; line-height: .78; letter-spacing: -.05em; text-transform: uppercase; white-space: nowrap; pointer-events: none; user-select: none; }
 .section-dark .ft-ghost, .ft-team .ft-ghost { color: rgba(255,255,255,.06); }
+/* The word itself lives in data-ghost (decorative: kept out of the text so contrast checks and copy/paste skip it). */
+.ft-ghost::before { content: attr(data-ghost); }
 .ft-ghost--glance { top: clamp(18px, 2.4vw, 36px); right: -.04em; }
 .ft-ghost-wrap { position: relative; }
 
@@ -622,7 +624,7 @@ html main .mb-from-section { background: var(--paper); color: var(--ink); }
 .mb-px-head h2 { margin: 0; }
 .mb-px-intro { max-width: 52ch; margin: 18px 0 0; color: var(--olive); font-size: 17px; line-height: 1.6; }
 .mb-px-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.mb-px-list li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--white); scroll-margin-top: calc(var(--header-height, 106px) + 24px); transition: background-color .45s ease, border-color .45s ease, box-shadow .45s ease; }
+.mb-px-list li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--white); scroll-margin-top: calc(var(--header-height, 106px) + 24px); transition: background-color .45s ease, border-color .45s ease, box-shadow .45s ease; }
 .mb-px-list li.is-active { border-color: var(--ink); background: var(--ink); box-shadow: 0 18px 40px rgba(21,23,19,.18); }
 .mb-px-row { display: grid; gap: 4px; padding: 13px 22px; border: 0; background: transparent; color: var(--ink); text-align: left; cursor: pointer; transition: color .45s ease; }
 .mb-px-row:focus-visible { outline: 2px solid var(--signal); outline-offset: -4px; border-radius: 18px; }
@@ -631,8 +633,6 @@ html main .mb-from-section { background: var(--paper); color: var(--ink); }
 .mb-px-from small { font: 400 10px/1.2 var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
 .mb-px-list li.is-active .mb-px-row { color: var(--white); }
 .mb-px-list li.is-active .mb-px-from { color: var(--signal); }
-.mb-px-cta { margin-right: 22px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); font: 700 11px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; opacity: .6; transition: opacity .45s ease, background-color .45s ease, border-color .45s ease, color .45s ease; }
-.mb-px-list li.is-active .mb-px-cta { opacity: 1; border-color: var(--signal); background: var(--signal); color: var(--ink); }
 .mb-px-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; pointer-events: none; }
 .mb-px-bar > span { display: block; height: 100%; background: var(--signal); transform: scaleX(0); transform-origin: left; }
 .mb-px-list li.is-active .mb-px-bar > span { transform: scaleX(1); transition: transform .4s ease; }
@@ -658,6 +658,7 @@ html main .mb-px-from .mb-cur { margin-left: .2em !important; font-size: .85em !
 .mb-px-dots { transform-origin: left; }
 .mb-px-panel > section.is-active .mb-px-dots { animation: mb-px-draw-dots .6s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(.38s + var(--n, 0) * 55ms); }
 .mb-px-panel > section.is-active .mb-px-note { animation: mb-px-up .5s ease both; animation-delay: calc(.4s + 10 * 55ms); }
+.mb-px-panel > section.is-active .mb-px-inquire { animation: mb-px-up .5s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(.45s + var(--item-count, 0) * 55ms); }
 @keyframes mb-px-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes mb-px-wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(18px); } to { clip-path: inset(0 0 0 0); transform: none; } }
 @keyframes mb-px-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -680,19 +681,23 @@ html main .mb-px-panel-head h3 { margin: 0; color: var(--white); font: 400 clamp
 .mb-px-item-price small { color: rgba(255,255,255,.55); font: 400 9.5px/1 var(--font-geist-mono), monospace; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
 .mb-px-items li[data-featured] .mb-px-item-price strong { color: var(--signal); }
 .mb-px-note { margin: 6px 0 0; padding: 10px 14px; border-left: 3px solid var(--signal); color: rgba(255,255,255,.65); font-size: 12.5px; line-height: 1.5; }
+.mb-px-inquire { display: inline-flex; align-items: center; justify-content: center; gap: 28px; justify-self: start; min-height: 48px; margin-top: 8px; padding: 0 22px; border-radius: 999px; background: var(--signal); color: var(--ink); font: 800 11px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; transition: transform .25s ease, box-shadow .25s ease; }
+.mb-px-inquire:hover, .mb-px-inquire:focus-visible { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(198,244,50,.2); }
+.mb-px-inquire span { display: inline-block; font-size: 15px; transition: transform .25s ease; }
+.mb-px-inquire:hover span, .mb-px-inquire:focus-visible span { transform: translateX(4px); }
 @media (max-width: 900px) {
   .mb-px-grid { grid-template-columns: 1fr; }
   .mb-px-panel { position: static; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mb-px-list li, .mb-px-row, .mb-px-from, .mb-px-cta { transition: none; }
+  .mb-px-list li, .mb-px-row, .mb-px-from, .mb-px-inquire, .mb-px-inquire span { transition: none; }
   .mb-px-panel > section.is-active *, .mb-px-panel > section.is-active .mb-px-panel-from::after { animation: none !important; }
   .mb-px-list li.is-active .mb-px-bar > span[data-run] { animation: none; }
 }
 
 
 
-/* ---------- Member accounts: log-in / sign-up pages, "Log in to continue" gate, header log-out ---------- */
+/* ---------- Member accounts: log-in / sign-up pages, header log-out ---------- */
 .mb-auth { padding-top: calc(var(--header-height, 106px) + clamp(40px, 6vw, 80px)); background: var(--paper); }
 .mb-auth-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: stretch; }
 .mb-auth-brand { display: grid; align-content: start; gap: 18px; padding: clamp(28px, 4vw, 52px); border-radius: 22px; background: var(--ink); color: var(--white); }
@@ -725,21 +730,6 @@ html main .mb-auth-card h2 { margin: 0; font: 400 clamp(30px, 3vw, 44px)/.95 var
 .mb-auth-switch a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .mb-auth-loading { margin: 0; color: var(--olive); }
 
-/* "Log in to continue" gate (replaces a form for visitors). */
-.mb-gate { display: grid; gap: 10px; justify-items: start; padding: clamp(22px, 2.6vw, 32px); border-radius: 18px; background: var(--ink); color: var(--white); }
-.mb-gate-eyebrow { margin: 0; color: var(--signal); font: 400 11px/1.2 var(--font-geist-mono), monospace; letter-spacing: .2em; text-transform: uppercase; }
-.mb-gate-title { margin: 0; color: var(--white); font: 400 clamp(24px, 2.4vw, 34px)/1 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.01em; text-transform: uppercase; }
-.mb-gate-text { margin: 0; color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.5; }
-.mb-gate-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
-.mb-gate-login, .mb-gate-signup { padding: 12px 20px; border-radius: 999px; font: 700 12px/1 var(--font-poppins), sans-serif; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
-.mb-gate-login { border: 1px solid var(--signal); background: var(--signal); color: var(--ink); }
-.mb-gate-login:hover { border-color: var(--white); background: var(--white); }
-.mb-gate-signup { border: 1px solid rgba(255,255,255,.5); color: var(--white); }
-.mb-gate-signup:hover { border-color: var(--signal); color: var(--signal); }
-.mb-gate-compact { padding: 16px; border-radius: 14px; }
-.mb-gate-compact .mb-gate-title { font-size: 18px; }
-.mb-gate-compact .mb-gate-text { font-size: 13px; }
-.mb-gate-compact .mb-gate-login, .mb-gate-compact .mb-gate-signup { padding: 10px 14px; font-size: 11px; }
 /* Header / mobile "Log out" keeps the Login button look. */
 .mb-nav-logout { display: contents; }
 .mb-nav-logout button { cursor: pointer; font: inherit; }

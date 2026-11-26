@@ -5,7 +5,6 @@ import { type CSSProperties, useEffect, useRef, useState } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { Availability } from "@/content/types";
 import Money from "./Money";
-import "@/components/payments/payments.css";
 
 export type FromPriceItem = {
   id: string;
@@ -16,17 +15,15 @@ export type FromPriceItem = {
   availability: Availability;
   price: string;
   unit: string;
-  /** Online checkout link ("" when the item can't be paid online). */
-  pay?: string;
 };
 
 export type FromPriceCard = {
   key: string;
   anchor: string;
-  /** Where the category button goes (online checkout, or the contact form when nothing is payable online); null hides it. */
+  /** Checkout or contact destination for the panel action; null hides it. */
   href: string | null;
-  /** "Purchase" (checkout) or "Inquire" (contact form). */
-  ctaLabel?: string;
+  /** Category-specific action wording; never the generic "Purchase" label. */
+  ctaLabel: string;
   title: string;
   /** "locals" | "travellers" | "both" (who the price is mainly for). */
   audience: "locals" | "travellers" | "both";
@@ -97,7 +94,6 @@ export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst
                 <span className="mb-px-label">{c.title}</span>
                 <span className="mb-px-from"><Money value={c.price} />{c.unit && <small>{c.unit}</small>}</span>
               </button>
-              {c.href && <Link href={c.href} className="mb-px-cta" aria-label={`${c.ctaLabel ?? "Purchase"} ${c.title}`}>{c.ctaLabel ?? "Purchase"}</Link>}
               <span className="mb-px-bar" aria-hidden="true"><span key={i === active ? `${cycleKey}-${active}` : "idle"} data-run={i === active && !paused ? "" : undefined} /></span>
             </li>
           ))}
@@ -106,7 +102,7 @@ export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst
 
       <div className="mb-px-panel" id="mb-px-panel" aria-live="polite" data-reveal data-reveal-delay="short">
         {cards.map((c, i) => (
-          <section key={c.key} className={i === active ? "is-active" : undefined} aria-hidden={i !== active} aria-labelledby={`mb-px-${c.key}`}>
+          <section key={c.key} className={i === active ? "is-active" : undefined} aria-hidden={i !== active} aria-labelledby={`mb-px-${c.key}`} style={{ "--item-count": c.items.length } as CSSProperties}>
             <p className="mb-px-group">{c.groupLabel}</p>
             <div className="mb-px-panel-head">
               <h3 id={`mb-px-${c.key}`}>{c.title}</h3>
@@ -119,11 +115,11 @@ export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst
                   <span className="mb-px-item-name">{item.name}{item.badge && <em>{item.badge}</em>}</span>
                   <span className="mb-px-dots" aria-hidden="true" />
                   <span className="mb-px-item-price"><strong><Money value={item.price} /></strong>{item.unit && <small>{item.unit}</small>}</span>
-                  {item.pay && <Link className="mb-px-buy" href={item.pay} aria-label={`Buy ${item.name} online`}>Buy</Link>}
                 </li>
               ))}
             </ul>
             {c.note && <p className="mb-px-note">{c.note}</p>}
+            {c.href && <Link href={c.href} className="mb-px-inquire" aria-label={`${c.ctaLabel} — ${c.title}`}>{c.ctaLabel} <span aria-hidden="true">→</span></Link>}
           </section>
         ))}
       </div>
