@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { directionsUrl } from "@/data/brand";
+import { useUi } from "@/i18n/client";
 import "@/styles/find-us.css";
 
 const subscribeNoop = () => () => {};
@@ -17,6 +18,7 @@ const subscribeNoop = () => () => {};
  * The iframe mounts on the client only, so its onLoad can never fire before React is listening.
  */
 export default function FindUsMap({ query }: { query: string }) {
+  const ui = useUi();
   const [view, setView] = useState<"k" | "m">("k");
   const [active, setActive] = useState(false);
   const [loadedView, setLoadedView] = useState<"k" | "m" | null>(null);
@@ -29,19 +31,19 @@ export default function FindUsMap({ query }: { query: string }) {
       <div className="fu-map-fallback" aria-hidden={loaded ? true : undefined}>
         <svg viewBox="0 0 24 24" aria-hidden="true" className="fu-map-fallback-pin"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" /></svg>
         <a href={directionsUrl(query)} target="_blank" rel="noreferrer" tabIndex={loaded ? -1 : undefined}>
-          Open in Google Maps<span className="sr-only"> (opens in a new tab)</span>
+          {ui.map.open}<span className="sr-only"> {ui.common.opensNewTab}</span>
         </a>
       </div>
       {isClient && (
-        <iframe key={view} title="Map: BaseCamp CamSur" src={src} loading="lazy" referrerPolicy="no-referrer-when-downgrade" tabIndex={active ? 0 : -1} onLoad={() => setLoadedView(view)} />
+        <iframe key={view} title={ui.map.title} src={src} loading="lazy" referrerPolicy="no-referrer-when-downgrade" tabIndex={active ? 0 : -1} onLoad={() => setLoadedView(view)} />
       )}
-      <div className="fu-map-toggle" role="group" aria-label="Map view">
-        <button type="button" aria-pressed={view === "k"} onClick={() => setView("k")}>Satellite</button>
-        <button type="button" aria-pressed={view === "m"} onClick={() => setView("m")}>Map</button>
+      <div className="fu-map-toggle" role="group" aria-label={ui.map.view}>
+        <button type="button" aria-pressed={view === "k"} onClick={() => setView("k")}>{ui.map.satellite}</button>
+        <button type="button" aria-pressed={view === "m"} onClick={() => setView("m")}>{ui.map.map}</button>
       </div>
       {!active && loaded && (
         <button type="button" className="fu-map-guard" onClick={() => setActive(true)}>
-          <span>Click to explore the map</span>
+          <span>{ui.map.explore}</span>
         </button>
       )}
     </div>

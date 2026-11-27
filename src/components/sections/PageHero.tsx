@@ -1,5 +1,6 @@
 import Image from "next/image";
 import AiImageLabel, { imageKind, labelledImageAlt, type ImageKind } from "@/components/ui/AiImageLabel";
+import { getLocale } from "@/i18n/server";
 import HeroVideo, { type HeroVideoSource } from "./HeroVideo";
 
 /**
@@ -61,6 +62,7 @@ export default function PageHero({ eyebrow, title, intro, image, imageAlt, image
   // photo and say so in its alt text.
   const hasVideo = !!video && (variant === "full" || variant === "stat");
   const kind: ImageKind | null = hasVideo || aiGenerated === false ? null : aiGenerated ? "ai" : imageKind(image);
+  const locale = getLocale();
   const copy = (
     <div className="shell page-hero-content">
       {eyebrow && <p className="eyebrow eyebrow-light">{eyebrow}</p>}
@@ -73,7 +75,7 @@ export default function PageHero({ eyebrow, title, intro, image, imageAlt, image
     return (
       <section className={`page-hero page-hero-${align}${fullHeight ? " page-hero--full" : ""}${video ? " page-hero--video" : ""}${video && fitVideo ? " page-hero--ratio" : ""}${animate ? "" : " page-hero--static"}`}>
         {/* Video heroes use the supplied photo as a responsive loading poster; other heroes keep the optimized image. */}
-        {video ? <HeroVideo {...video} poster={video.poster ?? image} /> : <Image src={image} alt={labelledImageAlt(imageAlt, kind)} fill preload sizes="100vw" className="cover-image" style={imagePosition ? { objectPosition: imagePosition } : undefined} />}
+        {video ? <HeroVideo {...video} poster={video.poster ?? image} /> : <Image src={image} alt={labelledImageAlt(imageAlt, kind, locale)} fill preload sizes="100vw" className="cover-image" style={imagePosition ? { objectPosition: imagePosition } : undefined} />}
         <div className="hero-shade" />
         {kind && <AiImageLabel kind={kind} className="ai-label--hero" hidden={!!imageAlt.trim()} />}
         {copy}
@@ -82,7 +84,7 @@ export default function PageHero({ eyebrow, title, intro, image, imageAlt, image
   }
 
   const photo = (
-    <Image src={image} alt={labelledImageAlt(imageAlt, kind)} fill preload sizes={variant === "editorial" && frame === "band" ? "100vw" : SIZES[variant]} className="cover-image" style={imagePosition ? { objectPosition: imagePosition } : undefined} />
+    <Image src={image} alt={labelledImageAlt(imageAlt, kind, locale)} fill preload sizes={variant === "editorial" && frame === "band" ? "100vw" : SIZES[variant]} className="cover-image" style={imagePosition ? { objectPosition: imagePosition } : undefined} />
   );
   const label = (className: string) => kind && <AiImageLabel kind={kind} className={className} hidden={!!imageAlt.trim()} />;
   const classes = `page-hero page-hero--${variant}${variant === "editorial" ? ` page-hero--${frame}` : ""}${hasVideo ? " page-hero--video" : ""}${animate ? "" : " page-hero--static"}`;

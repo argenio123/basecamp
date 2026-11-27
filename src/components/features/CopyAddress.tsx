@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useUi } from "@/i18n/client";
 
 /** Copy-to-clipboard pill (address by default, e.g. "Copy email" too); confirms for two seconds. */
-export default function CopyAddress({ text, className, label = "Copy address", copiedLabel = "Address copied" }: { text: string; className?: string; label?: string; copiedLabel?: string }) {
+export default function CopyAddress({ text, className, label, copiedLabel }: { text: string; className?: string; label?: string; copiedLabel?: string }) {
+  const ui = useUi();
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -16,7 +18,7 @@ export default function CopyAddress({ text, className, label = "Copy address", c
   };
   return (
     <button type="button" className={className} onClick={copy} aria-live="polite">
-      {copied ? copiedLabel : label}
+      {copied ? copiedLabel ?? ui.common.addressCopied : label ?? ui.common.copyAddress}
     </button>
   );
 }

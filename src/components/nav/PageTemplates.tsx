@@ -4,6 +4,7 @@ import QuoteBand from "@/components/features/QuoteBand";
 import AtAGlance from "@/components/ui/AtAGlance";
 import { sectionKeyFor } from "@/data/features";
 import { getData } from "@/i18n/data";
+import { getUi } from "@/i18n/server";
 import Breadcrumbs from "./Breadcrumbs";
 import PrevNext from "./PrevNext";
 import RelatedLinks from "./RelatedLinks";
@@ -58,7 +59,7 @@ export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true,
       <AtAGlance ghost={feature.ghost} {...glance} />
       {marquee && showsMarquee(path) && <Marquee text={feature.marquee} />}
       {cardsAfter && children}
-      {cards !== false && <SubpageCards section={path} title="Explore" {...cards} />}
+      {cards !== false && <SubpageCards section={path} title={getUi().nav.exploreTitle} {...cards} />}
       {!cardsAfter && children}
       {quote && <QuoteBand quote={feature.quote} />}
       {cta}
