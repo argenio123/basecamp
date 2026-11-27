@@ -18,10 +18,20 @@ export async function markPaid(payment: Payment, info: { method?: string; refere
     const start = lastEnd && lastEnd > now ? lastEnd : now;
     period = { periodStart: start.toISOString(), periodEnd: addMonth(start).toISOString() };
   }
-  return updatePayment(payment.id, (p) => (p.status === "paid" ? p : {
+  const result = await updatePayment(payment.id, (p) => (p.status === "paid" ? p : {
     ...p, ...period, status: "paid", paidAt: now.toISOString(),
     method: info.method ?? p.method, reference: info.reference ?? p.reference,
   }));
+  // A class booking paid online is confirmed as soon as its payment is (imported lazily: bookings uses this module).
+  if (result?.status === "paid") {
+    try {
+      const { confirmBookingForPayment } = await import("@/lib/bookings/service");
+      await confirmBookingForPayment(result, undefined, now.getTime());
+    } catch (error) {
+      console.error("[bookings] confirm after payment failed:", error instanceof Error ? error.message : error);
+    }
+  }
+  return result;
 }
 
 /**
