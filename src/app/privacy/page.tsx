@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { POSTAL_ADDRESS, PRIVACY_EMAIL, SITE_NAME } from "@/data/brand";
 import { DPO_NAME, TERMS_PATH } from "@/data/legal";
 import { CONSENT_MAX_AGE_DAYS } from "@/lib/consent";
-import { LEAD_RETENTION_MONTHS, UNPAID_PAYMENT_RETENTION_DAYS } from "@/lib/privacy/retention";
+import { EXPIRED_HOLD_RETENTION_DAYS, LEAD_RETENTION_MONTHS, UNPAID_PAYMENT_RETENTION_DAYS } from "@/lib/privacy/retention";
 import LegalShell, { LegalSectionBlock, Tbc, type LegalSection } from "./_legal/LegalShell";
 
 export const metadata: Metadata = {
@@ -75,7 +75,7 @@ const ROWS: Row[] = [
   {
     data: "Member account",
     detail: "First and last name, email, phone (optional), your password (stored only as a one-way hash, never as readable text) and the date you joined.",
-    purpose: "To let you log in, and to show your requests and payments in your account.",
+    purpose: "To let you log in, and to show your requests, class bookings and payments in your account.",
     basis: "Our contract with you (Sec. 12(b)).",
     retention: "While your account is open. When you delete it in your account settings, the account record is deleted straight away.",
   },
@@ -85,6 +85,13 @@ const ROWS: Row[] = [
     purpose: "To tailor coaching and reminders to you.",
     basis: <>Our contract with you (Sec. 12(b)); for any health details in your notes, your consent (Sec. 13(a)).</>,
     retention: "As for your member account, and deleted with it. You can change these fields yourself in your account settings.",
+  },
+  {
+    data: "Class bookings",
+    detail: "When you book a class from your account: your name and email, the session (title, time and date), the status (awaiting payment, confirmed, cancelled or expired), whether it was included in your membership or paid online (with the amount and a link to the payment record), when you booked and when it was confirmed or cancelled, and who cancelled it. A short note for our staff may be added, for example that a refund is due.",
+    purpose: "To keep your place in the session, make sure classes don't go over capacity, let you see and cancel your bookings, and plan coaching.",
+    basis: "Our contract with you (Sec. 12(b)).",
+    retention: <>{LEAD_RETENTION_MONTHS} months after the session, then anonymised: your name, email and the link to your account are removed, and the session, date and status stay for attendance statistics. Unpaid holds that ran out are deleted {EXPIRED_HOLD_RETENTION_DAYS} days after they expired, once the session has passed <Tbc>periods to be confirmed</Tbc>.</>,
   },
   {
     data: "Online payments",
@@ -184,7 +191,7 @@ export default function PrivacyPage() {
         </p>
         <ul className="lg-list">
           <li><strong>Vercel</strong> hosts the website and runs its server code; it handles every request, including the data you send through forms.</li>
-          <li><strong>Upstash</strong> provides the database (Redis) where form submissions, member accounts, profiles and payment records are stored.</li>
+          <li><strong>Upstash</strong> provides the database (Redis) where form submissions, member accounts, profiles, class bookings and payment records are stored.</li>
           <li><strong>PayMongo</strong> processes payments by GCash, Maya, card and other local methods, and emails your receipt.</li>
           <li><strong>PayPal</strong> processes payments made with PayPal.</li>
           <li><strong>Google</strong>: Google Analytics (only when switched on), the Google Maps embed on our Visit page, the optional &quot;add to calendar&quot; links on the schedule, and Gmail, which we use to reply to you by email.</li>
@@ -270,6 +277,13 @@ export default function PrivacyPage() {
             {" "}&quot;[deleted]&quot;, and only the date, type and status stay so we can count requests.
           </li>
           <li>
+            <strong>Class bookings</strong> for sessions held more than {LEAD_RETENTION_MONTHS} months ago are
+            anonymised: your name, email and the link to your account are replaced, and only the session, date and
+            status stay so we can count attendance. Unpaid holds that ran out are deleted{" "}
+            {EXPIRED_HOLD_RETENTION_DAYS} days after they expired, once the session has passed. Bookings for upcoming
+            sessions are never changed by this clean-up.
+          </li>
+          <li>
             <strong>Unpaid checkouts</strong> (expired, cancelled, failed or abandoned) lose their name and email after
             {" "}{UNPAID_PAYMENT_RETENTION_DAYS} days. Paid payment records are kept for tax and accounting.
           </li>
@@ -307,15 +321,19 @@ export default function PrivacyPage() {
         <ul className="lg-list">
           <li>
             <strong>Download my data</strong> (access and portability): a JSON file with your account details, profile
-            and preferences, the requests you sent us and your payment records. Staff notes on your requests are not in
-            the file; email us if you want them.
+            and preferences, the requests you sent us, your class bookings (session, date, status and when you booked,
+            confirmed or cancelled) and your payment records. Staff notes on your requests and bookings are not in the
+            file; email us if you want them.
           </li>
           <li>
             <strong>Delete my account</strong> (erasure): you confirm by typing your email address or &quot;DELETE&quot;
             and your current password. We then delete your account, profile and preferences straight away, anonymise the
             requests you sent us (name, email, phone and message replaced with &quot;[deleted]&quot;; the date and type
-            stay for our statistics) and log you out. Payment records are kept only because tax and accounting rules
-            require it, with your name and email removed: the item, amount, payment reference and date stay.
+            stay for our statistics), cancel your upcoming class bookings so the spots are freed, anonymise your other
+            class bookings (name and email replaced; the session, date and status stay for attendance statistics) and
+            log you out. Payment records are kept only because tax and accounting rules require it, with your name and
+            email removed: the item, amount, payment reference and date stay. If you paid online for an upcoming class,
+            email us before you delete your account so we can arrange the refund.
           </li>
         </ul>
         <p><strong>By email</strong>, for any right, including if you don&apos;t have an account:</p>
