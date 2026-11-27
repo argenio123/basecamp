@@ -53,7 +53,7 @@ export default async function AboutBuildPage() {
   return (
     <DetailTemplate
       path="/about/the-build"
-      hero={<PageHero variant="editorial" caption={t("The build · Camarines Sur")} title={BUILD_HERO.title} intro={BUILD_HERO.intro} image={BUILD_HERO.image} imageAlt={BUILD_HERO.imageAlt} />}
+      hero={<PageHero title={BUILD_HERO.title} intro={BUILD_HERO.intro} image={BUILD_HERO.image} imageAlt={BUILD_HERO.imageAlt} />}
       glance={{ summary: ABOUT_GLANCE.build, statement: true }}
       cta={<CtaBand title={ABOUT_CTA.title} body={ABOUT_CTA.body} label={c.settings.founding.enabled ? c.settings.founding.ctaLabel || undefined : undefined} href="/contact" />}
     >

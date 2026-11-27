@@ -19,7 +19,7 @@ export default function CampsPage() {
   return (
     <DetailTemplate
       path="/visit/camps"
-      hero={<PageHero {...CAMPS_HERO} variant="editorial" frame="band" />}
+      hero={<PageHero {...CAMPS_HERO} />}
       glance={{ summary: CAMPS_GLANCE.summary, statement: true }}
       related={["/visit/why-camsur", "/membership/price-guide"]}
       cta={<CtaBand eyebrow={CAMPS_CTA.eyebrow} />}

@@ -27,9 +27,10 @@ export const FIL_PHRASES: Readonly<Record<string, string>> = {
     "Gym, mga coached class at recovery (cold plunge, sauna, therapy) sa iisang lugar, dito sa Camarines Sur.",
   "Join early access": "Sumali sa early access",
   "See the facilities": "Tingnan ang mga pasilidad",
-  "The Philippines' first": "Ang kauna-unahang",
-  "integrated sports, fitness": "integrated sports, fitness",
-  "& wellness destination": "at wellness destination sa Pilipinas",
+  // The three lines of the home statement are rebalanced in Filipino (similar lengths), so none overflows.
+  "The Philippines' first": "Ang kauna-unahang integrated",
+  "integrated sports, fitness": "sports, fitness at wellness",
+  "& wellness destination": "destination sa Pilipinas",
   "Basecamp CamSur represents a bold new category in sports tourism: an integrated destination where elite performance training, evidence-based recovery, and authentic lifestyle converge to create transformative experiences.":
     "Bagong klase ng sports tourism ang Basecamp CamSur: isang integrated destination kung saan nagsasama ang elite performance training, recovery na batay sa siyensya, at tunay na lifestyle para sa mga karanasang talagang nagpapabago.",
   "Purpose-built performance training zones combining CrossFit, functional fitness, and endurance programming in a world-class outdoor environment.":

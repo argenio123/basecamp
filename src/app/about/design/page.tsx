@@ -6,7 +6,6 @@ import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { getData } from "@/i18n/data";
 import { alternatesFor } from "@/i18n/paths";
-import { t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Design & Place",
@@ -24,7 +23,7 @@ export default async function AboutDesignPage() {
   return (
     <DetailTemplate
       path="/about/design"
-      hero={<PageHero variant="editorial" caption={t("Design · Shaped by training and the landscape")} title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} />}
+      hero={<PageHero title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} />}
       glance={{ summary: ABOUT_GLANCE.design, statement: true }}
       cta={<CtaBand title={ABOUT_CTA.title} body={ABOUT_CTA.body} label={c.settings.founding.enabled ? c.settings.founding.ctaLabel || undefined : undefined} href="/contact" />}
     >

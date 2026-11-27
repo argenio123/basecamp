@@ -39,7 +39,7 @@ export default async function FoundingPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero variant="split" title={t("Be one of the first.")} intro={t("Join before opening and keep the founding rate, priority access and a place at the launch event.")} image="/images/membership/generated/founding-members-community.webp" imageAlt={t("Founding gym members gathering together after their first workout")} />}
+      hero={<PageHero title={t("Be one of the first.")} intro={t("Join before opening and keep the founding rate, priority access and a place at the launch event.")} image="/images/membership/generated/founding-members-community.webp" imageAlt={t("Founding gym members gathering together after their first workout")} />}
       glance={{ summary: t("Founding rates.\nPriority access.\nA seat at launch."), statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions", "/about/faq"]}
       cta={<>

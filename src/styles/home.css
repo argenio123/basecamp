@@ -311,6 +311,16 @@
 @media (min-width: 1041px) {
   .destination-intro .hm-intro-title { font-size: min(78px, calc((100vw - 72px) / 16.5)); white-space: nowrap; }
 }
+/* Filipino (/fil): longer words and button labels. On desktop the hero buttons go under the text (as on tablets) so
+   the headline keeps two clean lines instead of wrapping beside the wide buttons (which split "MAG-" from "RECOVER"),
+   and the unwrapped statement lines are sized for the longer Filipino line. */
+@media (min-width: 1041px) {
+  html[lang="fil"] .home-hero .hm-hero-copy { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  html[lang="fil"] .home-hero .hm-hero-copy .hm-hero-actions { justify-content: flex-start; }
+  html[lang="fil"] .home-hero .hm-hero-text { max-width: 1100px; }
+  html[lang="fil"] .home-hero .hm-hero-title { font-size: clamp(40px, 4.4vw, 66px); }
+  html[lang="fil"] .destination-intro .hm-intro-title { font-size: min(66px, calc((100vw - 72px) / 20.5)); }
+}
 @media (max-height: 700px) and (min-width: 761px) {
   .home-hero .hm-hero-copy { bottom: 80px; }
   .home-hero .hm-hero-title { font-size: clamp(38px, 4.6vw, 64px); }
