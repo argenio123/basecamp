@@ -1,5 +1,6 @@
 import { readContentFresh } from "@/content/get";
 import type { ContentMeta, SiteContent } from "@/content/types";
+import { staleTranslations } from "@/i18n/stale";
 import { requireAdmin, staffEmail } from "@/lib/auth/session";
 import { listLeads } from "@/lib/leads/store";
 import type { Lead } from "@/lib/leads/types";
@@ -26,5 +27,5 @@ export default async function AdminDashboard() {
       </div>
     );
   }
-  return <AdminApp content={data.content} meta={data.meta} leads={data.leads} storage={driver()} signedInAs={staffEmail(session)} />;
+  return <AdminApp content={data.content} meta={data.meta} leads={data.leads} storage={driver()} signedInAs={staffEmail(session)} staleFil={staleTranslations(data.content)} />;
 }

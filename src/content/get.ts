@@ -19,7 +19,8 @@ import type { ContentMeta, SiteContent } from "./types";
  * Site content in `locale` for public pages and the root layout. Without an argument: the request locale
  * (src/i18n/server.ts), i.e. "fil" inside a /fil route and "en" everywhere else. Root-layout code passes it explicitly.
  * Filipino = the English content (with admin edits) overlaid with src/i18n/fil/content.ts: translated text only,
- * English for anything untranslated, internal links pointed at /fil pages (design: src/i18n/README.md).
+ * English for anything untranslated or edited by the admin since it was translated, internal links pointed at /fil
+ * pages (design: src/i18n/README.md).
  */
 export async function getSiteContent(locale: Locale = getLocale()): Promise<SiteContent> {
   return getLocalizedContent(locale);
@@ -40,7 +41,8 @@ async function getLocalizedContent(locale: Locale): Promise<SiteContent> {
   }
   const content = mergeContent(DEFAULT_CONTENT, stored?.sections ?? {});
   if (locale === DEFAULT_LOCALE) return content;
-  return mapHrefs(localizeValue(content, filContent), (href) => localizedHref(href, locale));
+  // Translations apply only where the English still equals the default they were made from (admin edits win).
+  return mapHrefs(localizeValue(content, filContent, { source: DEFAULT_CONTENT }), (href) => localizedHref(href, locale));
 }
 
 /** Uncached read for the admin (call only inside a Suspense boundary after requireAdmin()). */
