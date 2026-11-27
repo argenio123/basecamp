@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/i18n/client";
+import { FACILITIES_UI } from "@/i18n/ui-sections/facilities";
+import { fmt } from "@/i18n/ui";
 
 export type ShowcaseSlide = {
   /** Small label above the title (e.g. the floor or group: "Zones", "Recovery"). */
@@ -30,6 +33,7 @@ function keepHyphens(title: string) {
  * auto-advance. Deep links (#equipment …) open their slide.
  */
 export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSlide[]; label: string }) {
+  const ui = FACILITIES_UI[useLocale()].showcase;
   const [active, setActive] = useState(0);
   const rootRef = useRef<HTMLElement>(null);
   const count = slides.length;
@@ -70,7 +74,7 @@ export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSl
           className={`fc-show-slide${i === active ? " is-active" : ""}`}
           role="group"
           aria-roledescription="slide"
-          aria-label={`${i + 1} of ${count}: ${s.title}`}
+          aria-label={fmt(ui.slide, { n: i + 1, count, title: s.title })}
           aria-hidden={i !== active}
           inert={i !== active}
         >
@@ -79,7 +83,7 @@ export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSl
           {/* Room name and its short description over the photo. The tag is honest about what the image is:
               every room here is an architectural render of the building under construction. */}
           <div className="fc-show-copy">
-            <p className="fc-show-tag">Concept render</p>
+            <p className="fc-show-tag">{ui.conceptRender}</p>
             <h3>{keepHyphens(s.title)}</h3>
             {s.body && <p className="fc-show-body">{s.body}</p>}
           </div>
@@ -88,7 +92,7 @@ export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSl
 
       {count > 1 && (
         <>
-          <nav className="fc-show-rail" aria-label={`${label}: choose a room`}>
+          <nav className="fc-show-rail" aria-label={fmt(ui.rail, { label })}>
             {slides.map((s, i) => (
               <button key={`${s.eyebrow}-${s.title}`} type="button" className="fc-show-dot" aria-label={s.title} aria-current={i === active ? "true" : undefined} onClick={() => step(i)}>
                 <span className="fc-show-dot-label" aria-hidden="true">{s.title}</span>
@@ -96,8 +100,8 @@ export default function FacilityShowcase({ slides, label }: { slides: ShowcaseSl
             ))}
           </nav>
           <div className="fc-show-arrows">
-            <button type="button" className="fc-show-arrow" aria-label="Previous room" onClick={() => step(active - 1)}><span aria-hidden="true">‹</span></button>
-            <button type="button" className="fc-show-arrow" aria-label="Next room" onClick={() => step(active + 1)}><span aria-hidden="true">›</span></button>
+            <button type="button" className="fc-show-arrow" aria-label={ui.previous} onClick={() => step(active - 1)}><span aria-hidden="true">‹</span></button>
+            <button type="button" className="fc-show-arrow" aria-label={ui.next} onClick={() => step(active + 1)}><span aria-hidden="true">›</span></button>
           </div>
           <p className="fc-show-count" aria-hidden="true"><strong>{String(active + 1).padStart(2, "0")}</strong> / {String(count).padStart(2, "0")}</p>
         </>

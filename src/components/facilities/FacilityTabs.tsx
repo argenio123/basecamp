@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useEffect, useId, useState, type CSSProperties } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { Availability } from "@/content/types";
+import { useLocale } from "@/i18n/client";
+import { FACILITIES_UI } from "@/i18n/ui-sections/facilities";
+import { fmt } from "@/i18n/ui";
 
 export type FacilityTabCard = {
   title: string;
@@ -26,7 +29,9 @@ export type FacilityTabPanel = {
  * One section, several topics: a tab bar over a single card grid. Every panel uses the same card, so the
  * whole training floor reads as one layout. Cards slide in like drawers when the tab changes.
  */
-export default function FacilityTabs({ panels, label = "Spaces" }: { panels: FacilityTabPanel[]; /** Accessible name of the tab bar. */ label?: string }) {
+export default function FacilityTabs({ panels, label }: { panels: FacilityTabPanel[]; /** Accessible name of the tab bar (default "Spaces", in the page's language). */ label?: string }) {
+  const ui = FACILITIES_UI[useLocale()].tabs;
+  label ??= ui.label;
   const baseId = useId();
   const [active, setActive] = useState(panels[0]?.id);
   const [switched, setSwitched] = useState(false);
@@ -88,7 +93,7 @@ export default function FacilityTabs({ panels, label = "Spaces" }: { panels: Fac
                   {c.availability && <StatusBadge availability={c.availability} />}
                   <h3>{c.title}</h3>
                   {c.body && <p>{c.body}</p>}
-                  {c.pills && <ul className="fc-pills" aria-label={`${c.title} equipment`}>{c.pills.map((pill) => <li key={pill}>{pill}</li>)}</ul>}
+                  {c.pills && <ul className="fc-pills" aria-label={fmt(ui.equipment, { title: c.title })}>{c.pills.map((pill) => <li key={pill}>{pill}</li>)}</ul>}
                 </div>
               </li>
             ))}

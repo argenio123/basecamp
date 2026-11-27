@@ -7,12 +7,17 @@ import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
 import { facilitiesVideo, facilitiesVideoFrame } from "@/data/brand";
-import { FACILITIES_CTA, FACILITIES_HERO } from "@/data/facilities";
+import { getData } from "@/i18n/data";
+import { alternatesFor } from "@/i18n/paths";
+import { getLocale, t } from "@/i18n/server";
+import { localizePage } from "@/i18n/sitemap";
 
 // Static metadata object (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md).
+// /fil/facilities translates title and description by phrase lookup (localizedRoute, src/i18n/README.md).
 export const metadata: Metadata = {
   title: "Facilities",
   description: "The planned BaseCamp CamSur facility in Camarines Sur: modern tropical design, 673 square meters of outdoor training, a recovery level, and spaces to stay longer.",
+  alternates: alternatesFor("/facilities"),
 };
 
 // The overview uses the latest interior renders as one visual family. The hero remains the
@@ -53,6 +58,7 @@ const HERO_STATS = ["sqm", "zones", "floor"];
 
 export default async function FacilitiesPage() {
   const c = await getSiteContent();
+  const { FACILITIES_CTA, FACILITIES_HERO } = getData("facilities");
   const facilityPages = findPage("/facilities", c.programmes.featured)?.section.pages ?? [];
 
   return (
@@ -60,7 +66,7 @@ export default async function FacilitiesPage() {
       path="/facilities"
       hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} variant="stat" facts={HERO_STATS.map((id) => statFact(c.home.stats.items, id))} />}
       glance={{
-        summary: "Training zones.\nA recovery level.\nSpaces to stay longer.",
+        summary: t("Training zones.\nA recovery level.\nSpaces to stay longer."),
         statement: true,
       }}
       cards={false}
@@ -69,12 +75,14 @@ export default async function FacilitiesPage() {
       cta={<CtaBand {...FACILITIES_CTA} />}
     >
       <ScheduleExplore
-        eyebrow="Explore the facility"
-        title="Train. Recover. Stay."
-        intro="Two floors. One connected space."
+        eyebrow={t("Explore the facility")}
+        title={t("Train. Recover. Stay.")}
+        intro={t("Two floors. One connected space.")}
         items={facilityPages.flatMap((page) => {
+          // Look up by the English href, then localise the label and link (/fil/facilities/… on Filipino pages).
           const preview = FACILITY_PREVIEWS[page.href];
-          return preview ? [{ href: page.href, label: page.label, summary: preview.description, image: preview.image, imageAlt: preview.imageAlt }] : [];
+          const { href, label } = localizePage(page, getLocale());
+          return preview ? [{ href, label, summary: t(preview.description), image: preview.image, imageAlt: t(preview.imageAlt) }] : [];
         })}
       />
 
