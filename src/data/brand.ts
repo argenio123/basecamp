@@ -8,7 +8,8 @@ export const SHORT_LINE = "Train hard. Recover deeper. Live outdoors.";
 export const PLAYGROUND = "Southeast Asia's Performance Playground.";
 export const PROOF_ROW = ["Purpose-built facilities", "Professional operations", "Authentic community", "Complete ecosystem"] as const;
 export const PRIVACY_EMAIL = "basecampcamsur@gmail.com";
-export const PRIVACY_NOTE = `We use your details only to contact you about BaseCamp CamSur. To access or delete your data, email ${PRIVACY_EMAIL}.`;
+// Kept in line with the privacy policy (/privacy): details are used to handle the request and, with consent, for updates.
+export const PRIVACY_NOTE = `We use your details to handle your request and, if you agree, to send BaseCamp CamSur updates. To access or delete your data, email ${PRIVACY_EMAIL}.`;
 export const KEYWORDS = [
   "BaseCamp CamSur", "Camarines Sur", "CamSur Philippines", "sports tourism", "CrossFit", "HYROX training", "functional fitness",
   "hybrid athletes", "recovery", "cold plunge", "sauna", "contrast therapy", "training camps", "fitness holidays", "wellness retreat",

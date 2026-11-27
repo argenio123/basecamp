@@ -9,5 +9,6 @@ import { siteUrl } from "@/data/brand";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl();
   const { programmes } = await getSiteContent();
-  return getPublicPaths(programmes.featured).map((route) => ({ url: route === "/" ? base : `${base}${route}` }));
+  // The legal pages sit outside the navigation site map, so they're added here explicitly.
+  return [...getPublicPaths(programmes.featured), "/privacy", "/terms"].map((route) => ({ url: route === "/" ? base : `${base}${route}` }));
 }

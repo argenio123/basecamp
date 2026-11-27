@@ -8,6 +8,8 @@ import SocialIcon from "@/components/ui/SocialIcon";
 import { getSiteContent } from "@/content/get";
 import { getSections } from "@/content/sitemap";
 import { directionsUrl, PLAYGROUND, TAGLINE } from "@/data/brand";
+import { PRIVACY_PATH, TERMS_PATH } from "@/data/legal";
+import "@/styles/legal.css";
 
 // Hash links use plain Link so the browser lands on the anchor (ScrollTopLink forces scroll to top).
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
@@ -98,6 +100,11 @@ export default async function Footer() {
       </nav>
       <div className="footer-bottom shell">
         <span>© <CopyrightYear /> BaseCamp CamSur. All rights reserved.</span>
+        <p className="footer-ai-note">Some images are AI-generated illustrations or architectural renders of the building under construction.</p>
+        <nav className="footer-legal" aria-label="Legal">
+          <ScrollTopLink href={PRIVACY_PATH}>Privacy</ScrollTopLink>
+          <ScrollTopLink href={TERMS_PATH}>Terms</ScrollTopLink>
+        </nav>
       </div>
     </footer>
   );
