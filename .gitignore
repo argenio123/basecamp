@@ -53,3 +53,6 @@ next-env.d.ts
 
 # editor settings
 /.vscode/
+
+# Claude Code local data (agent worktrees, session settings)
+/.claude/
