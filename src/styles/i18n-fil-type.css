@@ -408,6 +408,9 @@ html[lang="fil"] .mb-px-panel-from > span { letter-spacing: .072em; }
 html[lang="fil"] .mb-px-item-name em { letter-spacing: .06em; }
 html[lang="fil"] .mb-px-item-price small { letter-spacing: .048em; }
 html[lang="fil"] .mb-px-inquire { letter-spacing: .06em; }
+html[lang="fil"] main .mb-px-chooser-head h3, html[lang="fil"] .mb-px-chooser-head h3 { letter-spacing: -.02em; }
+html[lang="fil"] .mb-px-chooser-name em { letter-spacing: .06em; }
+html[lang="fil"] .mb-px-chooser-soon { letter-spacing: .06em; }
 html[lang="fil"] .mb-auth-eyebrow { letter-spacing: .12em; }
 html[lang="fil"] main .mb-auth-brand h1 { letter-spacing: -.03em; }
 html[lang="fil"] main .mb-auth-card h2 { letter-spacing: -.02em; }
