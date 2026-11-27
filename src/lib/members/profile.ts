@@ -69,3 +69,18 @@ export async function saveMemberProfile(member: PublicMember, patch: ProfilePatc
   });
   return next;
 }
+
+/** Removes the stored profile (account deletion). */
+export async function deleteMemberProfile(memberId: string): Promise<void> {
+  if (driver() === "upstash") {
+    await upstash<number>(["HDEL", HASH, memberId]);
+    return;
+  }
+  if (driver() === "readonly") throw new Error("Member profiles are read-only.");
+  await withFileLock(async () => {
+    const profiles = await readJsonFile<Record<string, MemberProfile>>(FILE, {});
+    if (!(memberId in profiles)) return;
+    delete profiles[memberId];
+    await writeJsonFile(FILE, profiles);
+  });
+}

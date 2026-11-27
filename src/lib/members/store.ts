@@ -113,3 +113,20 @@ export const toPublic = (member: Member): PublicMember => {
   delete copy.passwordHash;
   return copy as PublicMember;
 };
+
+/** The local demo login (never in production) lives in env vars, not the store, so it can't be deleted. */
+export const isDemoMember = (id: string) => id === DEMO_ID;
+
+/** Removes the member record (account deletion). Returns false when it wasn't in the store. */
+export async function deleteMember(member: Pick<Member, "id" | "email">): Promise<boolean> {
+  const mode = driver();
+  if (mode === "readonly") throw new StorageUnavailableError();
+  if (mode === "upstash") return (await upstash<number>(["HDEL", HASH, normalise(member.email)])) > 0;
+  return withFileLock(async () => {
+    const members = await readFileMembers();
+    const rest = members.filter((m) => m.id !== member.id);
+    if (rest.length === members.length) return false;
+    await writeJsonFile(FILE, rest);
+    return true;
+  });
+}
