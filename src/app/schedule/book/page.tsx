@@ -4,12 +4,11 @@ import BookingRequestForm, { type BookingFormContent } from "@/components/schedu
 import BookingRequestFormWithParams from "@/components/schedule/BookingRequestFormWithParams";
 import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import type { PriceGroup } from "@/content/types";
 import { bookingNote } from "@/data/programs-static";
 import { getData } from "@/i18n/data";
 import { alternatesFor } from "@/i18n/paths";
-import { t } from "@/i18n/server";
+import { getUi, t } from "@/i18n/server";
 import { isClassSlot, sessionPayable } from "@/lib/bookings/schedule";
 import { bookingPaymentsOn } from "@/lib/bookings/service";
 import { pesoLabel } from "@/lib/bookings/types";
@@ -47,7 +46,7 @@ export default async function ScheduleBookPage() {
     programmes: c.programmes.featured.filter((p) => p.bookable).map((p) => ({ slug: p.slug, title: p.title })),
     appointments: priceOptions(c.pricing.groups, ["recovery", "advanced-recovery", "optimisation"]),
     camps: priceOptions(c.pricing.groups, ["camps"]),
-    submitLabel: t(PHASE_COPY[c.settings.launchPhase].bookingSubmit),
+    submitLabel: getUi().labels.phase[c.settings.launchPhase].bookingSubmit,
     contact: { phoneDisplay: contact.phoneDisplay, phoneHref: `tel:${contact.phoneE164 || contact.phoneDisplay}`, email: contact.email },
     image: "/images/schedule/generated/booking-cover-1263x1090-v2.webp",
     // getData() keeps functions English, so the note is translated by phrase.

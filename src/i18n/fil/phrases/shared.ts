@@ -13,10 +13,7 @@ export const PHRASES_SHARED: Readonly<Record<string, string>> = {
 
   // ---------- components/home ----------
   "Limited founding spots": "Limitado ang founding spots",
-  "Founding members": "Founding members",
   "Founding rates end {date}": "Hanggang {date} na lang ang founding rates",
-  "See membership plans": "Tingnan ang membership plans",
-  "Become an early member": "Maging early member",
   "Early rates end {date}": "Hanggang {date} na lang ang early rates",
   "Read our Google reviews": "Basahin ang aming Google reviews",
   "Learn more about {title}": "Alamin pa ang tungkol sa {title}",

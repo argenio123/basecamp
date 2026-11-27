@@ -16,9 +16,9 @@ import RouteScope from "@/components/ui/RouteScope";
 import RouteScrollReset from "@/components/ui/RouteScrollReset";
 import SiteReveal from "@/components/ui/SiteReveal";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import { getSections } from "@/content/sitemap";
 import { KEYWORDS, POSITIONING_LINE, siteUrl } from "@/data/brand";
+import { getUi } from "@/i18n/server";
 import { gretaros } from "./fonts";
 import "./globals.css";
 
@@ -66,6 +66,8 @@ export const metadata: Metadata = {
 // Layout code passes the locale explicitly: the request locale belongs to the page, not to the layout.
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const c = await getSiteContent("en");
+  // English here; the Header swaps in the URL locale's label on the client (ui.phaseCta).
+  const phaseLabels = getUi("en").labels.phase;
 
   return (
     <LocaleHtml
@@ -84,7 +86,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <RouteScope />
         <RouteScrollReset />
         <Header
-          ctaLabel={PHASE_COPY[c.settings.launchPhase]?.ctaLabel ?? PHASE_COPY["pre-launch"].ctaLabel}
+          ctaLabel={(phaseLabels[c.settings.launchPhase] ?? phaseLabels["pre-launch"]).ctaLabel}
           launchPhase={c.settings.launchPhase}
           sections={getSections(c.programmes.featured)}
         />

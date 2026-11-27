@@ -8,6 +8,7 @@ import Image from "next/image";
 import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useLocale } from "@/i18n/client";
 
 export type ClassCard = {
   slug: string;
@@ -21,6 +22,7 @@ export type ClassCard = {
 export type ClassGroup = { id: string; title: string; description: string; items: ClassCard[] };
 
 export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
+  const locale = useLocale();
   const [active, setActive] = useState("all");
   const [round, setRound] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
@@ -64,7 +66,7 @@ export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
                   <Link href={`/classes/styles/${item.slug}`}>
                     {/* Full-photo card: focus label + title laid over the photo. */}
                     <div className="pr-workout-card-image">
-                      <Image src={item.image} alt={isAiGeneratedImage(item.image) ? aiImageAlt(item.imageAlt) : item.imageAlt} fill sizes="(max-width: 760px) 100vw, 50vw" className="cover-image" />
+                      <Image src={item.image} alt={isAiGeneratedImage(item.image) ? aiImageAlt(item.imageAlt, locale) : item.imageAlt} fill sizes="(max-width: 760px) 100vw, 50vw" className="cover-image" />
                       {isAiGeneratedImage(item.image) && <AiImageLabel className="ai-label--corner" hidden={!!item.imageAlt.trim()} />}
                     </div>
                     <div className="pr-workout-card-copy">

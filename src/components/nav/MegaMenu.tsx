@@ -6,7 +6,7 @@ import { Fragment, useCallback, useEffect, useRef, useState, type FocusEvent, ty
 import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import type { SectionId, SiteSection } from "@/content/sitemap";
-import { useUi } from "@/i18n/client";
+import { useLocale, useUi } from "@/i18n/client";
 import { fmt } from "@/i18n/ui";
 
 /**
@@ -33,6 +33,7 @@ function NavLink({ href, className, children, onClick, isCurrent }: { href: stri
  * and it plays only while the panel is open. With prefers-reduced-motion it stays on its first frame.
  */
 function PanelMedia({ menu, isOpen, warm }: { menu: SiteSection["menu"]; isOpen: boolean; warm: boolean }) {
+  const locale = useLocale();
   const ref = useRef<HTMLVideoElement>(null);
   const loadStarted = useRef(false);
 
@@ -60,7 +61,7 @@ function PanelMedia({ menu, isOpen, warm }: { menu: SiteSection["menu"]; isOpen:
   if (!menu.video) {
     return (
       <div className="nv-panel-image">
-        <Image src={menu.image} alt={labelledImageAlt(menu.imageAlt, imageKind(menu.image))} fill sizes="(max-width: 1440px) 30vw, 420px" className="cover-image" />
+        <Image src={menu.image} alt={labelledImageAlt(menu.imageAlt, imageKind(menu.image), locale)} fill sizes="(max-width: 1440px) 30vw, 420px" className="cover-image" />
         <ImageLabel src={menu.image} className="ai-label--corner ai-label--small" hidden={!!menu.imageAlt.trim()} />
       </div>
     );

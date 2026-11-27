@@ -48,7 +48,7 @@ export function localizeSections(sections: readonly SiteSection[], locale: Local
       href: localizedHref(section.href, locale),
       overview: localizePage(section.overview, locale),
       pages: section.pages.map((p) => localizePage(p, locale)),
-      menu: { ...section.menu, text: menuText, highlights: section.menu.highlights.map((h) => localizeLink(h, locale)) },
+      menu: { ...section.menu, text: menuText, imageAlt: s?.menuImageAlt ?? section.menu.imageAlt, highlights: section.menu.highlights.map((h) => localizeLink(h, locale)) },
     };
   });
 }

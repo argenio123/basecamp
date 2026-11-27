@@ -51,6 +51,7 @@ export const PHRASES_FACILITIES: Readonly<Record<string, string>> = {
   "Related programs": "Kaugnay na programs",
   "Technical detail": "Teknikal na detalye",
   "Recovery modalities": "Recovery modalities",
+  "Recovery": "Recovery",
   "At launch": "Sa pagbukas",
   "Phase 2 or planned": "Phase 2 o nakaplano",
 };

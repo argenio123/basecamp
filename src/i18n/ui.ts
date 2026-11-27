@@ -38,8 +38,8 @@ type PhaseStrings = { scheduleNotice: string; bookingSubmit: string; ctaLabel: s
 
 /** Site-map overlay per English href (page label, section-tab label, one-line summary). */
 export type PageStrings = { label?: string; tabLabel?: string; summary?: string };
-/** Site-map overlay per section id (top-level nav label and mega-menu text). */
-export type SectionStrings = { label?: string; menuText?: string };
+/** Site-map overlay per section id (top-level nav label, mega-menu text and mega-menu image alt text). */
+export type SectionStrings = { label?: string; menuText?: string; menuImageAlt?: string };
 
 const en = {
   lang: {
@@ -322,6 +322,8 @@ const en = {
     emailPlaceholder: "Email address",
     submit: "Join",
     consent: "I'm 18+ and agree to receive BaseCamp CamSur early-member news and opening updates.",
+    /** Browser-side check of the consent box before submitting. */
+    consentRequired: "Please confirm you're 18 or older and agree to continue.",
   },
   /** Shared form labels and client-side messages (server messages: src/lib/leads/validate.ts, see MERGE-PLAN.md). */
   form: {
@@ -422,7 +424,7 @@ const fil: UiDict = {
   labels: {
     availability: {
       available: "Available na",
-      "at-launch": "Sa pagbubukas",
+      "at-launch": "Sa pagbukas",
       "phase-2": "Phase 2",
       planned: "Nakaplano",
     },
@@ -638,7 +640,7 @@ const fil: UiDict = {
     partySize: "Maglagay ng laki ng grupo mula 1 hanggang 60.",
   },
   header: {
-    homeLabel: "BaseCamp CamSur home",
+    homeLabel: "Home ng BaseCamp CamSur",
     primaryNav: "Pangunahing navigation",
     menuLabel: "Menu ng {label}",
     exploreSection: "Tingnan ang {label}",
@@ -669,7 +671,7 @@ const fil: UiDict = {
     live: "Mag-book ng session",
   },
   footer: {
-    nav: "Footer navigation",
+    nav: "Navigation sa footer",
     bookingLine: "Booking line",
     email: "Email",
     hours: "Oras",
@@ -687,6 +689,7 @@ const fil: UiDict = {
     emailPlaceholder: "Email address",
     submit: "Sumali",
     consent: "18 taong gulang pataas ako at pumapayag akong makatanggap ng balita para sa early members at updates sa pagbubukas ng BaseCamp CamSur.",
+    consentRequired: "Pakikumpirma na 18 taong gulang pataas ka at pumapayag ka bago magpatuloy.",
   },
   form: {
     name: "Buong pangalan",
@@ -734,12 +737,30 @@ const fil: UiDict = {
   },
   // Top-level nav labels are kept short: the desktop bar fits six labels around the logo (page labels can be longer).
   sections: {
-    programs: { label: "Klase" },
-    facilities: { label: "Pasilidad", menuText: "Mga training room, recovery level, at mga lugar para magtagal." },
-    membership: { label: "Membership", menuText: "Early rates, membership tiers, passes, at presyo ng recovery." },
-    schedule: { label: "Iskedyul", menuText: "Ang lingguhang ritmo, mga event, at booking." },
-    visit: { label: "Bisita", menuText: "Paano pumunta sa BaseCamp, at camps & trips para sa mga biyahero." },
-    about: { label: "Tungkol", menuText: "Ang Performance Playground ng Southeast Asia: ang kuwento at ang pagpapatayo." },
+    programs: {
+      label: "Klase",
+      menuImageAlt: "Atletang nagda-dumbbell lunges habang inaayos ng coach ang barbell sa gym na brick at konkreto",
+    },
+    facilities: {
+      label: "Pasilidad", menuText: "Mga training room, recovery level, at mga lugar para magtagal.",
+      menuImageAlt: "Aerial render ng gusali at bakuran ng BaseCamp CamSur",
+    },
+    membership: {
+      label: "Membership", menuText: "Early rates, membership tiers, passes, at presyo ng recovery.",
+      menuImageAlt: "Atletang nagtutulak ng weighted sled sa open-air gym",
+    },
+    schedule: {
+      label: "Iskedyul", menuText: "Ang lingguhang ritmo, mga event, at booking.",
+      menuImageAlt: "Coach na umaalalay sa atleta habang nagte-training",
+    },
+    visit: {
+      label: "Bisita", menuText: "Paano pumunta sa BaseCamp, at camps & trips para sa mga biyahero.",
+      menuImageAlt: "Atletang tumatakbo sa curved treadmill sa open-air gym, may mga bundok sa likod",
+    },
+    about: {
+      label: "Tungkol", menuText: "Ang Performance Playground ng Southeast Asia: ang kuwento at ang pagpapatayo.",
+      menuImageAlt: "Aerial view ng gusali, damuhan, at parking ng BaseCamp CamSur",
+    },
   },
   pages: {
     "/": { label: "Home", summary: "Ang Performance Playground ng Southeast Asia sa Camarines Sur." },

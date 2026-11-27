@@ -4,9 +4,8 @@
 // Client Component text (Timetable, BookingRequestForm) is in src/i18n/ui-sections/schedule.ts instead.
 export const PHRASES_SCHEDULE: Readonly<Record<string, string>> = {
   // ---------- shared by the schedule pages (CTA band, PHASE_COPY from content/labels.ts) ----------
-  "Early members": "Para sa early members",
+  "Early members": "Early members",
   "Get early access": "Kunin ang early access",
-  "Become an early member": "Maging early member",
   "Book a session": "Mag-book ng session",
   "Request early access": "Mag-request ng early access",
   "Request a session": "Mag-request ng session",
@@ -59,7 +58,6 @@ export const PHRASES_SCHEDULE: Readonly<Record<string, string>> = {
     "Iisang mabilis na request lang para sa mga class, camp, at recovery. Pumili kung saan mo gustong magsimula.",
   "Classes & camps": "Mga class at camp",
   "Request a coached class, camp place, or private session.": "Mag-request ng coached class, puwesto sa camp, o private session.",
-  "Recovery": "Recovery",
   "Recovery appointments": "Mga recovery appointment",
   "Request sauna, ice bath, massage, physio, or 1:1 support.": "Mag-request ng sauna, ice bath, massage, physio, o 1:1 na suporta.",
 
@@ -85,7 +83,6 @@ export const PHRASES_SCHEDULE: Readonly<Record<string, string>> = {
   "Live leaderboards coming soon": "Malapit na ang live leaderboards",
   "{title}, {cadence}. Request a place": "{title}, {cadence}. Mag-request ng puwesto",
   "Request": "Mag-request",
-  "Register interest": "Mag-register ng interes",
   "Date to be announced": "Iaanunsyo pa ang petsa",
   "To be announced": "Iaanunsyo pa",
   // Cadence values (content enum, shown as the row's "when")
@@ -96,7 +93,6 @@ export const PHRASES_SCHEDULE: Readonly<Record<string, string>> = {
   "Quarterly": "Kada tatlong buwan",
   // Availability badges (content/labels.ts AVAILABILITY_LABEL)
   "Available now": "Available na",
-  "At launch": "Sa launch",
   "Phase 2": "Phase 2",
   "Planned": "Nakaplano",
 

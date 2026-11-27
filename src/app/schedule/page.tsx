@@ -7,9 +7,8 @@ import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import { alternatesFor } from "@/i18n/paths";
-import { localHref, t } from "@/i18n/server";
+import { getLocale, getUi, localHref, t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Schedule & timetable",
@@ -57,7 +56,7 @@ export default async function SchedulePage() {
         summary: t("Sunrise classes.\nOpen gym hours.\nTraining under lights."),
         statement: true,
       }}
-      cta={<CtaBand eyebrow={t("Early members")} label={t(PHASE_COPY[phase].ctaLabel)} />}
+      cta={<CtaBand eyebrow={t("Early members")} label={getUi().labels.phase[phase].ctaLabel} />}
     >
       <section className="section" id="hours">
         <div className="shell">
@@ -92,7 +91,7 @@ export default async function SchedulePage() {
           <div className="sd-booking-media" data-reveal>
             <Image
               src={BOOKING_COVER}
-              alt={labelledImageAlt(t("An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"), imageKind(BOOKING_COVER))}
+              alt={labelledImageAlt(t("An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"), imageKind(BOOKING_COVER), getLocale())}
               fill
               sizes="(max-width: 900px) 100vw, 55vw"
               className="cover-image"

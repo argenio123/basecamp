@@ -106,6 +106,8 @@ find src/app/fil -name page.tsx | sed 's#src/app/fil##; s#/page.tsx##; s#^$#/#'
 grep -n "LOCALIZED_PATHS" -A2 src/i18n/paths.ts
 # English strings still inline in a localized page (rough): quoted capitalised text outside t(
 grep -nE '>[A-Z][a-z][^<{]{3,}<|="[A-Z][a-z][^"]{3,}"' src/app/<path>/page.tsx
+# The same phrase key with two different values across fil/phrases.ts + fil/phrases/*.ts (the last spread wins)
+node scripts/check-i18n-phrases.mjs
 # Phrase keys no longer used anywhere (stale after copy edits)
 node -e 'const s=require("fs").readFileSync("src/i18n/fil/phrases.ts","utf8");for(const m of s.matchAll(/^\s+"(.+?)":/gm))console.log(m[1])' | while read -r k; do grep -rqF "t(\"$k\"" src || echo "unused: $k"; done
 ```
