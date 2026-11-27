@@ -14,6 +14,7 @@ import { foundingFor, foundingSpots } from "@/lib/payments/founding";
 import { checkoutMethods, paymongoConfigured, paymongoTestMode } from "@/lib/payments/paymongo";
 import { paypalConfigured, paypalTestMode } from "@/lib/payments/paypal";
 import { membershipStatus } from "@/lib/payments/service";
+import { paymentsLive } from "@/lib/payments/status";
 import { payHref } from "@/lib/payments/types";
 
 export const metadata: Metadata = {
@@ -78,7 +79,8 @@ export default async function PayPage({ searchParams }: { searchParams: Promise<
   const { item, group, kind, amount, deposit } = payable;
   const configured = paymongoConfigured();
   const paypalOn = paypalConfigured();
-  const status = kind === "membership" ? await membershipStatus(member.id) : null;
+  // With live keys, a test / sandbox month doesn't push back when a real one starts (see markPaid).
+  const status = kind === "membership" ? await membershipStatus(member.id, new Date(), { includeTest: !paymentsLive() }) : null;
   // Founding-member rate: asked for in the link (?offer=founding), or automatic for a member who already pays it.
   const foundingCheck = kind === "membership" ? await foundingFor(content, member.id, item.id) : null;
   const founding = foundingCheck?.ok && (offer === "founding" || foundingCheck.returning) ? foundingCheck : null;

@@ -2,15 +2,19 @@
 //
 // Upstash: every key shares the {bk} hash tag, so one EVAL can touch them all.
 //   bc:{bk}:v1                hash  bookingId -> JSON Booking
-//   bc:{bk}:occ:<slot>:<date> zset  bookingId -> score: hold expiry (ms) for held, +inf for confirmed
+//   bc:{bk}:occ:<slot>:<date> zset  bookingId -> score: hold expiry (ms) for held, CONFIRMED_SCORE for confirmed
 //   bc:{bk}:mem               hash  "<slot>:<date>:<memberId>" -> bookingId (one live booking per member and session)
 //   bc:{bk}:pay               hash  paymentId -> bookingId
 // Spots used = ZCOUNT occ (now, +inf]: expired holds drop out by themselves, no sweeper needed. Taking a spot is one
 // Lua script (check duplicate, count, add), so two members can't both take the last spot.
-// File (local dev): .data/bookings.json (Booking[]), the same check-and-add done inside withFileLock.
-// Privacy tools (account deletion, retention clean-up) go through rewriteBookings: a compare-and-set script per
-// booking, which never touches a booking that still holds a spot in a future session.
+// Every later change to a stored booking (confirm, release, update, privacy rewrite) is compare-and-set: the script
+// writes only if the stored JSON is still the copy the change was computed from, else the change is re-applied to
+// the fresh copy. So a payment webhook can't write back a booking that was anonymised or cancelled meanwhile.
+// File (local dev): .data/bookings.json (Booking[]), the same checks done on a fresh read inside withFileLock.
+// Privacy tools (account deletion, retention clean-up) go through rewriteBookings, which never touches a booking
+// that still holds a spot in a future session.
 import { driver, readJsonFile, StorageUnavailableError, upstash, withFileLock, writeJsonFile } from "@/lib/storage/driver";
+import { isAnonymisedBooking } from "@/lib/privacy/anonymise";
 import { effectiveStatus, isActive, type Booking } from "./types";
 
 const HASH = "bc:{bk}:v1";
@@ -21,12 +25,21 @@ const occKey = (slotId: string, date: string) => `bc:{bk}:occ:${slotId}:${date}`
 const memberField = (b: Pick<Booking, "slotId" | "date" | "memberId">) => `${b.slotId}:${b.date}:${b.memberId}`;
 /** Occurrence sets expire two days after the session (the booking records themselves are kept). */
 const occExpiry = (date: string) => Date.parse(`${date}T00:00:00+08:00`) + 3 * 86_400_000;
-const score = (b: Booking) => (b.status === "confirmed" ? "+inf" : String(Date.parse(b.holdExpiresAt ?? "") || 0));
+/**
+ * Occurrence-set score of a confirmed booking: later than any hold expiry (ms) and finite, so every Redis Lua build
+ * reads it back with tonumber() (older sets may still hold "+inf"; the scripts treat an unreadable score as live).
+ */
+const CONFIRMED_SCORE = "9000000000000000";
+const score = (b: Booking) => (b.status === "confirmed" ? CONFIRMED_SCORE : String(Date.parse(b.holdExpiresAt ?? "") || 0));
+/** Compare-and-set attempts before a change gives up (each retry re-reads the booking and re-applies the change). */
+const CAS_ATTEMPTS = 5;
+const busy = () => new Error("The booking changed several times while being updated; try again.");
 
 const byNewest = (a: Booking, b: Booking) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0);
 const readFile = () => readJsonFile<Booking[]>(FILE, []).then((l) => (Array.isArray(l) ? l : []));
 const sameOcc = (a: Pick<Booking, "slotId" | "date">, b: Pick<Booking, "slotId" | "date">) => a.slotId === b.slotId && a.date === b.date;
 const parse = (raw: string | null | undefined): Booking | null => { try { return raw ? (JSON.parse(raw) as Booking) : null; } catch { return null; } };
+const getRaw = (id: string) => upstash<string | null>(["HGET", HASH, id]);
 
 // KEYS: occ, hash, member index. ARGV: now, capacity, bookingId, score, json, member field, occ expiry (ms).
 const HOLD_SCRIPT = `
@@ -35,7 +48,7 @@ redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', now)
 local existing = redis.call('HGET', KEYS[3], ARGV[6])
 if existing then
   local s = redis.call('ZSCORE', KEYS[1], existing)
-  if s and tonumber(s) > now then return {'duplicate', existing} end
+  if s and (tonumber(s) or now + 1) > now then return {'duplicate', existing} end
 end
 local used = redis.call('ZCOUNT', KEYS[1], '(' .. ARGV[1], '+inf')
 if used >= tonumber(ARGV[2]) then return {'full', ''} end
@@ -45,24 +58,39 @@ redis.call('HSET', KEYS[2], ARGV[3], ARGV[5])
 redis.call('HSET', KEYS[3], ARGV[6], ARGV[3])
 return {'ok', ARGV[3]}`;
 
-// KEYS: occ, hash. ARGV: now, capacity, bookingId, json, json with overCapacity. Returns 1 when over capacity.
+// Compare-and-set confirm. KEYS: occ, hash. ARGV: now, capacity, bookingId, expected json, json, json with
+// overCapacity, occ expiry (ms), confirmed score. Returns -1 (nothing written) when the stored copy changed since it
+// was read, 1 when the booking took a spot the session no longer had (over capacity), else 0. The occ set gets its
+// expiry again: the ZADD recreates it when every hold in it had run out and been trimmed.
 const CONFIRM_SCRIPT = `
+if redis.call('HGET', KEYS[2], ARGV[3]) ~= ARGV[4] then return -1 end
 local now = tonumber(ARGV[1])
 local s = redis.call('ZSCORE', KEYS[1], ARGV[3])
 local over = 0
-if not (s and tonumber(s) > now) then
+if not (s and (tonumber(s) or now + 1) > now) then
   local used = redis.call('ZCOUNT', KEYS[1], '(' .. ARGV[1], '+inf')
   if used >= tonumber(ARGV[2]) then over = 1 end
 end
-redis.call('ZADD', KEYS[1], '+inf', ARGV[3])
-if over == 1 then redis.call('HSET', KEYS[2], ARGV[3], ARGV[5]) else redis.call('HSET', KEYS[2], ARGV[3], ARGV[4]) end
+redis.call('ZADD', KEYS[1], ARGV[8], ARGV[3])
+redis.call('PEXPIREAT', KEYS[1], ARGV[7])
+if over == 1 then redis.call('HSET', KEYS[2], ARGV[3], ARGV[6]) else redis.call('HSET', KEYS[2], ARGV[3], ARGV[5]) end
 return over`;
 
-// KEYS: occ, hash, member index. ARGV: bookingId, json, member field.
+// Compare-and-set release. KEYS: occ, hash, member index. ARGV: bookingId, expected json, json, member field.
+// Returns 0 (nothing written) when the stored copy changed since it was read.
 const RELEASE_SCRIPT = `
+if redis.call('HGET', KEYS[2], ARGV[1]) ~= ARGV[2] then return 0 end
 redis.call('ZREM', KEYS[1], ARGV[1])
-redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])
-if redis.call('HGET', KEYS[3], ARGV[3]) == ARGV[1] then redis.call('HDEL', KEYS[3], ARGV[3]) end
+redis.call('HSET', KEYS[2], ARGV[1], ARGV[3])
+if redis.call('HGET', KEYS[3], ARGV[4]) == ARGV[1] then redis.call('HDEL', KEYS[3], ARGV[4]) end
+return 1`;
+
+// Compare-and-set update. KEYS: hash, payment index. ARGV: bookingId, expected json, json, paymentId to index ('' when
+// none). Returns 0 (nothing written) when the stored copy changed since it was read.
+const UPDATE_SCRIPT = `
+if redis.call('HGET', KEYS[1], ARGV[1]) ~= ARGV[2] then return 0 end
+redis.call('HSET', KEYS[1], ARGV[1], ARGV[3])
+if ARGV[4] ~= '' then redis.call('HSET', KEYS[2], ARGV[4], ARGV[1]) end
 return 1`;
 
 // KEYS: occ sets. ARGV: now. Returns the spots used in each.
@@ -121,61 +149,112 @@ export async function createHold(booking: Booking, capacity: number, now = Date.
   });
 }
 
+/** What confirmBooking does with the latest stored copy of a booking. */
+export type ConfirmPlan = {
+  /** Applied to a held booking (live or run-out hold); the status becomes "confirmed". */
+  confirm: (b: Booking) => Booking;
+  /** Applied instead when the booking was cancelled, released or anonymised (e.g. a refund note for staff). */
+  refuse: (b: Booking) => Booking;
+};
+
 /**
- * Confirms a booking (after payment). If its hold had already run out and the session filled up meanwhile, it is
- * still confirmed (the member paid) but flagged overCapacity for staff. `update` gets the latest stored copy.
+ * Only a stored "held" booking (its hold may have run out) of a member who still has an account can be confirmed:
+ * cancelled, released ("expired") and anonymised bookings are never brought back.
  */
-export async function confirmBooking(id: string, update: (b: Booking) => Booking, capacity: number, now = Date.now()): Promise<Booking | null> {
+export const confirmable = (b: Booking) => b.status === "held" && !isAnonymisedBooking(b);
+
+/**
+ * Confirms a booking (after payment), compare-and-set against the latest stored copy. If its hold had already run
+ * out and the session filled up meanwhile, it is still confirmed (the member paid) but flagged overCapacity for staff.
+ * An already confirmed booking is returned as is; one that isn't `confirmable` gets `plan.refuse` instead.
+ */
+export async function confirmBooking(id: string, plan: ConfirmPlan, capacity: number, now = Date.now()): Promise<Booking | null> {
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
   if (mode === "upstash") {
-    const current = await getBooking(id);
-    if (!current) return null;
-    const next = { ...update(current), status: "confirmed" as const };
-    const over = await upstash<number>(["EVAL", CONFIRM_SCRIPT, 2, occKey(current.slotId, current.date), HASH,
-      now, capacity, id, JSON.stringify(next), JSON.stringify({ ...next, overCapacity: true })]);
-    return Number(over) === 1 ? { ...next, overCapacity: true } : next;
+    for (let attempt = 0; attempt < CAS_ATTEMPTS; attempt++) {
+      const raw = await getRaw(id);
+      const current = parse(raw);
+      if (!raw || !current) return null;
+      if (current.status === "confirmed") return current;
+      if (!confirmable(current)) {
+        const refused = plan.refuse(current);
+        if (refused === current) return current;
+        if (await casUpdate(id, raw, refused, current)) return refused;
+        continue;
+      }
+      const next = { ...plan.confirm(current), status: "confirmed" as const };
+      const over = Number(await upstash<number>(["EVAL", CONFIRM_SCRIPT, 2, occKey(current.slotId, current.date), HASH,
+        now, capacity, id, raw, JSON.stringify(next), JSON.stringify({ ...next, overCapacity: true }), occExpiry(current.date), CONFIRMED_SCORE]));
+      if (over === -1) continue;
+      return over === 1 ? { ...next, overCapacity: true } : next;
+    }
+    throw busy();
   }
   return withFileLock(async () => {
     const all = await readFile();
     const i = all.findIndex((b) => b.id === id);
     if (i < 0) return null;
     const current = all[i];
-    const used = all.filter((b) => b.id !== id && sameOcc(b, current) && isActive(b, now)).length;
-    const over = !isActive(current, now) && used >= capacity;
-    all[i] = { ...update(current), status: "confirmed", ...(over ? { overCapacity: true } : {}) };
+    if (current.status === "confirmed") return current;
+    if (!confirmable(current)) {
+      const refused = plan.refuse(current);
+      if (refused === current) return current;
+      all[i] = refused;
+    } else {
+      const used = all.filter((b) => b.id !== id && sameOcc(b, current) && isActive(b, now)).length;
+      const over = !isActive(current, now) && used >= capacity;
+      all[i] = { ...plan.confirm(current), status: "confirmed", ...(over ? { overCapacity: true } : {}) };
+    }
     await writeJsonFile(FILE, all);
     return all[i];
   });
 }
 
-/** Frees the spot and stores the booking as cancelled or expired (with `update` applied to the latest copy). */
+/**
+ * Frees the spot and stores the booking as cancelled or expired (with `update` applied to the latest copy). When
+ * `update` returns the copy unchanged, nothing is written and the spot stays taken.
+ */
 export async function releaseBooking(id: string, update: (b: Booking) => Booking): Promise<Booking | null> {
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
   if (mode === "upstash") {
-    const current = await getBooking(id);
-    if (!current) return null;
-    const next = update(current);
-    await upstash(["EVAL", RELEASE_SCRIPT, 3, occKey(current.slotId, current.date), HASH, MEMBER_INDEX, id, JSON.stringify(next), memberField(current)]);
-    return next;
+    for (let attempt = 0; attempt < CAS_ATTEMPTS; attempt++) {
+      const raw = await getRaw(id);
+      const current = parse(raw);
+      if (!raw || !current) return null;
+      const next = update(current);
+      if (next === current) return current;
+      const done = await upstash<number>(["EVAL", RELEASE_SCRIPT, 3, occKey(current.slotId, current.date), HASH, MEMBER_INDEX, id, raw, JSON.stringify(next), memberField(current)]);
+      if (Number(done) === 1) return next;
+    }
+    throw busy();
   }
   return updateFile(id, update);
 }
 
-/** Changes fields that don't affect capacity (e.g. linking the payment). */
+/** Changes fields that don't affect capacity (e.g. linking the payment, a staff note), on the latest stored copy. */
 export async function updateBooking(id: string, update: (b: Booking) => Booking): Promise<Booking | null> {
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
   if (mode === "upstash") {
-    const current = await getBooking(id);
-    if (!current) return null;
-    const next = update(current);
-    await upstash(["HSET", HASH, id, JSON.stringify(next)]);
-    if (next.paymentId && next.paymentId !== current.paymentId) await upstash(["HSET", PAYMENT_INDEX, next.paymentId, id]);
-    return next;
+    for (let attempt = 0; attempt < CAS_ATTEMPTS; attempt++) {
+      const raw = await getRaw(id);
+      const current = parse(raw);
+      if (!raw || !current) return null;
+      const next = update(current);
+      if (next === current) return current;
+      if (await casUpdate(id, raw, next, current)) return next;
+    }
+    throw busy();
   }
   return updateFile(id, update);
+}
+
+/** One compare-and-set write of a booking (Upstash); false when the stored copy is no longer `raw`. */
+async function casUpdate(id: string, raw: string, next: Booking, current: Booking): Promise<boolean> {
+  const indexPayment = next.paymentId && next.paymentId !== current.paymentId ? next.paymentId : "";
+  return Number(await upstash<number>(["EVAL", UPDATE_SCRIPT, 2, HASH, PAYMENT_INDEX, id, raw, JSON.stringify(next), indexPayment])) === 1;
 }
 
 function updateFile(id: string, update: (b: Booking) => Booking): Promise<Booking | null> {
@@ -183,9 +262,11 @@ function updateFile(id: string, update: (b: Booking) => Booking): Promise<Bookin
     const all = await readFile();
     const i = all.findIndex((b) => b.id === id);
     if (i < 0) return null;
-    all[i] = update(all[i]);
+    const next = update(all[i]);
+    if (next === all[i]) return next;
+    all[i] = next;
     await writeJsonFile(FILE, all);
-    return all[i];
+    return next;
   });
 }
 
@@ -193,7 +274,7 @@ export async function getBooking(id: string): Promise<Booking | null> {
   const mode = driver();
   if (mode === "readonly" || !id) return null;
   if (mode === "file") return (await readFile()).find((b) => b.id === id) ?? null;
-  return parse(await upstash<string | null>(["HGET", HASH, id]));
+  return parse(await getRaw(id));
 }
 
 export async function findBookingByPaymentId(paymentId: string): Promise<Booking | null> {
@@ -271,7 +352,7 @@ export async function rewriteBookings(decide: (b: Booking) => BookingRewrite, no
           else rewritten++;
           break;
         }
-        raw = await upstash<string | null>(["HGET", HASH, id]);
+        raw = await getRaw(id);
       }
     }
     return { rewritten, deleted };

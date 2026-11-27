@@ -1,5 +1,7 @@
 // Payment records (server-only). Same storage as leads: Upstash hash bc:payments:v1 (field = id, value = JSON), or
-// .data/payments.json (Payment[]) serialised by withFileLock.
+// .data/payments.json (Payment[]) serialised by withFileLock. Upstash changes are compare-and-set (CAS_SCRIPT): a
+// change is written only over the exact copy it was computed from, else re-applied to the fresh copy, so a privacy
+// strip can't undo "paid" and a late webhook can't write stripped contact details back.
 import { driver, readJsonFile, StorageUnavailableError, upstash, withFileLock, writeJsonFile } from "@/lib/storage/driver";
 import { refreshFoundingCount } from "./founding-cache";
 import { countFoundingMembers } from "./founding-status";
@@ -9,6 +11,17 @@ const HASH = "bc:payments:v1";
 const FILE = "payments.json";
 
 const byNewest = (a: Payment, b: Payment) => (a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0);
+const parse = (raw: string | null | undefined): Payment | null => { try { return raw ? (JSON.parse(raw) as Payment) : null; } catch { return null; } };
+const getRaw = (id: string) => upstash<string | null>(["HGET", HASH, id]);
+/** Compare-and-set attempts before a change gives up (each retry re-reads the payment and re-applies the change). */
+const CAS_ATTEMPTS = 5;
+
+// KEYS: hash. ARGV: id, expected json, new json. Returns 0 (nothing written) when the stored copy changed.
+const CAS_SCRIPT = `
+if redis.call('HGET', KEYS[1], ARGV[1]) ~= ARGV[2] then return 0 end
+redis.call('HSET', KEYS[1], ARGV[1], ARGV[3])
+return 1`;
+const cas = async (id: string, raw: string, next: Payment) => Number(await upstash<number>(["EVAL", CAS_SCRIPT, 1, HASH, id, raw, JSON.stringify(next)])) === 1;
 const readFile = () => readJsonFile<Payment[]>(FILE, []).then((l) => (Array.isArray(l) ? l : []));
 /** The public founding counter is refreshed whenever a payment starts or stops counting towards it (paid, refunded). */
 const countsAsFounding = (p: Payment | null) => (p ? countFoundingMembers([p]) === 1 : false);
@@ -43,8 +56,7 @@ export async function getPayment(id: string): Promise<Payment | null> {
   const mode = driver();
   if (mode === "readonly") return null;
   if (mode === "file") return (await readFile()).find((p) => p.id === id) ?? null;
-  const raw = await upstash<string | null>(["HGET", HASH, id]);
-  try { return raw ? (JSON.parse(raw) as Payment) : null; } catch { return null; }
+  return parse(await getRaw(id));
 }
 
 export async function findPaymentByCheckoutId(checkoutId: string): Promise<Payment | null> {
@@ -61,12 +73,18 @@ export async function updatePayment(id: string, update: (p: Payment) => Payment)
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
   if (mode === "upstash") {
-    const current = await getPayment(id);
-    if (!current) return null;
-    const next = update(current);
-    await upstash(["HSET", HASH, id, JSON.stringify(next)]);
-    afterChange(current, next);
-    return next;
+    for (let attempt = 0; attempt < CAS_ATTEMPTS; attempt++) {
+      const raw = await getRaw(id);
+      const current = parse(raw);
+      if (!raw || !current) return null;
+      const next = update(current);
+      if (next === current) return current;
+      if (await cas(id, raw, next)) {
+        afterChange(current, next);
+        return next;
+      }
+    }
+    throw new Error("The payment changed several times while being updated; try again.");
   }
   return withFileLock(async () => {
     const all = await readFile();
@@ -80,17 +98,31 @@ export async function updatePayment(id: string, update: (p: Payment) => Payment)
   });
 }
 
-/** Privacy tools: replaces each payment for which `transform` returns a new value (null leaves it). Returns the count. */
+/**
+ * Privacy tools: replaces each payment for which `transform` returns a new value (null leaves it). Returns the count.
+ * Upstash: each replacement is compare-and-set; when the payment changed meanwhile (e.g. marked paid), `transform`
+ * sees the fresh copy and decides again. File: read and written inside withFileLock, like every other change.
+ */
 export async function rewritePayments(transform: (p: Payment) => Payment | null): Promise<number> {
   const mode = driver();
   if (mode === "readonly") throw new StorageUnavailableError();
   if (mode === "upstash") {
     let changed = 0;
-    for (const payment of await listPayments()) {
-      const next = transform(payment);
-      if (!next) continue;
-      await upstash(["HSET", HASH, payment.id, JSON.stringify(next)]);
-      changed++;
+    const flat = (await upstash<string[] | null>(["HGETALL", HASH])) ?? [];
+    for (let i = 0; i + 1 < flat.length; i += 2) {
+      const id = flat[i];
+      let raw: string | null = flat[i + 1];
+      for (let attempt = 0; raw && attempt < CAS_ATTEMPTS; attempt++) {
+        const current = parse(raw);
+        const next = current && transform(current);
+        if (!current || !next) break;
+        if (await cas(id, raw, next)) {
+          afterChange(current, next);
+          changed++;
+          break;
+        }
+        raw = await getRaw(id);
+      }
     }
     return changed;
   }

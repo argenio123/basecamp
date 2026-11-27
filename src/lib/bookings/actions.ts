@@ -11,13 +11,14 @@ import { audit } from "@/lib/auth/audit";
 import { requireAdmin } from "@/lib/auth/session";
 import { currentMember } from "@/lib/members/session";
 import { loginHref } from "@/lib/members/types";
-import { createCheckoutSession, paymongoConfigured, paymongoTestMode } from "@/lib/payments/paymongo";
-import { createPaypalOrder, paypalConfigured, paypalTestMode } from "@/lib/payments/paypal";
+import { createCheckoutSession, paymongoTestMode } from "@/lib/payments/paymongo";
+import { createPaypalOrder, paypalTestMode } from "@/lib/payments/paypal";
 import { getPayment, addPayment, updatePayment } from "@/lib/payments/store";
 import type { Payment } from "@/lib/payments/types";
+import { clientIp } from "@/lib/rateLimit";
 import { createSharedLimiter } from "@/lib/sharedLimiter";
 import { longDate, resolveOccurrence, sessionPayable } from "./schedule";
-import { bookingPaymentsOn, cancelBooking, classEntitlement } from "./service";
+import { bookingProviderOn, cancelBooking, classEntitlement } from "./service";
 import { getBooking, createHold, releaseBooking, updateBooking } from "./store";
 import { bookedHref, bookHref, canMemberCancel, CANCEL_CUTOFF_HOURS, HOLD_MINUTES, isActive, PAYMENTS_OFF_MESSAGE, requestHref, type Booking } from "./types";
 
@@ -25,6 +26,8 @@ export type BookResult = { status: "idle" | "error"; message: string; /** Fallba
 export type CancelResult = { status: "idle" | "error" | "done"; message: string };
 
 const limiter = createSharedLimiter({ name: "booking", windowMs: 10 * 60_000, perKey: 20, global: 600 });
+/** Unpaid holds per IP: one person with several accounts can't keep a session full by holding spots over and over. */
+const holdLimiter = createSharedLimiter({ name: "booking-hold", windowMs: 30 * 60_000, perKey: 6, global: 2000 });
 const str = (v: FormDataEntryValue | null, max: number) => String(v ?? "").slice(0, max).trim();
 
 async function siteOrigin(): Promise<string> {
@@ -55,12 +58,17 @@ export async function bookSession(_prev: BookResult, form: FormData): Promise<Bo
     return { status: "error", message: occ.message, ...(occ.slot ? { href: requestHref(slotId, date), hrefLabel: "Request this session" } : {}) };
   }
 
-  const entitlement = await classEntitlement(content, member.id, now);
+  // Covered when a paid (real-money) membership month that includes classes runs at the session's start.
+  const entitlement = await classEntitlement(content, member.id, occ.startAt);
   const payable = entitlement ? null : sessionPayable(content);
   const provider = form.get("provider") === "paypal" ? "paypal" : "paymongo";
   if (!entitlement) {
-    if (!payable || !bookingPaymentsOn() || !(provider === "paypal" ? paypalConfigured() : paymongoConfigured())) {
+    // The chosen provider itself must take real money (sandbox only with BOOKING_TEST_PAYMENTS=1).
+    if (!payable || !bookingProviderOn(provider)) {
       return { status: "error", message: PAYMENTS_OFF_MESSAGE, href: requestHref(slotId, date), hrefLabel: "Request this session" };
+    }
+    if (await holdLimiter.take(clientIp(await headers()))) {
+      return { status: "error", message: "Too many unpaid bookings from this connection. Please finish paying for one, or wait half an hour and try again." };
     }
   }
 

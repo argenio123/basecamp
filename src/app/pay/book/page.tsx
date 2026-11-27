@@ -6,13 +6,13 @@ import "@/components/bookings/bookings.css";
 import "@/components/payments/payments.css";
 import { getSiteContent } from "@/content/get";
 import { longDate, nextBookableDate, resolveOccurrence, sessionPayable } from "@/lib/bookings/schedule";
-import { bookingPaymentsOn, classEntitlement, spotsLeft } from "@/lib/bookings/service";
+import { bookingProviderOn, classEntitlement, spotsLeft } from "@/lib/bookings/service";
 import { listMemberBookings } from "@/lib/bookings/store";
 import { bookedHref, bookHref, CANCEL_CUTOFF_HOURS, HOLD_MINUTES, isActive, PAYMENTS_OFF_MESSAGE, pesoLabel, requestHref } from "@/lib/bookings/types";
 import { currentMember } from "@/lib/members/session";
 import { loginHref } from "@/lib/members/types";
-import { paymongoConfigured, paymongoTestMode } from "@/lib/payments/paymongo";
-import { paypalConfigured, paypalTestMode } from "@/lib/payments/paypal";
+import { paymongoTestMode } from "@/lib/payments/paymongo";
+import { paypalTestMode } from "@/lib/payments/paypal";
 
 export const metadata: Metadata = { title: "Book a session", robots: { index: false, follow: false } };
 export const instant = false;
@@ -49,7 +49,7 @@ export default async function BookSessionPage({ searchParams }: { searchParams: 
   }
 
   const [entitlement, left, mine] = await Promise.all([
-    classEntitlement(content, member.id, now),
+    classEntitlement(content, member.id, occ.startAt),
     spotsLeft(slotId, date, occ.capacity, now.getTime()),
     listMemberBookings(member.id, now.getTime()),
   ]);
@@ -57,9 +57,9 @@ export default async function BookSessionPage({ searchParams }: { searchParams: 
   if (existing) redirect(bookedHref(existing.id));
 
   const payable = entitlement ? null : sessionPayable(content);
-  const payOn = bookingPaymentsOn();
-  const canPaymongo = !!payable && payOn && paymongoConfigured();
-  const canPaypal = !!payable && payOn && paypalConfigured();
+  // Each provider is offered only when it takes real money (sandbox only with BOOKING_TEST_PAYMENTS=1).
+  const canPaymongo = !!payable && bookingProviderOn("paymongo");
+  const canPaypal = !!payable && bookingProviderOn("paypal");
   const testMode = (canPaymongo && paymongoTestMode()) || (canPaypal && paypalTestMode());
   const full = left <= 0;
   const price = entitlement ? "Included" : payable ? pesoLabel(payable.amount) : "";

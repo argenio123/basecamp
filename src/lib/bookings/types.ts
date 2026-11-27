@@ -54,6 +54,9 @@ export const BOOKING_STATUS_LABEL: Record<BookingStatus, string> = {
   expired: "Expired",
 };
 
+/** Staff note on a hold released because it ran out and the session filled up before PayPal took the payment. */
+export const FULL_BEFORE_PAYMENT_NOTE = "Hold ran out and the session filled up before payment: PayPal payment not taken.";
+
 /** Shown instead of a pay button while online payment is off. */
 export const PAYMENTS_OFF_MESSAGE = "Online payment is being set up — request this session instead.";
 
