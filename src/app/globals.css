@@ -698,6 +698,115 @@ html[data-route="page"] main .page-hero.page-hero--ratio { display: flex; align-
 html[data-route="page"] main .page-hero.page-hero--ratio .page-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
 html[data-route="page"] main .pr-editorial-hero--full-image .pr-editorial-image { object-fit: cover; }
 
+/* ---------- Page hero variants (PageHero `variant`) ----------
+   So each section opens differently instead of every page being "full-screen photo, headline bottom-left" (the
+   default, untouched above). CSS only; the photo stays the LCP (next/image `preload`). Every variant keeps the top of
+   the hero dark for the transparent header and its hanging crest, and keeps the AI / render pill on the picture,
+   away from the text.
+   - split (Membership): headline on ink left, photo right; photo above the text on phones.
+   - editorial (About: framed inset + caption; Visit: full-width band): oversized headline on ink.
+   - stat (Facilities): full-bleed media, headline, and a solid strip of key facts along the bottom.
+   - compact (Schedule, Contact): ~60% screen banner, headline and intro side by side, so content comes sooner. */
+.page-hero:is(.page-hero--split, .page-hero--editorial) { --hero-gutter: max(24px, calc((100% - 1440px) / 2)); background: var(--ink); }
+.page-hero-media { position: relative; overflow: hidden; background: var(--graphite, #2a2c27); }
+.page-hero:not(.page-hero--static) .page-hero-media > .cover-image { animation: page-hero-image-in 1.6s cubic-bezier(.22, 1, .36, 1) both; }
+
+/* Split */
+.page-hero.page-hero--split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; padding: 0; }
+.page-hero--split .page-hero-content { align-self: end; width: auto; margin: 0; padding: calc(var(--header-height) + 110px) clamp(28px, 4vw, 72px) clamp(56px, 7vw, 104px) max(24px, calc((100vw - 1440px) / 2)); }
+html[data-route] main .page-hero--split h1 { max-width: 11ch; font-size: clamp(44px, 5.4vw, 88px) !important; }
+.page-hero--split .page-hero-content > p:last-child { max-width: 520px; }
+/* Signal rule down the seam, starting below the header crest so it never cuts through the logo. */
+.page-hero--split .page-hero-media::before { content: ""; position: absolute; z-index: 2; left: 0; top: calc(var(--header-height) + 96px); bottom: 0; width: 4px; background: var(--signal); }
+/* Keeps the header links and buttons that sit over the photo readable. */
+.page-hero--split .page-hero-media::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(21,23,19,.62), rgba(21,23,19,0) 30%); pointer-events: none; }
+
+/* Editorial: oversized headline across the full width; intro and photo share the row below. */
+.page-hero.page-hero--editorial { display: grid; grid-template-columns: var(--hero-gutter) minmax(0, .82fr) minmax(0, 1.18fr) var(--hero-gutter); grid-template-rows: 1fr auto auto; align-items: end; padding: calc(var(--header-height) + 88px) 0 clamp(44px, 5.5vw, 80px); }
+.page-hero--editorial .page-hero-content { display: contents; }
+.page-hero--editorial .page-hero-content > .eyebrow { grid-column: 2 / 4; grid-row: 1; align-self: end; margin-bottom: 18px; }
+.page-hero--editorial h1 { grid-column: 2 / 4; grid-row: 2; }
+html[data-route] main .page-hero--editorial h1 { max-width: 15ch; margin: 0 0 clamp(26px, 3vw, 44px); font-size: clamp(56px, 8.6vw, 148px) !important; line-height: .84 !important; }
+.page-hero--editorial .page-hero-content > p:last-child { grid-column: 2; grid-row: 3; align-self: start; margin: 0 clamp(24px, 4vw, 64px) 0 0; }
+.page-hero-figure { grid-column: 3; grid-row: 3; margin: 0; min-width: 0; }
+.page-hero--inset .page-hero-media { height: clamp(220px, 34svh, 400px); border-radius: var(--radius-card, 28px); box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
+.page-hero-figure figcaption { display: flex; gap: 12px; align-items: baseline; margin-top: 14px; color: rgba(255,255,255,.68); font: 600 11px/1.4 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.page-hero-figure figcaption::before { content: ""; flex: none; width: 28px; height: 2px; background: var(--signal); transform: translateY(-3px); }
+.page-hero--inset .page-hero-media .ai-label--corner { top: 16px; right: 16px; }
+/* Band: the intro sits beside the headline and the photo runs edge to edge along the bottom of the hero. */
+.page-hero.page-hero--band { grid-template-columns: var(--hero-gutter) minmax(0, 1.3fr) minmax(0, .7fr) var(--hero-gutter); grid-template-rows: 1fr auto auto auto; padding-bottom: 0; }
+.page-hero--band .page-hero-figure { grid-row: 4; }
+.page-hero--band h1 { grid-column: 2 / 4; }
+html[data-route] main .page-hero--band h1 { max-width: 20ch; margin-bottom: clamp(20px, 2.4vw, 32px); font-size: clamp(52px, 7.4vw, 128px) !important; }
+.page-hero--band .page-hero-content > p:last-child { grid-column: 3; grid-row: 3; align-self: end; margin: 0 0 clamp(32px, 4vw, 56px); }
+.page-hero--band .page-hero-figure { grid-column: 1 / -1; }
+.page-hero--band .page-hero-media { height: clamp(220px, 36svh, 420px); border-top: 4px solid var(--signal); }
+.page-hero--band .page-hero-figure figcaption { position: absolute; left: var(--hero-gutter); bottom: 18px; z-index: 2; margin: 0; }
+
+/* Stat: facts strip along the bottom of a full-bleed hero. */
+.page-hero.page-hero--stat { flex-direction: column; align-items: stretch; justify-content: flex-end; padding-top: calc(var(--header-height) + 110px); }
+.page-hero--stat .page-hero-content { width: min(100% - 48px, 1440px); padding-bottom: clamp(34px, 4.2vw, 60px); }
+.page-hero-facts { position: relative; z-index: 2; background: var(--ink); border-top: 3px solid var(--signal); }
+.page-hero-facts dl { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; margin: 0 auto; }
+.page-hero-facts dl > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 12px; min-width: 0; padding: clamp(20px, 2.4vw, 32px) clamp(16px, 2.2vw, 32px); border-left: 1px solid rgba(255,255,255,.14); }
+.page-hero-facts dl > div:first-child { padding-left: 0; border-left: 0; }
+.page-hero-facts dd { margin: 0; color: var(--signal); font: 400 clamp(36px, 4.2vw, 64px)/.9 var(--font-display), var(--font-poppins), sans-serif; letter-spacing: -.04em; text-transform: uppercase; }
+.page-hero-facts dt { color: rgba(255,255,255,.74); font: 600 11px/1.35 var(--font-geist-mono), monospace; letter-spacing: .16em; text-transform: uppercase; }
+
+/* Compact: shorter banner, headline and intro side by side, closed by a signal rule. */
+html[data-route="page"] main .page-hero.page-hero--compact { min-height: clamp(460px, 62svh, 640px) !important; }
+.page-hero.page-hero--compact { padding-top: calc(var(--header-height) + 96px); border-bottom: 4px solid var(--signal); }
+.page-hero--compact .page-hero-content { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); column-gap: clamp(32px, 5vw, 96px); align-items: end; padding-bottom: clamp(40px, 5vw, 72px); }
+.page-hero--compact .page-hero-content > .eyebrow { grid-column: 1 / -1; }
+html[data-route] main .page-hero--compact h1 { max-width: 14ch; margin: 0; }
+.page-hero--compact .page-hero-content > p:last-child { margin: 0 0 6px; }
+.page-hero.page-hero--compact .hero-shade { background: linear-gradient(180deg, rgba(21,23,19,.55), rgba(21,23,19,0) 32%), linear-gradient(0deg, rgba(21,23,19,.86), rgba(21,23,19,.28) 72%); }
+
+/* Tablets */
+@media (max-width: 1040px) {
+  .page-hero.page-hero--split { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+  .page-hero.page-hero--editorial { grid-template-columns: var(--hero-gutter) minmax(0, 1fr) minmax(0, 1fr) var(--hero-gutter); }
+  .page-hero.page-hero--band { grid-template-columns: var(--hero-gutter) minmax(0, 1.15fr) minmax(0, .85fr) var(--hero-gutter); }
+  .page-hero--compact .page-hero-content { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+}
+
+/* Phones: everything stacks in one column. */
+@media (max-width: 760px) {
+  .page-hero:is(.page-hero--split, .page-hero--editorial) { --hero-gutter: 18px; }
+  .page-hero.page-hero--split { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(46svh, 1fr) auto; }
+  .page-hero--split .page-hero-media { order: -1; min-height: 300px; border-bottom: 4px solid var(--signal); }
+  .page-hero--split .page-hero-media::before { content: none; }
+  .page-hero--split .page-hero-content { align-self: start; padding: 30px 18px 48px; }
+  html[data-route] main .page-hero--split h1 { max-width: 100%; font-size: clamp(36px, 11vw, 54px) !important; }
+
+  .page-hero.page-hero--editorial, .page-hero.page-hero--band { grid-template-columns: var(--hero-gutter) minmax(0, 1fr) var(--hero-gutter); grid-template-rows: 1fr auto auto auto; padding-top: calc(var(--header-height) + 84px); }
+  .page-hero--editorial .page-hero-content > .eyebrow, .page-hero--editorial h1 { grid-column: 2; }
+  html[data-route] main .page-hero--editorial h1 { max-width: 100%; margin-bottom: 22px; font-size: clamp(40px, 12.6vw, 64px) !important; }
+  .page-hero--editorial .page-hero-content > p:last-child, .page-hero--band .page-hero-content > p:last-child { grid-column: 2; grid-row: 3; margin: 0 0 28px; }
+  .page-hero-figure { grid-column: 2; grid-row: 4; }
+  .page-hero--inset .page-hero-media { height: clamp(200px, 30svh, 300px); border-radius: var(--radius-card, 22px); }
+  .page-hero--band .page-hero-figure { grid-column: 1 / -1; }
+  .page-hero.page-hero--band { grid-template-rows: auto auto auto minmax(220px, 1fr); }
+  .page-hero--band .page-hero-figure { display: grid; align-self: stretch; }
+  .page-hero--band .page-hero-media { height: auto; min-height: 220px; }
+
+  .page-hero.page-hero--stat { padding-top: calc(var(--header-height) + 70px); }
+  .page-hero--stat .page-hero-content { width: min(100% - 36px, 1440px); padding-bottom: 28px; }
+  .page-hero-facts dl { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); width: min(100% - 36px, 1440px); }
+  .page-hero-facts dl > div, .page-hero-facts dl > div:first-child { flex-direction: row-reverse; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-left: 0; }
+  .page-hero-facts dl > div + div { border-top: 1px solid rgba(255,255,255,.14); }
+  .page-hero-facts dd { flex: none; font-size: clamp(22px, 7vw, 32px); white-space: nowrap; }
+  .page-hero-facts dt { text-align: right; }
+
+  html[data-route="page"] main .page-hero.page-hero--compact { min-height: max(460px, 62svh) !important; }
+  .page-hero.page-hero--compact { padding-top: calc(var(--header-height) + 64px); }
+  .page-hero--compact .page-hero-content { grid-template-columns: minmax(0, 1fr); row-gap: 20px; padding-bottom: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-hero .page-hero-media > .cover-image { animation: none; }
+}
+
 /* ---------- Explicit device profiles ----------
    DEVICE_PROFILE_SCRIPT assigns exactly one tier before first paint. These rules sit last so mobile, tablet and
    desktop never combine animation directions, prompt layouts or hero focal points at overlapping breakpoints. */
