@@ -15,12 +15,14 @@ export type FromPriceItem = {
   availability: Availability;
   price: string;
   unit: string;
+  /** This item's checkout link, or null when it can't be paid online yet (e.g. planned). */
+  href: string | null;
 };
 
 export type FromPriceCard = {
   key: string;
   anchor: string;
-  /** Checkout or contact destination for the panel action; null hides it. */
+  /** Contact destination for categories with nothing payable. When null, the action opens the item chooser. */
   href: string | null;
   /** Category-specific action wording; never the generic "Purchase" label. */
   ctaLabel: string;
@@ -46,7 +48,10 @@ const CYCLE_MS = 7000;
  * own (Signal bar under the active card) and pauses while the visitor hovers, focuses or taps; hovering, focusing or
  * tapping a card makes it active. A category's #anchor (e.g. #packs) opens on that category.
  */
-export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst = [] }: { groups: FromPriceGroup[]; eyebrow?: string; title?: string; intro?: string; /** Category anchors listed first, in this order (e.g. ["advanced-recovery"]). */ pinFirst?: readonly string[] }) {
+type ChooserLabels = { choose: string; soon: string; close: string };
+const DEFAULT_LABELS: ChooserLabels = { choose: "Choose what to book", soon: "Coming soon", close: "Close" };
+
+export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst = [], labels = DEFAULT_LABELS }: { groups: FromPriceGroup[]; eyebrow?: string; title?: string; intro?: string; /** Category anchors listed first, in this order (e.g. ["advanced-recovery"]). */ pinFirst?: readonly string[]; /** Translated wording for the item chooser. */ labels?: ChooserLabels }) {
   const all = groups.flatMap((g) => g.cards.map((c) => ({ ...c, groupLabel: g.label })));
   const rank = (anchor: string) => { const i = pinFirst.indexOf(anchor); return i < 0 ? pinFirst.length : i; };
   const cards = [...all].sort((a, b) => rank(a.anchor) - rank(b.anchor));
@@ -76,6 +81,12 @@ export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst
   }, [active, paused, cycleKey, cards.length]);
 
   const pick = (i: number) => { setActive(i); setCycleKey((k) => k + 1); };
+
+  // Item chooser: "Get a Book" lists every item in the category so the visitor picks the one to pay for.
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [chooser, setChooser] = useState<number | null>(null);
+  const openChooser = (i: number) => { setChooser(i); setPaused(true); dialog.current?.showModal(); };
+  const chosen = chooser != null ? cards[chooser] : null;
 
   return (
     <div className="mb-px-grid" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
@@ -119,10 +130,49 @@ export default function FromPricesGrid({ groups, eyebrow, title, intro, pinFirst
               ))}
             </ul>
             {c.note && <p className="mb-px-note">{c.note}</p>}
-            {c.href && <Link href={c.href} className="mb-px-inquire" aria-label={`${c.ctaLabel} — ${c.title}`}>{c.ctaLabel} <span aria-hidden="true">→</span></Link>}
+            {c.href
+              ? <Link href={c.href} className="mb-px-inquire" aria-label={`${c.ctaLabel} — ${c.title}`}>{c.ctaLabel} <span aria-hidden="true">→</span></Link>
+              : <button type="button" className="mb-px-inquire" aria-haspopup="dialog" aria-label={`${c.ctaLabel} — ${c.title}`} tabIndex={i === active ? undefined : -1} onClick={() => openChooser(i)}>{c.ctaLabel} <span aria-hidden="true">→</span></button>}
           </section>
         ))}
       </div>
+
+      <dialog ref={dialog} className="mb-px-chooser" aria-labelledby="mb-px-chooser-title" onClose={() => setChooser(null)}
+        onClick={(e) => { if (e.target === e.currentTarget) e.currentTarget.close(); }}>
+        {chosen && (
+          <div className="mb-px-chooser-inner">
+            <div className="mb-px-chooser-head">
+              <div>
+                <p className="mb-px-group">{labels.choose}</p>
+                <h3 id="mb-px-chooser-title">{chosen.title}</h3>
+              </div>
+              <button type="button" className="mb-px-chooser-close" aria-label={labels.close} onClick={() => dialog.current?.close()}>×</button>
+            </div>
+            <ul className="mb-px-chooser-list">
+              {chosen.items.map((item) => {
+                const body = (
+                  <>
+                    <span className="mb-px-chooser-name">
+                      <strong>{item.name}{item.badge && <em>{item.badge}</em>}</strong>
+                      {item.description && <small>{item.description}</small>}
+                    </span>
+                    <span className="mb-px-item-price"><strong><Money value={item.price} /></strong>{item.unit && <small>{item.unit}</small>}</span>
+                    {item.href ? <span className="mb-px-chooser-go" aria-hidden="true">→</span> : <span className="mb-px-chooser-soon">{labels.soon}</span>}
+                  </>
+                );
+                return (
+                  <li key={item.id}>
+                    {item.href
+                      ? <Link href={item.href} className="mb-px-chooser-item">{body}</Link>
+                      : <div className="mb-px-chooser-item" aria-disabled="true">{body}</div>}
+                  </li>
+                );
+              })}
+            </ul>
+            {chosen.note && <p className="mb-px-note">{chosen.note}</p>}
+          </div>
+        )}
+      </dialog>
     </div>
   );
 }

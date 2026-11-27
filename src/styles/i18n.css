@@ -20,5 +20,11 @@ a.lang-switch-link:focus-visible { outline: 2px solid currentColor; outline-offs
 /* Filipino nav labels run longer than English: tighter spacing in the desktop bar so they clear LOGIN / JOIN. */
 @media (min-width: 1221px) {
   html[lang="fil"] .site-header .desktop-nav-group { gap: clamp(14px, 1.5vw, 32px); }
-  html[lang="fil"] .site-header .nv-trigger, html[lang="fil"] .site-header .header-actions .button { letter-spacing: .2px; }
+  /* "body" outranks the copy of the globals.css .5504px nav tracking in i18n-fil-type.css (same specificity otherwise). */
+  html[lang="fil"] body .site-header .nv-trigger, html[lang="fil"] body .site-header .header-actions .button { letter-spacing: .2px; }
+}
+/* Filipino timetable day strip on phones: "3 SESSION" is one character longer than "3 EVENTS" and wrapped in the 60px day
+   button. Keep the count on one line (the general Filipino letter-spacing lives in i18n-fil-type.css). */
+@media (max-width: 640px) {
+  html[lang="fil"] #timetable .sd-app-days em { font-size: 9px; letter-spacing: .02em; white-space: nowrap; }
 }

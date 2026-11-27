@@ -10,6 +10,7 @@
 @import "../styles/about.css";
 @import "../styles/reference-refresh.css";
 @import "../styles/features.css";
+@import "../styles/i18n-fil-type.css";
 
 :root {
   --ink: #151713;

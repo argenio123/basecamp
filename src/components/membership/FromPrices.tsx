@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { formatPhp } from "@/content/format";
-import type { PriceGroup } from "@/content/types";
+import type { PriceGroup, PriceItem } from "@/content/types";
 import { PAYABLE_GROUP_IDS } from "@/lib/payments/catalog";
 import { payHref } from "@/lib/payments/types";
 import { localHref, t } from "@/i18n/server";
@@ -67,12 +67,11 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
     const price = fromPrice(blockItems(block));
     if (!price) return [];
     const payableIds = new Set(block.groups.filter((group) => PAYABLE_GROUP_IDS.includes(group.id)).flatMap((group) => group.items.map((item) => item.id)));
-    const buyable = blockItems(block)
-      .filter((item) => payableIds.has(item.id) && item.price && item.availability !== "planned")
-      .sort((a, b) => a.price!.min - b.price!.min);
-    const href = buyable[0]
-      ? payHref(buyable[0].id)
-      : localHref(`/contact?interest=${CONTACT_INTEREST[block.anchor] ?? "membership-local"}`);
+    const canPay = (item: PriceItem) =>
+      payableIds.has(item.id) && !!item.price && item.price.min > 0 && item.availability !== "planned";
+    // Categories with something payable open a chooser of their items (each with its own checkout link);
+    // the rest (e.g. corporate) go straight to the contact form.
+    const href = blockItems(block).some(canPay) ? null : localHref(`/contact?interest=${CONTACT_INTEREST[block.anchor] ?? "membership-local"}`);
     return [{
       key: block.key, anchor: block.anchor, title: block.groups[0].title,
       href, ctaLabel: t(ACTION_LABEL[block.anchor] ?? "Get a Book"),
@@ -82,6 +81,7 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
       items: blockItems(block).map((item) => ({
         id: item.id, name: item.name, badge: item.badge, description: item.description, featured: item.featured,
         availability: item.availability, price: priceText(formatPhp(item.price)), unit: item.unit,
+        href: canPay(item) ? payHref(item.id) : null,
       })),
     }];
   });
@@ -91,7 +91,8 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
   return (
     <section id={id} className="section mb-from-section" aria-label={title}>
       <div className="shell">
-        <FromPricesGrid groups={grouped} eyebrow={eyebrow} title={title} intro={intro} pinFirst={["advanced-recovery"]} />
+        <FromPricesGrid groups={grouped} eyebrow={eyebrow} title={title} intro={intro} pinFirst={["advanced-recovery"]}
+          labels={{ choose: t("Choose what to book"), soon: t("Coming soon"), close: t("Close") }} />
       </div>
       {children && <div className="shell">{children}</div>}
     </section>

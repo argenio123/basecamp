@@ -57,6 +57,9 @@ export const PHRASES_MEMBERSHIP: Readonly<Record<string, string>> = {
   // FromPrices (price guide board)
   "Get a Book": "Mag-book",
   "Inquire": "Magtanong",
+  "Choose what to book": "Piliin ang ibu-book",
+  "Coming soon": "Malapit na",
+  "Close": "Isara",
   "Train": "Train",
   "Recover": "Recover",
   "Camps & teams": "Camps at teams",
