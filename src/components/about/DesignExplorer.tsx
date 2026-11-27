@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useLocale } from "@/i18n/client";
+import { fmt } from "@/i18n/ui";
+import { UI_VISIT_ABOUT } from "@/i18n/ui-sections/visit-about";
 
 type DesignPoint = { title: string; body: string };
 
@@ -13,6 +16,7 @@ const HOTSPOTS = [
 ] as const;
 
 export default function DesignExplorer({ image, imageAlt, points }: { image: string; imageAlt: string; points: readonly DesignPoint[] }) {
+  const ui = UI_VISIT_ABOUT[useLocale()].explorer;
   const [active, setActive] = useState(0);
   const selected = points[active];
 
@@ -28,7 +32,7 @@ export default function DesignExplorer({ image, imageAlt, points }: { image: str
               type="button"
               className="ab-explorer-hotspot"
               style={position}
-              aria-label={`Show ${point.title}`}
+              aria-label={fmt(ui.show, { title: point.title })}
               aria-pressed={active === index}
               aria-controls="ab-explorer-detail"
               onClick={() => setActive(index)}
@@ -39,10 +43,10 @@ export default function DesignExplorer({ image, imageAlt, points }: { image: str
         })}
       </div>
       <div className="ab-explorer-panel" id="ab-explorer-detail" aria-live="polite">
-        <p className="ab-explorer-count">Detail {String(active + 1).padStart(2, "0")} / {String(points.length).padStart(2, "0")}</p>
+        <p className="ab-explorer-count">{ui.detail} {String(active + 1).padStart(2, "0")} / {String(points.length).padStart(2, "0")}</p>
         <h3>{selected?.title}</h3>
         <p>{selected?.body}</p>
-        <div className="ab-explorer-controls" aria-label="Architectural details">
+        <div className="ab-explorer-controls" aria-label={ui.controls}>
           {points.map((point, index) => (
             <button key={point.title} type="button" aria-label={point.title} aria-pressed={active === index} onClick={() => setActive(index)} />
           ))}

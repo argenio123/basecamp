@@ -4,13 +4,18 @@ import StyleSteps from "@/components/programs/StyleSteps";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import CampJourney from "@/components/visit/CampJourney";
-import { CAMPS, CAMPS_CTA, CAMPS_GLANCE, CAMPS_HERO, CAMPS_META } from "@/data/visit";
+import { getData } from "@/i18n/data";
+import { alternatesFor } from "@/i18n/paths";
+import { t } from "@/i18n/server";
 
-// Static metadata object (01-app/03-api-reference/04-functions/generate-metadata.md#the-metadata-object).
-export const metadata: Metadata = CAMPS_META;
+// Metadata from the static visit copy in the page's language (getData; /fil/visit/camps reuses this page, src/i18n/README.md).
+export async function generateMetadata(): Promise<Metadata> {
+  return { ...getData("visit").CAMPS_META, alternates: alternatesFor("/visit/camps") };
+}
 
 // Two focused sections: the benefits of camping at BaseCamp and the camp experience.
 export default function CampsPage() {
+  const { CAMPS, CAMPS_CTA, CAMPS_GLANCE, CAMPS_HERO } = getData("visit");
   return (
     <DetailTemplate
       path="/visit/camps"
@@ -25,7 +30,7 @@ export default function CampsPage() {
           <p className="pr-dev-label pr-dev-label-light" data-reveal>{CAMPS.eyebrow}</p>
           <h2 id="vc-camps-title" data-reveal data-reveal-delay="short">{CAMPS.title}</h2>
         </div>
-        <StyleSteps className="Camps & trips" caption={CAMPS.caption} steps={CAMPS.benefits} />
+        <StyleSteps className={t("Camps & trips")} caption={CAMPS.caption} steps={CAMPS.benefits} />
       </section>
 
       <CampJourney eyebrow={CAMPS.flowEyebrow} title={CAMPS.flowTitle} note={CAMPS.flowNote} stages={CAMPS.flow} />

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { t } from "@/i18n/server";
 
 type AboutEditorialHeroProps = {
   chapter: string;
@@ -27,7 +28,7 @@ export default function AboutEditorialHero({ chapter, eyebrow, title, intro, ima
         <h1>{title}</h1>
         <div className="ab-editorial-hero-foot">
           <p>{intro}</p>
-          <p className="ab-editorial-edition">BaseCamp CamSur<br />{VARIANT_LABEL[variant]}</p>
+          <p className="ab-editorial-edition">BaseCamp CamSur<br />{t(VARIANT_LABEL[variant])}</p>
         </div>
       </div>
     </section>

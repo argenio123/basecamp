@@ -2,10 +2,14 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useLocale } from "@/i18n/client";
+import { fmt } from "@/i18n/ui";
+import { UI_VISIT_ABOUT } from "@/i18n/ui-sections/visit-about";
 
 type ComparisonImage = { src: string; alt: string; label: string };
 
 export default function ImageComparison({ first, second }: { first: ComparisonImage; second: ComparisonImage }) {
+  const ui = UI_VISIT_ABOUT[useLocale()].comparison;
   const [position, setPosition] = useState(52);
 
   return (
@@ -24,10 +28,10 @@ export default function ImageComparison({ first, second }: { first: ComparisonIm
           max="100"
           value={position}
           onChange={(event) => setPosition(Number(event.target.value))}
-          aria-label={`Compare ${first.label} and ${second.label}`}
+          aria-label={fmt(ui.compare, { first: first.label, second: second.label })}
         />
       </div>
-      <figcaption>Drag to compare two architectural viewpoints from the current render study.</figcaption>
+      <figcaption>{ui.caption}</figcaption>
     </figure>
   );
 }
