@@ -7,6 +7,9 @@ import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
 import type { PriceGroup } from "@/content/types";
 import { bookingNote } from "@/data/programs-static";
+import { isClassSlot, sessionPayable } from "@/lib/bookings/schedule";
+import { bookingPaymentsOn } from "@/lib/bookings/service";
+import { pesoLabel } from "@/lib/bookings/types";
 import { paymentsLive } from "@/lib/payments/status";
 
 export const metadata: Metadata = {
@@ -22,6 +25,12 @@ const priceOptions = (groups: PriceGroup[], ids: string[]) => groups
 // Booking request: one question per screen, one-question-per-screen (cover → service → program/session →
 // time → details → contact). Public: no account needed to send a request. Static under cacheComponents: reads only the cached
 // getSiteContent(); ?service= / ?item= are read client-side inside <Suspense> (docs: use-search-params.md).
+/** Drop-in price label for instant booking, only when online payment is on (env only: keeps the page static). */
+function instantPrice(c: Awaited<ReturnType<typeof getSiteContent>>) {
+  const payable = sessionPayable(c);
+  return payable && bookingPaymentsOn() ? pesoLabel(payable.amount) : null;
+}
+
 export default async function ScheduleBookPage() {
   const c = await getSiteContent();
   const { contact } = c.settings;
@@ -36,6 +45,7 @@ export default async function ScheduleBookPage() {
     image: "/images/schedule/generated/booking-cover-1263x1090-v2.webp",
     note: bookingNote(paymentsLive()),
     disclaimer: c.recovery.disclaimer,
+    instant: { slotIds: c.schedule.timetable.filter((s) => s.status === "open" && isClassSlot(s)).map((s) => s.id), price: instantPrice(c) },
   };
 
   return (

@@ -9,6 +9,7 @@ import { BOOKING_ADDONS, BOOKING_SERVICES, PREFERRED_TIMES } from "@/content/con
 import type { TimetableSlot } from "@/content/types";
 import { SLOT_STATUS_LABEL, WEEKDAY_LABEL } from "@/data/programs-static";
 import { trackLead } from "@/lib/analytics";
+import { bookHref } from "@/lib/bookings/types";
 import { submitLead } from "@/lib/leads/actions";
 import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
 
@@ -28,9 +29,11 @@ export type BookingFormContent = {
   note: string;
   /** Recovery/medical caveat, shown on the appointment question. */
   disclaimer: string;
+  /** Timetable sessions members can book instantly (confirm screen at /pay/book), and the price label when paid online. */
+  instant?: { slotIds: string[]; price: string | null };
 };
 
-type Props = { content: BookingFormContent; initialService?: string | null; initialItem?: string | null };
+type Props = { content: BookingFormContent; initialService?: string | null; initialItem?: string | null; initialDate?: string | null; initialWaitlist?: boolean };
 
 const SERVICE_VALUES = BOOKING_SERVICES.map((s) => s.value) as readonly string[];
 const isService = (v: string | null | undefined): v is Service => !!v && SERVICE_VALUES.includes(v);
@@ -85,7 +88,7 @@ export default function BookingRequestForm(props: Props) {
   return <BookingFlow key={formKey} {...props} onReset={() => setFormKey((k) => k + 1)} />;
 }
 
-function BookingFlow({ content, initialService, initialItem, onReset }: Props & { onReset: () => void }) {
+function BookingFlow({ content, initialService, initialItem, initialDate, initialWaitlist, onReset }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const [initial] = useState(() => resolveInitial(content, initialService, initialItem));
   const [step, setStep] = useState<Step>("intro");
@@ -114,7 +117,9 @@ function BookingFlow({ content, initialService, initialItem, onReset }: Props & 
 
   const groups = service ? optionGroups(service, content) : [];
   const slot = service === "class" ? content.slots.find((s) => s.id === item) : undefined;
-  const waitlist = slot?.status === "full";
+  // Full by status, or sent here from a session whose online spots ran out (?waitlist=1).
+  const waitlist = slot?.status === "full" || (!!initialWaitlist && !!slot && item === initial.item);
+  const instantHref = slot && content.instant?.slotIds.includes(slot.id) && !waitlist ? bookHref(slot.id, initialDate && item === initial.item ? initialDate : undefined) : "";
   const itemValue = service === "corporate" ? groupNote : item === ADVISE ? "" : item;
 
   if (state.status === "success") {
@@ -211,6 +216,7 @@ function BookingFlow({ content, initialService, initialItem, onReset }: Props & 
               )}
               <FlowOptions label="Not sure" value={item} groups={adviseGroup} onPick={setItem} />
               {waitlist && <p className="jf-hint" role="status">This session is full: we&apos;ll add you to the waitlist.</p>}
+              {instantHref && <p className="jf-hint" role="status">Want it confirmed now? <Link href={instantHref}>Book this session instantly{content.instant?.price ? ` · ${content.instant.price}` : ""}</Link> (members log in; plans with classes book free).</p>}
             </FlowQuestion>
           ))}
 
@@ -227,7 +233,7 @@ function BookingFlow({ content, initialService, initialItem, onReset }: Props & 
               nav={<FlowNav onBack={back} canContinue onContinue={next} />}>
               <div className="jf-fields">
                 <label className="jf-field" htmlFor={`${id}-date`}><span className="jf-label">Preferred date</span>
-                  <input id={`${id}-date`} name="preferredDate" type="date" />
+                  <input id={`${id}-date`} name="preferredDate" type="date" defaultValue={initialDate && /^\d{4}-\d{2}-\d{2}$/.test(initialDate) ? initialDate : undefined} />
                 </label>
                 <label className="jf-field" htmlFor={`${id}-party`}><span className="jf-label">Group size</span>
                   <input id={`${id}-party`} name="partySize" type="number" inputMode="numeric" min={1} max={60} step={1} defaultValue={1} {...fieldA11y(state, `${id}-party`, "partySize")} />

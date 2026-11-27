@@ -5,6 +5,8 @@ import { type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEve
 import { manilaNow } from "@/content/format";
 import type { TimetableSlot } from "@/content/types";
 import { SLOT_CATEGORY_LABEL, TIMETABLE_CAPTION, WEEKDAY_LABEL, WEEKDAYS } from "@/data/programs-static";
+import { bookHref, requestHref, type SpotInfo } from "@/lib/bookings/types";
+import { useSpots, ymd } from "./useSpots";
 
 type Weekday = (typeof WEEKDAYS)[number];
 type Category = TimetableSlot["category"];
@@ -113,9 +115,14 @@ function calendarHref(slot: TimetableEntry, date: Date | undefined) {
   return `https://calendar.google.com/calendar/render?${q.toString()}`;
 }
 
-function Slot({ slot, date, index, ended }: { slot: TimetableEntry; date?: Date; index: number; ended?: boolean }) {
+function Slot({ slot, date, index, ended, spot, price }: { slot: TimetableEntry; date?: Date; index: number; ended?: boolean; spot?: SpotInfo; price?: string | null }) {
   const t = readTime(slot.time);
-  const status = ended ? { label: "Ended", tone: "ended" as const } : statusOf(slot);
+  // Live spots (instant booking): bookable sessions go to the confirm screen, full ones to a waitlist request.
+  const live = !ended && date ? spot : undefined;
+  const day = date ? ymd(date) : undefined;
+  const status = ended ? { label: "Ended", tone: "ended" as const } : live?.state === "full" ? { label: "Full · Waitlist", tone: "full" as const } : live ? { label: "Open", tone: "open" as const } : statusOf(slot);
+  const href = live?.state === "bookable" ? bookHref(slot.id, day) : live?.state === "full" ? requestHref(slot.id, day, true) : `/schedule/book?service=class&item=${encodeURIComponent(slot.id)}`;
+  const go = live?.state === "bookable" ? (price ? `Book · ${price}` : "Book") : live?.state === "full" ? "Waitlist" : "Request";
   const duration = t.start && t.end ? minutes(t.start, t.end) : null;
   const calendar = ended ? null : calendarHref(slot, date);
   const meta = [slot.coach ? `Coach ${slot.coach}` : "Coach TBA", slot.zone, slot.level].filter(Boolean);
@@ -136,8 +143,8 @@ function Slot({ slot, date, index, ended }: { slot: TimetableEntry; date?: Date;
           <span className="sd-app-chip sd-app-chip-quiet">{duration ? `${duration} min` : "Duration TBA"}</span>
         </span>
       </span>
-      <span className="sd-app-spots"><strong>{slot.capacity ?? "TBA"}</strong><small>Spots</small></span>
-      <span className="sd-app-go" aria-hidden="true">{ended ? "Ended" : "Request"}</span>
+      <span className="sd-app-spots"><strong>{live ? live.left : slot.capacity ?? "TBA"}</strong><small>{live ? "Left" : "Spots"}</small></span>
+      <span className="sd-app-go" aria-hidden="true">{ended ? "Ended" : go}</span>
     </>
   );
 
@@ -146,7 +153,7 @@ function Slot({ slot, date, index, ended }: { slot: TimetableEntry; date?: Date;
       {ended ? (
         <div className="sd-app-slot-card">{content}</div>
       ) : (
-        <Link href={`/schedule/book?service=class&item=${encodeURIComponent(slot.id)}`} aria-label={`${WEEKDAY_LABEL[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}. Request this session`}>{content}</Link>
+        <Link href={href} aria-label={`${WEEKDAY_LABEL[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}.${live ? ` ${live.left} of ${live.capacity} spots left.` : ""} ${live?.state === "bookable" ? `Book this session${price ? `, ${price}` : ""}` : live?.state === "full" ? "Join the waitlist" : "Request this session"}`}>{content}</Link>
       )}
       {calendar && <a className="sd-app-cal" href={calendar} target="_blank" rel="noopener noreferrer">Add to calendar</a>}
     </li>
@@ -475,6 +482,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   const selectedDay: Weekday = selected ? weekdayOf(selected) : "Mon";
   const list = daySlots(selectedDay);
   const dayPast = selected ? isPast(selected) : false;
+  const spots = useSpots(selected && !dayPast ? selected : null);
 
   return (
     <div className="sd-timetable sd-app" data-flip={flipped ? "" : undefined}>
@@ -593,7 +601,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
           {dayPast && <em className="sd-app-past-tag">Past</em>}
         </p>
         {list.length
-          ? <ul data-reveal="stagger">{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} />)}</ul>
+          ? <ul data-reveal="stagger">{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} spot={spots?.slots[slot.id]} price={spots?.price} />)}</ul>
           : <p className="sd-slot-empty">No sessions match these filters</p>}
       </div>
       <p className="sd-caption" data-reveal>{TIMETABLE_CAPTION}</p>
