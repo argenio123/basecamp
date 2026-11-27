@@ -3,10 +3,32 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createPortal } from "react-dom";
+import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import SocialIcon from "@/components/ui/SocialIcon";
+import { isLibraryImage } from "@/content/images";
 import type { GalleryPost, SocialLink, SocialPlatform } from "@/content/types";
 import { trapFocus } from "@/lib/focusTrap";
 import { lockPageScroll } from "@/lib/scrollLock";
+import "@/styles/social.css";
+
+/**
+ * Library images were converted from .png to .webp; posts saved (or defaulted) before that still point at the
+ * old .png path, which 404s. Swap to the .webp twin when only that one exists in the image library.
+ */
+function resolvePostImage(src: string): string {
+  if (!/\.png$/i.test(src) || isLibraryImage(src)) return src;
+  const webp = src.replace(/\.png$/i, ".webp");
+  return isLibraryImage(webp) ? webp : src;
+}
+
+/** Hide a photo that failed to load (so the browser's broken-image glyph never covers the placeholder under it). */
+const hideBrokenImage = (img: HTMLImageElement | null) => {
+  // Ref callback: also catches errors that fired before hydration.
+  if (img && img.complete && img.naturalWidth === 0) img.style.visibility = "hidden";
+};
+const onImageError = (event: { currentTarget: HTMLImageElement }) => { event.currentTarget.style.visibility = "hidden"; };
+// A lazy photo can look "complete" before it has loaded; if it loads later, show it again.
+const onImageLoad = (event: { currentTarget: HTMLImageElement }) => { event.currentTarget.style.visibility = ""; };
 
 type SocialGalleryProps = {
   /** Kept for callers; the rail layout shows the title only. */
@@ -262,7 +284,13 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
                       tabIndex={isPrimary ? undefined : -1}
                       key={`${copy}-${loopIndex}-${id}`}
                     >
-                      <Image src={image} alt="" fill sizes="(max-width: 760px) 80vw, 340px" className="social-rail-image" draggable={false} style={{ objectPosition: imagePosition }} />
+                      {/* Sits under the photo: covered once it loads, shows if the image is missing or blocked. */}
+                      <span className="social-rail-fallback" aria-hidden="true">
+                        <span className="social-rail-fallback-icon"><SocialIcon platform={platform} /></span>
+                        <span className="social-rail-fallback-cta">View on {platform === "X" ? "X" : platform}</span>
+                      </span>
+                      <Image src={resolvePostImage(image)} alt="" fill sizes="(max-width: 760px) 80vw, 340px" className="social-rail-image" draggable={false} style={{ objectPosition: imagePosition }} ref={hideBrokenImage} onError={onImageError} onLoad={onImageLoad} />
+                      <ImageLabel src={image} className="ai-label--corner ai-label--small" hidden />
                       <span className="social-rail-overlay" aria-hidden="true">
                         <span className="social-rail-icon"><SocialIcon platform={platform} /></span>
                         <span className="social-rail-copy">
@@ -313,13 +341,20 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
             }}
           >
             <div className="social-modal-media">
+              <span className="social-rail-fallback" aria-hidden="true">
+                <span className="social-rail-fallback-icon"><SocialIcon platform={activePost.platform} /></span>
+                <span className="social-rail-fallback-cta">{activePost.title}</span>
+              </span>
               <Image
-                src={activePost.image}
-                alt={`${activePost.type} at BaseCamp CamSur`}
+                src={resolvePostImage(activePost.image)}
+                alt={labelledImageAlt(`${activePost.type} at BaseCamp CamSur`, imageKind(activePost.image))}
                 fill
                 sizes="(max-width: 760px) 100vw, 70vw"
                 style={{ objectPosition: activePost.imagePosition }}
+                ref={hideBrokenImage}
+                onError={onImageError} onLoad={onImageLoad}
               />
+              <ImageLabel src={activePost.image} className="ai-label--corner ai-label--start" hidden />
             </div>
             <div className="social-modal-info">
               <button type="button" className="social-modal-close" onClick={closeModal} aria-label="Close social post">✕</button>

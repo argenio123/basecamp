@@ -1,0 +1,22 @@
+/* Find us map: static placeholder behind the Google Maps embed (FindUsMap.tsx). The iframe fades in over it once loaded. */
+.fu-map-fallback {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(198,244,50,.14), transparent 42%),
+    repeating-linear-gradient(0deg, transparent 0 47px, rgba(255,255,255,.05) 47px 48px),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgba(255,255,255,.05) 47px 48px),
+    #1f2a1c;
+  color: var(--white, #fff); text-align: center;
+}
+.fu-map-fallback-pin { width: 44px; height: 44px; fill: var(--signal, #c6f432); filter: drop-shadow(0 6px 14px rgba(0,0,0,.35)); }
+.fu-map-fallback a {
+  padding: 10px 16px; border-radius: 999px; background: var(--ink, #151713); color: var(--white, #fff); text-decoration: none;
+  font: 400 10.5px/1 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase;
+  transition: background-color .25s ease, color .25s ease;
+}
+.fu-map-fallback a:hover, .fu-map-fallback a:focus-visible { background: var(--signal, #c6f432); color: var(--ink, #151713); }
+.fu-map iframe { opacity: 0; pointer-events: none; transition: opacity .4s ease; }
+.fu-map[data-loaded] iframe { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .fu-map iframe, .fu-map-fallback a { transition: none; }
+}

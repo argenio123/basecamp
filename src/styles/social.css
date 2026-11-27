@@ -1,0 +1,12 @@
+/* Social rail / modal: placeholder under each post photo (SocialGallery.tsx). The photo covers it once loaded;
+   if the image 404s or is blocked, the tile shows a branded panel instead of an empty dark box. */
+.social-rail-fallback {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 20px;
+  background: radial-gradient(circle at 50% 40%, rgba(198,244,50,.16), transparent 60%), linear-gradient(160deg, var(--olive, #555d45), var(--ink, #151713));
+  color: var(--white, #fff); text-align: center;
+}
+.social-rail-fallback-icon { width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; }
+.social-rail-fallback-icon svg { width: 20px; height: 20px; overflow: visible; }
+.social-rail-fallback-icon path, .social-rail-fallback-icon .social-icon-fill { fill: currentColor; }
+.social-rail-fallback-icon rect, .social-rail-fallback-icon circle:not(.social-icon-fill) { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.social-rail-fallback-cta { font: 400 10.5px/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.85); }
