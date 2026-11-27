@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { t } from "@/i18n/server";
 
 /**
  * "The camp experience" as a journey: heading left, a note right, then the four stages on one timeline. A Signal
@@ -29,7 +30,7 @@ export default function CampJourney({ eyebrow, title, note, stages }: {
             {stages.map((stage, i) => (
               <li key={stage.value} style={{ "--vc-i": i } as CSSProperties}>
                 <span className="vc-journey-dot" aria-hidden="true">{pad(i + 1)}</span>
-                <p className="vc-journey-step">Stage {pad(i + 1)}</p>
+                <p className="vc-journey-step">{t("Stage {n}", { n: pad(i + 1) })}</p>
                 <h3>{stage.value}</h3>
                 <p className="vc-journey-label">{stage.label}</p>
               </li>

@@ -4,6 +4,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
 import Money from "@/components/membership/Money";
+import { t } from "@/i18n/server";
 import { payHref } from "@/lib/payments/types";
 import "@/components/payments/payments.css";
 
@@ -22,7 +23,7 @@ export default function CampCards({ items, exchangeRate, enquiryLabel, requestLa
         return (
           <li key={item.id} className={`sd-ev-row vt-pk${item.featured ? " vt-pk-featured" : ""}`} style={{ "--i": i } as CSSProperties}>
             <Link href={`/schedule/book?service=camp&item=${encodeURIComponent(item.id)}`} aria-label={`${item.name}, ${formatPhp(item.price)} ${item.unit ?? ""}. ${requestLabel}`}>
-              <span className="sd-ev-when"><small>{item.badge || "Camp"}</small></span>
+              <span className="sd-ev-when"><small>{item.badge || t("Camp")}</small></span>
               <span className="sd-ev-body">
                 <span className="sd-ev-title">{item.name}</span>
                 {item.description && <span className="sd-ev-desc">{item.description}</span>}
@@ -34,7 +35,7 @@ export default function CampCards({ items, exchangeRate, enquiryLabel, requestLa
               </span>
               <span className="sd-ev-go" aria-hidden="true">{requestLabel}</span>
             </Link>
-            {item.price && <Link href={payHref(item.id)} className="py-buy vt-pk-pay">{item.price.max != null ? "Pay deposit online" : "Pay online"}</Link>}
+            {item.price && <Link href={payHref(item.id)} className="py-buy vt-pk-pay">{item.price.max != null ? t("Pay deposit online") : t("Pay online")}</Link>}
           </li>
         );
       })}
