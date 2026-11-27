@@ -1,5 +1,6 @@
 import Image from "next/image";
 import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
+import { t } from "@/i18n/server";
 
 type ClassesEditorialHeroProps = {
   chapter: string;
@@ -36,7 +37,7 @@ export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, i
       <span className="pr-editorial-shade" aria-hidden="true" />
       {ai && <AiImageLabel className="ai-label--hero" hidden={!!imageAlt.trim()} />}
       <div className="shell pr-editorial-inner">
-        {!minimalMeta && <div className="pr-editorial-kicker"><span>{chapter}</span><p>{eyebrow}</p><strong>{VARIANT_LABEL[variant]}</strong></div>}
+        {!minimalMeta && <div className="pr-editorial-kicker"><span>{chapter}</span><p>{eyebrow}</p><strong>{t(VARIANT_LABEL[variant])}</strong></div>}
         <h1 id="pr-editorial-title">{title}</h1>
         <div className={`pr-editorial-foot${minimalMeta ? " pr-editorial-foot-minimal" : ""}`}>
           <p>{intro}</p>

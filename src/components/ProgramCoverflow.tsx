@@ -13,6 +13,9 @@ import {
 import { ImageLabel } from "@/components/ui/AiImageLabel";
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { Availability } from "@/content/types";
+import { useLocale } from "@/i18n/client";
+import { fmt } from "@/i18n/ui";
+import { CLASSES_UI } from "@/i18n/ui-sections/classes";
 
 type Program = {
   title: string;
@@ -35,6 +38,7 @@ const maxDots = 7;
 
 export default function ProgramCoverflow({ programs, titleClassName = "" }: ProgramCoverflowProps) {
   const router = useRouter();
+  const ui = CLASSES_UI[useLocale()].coverflow;
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -159,7 +163,7 @@ export default function ProgramCoverflow({ programs, titleClassName = "" }: Prog
   return (
     <div
       className={`program-coverflow${programs.length > maxDots ? " hm-coverflow-many" : ""}`}
-      aria-label="Training programs"
+      aria-label={ui.carousel}
       aria-roledescription="carousel"
       data-home-reveal
       data-home-reveal-delay="short"
@@ -248,31 +252,31 @@ export default function ProgramCoverflow({ programs, titleClassName = "" }: Prog
       </div>
 
       <div className="program-coverflow-controls shell">
-        <button type="button" className="program-coverflow-arrow" onClick={movePrevious} aria-label="Previous program">
+        <button type="button" className="program-coverflow-arrow" onClick={movePrevious} aria-label={ui.previous}>
           <span aria-hidden="true">←</span>
         </button>
         <p className="program-coverflow-count" aria-hidden="true">
           {String(activeIndex + 1).padStart(2, "0")} / {String(programs.length).padStart(2, "0")}
         </p>
-        <div className="program-coverflow-dots hm-coverflow-dots" aria-label="Choose a program">
+        <div className="program-coverflow-dots hm-coverflow-dots" aria-label={ui.choose}>
           {programs.map((program, index) => (
             <button
               type="button"
               className={index === activeIndex ? "is-active" : ""}
-              aria-label={`Show ${program.title}`}
+              aria-label={fmt(ui.show, { title: program.title })}
               aria-current={index === activeIndex ? "true" : undefined}
               key={program.title}
               onClick={() => moveTo(index)}
             />
           ))}
         </div>
-        <button type="button" className="program-coverflow-arrow" onClick={moveNext} aria-label="Next program">
+        <button type="button" className="program-coverflow-arrow" onClick={moveNext} aria-label={ui.next}>
           <span aria-hidden="true">→</span>
         </button>
       </div>
 
       <p className="sr-only" aria-live="polite">
-        Showing {programs[activeIndex].title}: {programs[activeIndex].description}
+        {fmt(ui.showing, { title: programs[activeIndex].title, description: programs[activeIndex].description })}
       </p>
     </div>
   );
