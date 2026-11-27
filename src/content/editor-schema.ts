@@ -169,7 +169,7 @@ export const EDITOR_SCHEMA = {
       {
         title: "Early member offer",
         anchor: "/membership#founding",
-        help: "Confirm the early discount wording (Php 3,200 vs Php 4,500 is about 29%) with the owner.",
+        help: "Approved offer: Athlete at Php 3,150/month vs Php 4,500 standard (30% off), capped at 100 members. The first Php amount in the example line is what checkout charges.",
         fields: {
           founding: {
             kind: "object", label: "",
@@ -616,7 +616,7 @@ export const EDITOR_SCHEMA = {
         fields: {
           faq: {
             kind: "list", label: "Questions", itemTitleKey: "question", maxItems: 20,
-            fields: { id: id(), question: title("Question"), answer: area("Answer", { max: 800, required: true }) },
+            fields: { id: id(), question: title("Question"), answer: area("Answer", { max: 800, required: true, help: "Write {foundingCap} to show the founding member cap from Settings." }) },
             newItem: () => ({ id: newId("faq"), question: "New question", answer: "" }),
           },
         },

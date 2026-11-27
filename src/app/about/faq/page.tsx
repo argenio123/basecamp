@@ -30,7 +30,9 @@ const pad = (i: number) => String(i + 1).padStart(2, "0");
 // tiles) → CTA. Same heading / row / board language as the other pages. Anchors kept: #faq, #platform.
 export default async function MembershipFaqPage() {
   const { settings, pricing } = await getSiteContent();
-  const { faq } = pricing;
+  // "{foundingCap}" in an answer shows the founding member cap from Settings, so the FAQ can't drift from it.
+  const cap = String(Math.max(0, Math.floor(settings.founding.cap)));
+  const faq = pricing.faq.map((f) => ({ ...f, answer: f.answer.replaceAll("{foundingCap}", cap) }));
   // Once real online payment is on, joining and paying online is live: drop it from the coming-soon list.
   const live = paymentsLive();
   const platform = live ? PLATFORM.filter((p) => !("live" in p && p.live)) : PLATFORM;

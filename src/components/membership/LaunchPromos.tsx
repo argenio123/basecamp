@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { getSiteContent } from "@/content/get";
 import { formatPhp } from "@/content/format";
-import type { PriceGroup, PriceItem } from "@/content/types";
+import type { FoundingOffer, PriceGroup, PriceItem } from "@/content/types";
+import { foundingItemId } from "@/lib/payments/founding-link";
+import { payHref } from "@/lib/payments/types";
 import Money from "./Money";
-import { itemPrice } from "./pricing";
+import { foundingSaving, itemPrice } from "./pricing";
 
-/**
- * Proposed introductory Athlete rate on test. It is not in the price guide, so it lives here (and only here); the
- * standard rates it is compared with come from the pricing content.
- */
-export const INTRO_ATHLETE_RATE = 3200;
 /** Proposed early-booking camp discount (matches the camps group intro and FAQ in the pricing content). */
 export const CAMP_EARLY_DISCOUNT = "20%";
 
@@ -20,10 +17,17 @@ const findItem = (groups: readonly PriceGroup[], id: string): PriceItem | undefi
 /** The prices the launch promotions compare, all read from the pricing content (null when an item is hidden). */
 export function launchPromoPrices(groups: readonly PriceGroup[]) {
   return {
-    athlete: itemPrice(groups, "athlete"),
     dayStandard: itemPrice(groups, "day-pass-standard"),
     dayWeekend: itemPrice(groups, "day-pass-weekend"),
   };
+}
+
+/**
+ * The introductory membership rate is the founding offer (settings.founding): the same tier, price and saving the
+ * founding page shows and checkout charges (src/lib/payments/founding.ts). Null while the offer is off.
+ */
+export function launchFoundingRate(founding: FoundingOffer, groups: readonly PriceGroup[]) {
+  return founding.enabled ? foundingSaving(founding.example, groups) : null;
 }
 
 type Promo = {
@@ -32,27 +36,30 @@ type Promo = {
 };
 
 /**
- * Proposed launch promotions from the pricing deck (rates being tested; reviewed after the first 90 days).
- * Standard and weekend prices come from the pricing content (admin-editable), so this card never disagrees with
- * the price guide; the day-pass note is the weekend item's own description (which names the rate on test).
- * `perks` lists what each offer includes (Athlete features, day-pass inclusions, early-booking terms).
- * Each card ends with Purchase (checkout: logged-out visitors log in first, via the proxy) or Book a camp (a
- * public request).
+ * Launch promotions from the pricing deck (reviewed after the first 90 days). The membership card is the founding
+ * offer (launchFoundingRate) and buys at the founding rate; standard and weekend prices come from the pricing
+ * content (admin-editable), so no card disagrees with the price guide or checkout. The day-pass note is the weekend
+ * item's own description. `perks` lists what each offer includes (tier features, day-pass inclusions,
+ * early-booking terms). Each card ends with Purchase (checkout: logged-out visitors log in first, via the proxy) or
+ * Book a camp (a public request).
  */
 export default async function LaunchPromos() {
-  const { pricing } = await getSiteContent();
+  const { pricing, settings } = await getSiteContent();
   const prices = launchPromoPrices(pricing.groups);
   const weekend = findItem(pricing.groups, "day-pass-weekend");
+  const founding = launchFoundingRate(settings.founding, pricing.groups);
+  const foundingId = foundingItemId(settings.founding.example);
+  const cap = Math.max(0, Math.floor(settings.founding.cap));
 
   const promos: Promo[] = [];
-  if (prices.athlete != null && INTRO_ATHLETE_RATE < prices.athlete) promos.push({
-    tag: "Membership test", title: "Athlete membership", a: ["Standard", php(prices.athlete)], b: ["Introductory", php(INTRO_ATHLETE_RATE)],
-    note: "Standard monthly rate tested against an introductory rate.",
-    perks: ["All coached group classes", "Unlimited open-gym access", "Programming for serious local athletes", "Community-focused training program"],
-    buy: { label: "Purchase", href: "/pay?item=athlete" },
+  if (founding) promos.push({
+    tag: "Founding offer", title: `${founding.tier} membership`, a: ["Standard", php(founding.standard)], b: ["Founding rate", php(founding.founding)],
+    note: `${founding.percent} off the standard monthly rate for your first six months${cap > 0 ? `, for the first ${cap} founding members` : ""}.`,
+    perks: findItem(pricing.groups, foundingId)?.features ?? [],
+    buy: { label: "Purchase", href: payHref(foundingId, "founding") },
   });
   if (prices.dayStandard != null && prices.dayWeekend != null) promos.push({
-    tag: "Visitor test", title: "Day pass", a: ["Standard", php(prices.dayStandard)], b: ["Weekend", php(prices.dayWeekend)],
+    tag: "Visitors", title: "Day pass", a: ["Standard", php(prices.dayStandard)], b: ["Weekend", php(prices.dayWeekend)],
     note: weekend?.description || "Standard day pass compared with the weekend rate.",
     perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays, and long weekends"],
     buy: { label: "Purchase", href: "/pay?item=day-pass-standard" },
@@ -69,8 +76,8 @@ export default async function LaunchPromos() {
       <div className="shell">
         <div className="mb-promos-head" data-reveal>
           <p className="eyebrow eyebrow-light">Launch promotions</p>
-          <h2 id="mb-promos-title">Rates on test.</h2>
-          <p>We are testing these launch offers with the community. Every price is reviewed after the first 90 days.</p>
+          <h2 id="mb-promos-title">Launch rates.</h2>
+          <p>Launch offers for the community. Every price is reviewed after the first 90 days.</p>
         </div>
         <ul className="mb-promos-grid" data-reveal="stagger">
           {promos.map((p) => (

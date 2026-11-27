@@ -343,7 +343,7 @@
 
 
 /* ---------- Membership prices: one currency treatment everywhere ----------
-   ₱ is drawn at ~half the figure size and raised, so ₱4,500 / ₱3,200 / ₱650 read as one system on tier cards,
+   ₱ is drawn at ~half the figure size and raised, so ₱4,500 / ₱3,150 / ₱650 read as one system on tier cards,
    price rows, promos, camps and the founding card. */
 /* !important: the price lines style every inner span as the mono unit label ("/month"); the mark must not inherit that. */
 .mb-cur { display: inline-block !important; margin: 0 0 0 .14em !important; padding: 0 !important; border: 0 !important; color: inherit !important; font-family: var(--font-poppins), sans-serif !important; font-size: .3em !important; font-weight: 700 !important; line-height: 1 !important; letter-spacing: .01em !important; text-transform: none !important; vertical-align: baseline !important; }

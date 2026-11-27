@@ -1,5 +1,5 @@
 // Founding-member rate at checkout (server-only). The offer comes from the editable settings (settings.founding):
-// its example line names the tier and both prices, e.g. "Athlete founding rate Php 3,200/month (standard Php 4,500)".
+// its example line names the tier and both prices, e.g. "Athlete founding rate Php 3,150/month (standard Php 4,500)".
 // The standard price is taken from the pricing content; only the founding price comes from the offer text.
 import type { SiteContent } from "@/content/types";
 import { findPayable } from "./catalog";

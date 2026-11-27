@@ -220,7 +220,7 @@ const pricingGroups: PriceGroup[] = [
   group("day-passes", "day-passes", "Drop-ins & day passes", "travellers", "at-launch", [
     ["drop-in-standard", "Standard Drop-In", 450, 600, { unit: "per session", usd: "≈ US$8–$10", description: "One training session. Higher pricing may apply on weekends and peak tourist periods." }],
     ["day-pass-standard", "Standard Day Pass", 650, null, { unit: "per day", usd: "≈ US$11", description: "Gym access plus one coached class. For hotel guests and day travelers.", featured: true, badge: "Best for day travelers" }],
-    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", badge: "Php 850 rate on test", description: "Saturdays, Sundays, and long weekends: Php 800 listed, while a Php 850 weekend rate is being tested." }],
+    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", description: "Gym access plus one coached class on Saturdays, Sundays, and long weekends." }],
   ]),
   group("open-gym", "open-gym", "Open-gym-only passes", "both", "at-launch", [
     ["gym-day", "Day Pass", 300, null, { unit: "per day", usd: "≈ US$5", badge: "No classes", description: "Basic open-gym and equipment access." }],
@@ -284,10 +284,10 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     founding: {
       enabled: true, title: "Founding members",
-      summary: "Limited availability for the first founding members: a proposed saving of about 29% for your first six months, or a lifetime alumni rate that stays locked in.",
-      example: "Example: Athlete founding rate Php 3,200/month (standard Php 4,500).",
+      summary: "Limited availability for the first founding members: 30% off for your first six months, or a lifetime alumni rate that stays locked in.",
+      example: "Example: Athlete founding rate Php 3,150/month (standard Php 4,500).",
       benefits: [
-        "Founding rate: a proposed saving of about 29% for your first six months, or a locked lifetime alumni rate",
+        "Founding rate: 30% off for your first six months, or a locked lifetime alumni rate",
         "Priority access to camps, workshops, and special events",
         "Founding-community recognition",
         "An exclusive launch event",
@@ -500,7 +500,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "freeze", question: "Can I freeze my membership?", answer: "Freeze policies will be published before opening." },
       { id: "cancel", question: "How do cancellations work?", answer: "Cancellation procedures will be published before opening." },
       { id: "peak", question: "Why do some visitor rates vary?", answer: "Drop-in and day-pass rates can be higher on weekends, long weekends and peak travel periods." },
-      { id: "founding", question: "What is the founding-member offer?", answer: "A proposed founding rate for your first six months (for example, Athlete at Php 3,200 a month instead of Php 4,500, a saving of about 29%) or a locked lifetime alumni rate, plus priority access and an exclusive launch event. Availability is limited: the planned cap is being finalized between 50 and 150 members." },
+      { id: "founding", question: "What is the founding-member offer?", answer: "A founding rate of 30% off for your first six months (for example, Athlete at Php 3,150 a month instead of Php 4,500) or a locked lifetime alumni rate, plus priority access and an exclusive launch event. Availability is limited to the first {foundingCap} founding members." },
       { id: "recovery-bundle", question: "How much does the recovery bundle save?", answer: "Five sauna or ice-bath sessions cost Php 2,000, against Php 2,250 at the single-session rate: a saving of Php 250, about 11%." },
       { id: "early-booking", question: "Is there an early-booking discount for camps?", answer: "A 20% early-booking discount is proposed for camps booked at least 60 days in advance." },
     ],

@@ -11,12 +11,12 @@ import { getSiteContent } from "@/content/get";
 
 const PATH = "/membership/founding";
 
-// The saving is worked out from the actual founding and standard prices (Php 3,200 vs Php 4,500 → "about 29%"),
+// The saving is worked out from the actual founding and standard prices (Php 3,150 vs Php 4,500 → "30%"),
 // so the description never overstates it. Only the cached getSiteContent() is awaited, so it stays prerenderable.
 export async function generateMetadata(): Promise<Metadata> {
   const { settings, pricing } = await getSiteContent();
   const saving = foundingSaving(settings.founding.example, pricing.groups);
-  const offer = saving?.percent ? `a proposed saving of ${saving.percent} for your first six months` : "a proposed founding rate for your first six months";
+  const offer = saving?.percent ? `${saving.percent} off for your first six months` : "a founding rate for your first six months";
   return {
     title: "Founding Members",
     description: `Become a BaseCamp CamSur founding member: ${offer} or a locked lifetime alumni rate, priority access to camps and events, and an exclusive launch event.`,

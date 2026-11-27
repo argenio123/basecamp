@@ -105,8 +105,9 @@ export function itemPrice(groups: readonly PriceGroup[], id: string): number | n
 }
 
 /**
- * Honest saving label for `price` against `standard`: the exact percent when it is whole ("20%"), otherwise
- * "about N%" rounded to the nearest point (Php 3,200 vs Php 4,500 is 28.9% → "about 29%"). "" when there is no saving.
+ * Honest saving label for `price` against `standard`: the exact percent when it is whole (Php 3,150 vs Php 4,500 →
+ * "30%"), otherwise "about N%" rounded to the nearest point (Php 3,000 vs Php 4,500 is 33.3% → "about 33%"). "" when there
+ * is no saving.
  */
 export function savingLabel(standard: number, price: number): string {
   if (!(standard > 0) || !(price >= 0) || price >= standard) return "";

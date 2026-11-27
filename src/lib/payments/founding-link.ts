@@ -1,6 +1,6 @@
 // Founding offer link helpers (pure, safe anywhere): which tier the founding offer is for.
 
-/** "Example: Athlete founding rate Php 3,200/month (standard Php 4,500)." → tier name and founding price (pesos). */
+/** "Example: Athlete founding rate Php 3,150/month (standard Php 4,500)." → tier name and founding price (pesos). */
 export function parseFoundingExample(example: string): { tier: string; founding: number } | null {
   const amounts = [...example.matchAll(/(?:₱|Php)\s?([\d,]+)/gi)].map((m) => Number(m[1].replace(/,/g, "")));
   const tier = example.match(/^(?:Example:\s*)?([A-Za-z][A-Za-z ]*?)\s+founding/i)?.[1]?.trim() ?? "";
