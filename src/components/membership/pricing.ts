@@ -5,6 +5,7 @@
 //   /membership/price-guide       [recovery-pricing] [advanced-recovery] [yoga] [corporate] [camps-pricing]
 import { formatPhp } from "@/content/format";
 import type { Availability, Price, PriceGroup, PriceItem } from "@/content/types";
+import { foundingItemId, parseFoundingExample } from "@/lib/payments/founding-link";
 
 export type PricingPage = "overview" | "passes" | "recovery" | "yoga" | "corporate" | "camps";
 
@@ -95,6 +96,38 @@ export function fromChip(items: readonly PriceItem[]): string {
   if (!p || !items.some((i) => i.visible && i.price)) return "";
   const label = p.label.replace(/^From /, "from ");
   return !p.unit ? label : p.unit.startsWith("/") ? `${label}${p.unit}` : `${label} ${p.unit}`;
+}
+
+/** A visible, priced item's listed (lowest) price in pesos, or null. The one place promo copy reads prices from. */
+export function itemPrice(groups: readonly PriceGroup[], id: string): number | null {
+  const item = groups.flatMap((g) => g.items).find((i) => i.id === id);
+  return item?.visible && item.price ? item.price.min : null;
+}
+
+/**
+ * Honest saving label for `price` against `standard`: the exact percent when it is whole ("20%"), otherwise
+ * "about N%" rounded to the nearest point (Php 3,200 vs Php 4,500 is 28.9% → "about 29%"). "" when there is no saving.
+ */
+export function savingLabel(standard: number, price: number): string {
+  if (!(standard > 0) || !(price >= 0) || price >= standard) return "";
+  const exact = ((standard - price) / standard) * 100;
+  const rounded = Math.round(exact);
+  return Math.abs(exact - rounded) < 1e-9 ? `${rounded}%` : `about ${rounded}%`;
+}
+
+export type FoundingSaving = { tier: string; founding: number; standard: number; saving: number; percent: string };
+
+/**
+ * The founding offer's numbers: the founding price from the offer's example line, the standard price from the
+ * pricing content (as checkout charges it), and the saving.
+ */
+export function foundingSaving(example: string, groups: readonly PriceGroup[]): FoundingSaving | null {
+  const parsed = parseFoundingExample(example);
+  if (!parsed) return null;
+  // Null when the tier is hidden or unpriced: checkout (foundingRate) gives no founding rate then, so no saving may be promised.
+  const standard = itemPrice(groups, foundingItemId(example));
+  if (standard == null || !(parsed.founding > 0) || parsed.founding >= standard) return null;
+  return { tier: parsed.tier, founding: parsed.founding, standard, saving: standard - parsed.founding, percent: savingLabel(standard, parsed.founding) };
 }
 
 /** Shared availability of a block's items, or null when they differ. */

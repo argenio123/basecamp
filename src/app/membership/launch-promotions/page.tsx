@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
-import LaunchPromos from "@/components/membership/LaunchPromos";
+import LaunchPromos, { CAMP_EARLY_DISCOUNT, INTRO_ATHLETE_RATE, launchPromoPrices } from "@/components/membership/LaunchPromos";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
+import { formatPhp } from "@/content/format";
+import { getSiteContent } from "@/content/get";
 
 const PATH = "/membership/launch-promotions";
 
-export const metadata: Metadata = {
-  title: "Launch Promotions",
-  description: "BaseCamp CamSur launch promotions on test: Athlete membership Php 4,500 vs Php 3,200 introductory, day pass Php 650 vs Php 850 weekend, and 20% off camps booked 60+ days ahead.",
-};
+// Prices come from the pricing content (the same values LaunchPromos and the price guide show), so the description
+// never disagrees with the page. Only the cached getSiteContent() is awaited, so it stays prerenderable.
+export async function generateMetadata(): Promise<Metadata> {
+  const { pricing } = await getSiteContent();
+  const p = launchPromoPrices(pricing.groups);
+  const php = (n: number) => formatPhp({ min: n, max: null });
+  const parts = [
+    p.athlete != null && INTRO_ATHLETE_RATE < p.athlete ? `Athlete membership ${php(p.athlete)} vs ${php(INTRO_ATHLETE_RATE)} introductory` : "",
+    p.dayStandard != null && p.dayWeekend != null ? `day pass ${php(p.dayStandard)} standard vs ${php(p.dayWeekend)} weekend` : "",
+    `${CAMP_EARLY_DISCOUNT} off camps booked 60+ days ahead`,
+  ].filter(Boolean);
+  return { title: "Launch Promotions", description: `BaseCamp CamSur launch promotions on test: ${parts.join(", ")}.` };
+}
 
 export default function LaunchPromotionsPage() {
 

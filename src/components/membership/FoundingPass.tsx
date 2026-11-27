@@ -5,28 +5,25 @@ import { benefitFromText } from "@/components/features/BenefitCards";
 import GainList, { type Gain } from "@/components/programs/GainList";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import { formatDateLabel } from "@/content/format";
+import { getSiteContent } from "@/content/get";
 import type { FoundingOffer } from "@/content/types";
 import { MEMBERSHIP_GAINS } from "@/data/membership-gains";
 import Money from "./Money";
+import { foundingSaving } from "./pricing";
 
 const peso = (n: number) => n.toLocaleString("en-US");
-
-/** "Example: Athlete founding rate Php 3,200/month (standard Php 4,500)." → tier, founding and standard rates. */
-function parseExample(example: string) {
-  const amounts = [...example.matchAll(/(?:₱|Php)\s?([\d,]+)/g)].map((m) => Number(m[1].replace(/,/g, "")));
-  if (amounts.length < 2 || !amounts[0] || !amounts[1] || amounts[0] >= amounts[1]) return null;
-  const tier = example.match(/^Example:\s*([A-Za-z]+)/)?.[1] ?? "";
-  return { tier, founding: amounts[0], standard: amounts[1] };
-}
 
 /**
  * Founding members as one full-width membership card, styled like the featured tier card (Athlete): Ink panel,
  * Signal chip, display-face name, Signal price with a rule, a "+" checklist of benefits and a full-width Signal
  * button. Renders nothing while the offer is disabled. Section id stays #founding for existing links.
+ * The founding price comes from the offer's example line; the standard price and the saving (pesos and an honestly
+ * rounded percent) come from the pricing content, the same figures checkout uses (src/lib/payments/founding.ts).
  */
-export default function FoundingPass({ founding, exchangeRate }: { founding: FoundingOffer; exchangeRate: number }) {
+export default async function FoundingPass({ founding, exchangeRate }: { founding: FoundingOffer; exchangeRate: number }) {
   if (!founding.enabled) return null;
-  const rate = parseExample(founding.example);
+  const { pricing } = await getSiteContent();
+  const rate = foundingSaving(founding.example, pricing.groups);
   const expires = founding.expiresOn ? formatDateLabel(founding.expiresOn) : "";
   // "What you gain" rows for this page, falling back to the founding benefits from content.
   const gains: Gain[] = MEMBERSHIP_GAINS["/membership/founding"]?.length
@@ -49,7 +46,7 @@ export default function FoundingPass({ founding, exchangeRate }: { founding: Fou
                 <p className="mb-fp-meta">
                   {rate.tier && <span>{rate.tier} tier</span>}
                   <span>Standard Php {peso(rate.standard)}</span>
-                  <span className="mb-fp-save">Save Php {peso(rate.standard - rate.founding)}/month</span>
+                  <span className="mb-fp-save">Save Php {peso(rate.saving)}/month{rate.percent && ` (${rate.percent})`}</span>
                   {exchangeRate > 0 && <span>≈ US${Math.round(rate.founding / exchangeRate)}</span>}
                 </p>
               </>

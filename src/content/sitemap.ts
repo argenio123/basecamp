@@ -141,7 +141,7 @@ const STATIC_SECTIONS: Record<SectionId, SiteSection> = {
     pages: [
       page({
         href: "/membership/founding", label: "Founding members", tabLabel: "Founding",
-        summary: "A proposed 30% off your first six months or a locked lifetime rate, plus founding perks.",
+        summary: "A proposed saving of about 29% for your first six months or a locked lifetime rate, plus founding perks.",
         image: "/images/membership/generated/founding-members-community.webp", imageAlt: "Founding gym members gathering together after their first workout", adminTab: "pricing",
       }),
       page({

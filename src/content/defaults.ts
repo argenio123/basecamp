@@ -89,7 +89,7 @@ const dayRhythm = [
 
 const programmes: Programme[] = [
   {
-    slug: "crossfit-group", title: "CrossFit-style group training", group: "core", availability: "at-launch", image: `${G}/functional-training.png`,
+    slug: "crossfit-group", title: "CrossFit-style group training", group: "core", availability: "at-launch", image: `${G}/functional-training.webp`,
     audiences: ["local", "beginner", "traveller", "competitor"], level: "All levels: every session is scaled", format: "Coached group class", interest: "membership-local", bookable: true,
     summary: "Coached group sessions in outdoor and semi-covered zones for all weather conditions.",
     whatToExpect: "Constantly varied functional movements at high intensity. Coaches scale every movement and load so you can choose the right session for your level.",
@@ -98,7 +98,7 @@ const programmes: Programme[] = [
     spaces: [space.training, space.running],
   },
   {
-    slug: "hyrox", title: "HYROX-style training zone", group: "core", availability: "at-launch", image: `${G}/endurance.png`,
+    slug: "hyrox", title: "HYROX-style training zone", group: "core", availability: "at-launch", image: `${G}/endurance.webp`,
     audiences: ["competitor", "local", "traveller"], level: "Intermediate+ (scalable)", format: "Coached group & open training", interest: "hyrox", bookable: true,
     summary: "Dedicated space with sleds, running loops, and competition-standard stations.",
     whatToExpect: "Structured preparation cycles for hybrid fitness competitions: functional strength stations combined with running and endurance work.",
@@ -107,7 +107,7 @@ const programmes: Programme[] = [
     spaces: [space.training, space.running],
   },
   {
-    slug: "open-gym", title: "Open gym / athlete hours", group: "core", availability: "at-launch", image: `${G}/strength-conditioning.png`,
+    slug: "open-gym", title: "Open gym / athlete hours", group: "core", availability: "at-launch", image: `${G}/strength-conditioning.webp`,
     audiences: ["local", "competitor", "traveller"], level: "Experienced athletes", format: "Self-directed", interest: "drop-in", bookable: true,
     summary: "For serious individuals who prefer structured independence.",
     whatToExpect: "Open access to rigs, platforms, cardio and strength equipment during staffed hours to run your own program.",
@@ -116,7 +116,7 @@ const programmes: Programme[] = [
     spaces: [space.training],
   },
   {
-    slug: "commercial-gym", title: "Commercial gym", group: "core", availability: "at-launch", image: `${P}/program-strength.png`,
+    slug: "commercial-gym", title: "Commercial gym", group: "core", availability: "at-launch", image: `${P}/program-strength.webp`,
     audiences: ["local", "traveller"], level: "All levels", format: "Self-directed", interest: "drop-in", bookable: true,
     summary: "Traditional strength equipment, cardio machines, and accessory zones for aesthetics, physique and individual programming.",
     whatToExpect: "Bodybuilding and traditional gym training alongside functional fitness.",
@@ -125,7 +125,7 @@ const programmes: Programme[] = [
     spaces: [space.training],
   },
   {
-    slug: "outdoor-running", title: "Outdoor training & running loop", group: "core", availability: "at-launch", image: `${P}/program-endurance.png`,
+    slug: "outdoor-running", title: "Outdoor training & running loop", group: "core", availability: "at-launch", image: `${P}/program-endurance.webp`,
     audiences: ["local", "traveller", "competitor"], level: "All levels", format: "Coached & self-directed", interest: "membership-local", bookable: true,
     summary: "673 square meters of outdoor training space plus a continuous running loop integrated with nature.",
     whatToExpect: "Sprint work, sled pushes, carries and large-group programming under tropical conditions, on varying terrain.",
@@ -134,7 +134,7 @@ const programmes: Programme[] = [
     spaces: [space.training, space.running],
   },
   {
-    slug: "foundations", title: "Foundations on-ramp", group: "core", availability: "at-launch", image: `${G}/personal-coaching.png`,
+    slug: "foundations", title: "Foundations on-ramp", group: "core", availability: "at-launch", image: `${G}/personal-coaching.webp`,
     audiences: ["beginner"], level: "Beginner", format: "Small-group foundation course", interest: "membership-local", bookable: true,
     summary: "A foundation course for new members. Everyone is welcome.",
     whatToExpect: "We teach the core movements, track your completion, assess readiness, and move you into regular classes when you're ready. Trial class details are announced at launch.",
@@ -143,7 +143,7 @@ const programmes: Programme[] = [
     spaces: [space.training, space.arrival],
   },
   {
-    slug: "ice-sauna", title: "Ice bath + sauna", group: "wellness", availability: "at-launch", image: `${P}/program-recovery.png`,
+    slug: "ice-sauna", title: "Ice bath + sauna", group: "wellness", availability: "at-launch", image: `${P}/program-recovery.webp`,
     audiences: ["recovery", "local", "traveller"], level: "All levels", format: "Self-guided recovery", interest: "recovery", bookable: true,
     summary: "Ice bath and sauna infrastructure, separated from training intensity.",
     whatToExpect: "Contrast protocols moving from cold plunge to heat to rest. Make recovery systematic, not ad hoc.",
@@ -152,7 +152,7 @@ const programmes: Programme[] = [
     spaces: [space.recovery],
   },
   {
-    slug: "mobility-deck", title: "Stretch & mobility deck", group: "wellness", availability: "at-launch", image: `${G}/recovery-mobility.png`,
+    slug: "mobility-deck", title: "Stretch & mobility deck", group: "wellness", availability: "at-launch", image: `${G}/recovery-mobility.webp`,
     audiences: ["recovery", "beginner", "local"], level: "All levels", format: "Open & guided", interest: "recovery", bookable: true,
     summary: "A dedicated deck for stretching, mobility work, and recovery protocols.",
     whatToExpect: "Foam rollers, massage guns, resistance bands, mats, and yoga props.",
@@ -161,7 +161,7 @@ const programmes: Programme[] = [
     spaces: [space.recovery],
   },
   {
-    slug: "massage-physio", title: "Massage & physio", group: "wellness", availability: "at-launch", image: `${P}/program-coaching.png`,
+    slug: "massage-physio", title: "Massage & physio", group: "wellness", availability: "at-launch", image: `${P}/program-coaching.webp`,
     audiences: ["recovery", "competitor"], level: "By appointment", format: "1:1 (partner-based)", interest: "recovery", bookable: true,
     summary: "Licensed physiotherapists and massage therapists, partner-based initially.",
     whatToExpect: "60-minute sessions booked by request.",
@@ -179,7 +179,7 @@ const programmes: Programme[] = [
     spaces: [space.recovery],
   },
   {
-    slug: "wellness-consults", title: "Nutrition & mental performance consults", group: "wellness", availability: "planned", image: `${G}/personal-coaching.png`,
+    slug: "wellness-consults", title: "Nutrition & mental performance consults", group: "wellness", availability: "planned", image: `${G}/personal-coaching.webp`,
     audiences: ["competitor", "recovery"], level: "All levels", format: "1:1 by request (partner-based)", interest: "recovery", bookable: false,
     summary: "Nutrition consultants and mental performance coaches, by request.",
     whatToExpect: "Bookable-by-request appointments with partner specialists.",
@@ -188,7 +188,7 @@ const programmes: Programme[] = [
     spaces: [space.social],
   },
   {
-    slug: "yoga-breathwork", title: "Yoga & breathwork sessions", group: "phase-2", availability: "phase-2", image: `${G}/recovery-mobility.png`,
+    slug: "yoga-breathwork", title: "Yoga & breathwork sessions", group: "phase-2", availability: "phase-2", image: `${G}/recovery-mobility.webp`,
     audiences: ["recovery", "beginner"], level: "All levels", format: "Group class", interest: "yoga", bookable: false,
     summary: "Yoga, mobility and mind-body practices that complement high-intensity training.",
     whatToExpect: "Scheduled yoga and breathwork classes.",
@@ -220,7 +220,7 @@ const pricingGroups: PriceGroup[] = [
   group("day-passes", "day-passes", "Drop-ins & day passes", "travellers", "at-launch", [
     ["drop-in-standard", "Standard Drop-In", 450, 600, { unit: "per session", usd: "≈ US$8–$10", description: "One training session. Higher pricing may apply on weekends and peak tourist periods." }],
     ["day-pass-standard", "Standard Day Pass", 650, null, { unit: "per day", usd: "≈ US$11", description: "Gym access plus one coached class. For hotel guests and day travelers.", featured: true, badge: "Best for day travelers" }],
-    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", badge: "Testing Php 850", description: "Saturdays, Sundays, and long weekends. A Php 850 rate is also being tested." }],
+    ["day-pass-weekend", "Weekend Premium Pass", 800, null, { unit: "per day", usd: "≈ US$14", badge: "Php 850 rate on test", description: "Saturdays, Sundays, and long weekends: Php 800 listed, while a Php 850 weekend rate is being tested." }],
   ]),
   group("open-gym", "open-gym", "Open-gym-only passes", "both", "at-launch", [
     ["gym-day", "Day Pass", 300, null, { unit: "per day", usd: "≈ US$5", badge: "No classes", description: "Basic open-gym and equipment access." }],
@@ -284,10 +284,10 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     founding: {
       enabled: true, title: "Founding members",
-      summary: "Limited availability for the first founding members: a proposed 30% off your first six months, or a lifetime alumni rate that stays locked in.",
+      summary: "Limited availability for the first founding members: a proposed saving of about 29% for your first six months, or a lifetime alumni rate that stays locked in.",
       example: "Example: Athlete founding rate Php 3,200/month (standard Php 4,500).",
       benefits: [
-        "Founding rate: a proposed 30% off your first six months, or a locked lifetime alumni rate",
+        "Founding rate: a proposed saving of about 29% for your first six months, or a locked lifetime alumni rate",
         "Priority access to camps, workshops, and special events",
         "Founding-community recognition",
         "An exclusive launch event",
@@ -349,14 +349,14 @@ export const DEFAULT_CONTENT: SiteContent = {
       enabled: true, eyebrow: "After dark", title: "Own the night.",
       body: "Lakefront lighting, music, and energy rivaling a concert, and athletes training under the stars. Train hard without the afternoon sun.",
       highlights: ["Night Games (HYROX-style) · weekly", "Friday Night Lights (CrossFit-style) · weekly", "Night runs · weekly"],
-      image: `${P}/program-endurance.png`,
+      image: `${P}/program-endurance.webp`,
       cta: { label: "See night programming", href: "/schedule/events#night" },
     },
     recoveryTeaser: {
       enabled: true, eyebrow: "Transform", title: "Recovery is infrastructure.",
       body: "Recovery is not an add-on amenity. BaseCamp provides the facilities and space that enable athletes to recover at the same intensity they train: a biohacking playground for athletes.",
       modalityIds: ["sauna", "infrared", "cold-plunge", "hyperbaric"],
-      image: `${P}/program-recovery.png`,
+      image: `${P}/program-recovery.webp`,
       cta: { label: "Explore recovery", href: "/facilities/recovery" },
     },
     dayFlow: {
@@ -416,12 +416,12 @@ export const DEFAULT_CONTENT: SiteContent = {
     ],
     programmes,
     formats: [
-      { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.png`, href: "/schedule/timetable" },
-      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.png`, href: "/classes" },
-      { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.png`, href: "/classes" },
+      { id: "daily-classes", title: "Daily Classes", description: "Group CrossFit-style sessions and open gym access for local community and members", image: `${G}/functional-training.webp`, href: "/schedule/timetable" },
+      { id: "competition-prep", title: "Competition Prep", description: "Dedicated training tracks for athletes preparing for CrossFit competitions", image: `${G}/strength-conditioning.webp`, href: "/classes" },
+      { id: "hyrox-programmes", title: "HYROX-style Classes", description: "Structured preparation cycles for hybrid fitness competitions", image: `${G}/endurance.webp`, href: "/classes" },
       { id: "training-camps", title: "Training Camps", description: "Immersive multi-day experiences with accommodation and full programming", image: `${F}/facility-aerial.jpg`, href: "/visit/camps" },
-      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.png`, href: "/membership/price-guide#corporate" },
-      { id: "community-comps", title: "Community Comps", description: "Regular competitions and events building local engagement", image: `${P}/program-coaching.png`, href: "/schedule/events#competition" },
+      { id: "corporate-groups", title: "Corporate Groups", description: "Team-building and wellness off-sites with customized programming", image: `${G}/personal-coaching.webp`, href: "/membership/price-guide#corporate" },
+      { id: "community-comps", title: "Community Comps", description: "Regular competitions and events building local engagement", image: `${P}/program-coaching.webp`, href: "/schedule/events#competition" },
     ],
     modalities: [
       { id: "crossfit", title: "CrossFit-style", description: "Olympic lifting, gymnastics, metabolic conditioning", category: "train", availability: "at-launch" },
@@ -500,7 +500,7 @@ export const DEFAULT_CONTENT: SiteContent = {
       { id: "freeze", question: "Can I freeze my membership?", answer: "Freeze policies will be published before opening." },
       { id: "cancel", question: "How do cancellations work?", answer: "Cancellation procedures will be published before opening." },
       { id: "peak", question: "Why do some visitor rates vary?", answer: "Drop-in and day-pass rates can be higher on weekends, long weekends and peak travel periods." },
-      { id: "founding", question: "What is the founding-member offer?", answer: "A proposed 30% off your first six months or a locked lifetime alumni rate, plus priority access and an exclusive launch event. Availability is limited: the planned cap is being finalized between 50 and 150 members." },
+      { id: "founding", question: "What is the founding-member offer?", answer: "A proposed founding rate for your first six months (for example, Athlete at Php 3,200 a month instead of Php 4,500, a saving of about 29%) or a locked lifetime alumni rate, plus priority access and an exclusive launch event. Availability is limited: the planned cap is being finalized between 50 and 150 members." },
       { id: "recovery-bundle", question: "How much does the recovery bundle save?", answer: "Five sauna or ice-bath sessions cost Php 2,000, against Php 2,250 at the single-session rate: a saving of Php 250, about 11%." },
       { id: "early-booking", question: "Is there an early-booking discount for camps?", answer: "A 20% early-booking discount is proposed for camps booked at least 60 days in advance." },
     ],
@@ -590,25 +590,25 @@ export const DEFAULT_CONTENT: SiteContent = {
         id: "training-purpose", platform: "Instagram", type: "Strength", pillar: "training", format: "Photo", badge: "Training intensity",
         title: "Built with purpose", caption: "Strength that carries into training, sport, and everyday life.",
         detail: "Purposeful sessions build durable strength, confidence, and the capacity to keep progressing—one considered repetition at a time.",
-        image: `${P}/program-strength.png`, imagePosition: "center 42%", href: "https://www.instagram.com/basecampcamsur/",
+        image: `${P}/program-strength.webp`, imagePosition: "center 42%", href: "https://www.instagram.com/basecampcamsur/",
       },
       {
         id: "recovery-reset", platform: "Instagram", type: "Recovery", pillar: "recovery", format: "Photo", badge: "Recovery rituals",
         title: "Reset and restore", caption: "Make space for the work ahead.",
         detail: "Recovery belongs inside the training rhythm. Follow the practices, spaces, and guided sessions built to help the Basecamp community return ready.",
-        image: `${P}/program-recovery.png`, imagePosition: "center 42%", href: "https://www.instagram.com/basecampcamsur/",
+        image: `${P}/program-recovery.webp`, imagePosition: "center 42%", href: "https://www.instagram.com/basecampcamsur/",
       },
       {
         id: "coach-progress", platform: "Facebook", type: "Coaching", pillar: "coaches", format: "Photo", badge: "Coach spotlight",
         title: "Progress, guided", caption: "Focused coaching with room to grow.",
         detail: "Meet the coaching approach behind Basecamp: clear direction, thoughtful progressions, and support shaped around the person doing the work.",
-        image: `${P}/program-coaching.png`, imagePosition: "center 38%", href: "https://www.facebook.com/basecampcamsur",
+        image: `${P}/program-coaching.webp`, imagePosition: "center 38%", href: "https://www.facebook.com/basecampcamsur",
       },
       {
         id: "community-motion", platform: "X", type: "Training", pillar: "community", format: "Update", badge: "Community moments",
         title: "One movement at a time", caption: "Purpose-built sessions, shared by the community.",
         detail: "See the energy, coaching cues, and everyday work behind Basecamp training—from foundational movement to high-output sessions.",
-        image: `${P}/program-functional.png`, imagePosition: "center 48%", href: "https://x.com/basecampcamsur",
+        image: `${P}/program-functional.webp`, imagePosition: "center 48%", href: "https://x.com/basecampcamsur",
       },
     ],
   },

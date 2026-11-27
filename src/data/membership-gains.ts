@@ -9,13 +9,13 @@ export const MEMBERSHIP_GAINS: Readonly<Record<string, readonly Gain[]>> = {
     { title: "Recovery built in", detail: "Premium adds four monthly recovery credits for sauna, ice bath and therapy zones, plus two guest passes a month." },
   ],
   "/membership/founding": [
-    { title: "A lower monthly rate", detail: "A proposed 30% off your first six months, or a lifetime alumni rate that stays locked in." },
+    { title: "A lower monthly rate", detail: "A proposed saving of about 29% for your first six months, or a lifetime alumni rate that stays locked in." },
     { title: "First access", detail: "Priority booking for camps, workshops, and special events before they open to everyone." },
     { title: "A place in the story", detail: "Founding-community recognition and an invitation to the exclusive launch event." },
   ],
   "/membership/launch-promotions": [
     { title: "An introductory Athlete rate", detail: "Php 3,200 a month on test against the Php 4,500 standard while launch pricing is reviewed." },
-    { title: "Weekend day access", detail: "A day pass with gym access and one coached class: Php 650 standard, with an Php 850 weekend rate on test." },
+    { title: "Weekend day access", detail: "A day pass with gym access and one coached class: Php 650 standard and Php 800 on weekends, with a Php 850 weekend rate on test." },
     { title: "Camp savings", detail: "A proposed 20% off camps booked at least 60 days ahead." },
   ],
   "/membership/price-guide": [

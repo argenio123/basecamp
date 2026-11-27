@@ -42,7 +42,7 @@ export default function BenefitCards({ items, eyebrow, title, cta, dark = true }
   );
 }
 
-/** "Early rates locked in: about 30% off…" → { title: "Early rates locked in", body: "About 30% off…" }. */
+/** "Early rates locked in: about 29% off…" → { title: "Early rates locked in", body: "About 29% off…" }. */
 export function benefitFromText(text: string, image: string): BenefitCard {
   const i = text.indexOf(":");
   if (i < 0) return { title: text, body: "", image };
