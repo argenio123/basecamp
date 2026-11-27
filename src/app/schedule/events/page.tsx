@@ -22,7 +22,7 @@ export default async function ScheduleEventsPage() {
   return (
     <DetailTemplate
       path="/schedule/events"
-      hero={<PageHero title="Race the floor. Compete every week." intro="Weekly competition and leaderboards." image="/images/schedule/generated/gym-competition-night.webp" imageAlt="Athletes racing weighted sleds during a gym competition" />}
+      hero={<PageHero variant="compact" title="Race the floor. Compete every week." intro="Weekly competition and leaderboards." image="/images/schedule/generated/gym-competition-night.webp" imageAlt="Athletes racing weighted sleds during a gym competition" />}
       glance={{ summary: "Race the floor.\nChase your best.\nCompete every week.", statement: true }}
       cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
     >

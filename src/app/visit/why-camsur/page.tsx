@@ -13,7 +13,7 @@ export default function WhyCamsurPage() {
   return (
     <DetailTemplate
       path="/visit/why-camsur"
-      hero={<PageHero {...WHY_HERO} />}
+      hero={<PageHero {...WHY_HERO} variant="editorial" frame="band" />}
       glance={{ summary: WHY_GLANCE.summary, statement: true }}
       related={["/visit/camps", "/facilities/training", "/schedule/events"]}
       cta={<CtaBand eyebrow={VISIT_CTA.eyebrow} />}

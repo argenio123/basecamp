@@ -28,7 +28,7 @@ export default function LaunchPromotionsPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero title="Launch rates." intro="Launch offers for the community, reviewed after the first 90 days." image="/images/membership/generated/launch-promotions-hero-basecamp-interior.webp" imageAlt="BaseCamp CamSur members cheering on an athlete during a launch-day sled workout inside the glass-fronted training hall" />}
+      hero={<PageHero variant="split" title="Launch rates." intro="Launch offers for the community, reviewed after the first 90 days." image="/images/membership/generated/launch-promotions-hero-basecamp-interior.webp" imageAlt="BaseCamp CamSur members cheering on an athlete during a launch-day sled workout inside the glass-fronted training hall" />}
       glance={{ summary: "Founding rates.\nWeekend passes.\nEarly-bird camps.", statement: true }}
       related={["/membership/founding", "/membership#tiers", "/membership/price-guide"]}
       cta={<>

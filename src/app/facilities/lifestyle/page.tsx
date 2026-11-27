@@ -25,7 +25,7 @@ export default function FacilitiesLifestylePage() {
   return (
     <DetailTemplate
       path="/facilities/lifestyle"
-      hero={<PageHero {...LIFESTYLE_HERO} />}
+      hero={<PageHero {...LIFESTYLE_HERO} variant="stat" facts={[ROOMS.lobby, ROOMS.cafe, ROOMS.work].map((r) => ({ value: r.title, label: r.body }))} />}
       glance={{
         summary: "Lobby. Café. Lockers.\nEverything in one place.\nMade to stay longer.",
         statement: true,
