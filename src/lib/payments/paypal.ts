@@ -86,20 +86,24 @@ export async function createPaypalOrder(input: {
   return { id: r.data.id, approveUrl };
 }
 
-export type PaypalState = { paid: boolean; expired: boolean; reference?: string };
+/** `refused`: the order was approved but not captured because `mayCapture` said no (nothing was charged). */
+export type PaypalState = { paid: boolean; expired: boolean; reference?: string; refused?: boolean };
 
 const captureOf = (o: Order | null) => o?.purchase_units?.[0]?.payments?.captures?.find((c) => c.status === "COMPLETED");
 
 /**
  * Current state of an order. An approved order is captured here (the buyer said yes on PayPal, so this is the step
  * that actually takes the money); capturing twice is safe because PayPal reports the order as already captured.
+ * `mayCapture` is asked first: when it says no, the order is left uncaptured (PayPal lets it lapse) and reported
+ * as refused.
  */
-export async function getPaypalState(orderId: string): Promise<PaypalState> {
+export async function getPaypalState(orderId: string, { mayCapture }: { mayCapture?: () => Promise<boolean> } = {}): Promise<PaypalState> {
   const id = encodeURIComponent(orderId);
   const got = await call<Order>(`/v2/checkout/orders/${id}`, { method: "GET" });
   if (!got.ok || !got.data) throw new PaypalError(`PayPal order lookup failed (${got.status}).`);
   if (got.data.status === "COMPLETED") return { paid: true, expired: false, reference: captureOf(got.data)?.id ?? got.data.id };
   if (got.data.status === "APPROVED") {
+    if (mayCapture && !(await mayCapture())) return { paid: false, expired: false, refused: true };
     const cap = await call<Order>(`/v2/checkout/orders/${id}/capture`, { method: "POST", body: {}, requestId: `capture-${orderId}` });
     if (cap.ok && cap.data?.status === "COMPLETED") return { paid: true, expired: false, reference: captureOf(cap.data)?.id ?? orderId };
     if (cap.issue === "ORDER_ALREADY_CAPTURED") return getPaypalState(orderId);

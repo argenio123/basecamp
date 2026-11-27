@@ -6,7 +6,7 @@ import "@/components/bookings/bookings.css";
 import "@/components/payments/payments.css";
 import { longDate } from "@/lib/bookings/schedule";
 import { getBooking } from "@/lib/bookings/store";
-import { BOOKING_STATUS_LABEL, bookedHref, bookHref, canMemberCancel, CANCEL_CUTOFF_HOURS, effectiveStatus, MY_BOOKINGS_PATH, pesoLabel } from "@/lib/bookings/types";
+import { BOOKING_STATUS_LABEL, bookedHref, bookHref, canMemberCancel, CANCEL_CUTOFF_HOURS, effectiveStatus, FULL_BEFORE_PAYMENT_NOTE, MY_BOOKINGS_PATH, pesoLabel, requestHref } from "@/lib/bookings/types";
 import { currentMember } from "@/lib/members/session";
 import { loginHref } from "@/lib/members/types";
 import { syncPayment } from "@/lib/payments/service";
@@ -19,6 +19,7 @@ const clock = (iso: string) => new Date(iso).toLocaleTimeString("en-PH", { hour:
 
 // After booking (free) or paying (PayMongo / PayPal return here). A paid booking's payment is checked with the
 // provider directly (local servers get no webhooks); markPaid then confirms the booking, so a reload shows the latest.
+// A PayPal order whose hold ran out while the session filled up is not captured (syncPayment): no charge, hold released.
 export default async function BookedPage({ searchParams }: { searchParams: Promise<{ booking?: string; cancelled?: string }> }) {
   const { booking: id = "", cancelled = "" } = await searchParams;
   const member = await currentMember();
@@ -28,11 +29,13 @@ export default async function BookedPage({ searchParams }: { searchParams: Promi
 
   const stored = booking.paymentId ? await getPayment(booking.paymentId) : null;
   const payment = stored ? await syncPayment(stored) : null;
-  if (payment?.status === "paid" && booking.status !== "confirmed") booking = (await getBooking(id)) ?? booking;
+  if (payment && payment.status !== stored?.status) booking = (await getBooking(id)) ?? booking;
   const now = new Date().getTime(); // server component: rendered per request
   const status = effectiveStatus(booking, now);
   const confirmed = status === "confirmed";
   const held = status === "held";
+  // Released because the hold ran out and the session filled up before PayPal took the money (nothing was charged).
+  const fullBeforePayment = status === "expired" && booking.note === FULL_BEFORE_PAYMENT_NOTE;
 
   const heading = confirmed ? "You're booked." : held ? (cancelled ? "Payment not finished." : "Almost there.") : status === "expired" ? "Your hold ran out." : "Booking cancelled.";
   const lead = confirmed
@@ -40,7 +43,8 @@ export default async function BookedPage({ searchParams }: { searchParams: Promi
     : held
       ? cancelled ? `Your spot is held until ${clock(booking.holdExpiresAt!)}. Finish paying to confirm it, or release it for someone else.`
         : "We haven't had confirmation of your payment yet. This usually takes a few seconds; reload this page to check again."
-      : status === "expired" ? "The 15-minute hold ended before payment came through, so the spot went back on the timetable. You can book again if there's room."
+      : fullBeforePayment ? "Your 15-minute hold ran out and the session filled up before your PayPal payment went through, so we didn't take your payment. Join the waitlist and we'll tell you if a spot opens."
+        : status === "expired" ? "The 15-minute hold ended before payment came through, so the spot went back on the timetable. You can book again if there's room."
         : "This booking was cancelled and its spot released.";
 
   return (
@@ -60,7 +64,8 @@ export default async function BookedPage({ searchParams }: { searchParams: Promi
         {payment?.test && <p className="py-test">Test payment: no real money was charged.</p>}
         <div className="py-actions">
           {held && payment?.status === "pending" && payment.checkoutUrl && <a className="py-button py-button--link" href={payment.checkoutUrl}>Finish paying <span aria-hidden="true">→</span></a>}
-          {(status === "expired" || status === "cancelled") && <Link className="py-button py-button--link" href={bookHref(booking.slotId, booking.date)}>Book again <span aria-hidden="true">→</span></Link>}
+          {fullBeforePayment && <Link className="py-button py-button--link" href={requestHref(booking.slotId, booking.date, true)}>Join the waitlist <span aria-hidden="true">→</span></Link>}
+          {!fullBeforePayment && (status === "expired" || status === "cancelled") && <Link className="py-button py-button--link" href={bookHref(booking.slotId, booking.date)}>Book again <span aria-hidden="true">→</span></Link>}
           <Link className="py-link" href={MY_BOOKINGS_PATH}>My bookings</Link>
           <Link className="py-link" href="/schedule/timetable">Back to the timetable</Link>
         </div>

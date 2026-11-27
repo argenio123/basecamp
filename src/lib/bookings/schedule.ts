@@ -113,11 +113,15 @@ export function sessionPayable(content: SiteContent): Payable | null {
   return null;
 }
 
-/** True when a membership plan includes coached classes (judged from its features: "Coached classes not included" doesn't). */
+/**
+ * Membership plans (pricing item ids in the "memberships" group) whose members book coached classes free. An explicit
+ * list, never read from the feature text: copy edits and translations (e.g. "Hindi kasama ang mga coached class")
+ * can't change who pays. A new plan that includes classes is added here.
+ */
+export const CLASS_MEMBERSHIP_IDS: ReadonlySet<string> = new Set(["athlete", "premium"]);
+
+/** True when a membership plan on the price list includes coached classes (see CLASS_MEMBERSHIP_IDS). */
 export function membershipIncludesClasses(content: SiteContent, itemId: string): boolean {
   const item = content.pricing.groups.find((g) => g.id === "memberships")?.items.find((i) => i.id === itemId);
-  if (!item) return false;
-  const features = item.features.map((f) => f.toLowerCase());
-  if (features.some((f) => /class/.test(f) && /not included|excluded|no classes/.test(f))) return false;
-  return features.some((f) => /class/.test(f));
+  return !!item && CLASS_MEMBERSHIP_IDS.has(item.id);
 }
