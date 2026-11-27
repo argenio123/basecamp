@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import CopyrightYear from "@/components/layout/CopyrightYear";
 import FooterSignup from "@/components/layout/FooterSignup";
+import { CookieSettingsButton } from "@/components/privacy/AnalyticsConsent";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import SocialIcon from "@/components/ui/SocialIcon";
 import { getSiteContent } from "@/content/get";
@@ -104,6 +105,7 @@ export default async function Footer() {
         <nav className="footer-legal" aria-label="Legal">
           <ScrollTopLink href={PRIVACY_PATH}>Privacy</ScrollTopLink>
           <ScrollTopLink href={TERMS_PATH}>Terms</ScrollTopLink>
+          <CookieSettingsButton />
         </nav>
       </div>
     </footer>

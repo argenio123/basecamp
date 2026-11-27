@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
-import Script from "next/script";
 import Footer from "@/components/layout/Footer";
 import FooterGate from "@/components/layout/FooterGate";
 import Header from "@/components/layout/Header";
 import HashForwarder from "@/components/nav/HashForwarder";
 import OfferActivityTracker from "@/components/home/OfferActivityTracker";
+import AnalyticsConsent from "@/components/privacy/AnalyticsConsent";
 import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
 import { DEVICE_PROFILE_SCRIPT, RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
@@ -91,14 +91,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <OfferActivityTracker />
         <AdminQuickEdit />
         <JsonLd />
-        {gaId && (
-          <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`} strategy="afterInteractive" />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',${JSON.stringify(gaId)});`}
-            </Script>
-          </>
-        )}
+        {/* Google Analytics loads only after the visitor accepts (no banner at all without a GA id). */}
+        {gaId && <AnalyticsConsent gaId={gaId} />}
       </body>
     </html>
   );
