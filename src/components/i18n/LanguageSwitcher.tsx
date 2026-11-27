@@ -39,7 +39,7 @@ export default function LanguageSwitcher({ className, tone = "light", compact = 
           {l === current
             ? <span className="lang-switch-link" aria-current="true" lang={LOCALE_TAG[l]} title={LOCALE_LABELS[l]}>{LOCALE_SHORT[l]}</span>
             : (
-              <Link href={switchLocaleHref(pathname, l)} className="lang-switch-link" hrefLang={LOCALE_TAG[l]} lang={LOCALE_TAG[l]} aria-label={fmt(ui.lang.switchTo, { language: LOCALE_LABELS[l] })} title={LOCALE_LABELS[l]} onClick={keepPosition(l)}>
+              <Link href={switchLocaleHref(pathname, l)} className="lang-switch-link" hrefLang={LOCALE_TAG[l]} lang={LOCALE_TAG[l]} aria-label={`${LOCALE_SHORT[l]}: ${fmt(ui.lang.switchTo, { language: LOCALE_LABELS[l] })}`} title={LOCALE_LABELS[l]} onClick={keepPosition(l)}>
                 {LOCALE_SHORT[l]}
               </Link>
             )}
