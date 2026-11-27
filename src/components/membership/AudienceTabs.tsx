@@ -4,16 +4,15 @@ import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent }
 import { PriceBlock } from "@/components/membership/PriceTable";
 import { toBlocks } from "@/components/membership/pricing";
 import type { PriceGroup } from "@/content/types";
+import { useLocale } from "@/i18n/client";
+import { MEMBERSHIP_UI } from "@/i18n/ui-sections/membership";
 
 // Audience filter for price groups (spec §C.6.3; formerly /membership/passes). Every group is prerendered;
 // the tabs only toggle `hidden`, so all prices stay in the HTML. A hash that targets a hidden group switches
 // the view back to "All prices". The tabs are left out when filtering would change nothing.
 type Tab = "all" | "locals" | "travellers";
-const TABS: { id: Tab; label: string }[] = [
-  { id: "all", label: "All prices" },
-  { id: "locals", label: "For locals" },
-  { id: "travellers", label: "For travelers" },
-];
+// Labels: MEMBERSHIP_UI[locale].tabs (src/i18n/ui-sections/membership.ts).
+const TABS: { id: Tab }[] = [{ id: "all" }, { id: "locals" }, { id: "travellers" }];
 
 // location.hash as an external store (react-hooks v7: no setState in effects). Next <Link> hash navigation uses
 // pushState, which fires neither hashchange nor popstate, so the Navigation API event is used where available.
@@ -46,7 +45,11 @@ type AudienceTabsProps = {
   intro?: string;
 };
 
-export default function AudienceTabs({ groups, exchangeRate, disclaimer, eyebrow = "Pricing", title = "Rates for every rhythm.", intro }: AudienceTabsProps) {
+export default function AudienceTabs({ groups, exchangeRate, disclaimer, eyebrow, title, intro }: AudienceTabsProps) {
+  const locale = useLocale();
+  const ui = MEMBERSHIP_UI[locale];
+  eyebrow ??= ui.eyebrow;
+  title ??= ui.title;
   const hash = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [choice, setChoice] = useState<{ tab: Tab; hash: string }>({ tab: "all", hash: "" });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -79,7 +82,7 @@ export default function AudienceTabs({ groups, exchangeRate, disclaimer, eyebrow
   if (!blocks.length) return null;
 
   const panel = blocks.map((block) => (
-    <PriceBlock key={block.key} block={block} exchangeRate={exchangeRate} disclaimer={disclaimer}
+    <PriceBlock key={block.key} block={block} exchangeRate={exchangeRate} disclaimer={disclaimer} locale={locale}
       hidden={!block.groups.some((g) => showsFor(g, tab))}
       hiddenGroups={block.groups.filter((g) => !showsFor(g, tab)).map((g) => g.id)} />
   ));
@@ -92,11 +95,11 @@ export default function AudienceTabs({ groups, exchangeRate, disclaimer, eyebrow
       </div>
       {filterable ? (
         <>
-          <div className="mb-tabs" role="tablist" aria-label="Show prices for" onKeyDown={onKeyDown} data-reveal data-reveal-delay="short">
+          <div className="mb-tabs" role="tablist" aria-label={ui.tabsLabel} onKeyDown={onKeyDown} data-reveal data-reveal-delay="short">
             {TABS.map((t, i) => (
               <button key={t.id} ref={(el) => { tabRefs.current[i] = el; }} id={`mb-tab-${t.id}`} type="button" role="tab" className="mb-tab"
                 aria-selected={tab === t.id} aria-controls="mb-pricing-panel" tabIndex={tab === t.id ? 0 : -1} onClick={() => select(t.id)}>
-                {t.label}
+                {ui.tabs[t.id]}
               </button>
             ))}
           </div>

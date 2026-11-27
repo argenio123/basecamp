@@ -4,7 +4,9 @@ import { formatPhp } from "@/content/format";
 import type { FoundingOffer, PriceGroup, PriceItem } from "@/content/types";
 import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
+import { localHref, t } from "@/i18n/server";
 import Money from "./Money";
+import { percentText } from "./localize";
 import { foundingSaving, itemPrice } from "./pricing";
 
 /** Proposed early-booking camp discount (matches the camps group intro and FAQ in the pricing content). */
@@ -41,7 +43,8 @@ type Promo = {
  * content (admin-editable), so no card disagrees with the price guide or checkout. The day-pass note is the weekend
  * item's own description. `perks` lists what each offer includes (tier features, day-pass inclusions,
  * early-booking terms). Each card ends with Purchase (checkout: logged-out visitors log in first, via the proxy) or
- * Book a camp (a public request).
+ * Book a camp (a public request). Words go through t() (src/i18n/fil/phrases/membership.ts); prices, percents and the
+ * cap are filled in from content, so both languages show the same figures. Pay links stay English (/pay).
  */
 export default async function LaunchPromos() {
   const { pricing, settings } = await getSiteContent();
@@ -53,31 +56,34 @@ export default async function LaunchPromos() {
 
   const promos: Promo[] = [];
   if (founding) promos.push({
-    tag: "Founding offer", title: `${founding.tier} membership`, a: ["Standard", php(founding.standard)], b: ["Founding rate", php(founding.founding)],
-    note: `${founding.percent} off the standard monthly rate for your first six months${cap > 0 ? `, for the first ${cap} founding members` : ""}.`,
+    tag: t("Founding offer"), title: t("{tier} membership", { tier: founding.tier }), a: [t("Standard"), php(founding.standard)], b: [t("Founding rate"), php(founding.founding)],
+    note: t("{percent} off the standard monthly rate for your first six months{cap}.", {
+      percent: percentText(founding.percent),
+      cap: cap > 0 ? t(", for the first {cap} founding members", { cap }) : "",
+    }),
     perks: findItem(pricing.groups, foundingId)?.features ?? [],
-    buy: { label: "Purchase", href: payHref(foundingId, "founding") },
+    buy: { label: t("Purchase"), href: payHref(foundingId, "founding") },
   });
   if (prices.dayStandard != null && prices.dayWeekend != null) promos.push({
-    tag: "Visitors", title: "Day pass", a: ["Standard", php(prices.dayStandard)], b: ["Weekend", php(prices.dayWeekend)],
-    note: weekend?.description || "Standard day pass compared with the weekend rate.",
-    perks: ["Full gym access for the day", "One coached class included", "Built for hotel guests and day travelers", "Weekend rate covers Saturdays, Sundays, and long weekends"],
-    buy: { label: "Purchase", href: "/pay?item=day-pass-standard" },
+    tag: t("Visitors"), title: t("Day pass"), a: [t("Standard"), php(prices.dayStandard)], b: [t("Weekend"), php(prices.dayWeekend)],
+    note: weekend?.description || t("Standard day pass compared with the weekend rate."),
+    perks: [t("Full gym access for the day"), t("One coached class included"), t("Built for hotel guests and day travelers"), t("Weekend rate covers Saturdays, Sundays, and long weekends")],
+    buy: { label: t("Purchase"), href: "/pay?item=day-pass-standard" },
   });
   promos.push({
-    tag: "Camps", title: "Early booking", a: ["Book ahead", "60+ days"], b: ["Discount", CAMP_EARLY_DISCOUNT],
-    note: "Proposed for camps booked at least 60 days in advance.",
-    perks: [`${CAMP_EARLY_DISCOUNT} off camp packages`, "Day clinics, weekend camps, and five-day immersives", "Lock in your dates early", "Inquiry first: the team confirms dates and pricing"],
-    buy: { label: "Book a camp", href: "/schedule/book?service=camp" },
+    tag: t("Camps"), title: t("Early booking"), a: [t("Book ahead"), t("60+ days")], b: [t("Discount"), CAMP_EARLY_DISCOUNT],
+    note: t("Proposed for camps booked at least 60 days in advance."),
+    perks: [t("{discount} off camp packages", { discount: CAMP_EARLY_DISCOUNT }), t("Day clinics, weekend camps, and five-day immersives"), t("Lock in your dates early"), t("Inquiry first: the team confirms dates and pricing")],
+    buy: { label: t("Book a camp"), href: localHref("/schedule/book?service=camp") },
   });
 
   return (
     <section id="launch-promotions" className="section mb-promos" aria-labelledby="mb-promos-title">
       <div className="shell">
         <div className="mb-promos-head" data-reveal>
-          <p className="eyebrow eyebrow-light">Launch promotions</p>
-          <h2 id="mb-promos-title">Launch rates.</h2>
-          <p>Launch offers for the community. Every price is reviewed after the first 90 days.</p>
+          <p className="eyebrow eyebrow-light">{t("Launch promotions")}</p>
+          <h2 id="mb-promos-title">{t("Launch rates.")}</h2>
+          <p>{t("Launch offers for the community. Every price is reviewed after the first 90 days.")}</p>
         </div>
         <ul className="mb-promos-grid" data-reveal="stagger">
           {promos.map((p) => (
@@ -90,7 +96,7 @@ export default async function LaunchPromos() {
               </dl>
               <p className="mb-promo-note">{p.note}</p>
               <div className="mb-promo-perks">
-                <p className="mb-promo-perks-label">Benefits</p>
+                <p className="mb-promo-perks-label">{t("Benefits")}</p>
                 <ul className="mb-promo-checks">
                   {p.perks.map((perk) => <li key={perk}>{perk}</li>)}
                 </ul>

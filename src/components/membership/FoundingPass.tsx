@@ -6,10 +6,11 @@ import { payHref } from "@/lib/payments/types";
 import { benefitFromText } from "@/components/features/BenefitCards";
 import GainList, { type Gain } from "@/components/programs/GainList";
 import FoundingCounter from "@/components/ui/FoundingCounter";
-import { formatDateLabel } from "@/content/format";
 import { getSiteContent } from "@/content/get";
 import type { FoundingOffer } from "@/content/types";
-import { MEMBERSHIP_GAINS } from "@/data/membership-gains";
+import { getData } from "@/i18n/data";
+import { localHref, t } from "@/i18n/server";
+import { offerEndsText, percentText } from "./localize";
 import Money from "./Money";
 import { foundingSaving } from "./pricing";
 
@@ -28,7 +29,8 @@ export default async function FoundingPass({ founding, exchangeRate }: { foundin
   const rate = foundingSaving(founding.example, pricing.groups);
   // Cap reached: the button stops selling the founding rate (checkout refuses it too, src/lib/payments/founding.ts).
   const full = (await getFoundingAvailability(founding)).state === "full";
-  const expires = founding.expiresOn ? formatDateLabel(founding.expiresOn) : "";
+  const offerEnds = offerEndsText(founding.expiresOn);
+  const { MEMBERSHIP_GAINS } = getData("membership-gains");
   // "What you gain" rows for this page, falling back to the founding benefits from content.
   const gains: Gain[] = MEMBERSHIP_GAINS["/membership/founding"]?.length
     ? [...MEMBERSHIP_GAINS["/membership/founding"]]
@@ -40,17 +42,17 @@ export default async function FoundingPass({ founding, exchangeRate }: { foundin
         <article className="mb-fp-card" data-reveal>
           <div className="mb-fp-main">
             <div className="mb-fp-tags">
-              <span className="mb-label mb-label-signal">Early membership · Limited</span>
-              <span className="mb-label mb-label-ghost">Proposed rate</span>
+              <span className="mb-label mb-label-signal">{t("Early membership · Limited")}</span>
+              <span className="mb-label mb-label-ghost">{t("Proposed rate")}</span>
             </div>
             <h2 id="mb-fp-title" className="mb-fp-name">{founding.title}</h2>
             {rate ? (
               <>
-                <p className="mb-fp-price"><strong><Money value={`Php ${peso(rate.founding)}`} /></strong><span>/month</span></p>
+                <p className="mb-fp-price"><strong><Money value={`Php ${peso(rate.founding)}`} /></strong><span>{t("/month")}</span></p>
                 <p className="mb-fp-meta">
-                  {rate.tier && <span>{rate.tier} tier</span>}
-                  <span>Standard Php {peso(rate.standard)}</span>
-                  <span className="mb-fp-save">Save Php {peso(rate.saving)}/month{rate.percent && ` (${rate.percent})`}</span>
+                  {rate.tier && <span>{t("{tier} tier", { tier: rate.tier })}</span>}
+                  <span>{t("Standard Php {amount}", { amount: peso(rate.standard) })}</span>
+                  <span className="mb-fp-save">{t("Save Php {amount}/month", { amount: peso(rate.saving) })}{rate.percent && ` (${percentText(rate.percent)})`}</span>
                   {exchangeRate > 0 && <span>≈ US${Math.round(rate.founding / exchangeRate)}</span>}
                 </p>
               </>
@@ -61,16 +63,16 @@ export default async function FoundingPass({ founding, exchangeRate }: { foundin
           <div className="mb-fp-side">
             {gains.length > 0 && (
               <div className="mb-fp-gains">
-                <p className="mb-fp-gains-label">What you gain</p>
+                <p className="mb-fp-gains-label">{t("What you gain")}</p>
                 <GainList gains={gains} />
               </div>
             )}
             <div className="mb-fp-actions">
               {full
-                ? <Link href={MEMBERSHIP_PLANS_PATH} className="button mb-button-signal mb-fp-cta">See membership plans</Link>
-                : <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : MEMBERSHIP_PLANS_PATH} className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>}
+                ? <Link href={localHref(MEMBERSHIP_PLANS_PATH)} className="button mb-button-signal mb-fp-cta">{t("See membership plans")}</Link>
+                : <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : localHref(MEMBERSHIP_PLANS_PATH)} className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || t("Become an early member")}</Link>}
               <FoundingCounter founding={founding} showBar className="mb-fp-counter" />
-              {expires && expires !== "To be announced" && <p className="mb-fp-expiry">Offer ends {expires}</p>}
+              {offerEnds && <p className="mb-fp-expiry">{offerEnds}</p>}
             </div>
           </div>
         </article>

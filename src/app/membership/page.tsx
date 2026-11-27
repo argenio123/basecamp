@@ -57,7 +57,7 @@ export default async function MembershipPage() {
               <div><p className="eyebrow">{t("Membership tiers")}</p><h2>{t("Choose your tier.")}</h2></div>
               {tierGroup?.intro && <p>{tierGroup.intro}</p>}
             </div>
-            <TierCards items={tiers} exchangeRate={settings.exchangeRate} />
+            <TierCards items={tiers} exchangeRate={settings.exchangeRate} locale={getLocale()} />
           </div>
         </section>
       )}

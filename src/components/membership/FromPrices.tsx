@@ -3,7 +3,9 @@ import { formatPhp } from "@/content/format";
 import type { PriceGroup } from "@/content/types";
 import { PAYABLE_GROUP_IDS } from "@/lib/payments/catalog";
 import { payHref } from "@/lib/payments/types";
+import { localHref, t } from "@/i18n/server";
 import FromPricesGrid, { type FromPriceCard, type FromPriceGroup } from "./FromPricesGrid";
+import { priceText } from "./localize";
 import { audienceLabel, blockAvailability, blockItems, fromPrice, isMedicalBlock, toBlocks, type PriceBlockData } from "./pricing";
 
 type FromPricesProps = {
@@ -18,6 +20,8 @@ type FromPricesProps = {
   intro?: string;
   children?: ReactNode;
 };
+
+// The English labels below are translated with t() where they are used (src/i18n/fil/phrases/membership.ts).
 
 /** Which group a price block sits in (by its anchor). Unknown anchors go to Train. */
 const GROUP_OF: Readonly<Record<string, string>> = {
@@ -68,21 +72,21 @@ export default function FromPrices({ groups, disclaimer, id, eyebrow, title, int
       .sort((a, b) => a.price!.min - b.price!.min);
     const href = buyable[0]
       ? payHref(buyable[0].id)
-      : `/contact?interest=${CONTACT_INTEREST[block.anchor] ?? "membership-local"}`;
+      : localHref(`/contact?interest=${CONTACT_INTEREST[block.anchor] ?? "membership-local"}`);
     return [{
       key: block.key, anchor: block.anchor, title: block.groups[0].title,
-      href, ctaLabel: ACTION_LABEL[block.anchor] ?? "Get a Book",
-      audience: audienceKey(block), audienceText: audienceLabel(block), availability: blockAvailability(block),
-      price: price.label, unit: price.unit, group: GROUP_OF[block.anchor] ?? "train",
+      href, ctaLabel: t(ACTION_LABEL[block.anchor] ?? "Get a Book"),
+      audience: audienceKey(block), audienceText: t(audienceLabel(block)), availability: blockAvailability(block),
+      price: priceText(price.label), unit: price.unit, group: GROUP_OF[block.anchor] ?? "train",
       note: isMedicalBlock(block) && disclaimer ? disclaimer : "",
       items: blockItems(block).map((item) => ({
         id: item.id, name: item.name, badge: item.badge, description: item.description, featured: item.featured,
-        availability: item.availability, price: formatPhp(item.price), unit: item.unit,
+        availability: item.availability, price: priceText(formatPhp(item.price)), unit: item.unit,
       })),
     }];
   });
   if (!cards.length) return null;
-  const grouped: FromPriceGroup[] = GROUPS.map((g) => ({ id: g.id, label: g.label, cards: cards.filter((c) => c.group === g.id) })).filter((g) => g.cards.length);
+  const grouped: FromPriceGroup[] = GROUPS.map((g) => ({ id: g.id, label: t(g.label), cards: cards.filter((c) => c.group === g.id) })).filter((g) => g.cards.length);
 
   return (
     <section id={id} className="section mb-from-section" aria-label={title}>
