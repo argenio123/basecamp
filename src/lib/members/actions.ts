@@ -9,7 +9,7 @@ import { StorageUnavailableError } from "@/lib/storage/driver";
 import { clearMemberCookies, setMemberCookies } from "./session";
 import { createMember, findMemberByEmail, passwordMatches } from "./store";
 import { membersConfigured, safeNext } from "./token";
-import type { AuthResult } from "./types";
+import { AGE_TERMS_ERROR, type AuthResult } from "./types";
 
 // Shared across instances via Redis (per-instance when Redis is absent or down): 10 attempts per 10 minutes per client IP.
 const limiter = createSharedLimiter({ name: "member-auth", windowMs: 10 * 60 * 1000, perKey: 10, global: 300 });
@@ -37,7 +37,8 @@ export async function signUp(_prev: AuthResult, formData: FormData): Promise<Aut
   if (phone.length > 40) fieldErrors.phone = "Use 40 characters or fewer.";
   if (password.length < 8 || password.length > 200) fieldErrors.password = "Use at least 8 characters.";
   if (confirm !== password) fieldErrors.confirm = "Passwords don't match.";
-  if (formData.get("terms") !== "on") fieldErrors.terms = "Please accept to create your account.";
+  // One box confirms both: the visitor is 18+ and agrees to the account data being stored.
+  if (formData.get("terms") !== "on") fieldErrors.terms = AGE_TERMS_ERROR;
   if (Object.keys(fieldErrors).length) return { status: "error", message: "Please check the highlighted fields.", fieldErrors };
 
   let memberId: string;

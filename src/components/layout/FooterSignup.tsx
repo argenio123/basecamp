@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState, type FormEvent } from "react";
 import { submitWithoutReset } from "@/components/forms/FormStatus";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { trackLead } from "@/lib/analytics";
@@ -12,8 +12,19 @@ import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
 export default function FooterSignup() {
   const pathname = usePathname();
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
+  // The 18+ / consent box is checked in the browser first; submitLead checks it again on the server.
+  const [ageError, setAgeError] = useState("");
   const emailError = state.fieldErrors?.email;
-  const consentError = state.fieldErrors?.consent;
+  const consentError = ageError || state.fieldErrors?.consent;
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (new FormData(event.currentTarget).get("consent") !== "on") {
+      event.preventDefault();
+      setAgeError("Please confirm you're 18 or older and agree to continue.");
+      return;
+    }
+    setAgeError("");
+    submitWithoutReset(formAction)(event);
+  };
 
   useEffect(() => {
     if (state.status === "success") trackLead("newsletter");
@@ -23,7 +34,7 @@ export default function FooterSignup() {
   if (pathname.startsWith("/account/")) return null;
 
   return (
-    <form className="footer-newsletter" action={formAction} onSubmit={submitWithoutReset(formAction)} noValidate>
+    <form className="footer-newsletter" action={formAction} onSubmit={onSubmit} noValidate>
       <label className="footer-label" htmlFor="footer-email">Get early access</label>
       {state.status === "success" ? (
         <p className="ui-footer-signup-status" role="status">You&apos;re on the list.</p>
@@ -45,7 +56,7 @@ export default function FooterSignup() {
           {emailError && <span className="ui-field-error" id="footer-email-error">{emailError}</span>}
           <label className="footer-consent">
             <input type="checkbox" name="consent" required aria-invalid={consentError ? true : undefined} aria-describedby={consentError ? "footer-consent-error" : undefined} />
-            <span>I agree to receive BaseCamp CamSur early-member news and opening updates.</span>
+            <span>I&apos;m 18+ and agree to receive BaseCamp CamSur early-member news and opening updates.</span>
           </label>
           {consentError && <span className="ui-field-error" id="footer-consent-error">{consentError}</span>}
           {state.status === "error" && !state.fieldErrors?.email && !consentError && (

@@ -274,7 +274,7 @@ function BookingFlow({ content, initialService, initialItem, onReset }: Props & 
               </div>
               <label className="jf-check" htmlFor={`${id}-consent`}>
                 <input id={`${id}-consent`} name="consent" type="checkbox" required {...fieldA11y(state, `${id}-consent`, "consent")} />
-                <span>I agree to be contacted by BaseCamp CamSur about this request.</span>
+                <span>I&apos;m 18+ and agree to be contacted by BaseCamp CamSur about this request.</span>
               </label>
               <FieldError id={`${id}-consent`} state={state} name="consent" />
               <PrivacyNote />
