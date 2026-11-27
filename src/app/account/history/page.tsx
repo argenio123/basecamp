@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import MemberBookings from "@/components/bookings/MemberBookings";
 import AccountSettingsNav from "@/components/members/AccountSettingsNav";
 import MemberHistory from "@/components/members/MemberHistory";
 import { getMemberActivity } from "@/lib/members/activity";
@@ -44,6 +45,8 @@ export default async function MemberHistoryPage() {
               <div><span>Open or in review</span><strong>{inProgress}</strong></div>
               <div><span>Completed</span><strong>{completed}</strong></div>
             </div>
+
+            <MemberBookings memberId={member.id} />
 
             <MemberHistory items={activity} />
           </div>
