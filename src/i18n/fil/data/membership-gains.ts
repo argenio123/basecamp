@@ -8,13 +8,13 @@ export const MEMBERSHIP_GAINS: Readonly<Record<string, readonly Gain[]>> = {
     { title: "May kasamang recovery", detail: "May dagdag na apat na buwanang recovery credit ang Premium para sa sauna, ice bath at therapy zones, at dalawang guest pass kada buwan." },
   ],
   "/membership/founding": [
-    { title: "Mas mababang buwanang rate", detail: "Proposed na tipid na humigit-kumulang 29% sa unang anim na buwan mo, o lifetime alumni rate na naka-lock na habambuhay." },
+    { title: "Mas mababang buwanang rate", detail: "30% off sa unang anim na buwan mo, o lifetime alumni rate na naka-lock na habambuhay." },
     { title: "Mauuna ka", detail: "Priority booking sa mga camp, workshop, at special event bago ito buksan sa lahat." },
     { title: "Bahagi ka ng kuwento", detail: "Pagkilala bilang bahagi ng founding community at imbitasyon sa eksklusibong launch event." },
   ],
   "/membership/launch-promotions": [
-    { title: "Introductory na Athlete rate", detail: "Php 3,200 kada buwan, tine-test kumpara sa Php 4,500 na standard habang sinusuri ang launch pricing." },
-    { title: "Weekend day access", detail: "Day pass na may gym access at isang coached class: Php 650 standard at Php 800 tuwing weekend, habang tine-test ang Php 850 na weekend rate." },
+    { title: "Founding na Athlete rate", detail: "Php 3,150 kada buwan sa unang anim na buwan mo, kumpara sa Php 4,500 na standard: 30% off para sa mga founding member." },
+    { title: "Weekend day access", detail: "Day pass na may gym access at isang coached class: Php 650 standard at Php 800 tuwing weekend." },
     { title: "Tipid sa camp", detail: "Proposed na 20% off sa mga camp na na-book nang hindi bababa sa 60 araw bago ito." },
   ],
   "/membership/price-guide": [

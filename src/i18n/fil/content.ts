@@ -66,10 +66,9 @@ export const filContent: DeepPartial<SiteContent> = {
     contact: { hours: "Iaanunsyo pa ang oras ng operasyon" },
     founding: {
       title: "Founding members",
-      summary: "Limitado lang para sa mga unang founding member: proposed na tipid na humigit-kumulang 29% sa unang anim na buwan mo, o lifetime alumni rate na naka-lock na habambuhay.",
-      example: "Halimbawa: Athlete founding rate na Php 3,200/buwan (standard ay Php 4,500).",
+      summary: "Limitado lang para sa mga unang founding member: 30% off sa unang anim na buwan mo, o lifetime alumni rate na naka-lock na habambuhay.",
       benefits: [
-        "Founding rate: proposed na tipid na humigit-kumulang 29% sa unang anim na buwan mo, o naka-lock na lifetime alumni rate",
+        "Founding rate: 30% off sa unang anim na buwan mo, o naka-lock na lifetime alumni rate",
         "Priority access sa mga camp, workshop, at special event",
         "Pagkilala bilang bahagi ng founding community",
         "Isang eksklusibong launch event",
@@ -392,7 +391,7 @@ export const filContent: DeepPartial<SiteContent> = {
         items: [
           { id: "drop-in-standard", name: "Standard Drop-In", unit: "bawat session", description: "Isang training session. Puwedeng mas mataas ang presyo tuwing weekend at peak tourist season." },
           { id: "day-pass-standard", name: "Standard Day Pass", unit: "bawat araw", description: "Gym access at isang coached class. Para sa mga hotel guest at day traveler.", badge: "Swak sa day travelers" },
-          { id: "day-pass-weekend", name: "Weekend Premium Pass", unit: "bawat araw", badge: "Tine-test ang Php 850 rate", description: "Sabado, Linggo, at long weekend: Php 800 ang nakalistang presyo, habang tine-test ang Php 850 na weekend rate." },
+          { id: "day-pass-weekend", name: "Weekend Premium Pass", unit: "bawat araw", description: "Gym access at isang coached class tuwing Sabado, Linggo, at long weekend." },
         ],
       },
       {
@@ -463,7 +462,7 @@ export const filContent: DeepPartial<SiteContent> = {
       { id: "freeze", question: "Puwede ko bang i-freeze ang membership ko?", answer: "Ilalabas ang freeze policy bago ang pagbubukas." },
       { id: "cancel", question: "Paano ang pag-cancel?", answer: "Ilalabas ang proseso ng cancellation bago ang pagbubukas." },
       { id: "peak", question: "Bakit nag-iiba ang ilang rate para sa bisita?", answer: "Puwedeng mas mataas ang drop-in at day-pass rates tuwing weekend, long weekend at peak travel season." },
-      { id: "founding", question: "Ano ang founding-member offer?", answer: "Isang proposed na founding rate para sa unang anim na buwan mo (halimbawa, Athlete sa Php 3,200 kada buwan imbes na Php 4,500, tipid na humigit-kumulang 29%) o naka-lock na lifetime alumni rate, kasama ang priority access at isang eksklusibong launch event. Limitado ang slots: tinatapos pa ang planong cap na nasa pagitan ng 50 at 150 member." },
+      { id: "founding", question: "Ano ang founding-member offer?", answer: "Isang founding rate na 30% off para sa unang anim na buwan mo (halimbawa, Athlete sa Php 3,150 kada buwan imbes na Php 4,500) o naka-lock na lifetime alumni rate, kasama ang priority access at isang eksklusibong launch event. Limitado lang ito sa unang {foundingCap} na founding member." },
       { id: "recovery-bundle", question: "Magkano ang matitipid sa recovery bundle?", answer: "Ang limang sauna o ice-bath session ay Php 2,000, kumpara sa Php 2,250 sa single-session rate: tipid na Php 250, humigit-kumulang 11%." },
       { id: "early-booking", question: "May early-booking discount ba para sa mga camp?", answer: "May proposed na 20% early-booking discount para sa mga camp na na-book nang hindi bababa sa 60 araw bago ito." },
     ],
