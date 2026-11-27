@@ -110,10 +110,5 @@
   .ui-admin-quick-edit { right: 12px; bottom: 12px; }
 }
 
-/* Copy protection (src/components/ui/CopyGuard.tsx adds .copy-guard on public pages): page text can't be highlighted,
-   so there is nothing to copy; form fields stay selectable so people can edit what they type. */
-.copy-guard body { -webkit-user-select: none; user-select: none; }
-.copy-guard input, .copy-guard textarea, .copy-guard select, .copy-guard [contenteditable]:not([contenteditable="false"]) { -webkit-user-select: text; user-select: text; }
-
 @media (prefers-reduced-motion: reduce) {
 }

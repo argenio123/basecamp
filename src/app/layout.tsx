@@ -8,7 +8,6 @@ import HashForwarder from "@/components/nav/HashForwarder";
 import OfferActivityTracker from "@/components/home/OfferActivityTracker";
 import JsonLd from "@/components/seo/JsonLd";
 import AdminQuickEdit from "@/components/ui/AdminQuickEdit";
-import CopyGuard from "@/components/ui/CopyGuard";
 import { DEVICE_PROFILE_SCRIPT, RELOAD_TO_TOP_SCRIPT, REVEAL_BOOT_SCRIPT, ROUTE_SCOPE_SCRIPT } from "@/components/ui/boot-scripts";
 import HeroReplay from "@/components/ui/HeroReplay";
 import RouteScope from "@/components/ui/RouteScope";
@@ -88,7 +87,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <FooterGate><Footer /></FooterGate>
         <SiteReveal />
         <HeroReplay />
-        <CopyGuard />
         <HashForwarder />
         <OfferActivityTracker />
         <AdminQuickEdit />
