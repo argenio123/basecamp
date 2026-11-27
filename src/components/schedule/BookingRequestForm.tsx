@@ -6,8 +6,11 @@ import { FieldError, fieldA11y, submitWithoutReset } from "@/components/forms/Fo
 import { FlowCover, FlowNav, FlowOptions, FlowProgress, FlowQuestion, type FlowChoice, type FlowContact } from "@/components/forms/StepFlow";
 import PrivacyNote from "@/components/ui/PrivacyNote";
 import { BOOKING_ADDONS, BOOKING_SERVICES, PREFERRED_TIMES } from "@/content/constants";
-import type { TimetableSlot } from "@/content/types";
+import type { TimetableSlot, Weekday } from "@/content/types";
 import { SLOT_STATUS_LABEL, WEEKDAY_LABEL } from "@/data/programs-static";
+import { useLocale } from "@/i18n/client";
+import { localizedHref } from "@/i18n/paths";
+import { SCHEDULE_UI, type ScheduleUi } from "@/i18n/ui-sections/schedule";
 import { trackLead } from "@/lib/analytics";
 import { bookHref } from "@/lib/bookings/types";
 import { submitLead } from "@/lib/leads/actions";
@@ -31,6 +34,8 @@ export type BookingFormContent = {
   disclaimer: string;
   /** Timetable sessions members can book instantly (confirm screen at /pay/book), and the price label when paid online. */
   instant?: { slotIds: string[]; price: string | null };
+  /** Weekday names and the "full" status in the page's language (getData("programs-static")); English when omitted. */
+  labels?: { weekday: Record<Weekday, string>; full: string };
 };
 
 type Props = { content: BookingFormContent; initialService?: string | null; initialItem?: string | null; initialDate?: string | null; initialWaitlist?: boolean };
@@ -38,27 +43,27 @@ type Props = { content: BookingFormContent; initialService?: string | null; init
 const SERVICE_VALUES = BOOKING_SERVICES.map((s) => s.value) as readonly string[];
 const isService = (v: string | null | undefined): v is Service => !!v && SERVICE_VALUES.includes(v);
 
-const SERVICE_HINT: Record<Service, string> = {
-  class: "A coached class, timetable session or open gym.",
-  appointment: "Sauna, ice bath, therapy, massage or performance testing.",
-  camp: "Day clinics, weekend camps and longer immersives.",
-  corporate: "Team-building and private group sessions.",
-};
-const TIME_HINT: Record<string, string> = {
-  "Early morning": "Sunrise sessions, before work.",
-  Midday: "Late morning to mid-afternoon.",
-  Evening: "After work, into the night sessions.",
-  Flexible: "Any time that has space.",
-};
+// Interface text per locale: src/i18n/ui-sections/schedule.ts (service hints, time hints, step titles…). Submitted values
+// (service, preferredTime, addOns) stay the English keys, so the lead store and admin inbox are unchanged.
+type Ui = ScheduleUi["booking"];
+const EN_UI = SCHEDULE_UI.en.booking;
+const EN_LABELS = { weekday: WEEKDAY_LABEL, full: SLOT_STATUS_LABEL.full };
 
-function optionGroups(service: Service, content: BookingFormContent): OptionGroup[] {
+/** "Mon · 6:00 AM · Sunrise Strength (Full · Join waitlist)" in the page's language. */
+function sessionLabel(s: TimetableSlot, content: BookingFormContent) {
+  const labels = content.labels ?? EN_LABELS;
+  return `${labels.weekday[s.day]} · ${s.time} · ${s.title}${s.status === "full" ? ` (${labels.full})` : ""}`;
+}
+
+/** Option groups. Group labels come from `ui`; the session group is recognised by its `sessions` flag, not its label. */
+function optionGroups(service: Service, content: BookingFormContent, ui: Ui = EN_UI): (OptionGroup & { sessions?: boolean })[] {
   switch (service) {
     case "class": return [
-      { label: "Classes", options: content.programmes.map((p) => ({ value: p.slug, label: p.title })) },
-      { label: SESSIONS, options: content.slots.map((s) => ({ value: s.id, label: `${WEEKDAY_LABEL[s.day]} · ${s.time} · ${s.title}${s.status === "full" ? ` (${SLOT_STATUS_LABEL.full})` : ""}` })) },
+      { label: ui.groupClasses, options: content.programmes.map((p) => ({ value: p.slug, label: p.title })) },
+      { label: ui.groupSessions, sessions: true, options: content.slots.map((s) => ({ value: s.id, label: sessionLabel(s, content) })) },
     ].filter((g) => g.options.length > 0);
-    case "appointment": return [{ label: "Recovery & 1:1", options: [...content.appointments, { value: "performance-testing", label: "Performance testing" }] }];
-    case "camp": return content.camps.length ? [{ label: "Camps & packages", options: content.camps }] : [];
+    case "appointment": return [{ label: ui.groupAppointments, options: [...content.appointments, { value: "performance-testing", label: ui.performanceTesting }] }];
+    case "camp": return content.camps.length ? [{ label: ui.groupCamps, options: content.camps }] : [];
     default: return [];
   }
 }
@@ -76,7 +81,6 @@ const STEPS = ["intro", "service", "item", "time", "details", "contact"] as cons
 type Step = (typeof STEPS)[number];
 const QUESTION_COUNT = STEPS.length - 1;
 const ADVISE = "__advise";
-const SESSIONS = "Timetable sessions";
 
 /**
  * Booking request (kind=booking) as a one-question-per-screen flow: cover → service → program/session → time →
@@ -89,6 +93,8 @@ export default function BookingRequestForm(props: Props) {
 }
 
 function BookingFlow({ content, initialService, initialItem, initialDate, initialWaitlist, onReset }: Props & { onReset: () => void }) {
+  const locale = useLocale();
+  const ui = SCHEDULE_UI[locale].booking;
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   const [initial] = useState(() => resolveInitial(content, initialService, initialItem));
   const [step, setStep] = useState<Step>("intro");
@@ -115,7 +121,7 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
   const next = () => setStep(STEPS[Math.min(index + 1, STEPS.length - 1)]);
   const back = () => setStep(STEPS[Math.max(index - 1, 0)]);
 
-  const groups = service ? optionGroups(service, content) : [];
+  const groups = service ? optionGroups(service, content, ui) : [];
   const slot = service === "class" ? content.slots.find((s) => s.id === item) : undefined;
   // Full by status, or sent here from a session whose online spots ran out (?waitlist=1).
   const waitlist = slot?.status === "full" || (!!initialWaitlist && !!slot && item === initial.item);
@@ -126,27 +132,30 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
     return (
       <div className="jf jf-done" role="status">
         <span className="jf-done-mark" aria-hidden="true">✓</span>
-        <h2>Request received.</h2>
+        <h2>{ui.doneTitle}</h2>
         <p>{state.message}</p>
         <div className="jf-done-actions">
-          <Link href="/schedule/timetable" className="jf-start">View the timetable</Link>
-          <button type="button" className="jf-back" onClick={onReset}>Book something else</button>
+          <Link href={localizedHref("/schedule/timetable", locale)} className="jf-start">{ui.doneTimetable}</Link>
+          <button type="button" className="jf-back" onClick={onReset}>{ui.doneAgain}</button>
         </div>
       </div>
     );
   }
 
-  const itemTitle = service === "class" ? "Which class or session?" : service === "appointment" ? "Which appointment?" : service === "camp" ? "Which camp or package?" : "Tell us about your group";
+  const itemTitle = service === "class" ? ui.itemClass : service === "appointment" ? ui.itemAppointment : service === "camp" ? ui.itemCamp : ui.itemGroup;
   // Timetable sessions are a long list: they go in a dropdown (grouped by day) instead of option cards.
-  const sessionGroup = service === "class" ? groups.find((g) => g.label === SESSIONS) : undefined;
+  const sessionGroup = service === "class" ? groups.find((g) => g.sessions) : undefined;
   const itemGroups = groups.filter((g) => g !== sessionGroup).map((g) => ({ label: g.label, choices: g.options as FlowChoice[] }));
-  const adviseGroup = [{ label: groups.length ? "Not sure?" : "Options", choices: [{ value: ADVISE, label: groups.length ? "Not sure yet — advise me" : "Details to be announced — advise me", hint: "We'll suggest the best fit when we reply." }] }];
+  const adviseGroup = [{ label: groups.length ? ui.notSure : ui.options, choices: [{ value: ADVISE, label: groups.length ? ui.advise : ui.adviseTba, hint: ui.adviseHint }] }];
+  const weekday = (content.labels ?? EN_LABELS).weekday;
   const sessionDays = [...new Set(content.slots.map((s) => s.day))];
   const isSession = Boolean(sessionGroup?.options.some((o) => o.value === item));
 
   return (
     <form className="jf" action={formAction} onSubmit={(e) => { if (step !== "contact") { e.preventDefault(); return; } submitWithoutReset(formAction)(e); }} noValidate aria-busy={pending || undefined}>
       <input type="hidden" name="kind" value="booking" />
+      {/* The page's language, for server-side messages (src/i18n/MERGE-PLAN.md §2). */}
+      <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="source" value="/schedule/book" />
       <input type="hidden" name="service" value={service || "class"} />
       <input type="hidden" name="item" value={itemValue} />
@@ -160,17 +169,17 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
       {step === "intro" ? (
         <FlowCover
           headingRef={headingRef}
-          title="Tell us what you'd like to book"
-          lead="Classes, recovery and 1:1 appointments, camps and group sessions. A few quick questions, then our team confirms availability with you."
+          title={ui.coverTitle}
+          lead={ui.coverLead}
           facts={[
-            { title: "About a minute", body: "One question per screen, and Back works the whole way through. Nothing is sent until the last screen." },
-            { title: "Confirmed by our team", body: content.note },
-            { title: "Nothing to pay now", body: "This is a request, not a payment. We reply with times, availability and anything you need to bring." },
+            { title: ui.factMinuteTitle, body: ui.factMinuteBody },
+            { title: ui.factTeamTitle, body: content.note },
+            { title: ui.factPayTitle, body: ui.factPayBody },
           ]}
           contact={content.contact}
           image={content.image}
-          imageAlt="An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"
-          caption="Sessions run from sunrise to night at BaseCamp CamSur, Pili."
+          imageAlt={ui.coverImageAlt}
+          caption={ui.coverCaption}
           onStart={next}
         />
       ) : (
@@ -178,35 +187,35 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
           <FlowProgress index={index} total={QUESTION_COUNT} />
 
           {step === "service" && (
-            <FlowQuestion headingRef={headingRef} title="What would you like to book?" hint="Pick one. You can add recovery extras later in the form."
+            <FlowQuestion headingRef={headingRef} title={ui.serviceTitle} hint={ui.serviceHintText}
               nav={<FlowNav onBack={back} canContinue={Boolean(service)} onContinue={next} />}>
-              <FlowOptions label="Service" value={service} choices={BOOKING_SERVICES.map((s) => ({ value: s.value, label: s.label, hint: SERVICE_HINT[s.value] }))}
+              <FlowOptions label={ui.serviceLabel} value={service} choices={BOOKING_SERVICES.map((s) => ({ value: s.value, label: ui.services[s.value] ?? s.label, hint: ui.serviceHint[s.value] }))}
                 onPick={(v) => { if (v !== service) { setService(v as Service); setItem(""); } }} />
             </FlowQuestion>
           )}
 
           {step === "item" && (service === "corporate" ? (
-            <FlowQuestion headingRef={headingRef} title={itemTitle} hint="Group size, goals and the kind of session you have in mind."
+            <FlowQuestion headingRef={headingRef} title={itemTitle} hint={ui.groupHint}
               nav={<FlowNav onBack={back} canContinue onContinue={next} />}>
-              <label className="jf-field" htmlFor={`${id}-item`}><span className="jf-label">Group size &amp; goals <small>Optional</small></span>
-                <input id={`${id}-item`} value={groupNote} onChange={(e) => setGroupNote(e.target.value)} maxLength={120} placeholder="e.g. 20 people, team-building half day" {...fieldA11y(state, `${id}-item`, "item")} />
+              <label className="jf-field" htmlFor={`${id}-item`}><span className="jf-label">{ui.groupLabel} <small>{ui.optional}</small></span>
+                <input id={`${id}-item`} value={groupNote} onChange={(e) => setGroupNote(e.target.value)} maxLength={120} placeholder={ui.groupPlaceholder} {...fieldA11y(state, `${id}-item`, "item")} />
                 <FieldError id={`${id}-item`} state={state} name="item" />
               </label>
             </FlowQuestion>
           ) : (
-            <FlowQuestion headingRef={headingRef} title={itemTitle} hint={service === "class" ? "Choose a class, or a specific session from the timetable." : service === "appointment" ? content.disclaimer : ""}
+            <FlowQuestion headingRef={headingRef} title={itemTitle} hint={service === "class" ? ui.classHint : service === "appointment" ? content.disclaimer : ""}
               nav={<FlowNav onBack={back} canContinue={Boolean(item)} onContinue={next} />}>
               {itemGroups.length > 0 && <FlowOptions label={itemTitle} value={item} groups={itemGroups} onPick={setItem} />}
               {sessionGroup && (
                 <div className="jf-group jf-select-group">
-                  <label className="jf-group-label" htmlFor={`${id}-session`}>{SESSIONS}</label>
+                  <label className="jf-group-label" htmlFor={`${id}-session`}>{sessionGroup.label}</label>
                   <div className={`jf-select${isSession ? " is-selected" : ""}`}>
                     <select id={`${id}-session`} value={isSession ? item : ""} onChange={(e) => setItem(e.target.value)}>
-                      <option value="">Choose a session from the timetable…</option>
+                      <option value="">{ui.chooseSession}</option>
                       {sessionDays.map((day) => (
-                        <optgroup label={WEEKDAY_LABEL[day]} key={day}>
+                        <optgroup label={weekday[day]} key={day}>
                           {content.slots.filter((s) => s.day === day).map((s) => (
-                            <option value={s.id} key={s.id}>{`${WEEKDAY_LABEL[s.day]} · ${s.time} · ${s.title}${s.status === "full" ? ` (${SLOT_STATUS_LABEL.full})` : ""}`}</option>
+                            <option value={s.id} key={s.id}>{sessionLabel(s, content)}</option>
                           ))}
                         </optgroup>
                       ))}
@@ -214,38 +223,39 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
                   </div>
                 </div>
               )}
-              <FlowOptions label="Not sure" value={item} groups={adviseGroup} onPick={setItem} />
-              {waitlist && <p className="jf-hint" role="status">This session is full: we&apos;ll add you to the waitlist.</p>}
-              {instantHref && <p className="jf-hint" role="status">Want it confirmed now? <Link href={instantHref}>Book this session instantly{content.instant?.price ? ` · ${content.instant.price}` : ""}</Link> (members log in; plans with classes book free).</p>}
+              <FlowOptions label={ui.notSureLabel} value={item} groups={adviseGroup} onPick={setItem} />
+              {waitlist && <p className="jf-hint" role="status">{ui.waitlistNote}</p>}
+              {/* Instant booking (/pay/book) is checkout and stays English by design. */}
+              {instantHref && <p className="jf-hint" role="status">{ui.instantLead} <Link href={instantHref}>{ui.instantLink}{content.instant?.price ? ` · ${content.instant.price}` : ""}</Link> {ui.instantTail}</p>}
             </FlowQuestion>
           ))}
 
           {step === "time" && (
-            <FlowQuestion headingRef={headingRef} title="What time suits you?" hint="Your usual window. We'll confirm the exact time."
+            <FlowQuestion headingRef={headingRef} title={ui.timeTitle} hint={ui.timeHintText}
               nav={<FlowNav onBack={back} canContinue={Boolean(time)} onContinue={next} />}>
-              <FlowOptions label="Preferred time" value={time} choices={PREFERRED_TIMES.map((t) => ({ value: t, label: t, hint: TIME_HINT[t] }))} onPick={setTime} />
+              <FlowOptions label={ui.timeLabel} value={time} choices={PREFERRED_TIMES.map((t) => ({ value: t, label: ui.times[t] ?? t, hint: ui.timeHint[t] }))} onPick={setTime} />
             </FlowQuestion>
           )}
 
           {/* Kept mounted (hidden) after this screen so the date, size and add-ons are still submitted. */}
           <div hidden={step !== "details"}>
-            <FlowQuestion headingRef={step === "details" ? headingRef : null} title="A few details" hint="All optional. Skip ahead if you're not sure yet."
+            <FlowQuestion headingRef={step === "details" ? headingRef : null} title={ui.detailsTitle} hint={ui.detailsHint}
               nav={<FlowNav onBack={back} canContinue onContinue={next} />}>
               <div className="jf-fields">
-                <label className="jf-field" htmlFor={`${id}-date`}><span className="jf-label">Preferred date</span>
+                <label className="jf-field" htmlFor={`${id}-date`}><span className="jf-label">{ui.date}</span>
                   <input id={`${id}-date`} name="preferredDate" type="date" defaultValue={initialDate && /^\d{4}-\d{2}-\d{2}$/.test(initialDate) ? initialDate : undefined} />
                 </label>
-                <label className="jf-field" htmlFor={`${id}-party`}><span className="jf-label">Group size</span>
+                <label className="jf-field" htmlFor={`${id}-party`}><span className="jf-label">{ui.partySize}</span>
                   <input id={`${id}-party`} name="partySize" type="number" inputMode="numeric" min={1} max={60} step={1} defaultValue={1} {...fieldA11y(state, `${id}-party`, "partySize")} />
                   <FieldError id={`${id}-party`} state={state} name="partySize" />
                 </label>
               </div>
               <fieldset className="jf-ticks">
-                <legend>Add-ons</legend>
+                <legend>{ui.addonsLegend}</legend>
                 {BOOKING_ADDONS.map((a) => (
                   <label className="jf-tick" key={a}>
                     <input type="checkbox" name="addOns" value={a} />
-                    <span>{a}</span>
+                    <span>{ui.addons[a] ?? a}</span>
                   </label>
                 ))}
               </fieldset>
@@ -253,34 +263,34 @@ function BookingFlow({ content, initialService, initialItem, initialDate, initia
           </div>
 
           <div hidden={step !== "contact"}>
-            <FlowQuestion headingRef={step === "contact" ? headingRef : null} title="How can we reach you?" hint="Last screen. We confirm by email or phone."
+            <FlowQuestion headingRef={step === "contact" ? headingRef : null} title={ui.contactTitle} hint={ui.contactHint}
               nav={<FlowNav onBack={back} submitLabel={content.submitLabel} pending={pending} />}>
               {state.status === "error" && state.message && <p className="jf-error" role="alert">{state.message}</p>}
               <div className="jf-fields">
-                <label className="jf-field" htmlFor={`${id}-first`}><span className="jf-label">First name*</span>
+                <label className="jf-field" htmlFor={`${id}-first`}><span className="jf-label">{ui.firstName}</span>
                   <input id={`${id}-first`} name="firstName" autoComplete="given-name" required maxLength={80} {...fieldA11y(state, `${id}-first`, "firstName")} />
                   <FieldError id={`${id}-first`} state={state} name="firstName" />
                 </label>
-                <label className="jf-field" htmlFor={`${id}-last`}><span className="jf-label">Surname</span>
+                <label className="jf-field" htmlFor={`${id}-last`}><span className="jf-label">{ui.lastName}</span>
                   <input id={`${id}-last`} name="lastName" autoComplete="family-name" maxLength={80} {...fieldA11y(state, `${id}-last`, "lastName")} />
                   <FieldError id={`${id}-last`} state={state} name="lastName" />
                 </label>
-                <label className="jf-field" htmlFor={`${id}-email`}><span className="jf-label">Email*</span>
+                <label className="jf-field" htmlFor={`${id}-email`}><span className="jf-label">{ui.email}</span>
                   <input id={`${id}-email`} name="email" type="email" autoComplete="email" required maxLength={254} {...fieldA11y(state, `${id}-email`, "email")} />
                   <FieldError id={`${id}-email`} state={state} name="email" />
                 </label>
-                <label className="jf-field" htmlFor={`${id}-phone`}><span className="jf-label">Phone</span>
+                <label className="jf-field" htmlFor={`${id}-phone`}><span className="jf-label">{ui.phone}</span>
                   <input id={`${id}-phone`} name="phone" type="tel" autoComplete="tel" maxLength={30} {...fieldA11y(state, `${id}-phone`, "phone")} />
                   <FieldError id={`${id}-phone`} state={state} name="phone" />
                 </label>
-                <label className="jf-field jf-field--wide" htmlFor={`${id}-message`}><span className="jf-label">Anything we should know? <small>Optional</small></span>
-                  <textarea id={`${id}-message`} name="message" rows={3} maxLength={2000} placeholder="Injuries, experience, questions…" {...fieldA11y(state, `${id}-message`, "message")} />
+                <label className="jf-field jf-field--wide" htmlFor={`${id}-message`}><span className="jf-label">{ui.message} <small>{ui.optional}</small></span>
+                  <textarea id={`${id}-message`} name="message" rows={3} maxLength={2000} placeholder={ui.messagePlaceholder} {...fieldA11y(state, `${id}-message`, "message")} />
                   <FieldError id={`${id}-message`} state={state} name="message" />
                 </label>
               </div>
               <label className="jf-check" htmlFor={`${id}-consent`}>
                 <input id={`${id}-consent`} name="consent" type="checkbox" required {...fieldA11y(state, `${id}-consent`, "consent")} />
-                <span>I&apos;m 18+ and agree to be contacted by BaseCamp CamSur about this request.</span>
+                <span>{ui.consent}</span>
               </label>
               <FieldError id={`${id}-consent`} state={state} name="consent" />
               <PrivacyNote />

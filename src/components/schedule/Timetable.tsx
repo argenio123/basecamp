@@ -5,6 +5,10 @@ import { type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEve
 import { manilaNow } from "@/content/format";
 import type { TimetableSlot } from "@/content/types";
 import { SLOT_CATEGORY_LABEL, TIMETABLE_CAPTION, WEEKDAY_LABEL, WEEKDAYS } from "@/data/programs-static";
+import { useLocale } from "@/i18n/client";
+import { localizedHref } from "@/i18n/paths";
+import { fmt as fill } from "@/i18n/ui";
+import { SCHEDULE_UI, type ScheduleUi } from "@/i18n/ui-sections/schedule";
 import { bookHref, requestHref, type SpotInfo } from "@/lib/bookings/types";
 import { useSpots, ymd } from "./useSpots";
 
@@ -15,11 +19,15 @@ type Part = "morning" | "midday" | "evening" | "night";
 /** A timetable slot plus details from its programme (resolved on the server). */
 export type TimetableEntry = TimetableSlot & { zone?: string; level?: string; coach?: string };
 
-const PART_LABEL: Record<Part, string> = { morning: "Morning", midday: "Midday", evening: "Evening", night: "Night" };
+/** Data strings in the page's language (getData("programs-static") on the server page); English when omitted. */
+export type TimetableLabels = { weekday: Record<Weekday, string>; category: Record<Category, string>; caption: string };
+const EN_LABELS: TimetableLabels = { weekday: WEEKDAY_LABEL, category: SLOT_CATEGORY_LABEL, caption: TIMETABLE_CAPTION };
+
+type Ui = ScheduleUi["timetable"];
 const PARTS: readonly Part[] = ["morning", "midday", "evening", "night"];
 
 /** Chip text without the ☀/☾ glyphs used elsewhere. */
-const chipLabel = (category: Category) => SLOT_CATEGORY_LABEL[category].replace(/^[^A-Za-z]+/, "");
+const chipLabel = (labels: TimetableLabels, category: Category) => labels.category[category].replace(/^[^A-Za-z]+/, "");
 
 type Clock = { h: number; m: number };
 const toClock = (t: string, ap?: string): Clock | null => {
@@ -38,7 +46,8 @@ const toClock = (t: string, ap?: string): Clock | null => {
  * "6:00–6:45 AM" or "6:00 AM – 7:00 AM". Returns display parts plus parsed clocks when the time is concrete.
  */
 function readTime(time: string) {
-  const tba = time.match(/^(.*?)\s*\(time TBA\)$/i);
+  // "Early morning (time TBA)"; Filipino content: "Madaling-araw (oras: TBA)".
+  const tba = time.match(/^(.*?)\s*\((?:time|oras:?)\s*TBA\)$/i);
   if (tba) return { label: "TBA", part: tba[1], start: null as Clock | null, end: null as Clock | null };
   const range = time.match(/^(\d{1,2}:\d{2})\s*(AM|PM)?\s*[–-]\s*(\d{1,2}:\d{2})\s*(AM|PM)?$/i);
   if (range) {
@@ -59,17 +68,18 @@ const minutes = (a: Clock, b: Clock) => (b.h * 60 + b.m) - (a.h * 60 + a.m);
 function partOf(slot: TimetableSlot): Part {
   const t = readTime(slot.time);
   if (t.start) return t.start.h < 11 ? "morning" : t.start.h < 16 ? "midday" : t.start.h < 19 ? "evening" : "night";
-  if (slot.category === "sunrise" || /morning/i.test(slot.time)) return "morning";
+  // English and Filipino content wording ("Madaling-araw", "Gabi"), so both languages filter the same way.
+  if (slot.category === "sunrise" || /morning|umaga|madaling-araw/i.test(slot.time)) return "morning";
   if (slot.category === "night" || /night/i.test(slot.time)) return "night";
-  if (slot.category === "evening" || /evening/i.test(slot.time)) return "evening";
+  if (slot.category === "evening" || /evening|gabi/i.test(slot.time)) return "evening";
   return "midday";
 }
 
-function statusOf(slot: TimetableSlot): { label: string; tone: "preview" | "open" | "full" | "invite" } {
-  if (slot.status === "open") return { label: "Open", tone: "open" };
-  if (slot.status === "full") return { label: "Full · Waitlist", tone: "full" };
-  if (slot.status === "invite-only") return { label: "Invite only", tone: "invite" };
-  return { label: "Preview", tone: "preview" };
+function statusOf(slot: TimetableSlot, ui: Ui): { label: string; tone: "preview" | "open" | "full" | "invite" } {
+  if (slot.status === "open") return { label: ui.status.open, tone: "open" };
+  if (slot.status === "full") return { label: ui.status.full, tone: "full" };
+  if (slot.status === "invite-only") return { label: ui.status.invite, tone: "invite" };
+  return { label: ui.status.preview, tone: "preview" };
 }
 
 const DAY_MS = 86_400_000;
@@ -93,14 +103,15 @@ function addMonths(d: Date, n: number) {
   return new Date(d.getFullYear(), d.getMonth() + n, Math.min(d.getDate(), lastDay));
 }
 
-/** "November 2026" (or "October – November 2026" when the week crosses a month) and "Nov 2 – 8" for the week. */
-function weekLabels(week: Date[]) {
+/** "November 2026" (or "October – November 2026" when the week crosses a month) and "Nov 2 – 8" for the week.
+ *  `locale` is an Intl tag ("en-US"; "fil-PH" gives "Nobyembre 2026" and "Nob 2 – 8"). */
+function weekLabels(week: Date[], locale: string) {
   const first = week[0], last = week[6];
-  const month = (d: Date, year = true) => d.toLocaleDateString("en-US", year ? { month: "long", year: "numeric" } : { month: "long" });
+  const month = (d: Date, year = true) => d.toLocaleDateString(locale, year ? { month: "long", year: "numeric" } : { month: "long" });
   const sameMonth = first.getMonth() === last.getMonth();
   const sameYear = first.getFullYear() === last.getFullYear();
   const title = sameMonth ? month(first) : `${month(first, !sameYear)} – ${month(last)}`;
-  const short = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const short = (d: Date) => d.toLocaleDateString(locale, { month: "short", day: "numeric" });
   const range = sameMonth ? `${short(first)} – ${last.getDate()}` : `${short(first)} – ${short(last)}`;
   return { title, range };
 }
@@ -115,36 +126,39 @@ function calendarHref(slot: TimetableEntry, date: Date | undefined) {
   return `https://calendar.google.com/calendar/render?${q.toString()}`;
 }
 
-function Slot({ slot, date, index, ended, spot, price }: { slot: TimetableEntry; date?: Date; index: number; ended?: boolean; spot?: SpotInfo; price?: string | null }) {
+function Slot({ slot, date, index, ended, spot, price, ui, labels }: { slot: TimetableEntry; date?: Date; index: number; ended?: boolean; spot?: SpotInfo; price?: string | null; ui: Ui; labels: TimetableLabels }) {
+  const locale = useLocale();
   const t = readTime(slot.time);
   // Live spots (instant booking): bookable sessions go to the confirm screen, full ones to a waitlist request.
   const live = !ended && date ? spot : undefined;
   const day = date ? ymd(date) : undefined;
-  const status = ended ? { label: "Ended", tone: "ended" as const } : live?.state === "full" ? { label: "Full · Waitlist", tone: "full" as const } : live ? { label: "Open", tone: "open" as const } : statusOf(slot);
-  const href = live?.state === "bookable" ? bookHref(slot.id, day) : live?.state === "full" ? requestHref(slot.id, day, true) : `/schedule/book?service=class&item=${encodeURIComponent(slot.id)}`;
-  const go = live?.state === "bookable" ? (price ? `Book · ${price}` : "Book") : live?.state === "full" ? "Waitlist" : "Request";
+  const status = ended ? { label: ui.status.ended, tone: "ended" as const } : live?.state === "full" ? { label: ui.status.full, tone: "full" as const } : live ? { label: ui.status.open, tone: "open" as const } : statusOf(slot, ui);
+  // Instant booking (/pay/book) stays English by design; request links stay in the page's language (/fil/schedule/book).
+  const href = live?.state === "bookable" ? bookHref(slot.id, day) : localizedHref(live?.state === "full" ? requestHref(slot.id, day, true) : `/schedule/book?service=class&item=${encodeURIComponent(slot.id)}`, locale);
+  const go = live?.state === "bookable" ? (price ? fill(ui.bookPrice, { price }) : ui.book) : live?.state === "full" ? ui.waitlist : ui.request;
   const duration = t.start && t.end ? minutes(t.start, t.end) : null;
   const calendar = ended ? null : calendarHref(slot, date);
-  const meta = [slot.coach ? `Coach ${slot.coach}` : "Coach TBA", slot.zone, slot.level].filter(Boolean);
+  const meta = [slot.coach ? fill(ui.coach, { name: slot.coach }) : ui.coachTba, slot.zone, slot.level].filter(Boolean);
+  const action = live?.state === "bookable" ? (price ? fill(ui.ariaBookPrice, { price }) : ui.ariaBook) : live?.state === "full" ? ui.ariaWaitlist : ui.ariaRequest;
 
   const content = (
     <>
       <span className="sd-app-time">
         <strong>{t.label}</strong>
         {t.part && <small>{t.part}</small>}
-        {t.end && <small className="sd-app-end">to {fmt(t.end)}</small>}
+        {t.end && <small className="sd-app-end">{fill(ui.until, { time: fmt(t.end) })}</small>}
       </span>
       <span className="sd-app-body">
         <span className="sd-app-title">{slot.title}</span>
         <span className="sd-app-meta">{meta.join(" · ")}</span>
         <span className="sd-app-tags">
-          <span className="sd-app-chip">{chipLabel(slot.category)}</span>
+          <span className="sd-app-chip">{chipLabel(labels, slot.category)}</span>
           <span className="sd-app-status" data-tone={status.tone}>{status.label}</span>
-          <span className="sd-app-chip sd-app-chip-quiet">{duration ? `${duration} min` : "Duration TBA"}</span>
+          <span className="sd-app-chip sd-app-chip-quiet">{duration ? fill(ui.minutes, { n: duration }) : ui.durationTba}</span>
         </span>
       </span>
-      <span className="sd-app-spots"><strong>{live ? live.left : slot.capacity ?? "TBA"}</strong><small>{live ? "Left" : "Spots"}</small></span>
-      <span className="sd-app-go" aria-hidden="true">{ended ? "Ended" : go}</span>
+      <span className="sd-app-spots"><strong>{live ? live.left : slot.capacity ?? "TBA"}</strong><small>{live ? ui.spotsLeft : ui.spots}</small></span>
+      <span className="sd-app-go" aria-hidden="true">{ended ? ui.status.ended : go}</span>
     </>
   );
 
@@ -153,18 +167,18 @@ function Slot({ slot, date, index, ended, spot, price }: { slot: TimetableEntry;
       {ended ? (
         <div className="sd-app-slot-card">{content}</div>
       ) : (
-        <Link href={href} aria-label={`${WEEKDAY_LABEL[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}.${live ? ` ${live.left} of ${live.capacity} spots left.` : ""} ${live?.state === "bookable" ? `Book this session${price ? `, ${price}` : ""}` : live?.state === "full" ? "Join the waitlist" : "Request this session"}`}>{content}</Link>
+        <Link href={href} aria-label={`${labels.weekday[slot.day]}, ${slot.time}: ${slot.title}. ${status.label}.${live ? fill(ui.ariaSpots, { left: live.left, capacity: live.capacity }) : ""} ${action}`}>{content}</Link>
       )}
-      {calendar && <a className="sd-app-cal" href={calendar} target="_blank" rel="noopener noreferrer">Add to calendar</a>}
+      {calendar && <a className="sd-app-cal" href={calendar} target="_blank" rel="noopener noreferrer">{ui.addToCalendar}</a>}
     </li>
   );
 }
 
 /** Month-cell count: "1 event", "3 events", "No events"; a negative count can only be a data error. */
-function eventLabel(n: number) {
-  if (n < 0) return "Error";
-  if (n === 0) return "No events";
-  return n === 1 ? "1 event" : `${n} events`;
+function eventLabel(n: number, ui: Ui) {
+  if (n < 0) return ui.eventsError;
+  if (n === 0) return ui.eventsNone;
+  return n === 1 ? ui.eventsOne : fill(ui.eventsMany, { n });
 }
 
 /** True when the session already finished: any session on a past day, or a timed session that ended earlier today. */
@@ -295,7 +309,11 @@ const RANGE_MONTHS = 24;
  * week or a month. Past sessions are marked "Ended". Dates and "today" (Asia/Manila) are set after mount so the
  * prerendered HTML never freezes a build-time date or depends on the visitor's clock.
  */
-export default function Timetable({ slots, status, statusHref, statusLabel }: { slots: TimetableEntry[]; status?: string; statusHref?: string; statusLabel?: string }) {
+export default function Timetable({ slots, status, statusHref, statusLabel, labels = EN_LABELS }: { slots: TimetableEntry[]; status?: string; statusHref?: string; statusLabel?: string; labels?: TimetableLabels }) {
+  // Interface text and date names follow the URL's language (/fil/...: "Biyernes, Nobyembre 27").
+  const locale = useLocale();
+  const { dateLocale, dayLocale, timetable: ui } = SCHEDULE_UI[locale];
+  const eventsLabel = (n: number) => eventLabel(n, ui);
   const [now, setNow] = useState<Date | null>(null);
   const [selected, setSelected] = useState<Date | null>(null);
   const [view, setView] = useState<"week" | "month">("week");
@@ -314,7 +332,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   const today = now ? atMidnight(now) : null;
   const isToday = (d: Date) => !!today && sameDay(d, today);
   const isPast = (d: Date) => !!today && d < today;
-  const longDate = (d: Date) => d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const longDate = (d: Date) => d.toLocaleDateString(dateLocale, { weekday: "long", month: "long", day: "numeric" });
 
   // Week view: days from a year before to a year after `weekAnchor` (a Monday). Month view: two years either side of `monthAnchor`.
   const [weekAnchor, setWeekAnchor] = useState<Date | null>(null);
@@ -476,8 +494,8 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
   });
 
   const visibleWeek = firstVisible ? Array.from({ length: 7 }, (_, i) => addDays(firstVisible, i)) : null;
-  const labels = visibleWeek ? weekLabels(visibleWeek) : null;
-  const monthTitle = visibleMonth?.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const weekTitle = visibleWeek ? weekLabels(visibleWeek, dateLocale) : null;
+  const monthTitle = visibleMonth?.toLocaleDateString(dateLocale, { month: "long", year: "numeric" });
 
   const selectedDay: Weekday = selected ? weekdayOf(selected) : "Mon";
   const list = daySlots(selectedDay);
@@ -488,7 +506,7 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
     <div className="sd-timetable sd-app" data-flip={flipped ? "" : undefined}>
       {status && (
         <p className="sd-app-status-line" data-reveal>
-          <span className="sd-app-status" data-tone="preview"><i aria-hidden="true" />Preview</span>
+          <span className="sd-app-status" data-tone="preview"><i aria-hidden="true" />{ui.preview}</span>
           <span>{status}</span>
           {statusHref && statusLabel && <Link href={statusHref}>{statusLabel}</Link>}
         </p>
@@ -496,47 +514,47 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
 
       <div className="sd-app-month" data-reveal data-reveal-delay="short">
         <div className="sd-app-month-title" aria-live="polite">
-          <h3 key={view}>{(view === "week" ? labels?.title : monthTitle) ?? " "}</h3>
-          {view === "week" && labels && <span>Week of {labels.range}</span>}
+          <h3 key={view}>{(view === "week" ? weekTitle?.title : monthTitle) ?? " "}</h3>
+          {view === "week" && weekTitle && <span>{fill(ui.weekOf, { range: weekTitle.range })}</span>}
         </div>
         <div className="sd-cal-controls">
-          <div className="sd-cal-view" role="group" aria-label="Calendar view">
-            <button type="button" aria-pressed={view === "week"} onClick={() => switchView("week")}>Week</button>
-            <button type="button" aria-pressed={view === "month"} onClick={() => switchView("month")}>Month</button>
+          <div className="sd-cal-view" role="group" aria-label={ui.calendarView}>
+            <button type="button" aria-pressed={view === "week"} onClick={() => switchView("week")}>{ui.week}</button>
+            <button type="button" aria-pressed={view === "month"} onClick={() => switchView("month")}>{ui.month}</button>
           </div>
           <div className="sd-cal-nav">
             <button type="button" className="sd-cal-arrow" onPointerDown={(e) => startHold(e, -1)} onPointerUp={stopHold} onPointerLeave={stopHold} onPointerCancel={stopHold}
-              onClick={(e) => { if (e.detail === 0) step(-1); }} onContextMenu={(e) => e.preventDefault()} disabled={!selected} aria-label={view === "week" ? "Previous week" : "Previous month"}>‹</button>
-            <button type="button" className="sd-cal-today" onClick={goToday} disabled={!today || onToday}>Today</button>
+              onClick={(e) => { if (e.detail === 0) step(-1); }} onContextMenu={(e) => e.preventDefault()} disabled={!selected} aria-label={view === "week" ? ui.prevWeek : ui.prevMonth}>‹</button>
+            <button type="button" className="sd-cal-today" onClick={goToday} disabled={!today || onToday}>{ui.today}</button>
             <button type="button" className="sd-cal-arrow" onPointerDown={(e) => startHold(e, 1)} onPointerUp={stopHold} onPointerLeave={stopHold} onPointerCancel={stopHold}
-              onClick={(e) => { if (e.detail === 0) step(1); }} onContextMenu={(e) => e.preventDefault()} disabled={!selected} aria-label={view === "week" ? "Next week" : "Next month"}>›</button>
+              onClick={(e) => { if (e.detail === 0) step(1); }} onContextMenu={(e) => e.preventDefault()} disabled={!selected} aria-label={view === "week" ? ui.nextWeek : ui.nextMonth}>›</button>
           </div>
         </div>
       </div>
 
       <div className="sd-cal-reveal" data-reveal data-reveal-delay="medium">
       {view === "week" ? (
-        <div ref={weekRef} className={`sd-app-days sd-cal-strip${weekScroll.grabbing ? " is-grabbing" : ""}`} role="tablist" aria-label="Days"
+        <div ref={weekRef} className={`sd-app-days sd-cal-strip${weekScroll.grabbing ? " is-grabbing" : ""}`} role="tablist" aria-label={ui.days}
           onScroll={onWeekScroll} {...weekScroll.handlers}>
           {days
             ? days.map((date, i) => {
               const d = weekdayOf(date);
               return (
                 <button key={date.toDateString()} type="button" role="tab" style={{ "--col": i % 7 } as CSSProperties} aria-selected={!!selected && sameDay(selected, date)} aria-controls="sd-day-panel"
-                  aria-label={`${longDate(date)}${isPast(date) ? ", past" : ""}`}
+                  aria-label={`${longDate(date)}${isPast(date) ? ui.pastSuffix : ""}`}
                   data-today={isToday(date) ? "" : undefined} data-past={isPast(date) ? "" : undefined}
                   onClick={() => setSelected(date)}>
-                  <small>{isToday(date) ? "Today" : d}</small>
+                  <small>{isToday(date) ? ui.today : ui.weekdayShort[d]}</small>
                   <strong>{date.getDate()}</strong>
-                  <em data-empty={daySlots(d).length === 0 ? "" : undefined}>{eventLabel(daySlots(d).length)}</em>
+                  <em data-empty={daySlots(d).length === 0 ? "" : undefined}>{eventsLabel(daySlots(d).length)}</em>
                 </button>
               );
             })
             : WEEKDAYS.map((d) => (
               <button key={d} type="button" role="tab" aria-selected={d === "Mon"} aria-controls="sd-day-panel">
-                <small>{d}</small>
-                <strong>{d.slice(0, 1)}</strong>
-                <em data-empty={daySlots(d).length === 0 ? "" : undefined}>{eventLabel(daySlots(d).length)}</em>
+                <small>{ui.weekdayShort[d]}</small>
+                <strong>{ui.weekdayShort[d].slice(0, 1)}</strong>
+                <em data-empty={daySlots(d).length === 0 ? "" : undefined}>{eventsLabel(daySlots(d).length)}</em>
               </button>
             ))}
         </div>
@@ -544,11 +562,11 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
         <div ref={monthRef} className={`sd-cal-months${monthScroll.grabbing ? " is-grabbing" : ""}`} onScroll={onMonthScroll} {...monthScroll.handlers}>
           {months?.map((month) => {
             const grid = monthGrid(month);
-            const title = month.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+            const title = month.toLocaleDateString(dateLocale, { month: "long", year: "numeric" });
             return (
               <div key={title} className="sd-cal-month" role="grid" aria-label={title}>
                 <div className="sd-cal-row sd-cal-head" role="row">
-                  {WEEKDAYS.map((d) => <span key={d} role="columnheader">{d}</span>)}
+                  {WEEKDAYS.map((d) => <span key={d} role="columnheader">{ui.weekdayShort[d]}</span>)}
                 </div>
                 {Array.from({ length: grid.length / 7 }, (_, w) => (
                   <div className="sd-cal-row" role="row" key={w} style={{ "--row": w + 1 } as CSSProperties}>
@@ -556,13 +574,13 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
                       const count = daySlots(weekdayOf(date)).length;
                       return (
                         <button key={date.toDateString()} type="button" role="gridcell" aria-selected={!!selected && sameDay(date, selected)}
-                          aria-label={`${longDate(date)}: ${eventLabel(count)}${isPast(date) ? ", past" : ""}`}
+                          aria-label={`${longDate(date)}: ${eventsLabel(count)}${isPast(date) ? ui.pastSuffix : ""}`}
                           data-today={isToday(date) ? "" : undefined} data-past={isPast(date) ? "" : undefined}
                           data-outside={date.getMonth() !== month.getMonth() ? "" : undefined}
                           onClick={() => setSelected(date)}>
                           <strong>{date.getDate()}</strong>
-                          {isToday(date) && <small>Today</small>}
-                          <em className="sd-cal-count" data-empty={count === 0 ? "" : undefined} aria-hidden="true">{eventLabel(count)}</em>
+                          {isToday(date) && <small>{ui.today}</small>}
+                          <em className="sd-cal-count" data-empty={count === 0 ? "" : undefined} aria-hidden="true">{eventsLabel(count)}</em>
                         </button>
                       );
                     })}
@@ -577,18 +595,18 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
 
       <div className="sd-app-filterset" data-reveal>
         {categories.length > 1 && (
-          <div className="sd-app-filters" role="toolbar" aria-label={partsRepeat ? "Filter by session" : "Filter by discipline"}>
-            <span className="sd-app-filter-label">{partsRepeat ? "Session" : "Discipline"}</span>
+          <div className="sd-app-filters" role="toolbar" aria-label={partsRepeat ? ui.filterSession : ui.filterDiscipline}>
+            <span className="sd-app-filter-label">{partsRepeat ? ui.session : ui.discipline}</span>
             {(["all", ...categories] as const).map((c) => (
-              <button key={c} type="button" aria-pressed={filter === c} onClick={() => setFilter(c)}>{c === "all" ? "All" : chipLabel(c)}</button>
+              <button key={c} type="button" aria-pressed={filter === c} onClick={() => setFilter(c)}>{c === "all" ? ui.all : chipLabel(labels, c)}</button>
             ))}
           </div>
         )}
         {parts.length > 1 && !partsRepeat && (
-          <div className="sd-app-filters" role="toolbar" aria-label="Filter by time of day">
-            <span className="sd-app-filter-label">Time of day</span>
+          <div className="sd-app-filters" role="toolbar" aria-label={ui.filterTime}>
+            <span className="sd-app-filter-label">{ui.timeOfDay}</span>
             {(["all", ...parts] as const).map((p) => (
-              <button key={p} type="button" aria-pressed={part === p} onClick={() => setPart(p)}>{p === "all" ? "All day" : PART_LABEL[p]}</button>
+              <button key={p} type="button" aria-pressed={part === p} onClick={() => setPart(p)}>{p === "all" ? ui.allDay : ui.parts[p]}</button>
             ))}
           </div>
         )}
@@ -596,15 +614,15 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
 
       <div key={selected?.toDateString() ?? "initial"} className="sd-app-list" role="tabpanel" id="sd-day-panel" data-past={dayPast ? "" : undefined}>
         <p className="sd-app-dayname">
-          {WEEKDAY_LABEL[selectedDay]}
-          {selected && <span> · {selected.toLocaleDateString("en-PH", { day: "numeric", month: "long", year: today && selected.getFullYear() !== today.getFullYear() ? "numeric" : undefined })}</span>}
-          {dayPast && <em className="sd-app-past-tag">Past</em>}
+          {labels.weekday[selectedDay]}
+          {selected && <span> · {selected.toLocaleDateString(dayLocale, { day: "numeric", month: "long", year: today && selected.getFullYear() !== today.getFullYear() ? "numeric" : undefined })}</span>}
+          {dayPast && <em className="sd-app-past-tag">{ui.past}</em>}
         </p>
         {list.length
-          ? <ul data-reveal="stagger">{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} spot={spots?.slots[slot.id]} price={spots?.price} />)}</ul>
-          : <p className="sd-slot-empty">No sessions match these filters</p>}
+          ? <ul data-reveal="stagger">{list.map((slot, i) => <Slot slot={slot} date={selected ?? undefined} index={i} key={slot.id} ended={!!selected && !!now && hasEnded(slot, selected, now)} spot={spots?.slots[slot.id]} price={spots?.price} ui={ui} labels={labels} />)}</ul>
+          : <p className="sd-slot-empty">{ui.empty}</p>}
       </div>
-      <p className="sd-caption" data-reveal>{TIMETABLE_CAPTION}</p>
+      <p className="sd-caption" data-reveal>{labels.caption}</p>
     </div>
   );
 }
