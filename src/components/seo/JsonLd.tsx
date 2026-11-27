@@ -10,7 +10,8 @@ const php = (n: number) => `₱${n.toLocaleString("en-PH")}`;
 
 /** Site-wide business JSON-LD (in the root layout). */
 export default async function JsonLd() {
-  const { settings, pricing } = await getSiteContent();
+  // Root layout: English explicitly (the request locale belongs to the page).
+  const { settings, pricing } = await getSiteContent("en");
   const url = siteUrl();
   // Price range across every visible, priced item that is actually offered (not "planned"), e.g. "₱350–₱45,000".
   const prices = pricing.groups.flatMap((g) => g.items).filter((i) => i.visible && i.availability !== "planned" && i.price && i.price.min > 0)

@@ -2,6 +2,7 @@
 
 import { useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
+import { basePath } from "@/i18n/paths";
 
 /**
  * Marks <html data-route="home|page|admin" data-section="<first path segment>"> so CSS can style the navigation
@@ -17,7 +18,8 @@ export function routeScope(pathname: string) {
 }
 
 export default function RouteScope() {
-  const pathname = usePathname();
+  // "/fil/…" pages are scoped like their English page ("/fil" = home).
+  const pathname = basePath(usePathname());
 
   useLayoutEffect(() => {
     document.documentElement.dataset.route = routeScope(pathname);

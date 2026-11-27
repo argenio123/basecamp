@@ -4,6 +4,8 @@ import Script from "next/script";
 import Footer from "@/components/layout/Footer";
 import FooterGate from "@/components/layout/FooterGate";
 import Header from "@/components/layout/Header";
+import LocaleHtml from "@/components/i18n/LocaleHtml";
+import SkipLink from "@/components/i18n/SkipLink";
 import HashForwarder from "@/components/nav/HashForwarder";
 import OfferActivityTracker from "@/components/home/OfferActivityTracker";
 import JsonLd from "@/components/seo/JsonLd";
@@ -59,12 +61,14 @@ export const metadata: Metadata = {
 };
 
 // getSiteContent() is 'use cache' (tag site-content), so awaiting it here keeps every route prerenderable.
+// One root layout for both locales (src/i18n/README.md): <html lang> and the header follow the URL on the client
+// (LocaleHtml, Header); the server-rendered footer is rendered per locale and FooterGate shows the matching one.
+// Layout code passes the locale explicitly: the request locale belongs to the page, not to the layout.
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const c = await getSiteContent();
+  const c = await getSiteContent("en");
 
   return (
-    <html
-      lang="en"
+    <LocaleHtml
       className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${gretaros.variable}`}
       // data-route and the reveal classes are set by the boot scripts before hydration, so the server HTML cannot match.
       suppressHydrationWarning
@@ -76,15 +80,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: RELOAD_TO_TOP_SCRIPT }} />
       </head>
       <body>
-        <a className="skip-link" href="#main-content">Skip to content</a>
+        <SkipLink />
         <RouteScope />
         <RouteScrollReset />
         <Header
           ctaLabel={PHASE_COPY[c.settings.launchPhase]?.ctaLabel ?? PHASE_COPY["pre-launch"].ctaLabel}
+          launchPhase={c.settings.launchPhase}
           sections={getSections(c.programmes.featured)}
         />
         <main id="main-content" tabIndex={-1}>{children}</main>
-        <FooterGate><Footer /></FooterGate>
+        <FooterGate fil={<Footer locale="fil" />}><Footer locale="en" /></FooterGate>
         <SiteReveal />
         <HeroReplay />
         <HashForwarder />
@@ -100,6 +105,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </>
         )}
       </body>
-    </html>
+    </LocaleHtml>
   );
 }

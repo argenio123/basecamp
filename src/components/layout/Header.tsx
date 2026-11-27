@@ -2,25 +2,39 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MegaMenu from "@/components/nav/MegaMenu";
 import MobileNav from "@/components/nav/MobileNav";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import MemberNavLink from "@/components/members/MemberNavLink";
 import { useMemberHint } from "@/components/members/useMemberHint";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import type { LaunchPhase } from "@/content/types";
 import { LOGIN_PATH, type SiteSection } from "@/content/sitemap";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { useLocale } from "@/i18n/client";
+import { basePath, localizedHref } from "@/i18n/paths";
+import { localizeSections } from "@/i18n/sitemap";
+import { UI } from "@/i18n/ui";
 
-/** `sections` comes from getSections(content programmes) in the root layout (src/content/sitemap.ts). */
-type HeaderProps = { ctaLabel: string; sections: SiteSection[] };
+/** `sections` comes from getSections(content programmes) in the root layout (src/content/sitemap.ts), in English;
+ *  the header shows them in the URL's locale (src/i18n/sitemap.ts). */
+type HeaderProps = { ctaLabel: string; launchPhase?: LaunchPhase; sections: SiteSection[] };
 
-export default function Header({ ctaLabel, sections }: HeaderProps) {
-  const pathname = usePathname();
+export default function Header({ ctaLabel, launchPhase, sections: englishSections }: HeaderProps) {
+  const locale = useLocale();
+  const ui = UI[locale];
+  const sections = useMemo(() => localizeSections(englishSections, locale), [englishSections, locale]);
+  // Every path check below compares the English (unprefixed) path: "/fil/visit" behaves like "/visit".
+  const rawPathname = usePathname();
+  const pathname = basePath(rawPathname);
+  const label = locale !== DEFAULT_LOCALE && launchPhase ? ui.phaseCta[launchPhase] : ctaLabel;
   const isLandingPage = pathname === "/";
   const member = useMemberHint();
   // Pages that open with a full-bleed image hero (every section overview and sub-route, and the member log-in /
   // sign-up pages with their gym photo) get the transparent overlay header
-  const hasHeroOverlay = isLandingPage || pathname === "/contact" || pathname === "/account/login" || pathname === "/account/signup" || sections.some((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
+  const hasHeroOverlay = isLandingPage || pathname === "/contact" || pathname === "/account/login" || pathname === "/account/signup" || sections.some((section) => pathname === basePath(section.href) || pathname.startsWith(`${basePath(section.href)}/`));
   const [hasScrolled, setHasScrolled] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
   const [offerPromptReady, setOfferPromptReady] = useState(false);
@@ -103,9 +117,9 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
       >
         <div className="header-shell">
         <ScrollTopLink
-          href="/"
+          href={localizedHref("/", locale)}
           className="brand header-brand"
-          aria-label="BaseCamp CamSur home"
+          aria-label={ui.header.homeLabel}
           onClick={(event) => {
             if (
               !isLandingPage ||
@@ -134,25 +148,26 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
             className="header-brand-logo"
           />
         </ScrollTopLink>
-        <MegaMenu key={pathname} sections={sections} pathname={pathname} onOpenChange={setIsMenuOpen} />
+        <MegaMenu key={rawPathname} sections={sections} pathname={rawPathname} onOpenChange={setIsMenuOpen} />
         {(showLogin || showJoin) && (
           <div className="header-actions">
             {/* Desktop: LOGIN then the lime JOIN in the top-right corner. Below 1221px only JOIN stays in the bar
                 (left of the centred logo, nav.css); Login moves into the mobile menu. */}
+            <LanguageSwitcher className="header-lang" compact />
             {showLogin && <MemberNavLink className="button button-small header-login" />}
-            {showJoin && <EarlyAccessLink className="button button-small header-join">Join</EarlyAccessLink>}
+            {showJoin && <EarlyAccessLink className="button button-small header-join">{ui.common.join}</EarlyAccessLink>}
           </div>
         )}
           <MobileNav sections={sections} />
         </div>
       </header>
       {isLandingPage && !member && offerPromptReady && pastHero && !promptDismissed && (
-        <aside className="home-scroll-prompt" data-visible={footerVisible ? "false" : "true"} aria-hidden={footerVisible} inert={footerVisible} aria-label="BaseCamp member access">
-          <button className="home-scroll-prompt-close" type="button" aria-label="Dismiss access prompt" onClick={() => setPromptDismissed(true)}>&times;</button>
-          <p>Ready for BaseCamp?</p>
-          <strong>Get priority access or continue to your member account.</strong>
+        <aside className="home-scroll-prompt" data-visible={footerVisible ? "false" : "true"} aria-hidden={footerVisible} inert={footerVisible} aria-label={ui.header.promptLabel}>
+          <button className="home-scroll-prompt-close" type="button" aria-label={ui.header.promptDismiss} onClick={() => setPromptDismissed(true)}>&times;</button>
+          <p>{ui.header.promptTitle}</p>
+          <strong>{ui.header.promptBody}</strong>
           <div>
-            <EarlyAccessLink className="home-scroll-prompt-primary">{ctaLabel}</EarlyAccessLink>
+            <EarlyAccessLink className="home-scroll-prompt-primary">{label}</EarlyAccessLink>
             <MemberNavLink className="home-scroll-prompt-login" />
           </div>
         </aside>

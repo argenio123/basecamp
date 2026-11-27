@@ -6,6 +6,8 @@ import { Fragment, useCallback, useEffect, useRef, useState, type FocusEvent, ty
 import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import type { SectionId, SiteSection } from "@/content/sitemap";
+import { useUi } from "@/i18n/client";
+import { fmt } from "@/i18n/ui";
 
 /**
  * Desktop mega menu (stage-3 §4). W3C disclosure-navigation pattern: each top item is a <button>
@@ -74,7 +76,9 @@ function PanelMedia({ menu, isOpen, warm }: { menu: SiteSection["menu"]; isOpen:
 
 type MegaMenuProps ={ sections: SiteSection[]; pathname: string; onOpenChange?: (isOpen: boolean) => void };
 
+/** `sections` arrive localized (Header); `pathname` is the browser path, so it matches their localized hrefs. */
 export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuProps) {
+  const ui = useUi();
   const [menu, setMenu] = useState<MenuState | null>(null);
   // True while moving from one open panel to another: the card stays in place and only its content animates
   // (nav.css [data-switching]). Opening from closed and closing keep the card's own fade/slide.
@@ -188,7 +192,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
           className="nv-panel"
           data-open={isOpen ? "true" : undefined}
           role="region"
-          aria-label={`${section.label} menu`}
+          aria-label={fmt(ui.header.menuLabel, { label: section.label })}
           onKeyDown={onPanelKeyDown(section.id)}
         >
           <div className="nv-panel-inner">
@@ -196,11 +200,11 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
               <PanelMedia menu={section.menu} isOpen={isOpen} warm={warmId === section.id} />
               <p className="nv-panel-text">{section.menu.text}</p>
               <NavLink href={section.href} className="button button-light button-small nv-panel-explore" onClick={() => close()} isCurrent={pathname === section.href}>
-                Explore {section.label}
+                {fmt(ui.header.exploreSection, { label: section.label })}
               </NavLink>
             </div>
             <div className="nv-panel-highlights">
-              <p className="eyebrow eyebrow-light">Highlights</p>
+              <p className="eyebrow eyebrow-light">{ui.header.highlights}</p>
               <ul className="nv-panel-list">
                 {section.menu.highlights.map((h) => (
                   <li key={h.label}><NavLink href={h.href} onClick={() => close()} isCurrent={!h.href.includes("#") && pathname === h.href}><span className="nv-panel-label">{h.label}</span></NavLink></li>
@@ -214,7 +218,7 @@ export default function MegaMenu({ sections, pathname, onOpenChange }: MegaMenuP
   };
 
   return (
-    <nav className="desktop-nav nv-desktop-nav" aria-label="Primary navigation" ref={navRef} onBlur={onNavBlur} data-switching={switching && hasOpenPanel ? "true" : undefined}>
+    <nav className="desktop-nav nv-desktop-nav" aria-label={ui.header.primaryNav} ref={navRef} onBlur={onNavBlur} data-switching={switching && hasOpenPanel ? "true" : undefined}>
       <div className="desktop-nav-group desktop-nav-group--left">
         {sections.slice(0, 3).map((s, i) => item(s, i))}
       </div>

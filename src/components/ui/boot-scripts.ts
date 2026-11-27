@@ -1,8 +1,9 @@
 // Inline <head> scripts for the root layout. They run before first paint, so they must stay tiny and
 // dependency-free. Kept in a plain module (not "use client") so the server layout imports the strings themselves.
 
-/** <html data-route="home|page|admin" data-section="facilities|…">; RouteScope keeps both in sync on navigation. */
-export const ROUTE_SCOPE_SCRIPT = `(function(){var p=location.pathname,d=document.documentElement.dataset;d.route=p==="/"?"home":p==="/login"||p.indexOf("/admin")===0?"admin":"page";d.section=p.split("/")[1]||"home";})();`;
+/** <html data-route="home|page|admin" data-section="facilities|…">; RouteScope keeps both in sync on navigation.
+ *  The "/fil" locale prefix is ignored (src/i18n/paths.ts basePath). */
+export const ROUTE_SCOPE_SCRIPT = `(function(){var p=location.pathname,d=document.documentElement.dataset;if(p.indexOf("/fil")===0&&(p.length===4||p.charAt(4)==="/"))p=p.slice(4)||"/";d.route=p==="/"?"home":p==="/login"||p.indexOf("/admin")===0?"admin":"page";d.section=p.split("/")[1]||"home";})();`;
 
 /**
  * Gives motion and media layouts one mutually-exclusive device profile before first paint. Keeping the tiers on

@@ -4,14 +4,30 @@
 // Editable content is read via fs/promises or fetch inside 'use cache' (never readFileSync or a JSON import),
 // so it is prerendered into static shells and refreshed by updateTag(CONTENT_TAG) from admin actions.
 import { cacheLife, cacheTag } from "next/cache";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+import { filContent } from "@/i18n/fil/content";
+import { localizeValue, mapHrefs } from "@/i18n/merge";
+import { localizedHref } from "@/i18n/paths";
+import { getLocale } from "@/i18n/server";
 import { CONTENT_TAG } from "./constants";
 import { DEFAULT_CONTENT } from "./defaults";
 import { mergeContent } from "./merge";
 import { readStoredContent, type StoredContent } from "./store";
 import type { ContentMeta, SiteContent } from "./types";
 
-/** Cached, tagged site content for public pages and the root layout. No cookies/headers inside. */
-export async function getSiteContent(): Promise<SiteContent> {
+/**
+ * Site content in `locale` for public pages and the root layout. Without an argument: the request locale
+ * (src/i18n/server.ts), i.e. "fil" inside a /fil route and "en" everywhere else. Root-layout code passes it explicitly.
+ * Filipino = the English content (with admin edits) overlaid with src/i18n/fil/content.ts: translated text only,
+ * English for anything untranslated, internal links pointed at /fil pages (design: src/i18n/README.md).
+ */
+export async function getSiteContent(locale: Locale = getLocale()): Promise<SiteContent> {
+  return getLocalizedContent(locale);
+}
+
+// The locale is an argument (part of the cache key): React.cache values are not visible inside 'use cache'.
+// One cache scope per locale (no nested 'use cache', so the cacheLife below applies as written).
+async function getLocalizedContent(locale: Locale): Promise<SiteContent> {
   "use cache";
   cacheTag(CONTENT_TAG);
   let stored: StoredContent | null = null;
@@ -22,7 +38,9 @@ export async function getSiteContent(): Promise<SiteContent> {
     // Storage outage → defaults, retried soon; 'minutes' expires in 1h so it stays prerenderable.
     cacheLife("minutes");
   }
-  return mergeContent(DEFAULT_CONTENT, stored?.sections ?? {});
+  const content = mergeContent(DEFAULT_CONTENT, stored?.sections ?? {});
+  if (locale === DEFAULT_LOCALE) return content;
+  return mapHrefs(localizeValue(content, filContent), (href) => localizedHref(href, locale));
 }
 
 /** Uncached read for the admin (call only inside a Suspense boundary after requireAdmin()). */
