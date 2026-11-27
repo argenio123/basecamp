@@ -25,6 +25,20 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
   const [footerVisible, setFooterVisible] = useState(false);
   const [offerPromptReady, setOfferPromptReady] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
+  // The "Ready for BaseCamp?" prompt waits until the visitor has scrolled past the hero: on phones it would otherwise
+  // cover the headline that says what BaseCamp is, and the header's Join button already covers the first screen.
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    if (!isLandingPage) return;
+    const update = () => setPastHero(window.scrollY > window.innerHeight * 0.6);
+    const frame = window.requestAnimationFrame(update);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+    };
+  }, [isLandingPage]);
 
   useEffect(() => {
     if (!hasHeroOverlay) return;
@@ -78,6 +92,9 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
 
   // After all hooks: the admin and the sign-in page have their own chrome.
   if (pathname.startsWith("/admin") || pathname === LOGIN_PATH) return null;
+  // The header "Join" (main action, every public page) steps aside inside the member account and checkout flows.
+  const showJoin = !(pathname === "/account" || pathname.startsWith("/account/") || pathname.startsWith("/pay"));
+  const showLogin = !isLandingPage || member;
 
   return (
     <>
@@ -118,16 +135,18 @@ export default function Header({ ctaLabel, sections }: HeaderProps) {
           />
         </ScrollTopLink>
         <MegaMenu key={pathname} sections={sections} pathname={pathname} onOpenChange={setIsMenuOpen} />
-        {(!isLandingPage || member) && (
+        {(showLogin || showJoin) && (
           <div className="header-actions">
-            {/* Same header on every page: navigation, logo and the account icon only (no "Get early access" button). */}
-            <MemberNavLink className="button button-small header-login" />
+            {/* Desktop: LOGIN then the lime JOIN in the top-right corner. Below 1221px only JOIN stays in the bar
+                (left of the centred logo, nav.css); Login moves into the mobile menu. */}
+            {showLogin && <MemberNavLink className="button button-small header-login" />}
+            {showJoin && <EarlyAccessLink className="button button-small header-join">Join</EarlyAccessLink>}
           </div>
         )}
           <MobileNav sections={sections} />
         </div>
       </header>
-      {isLandingPage && !member && offerPromptReady && !promptDismissed && (
+      {isLandingPage && !member && offerPromptReady && pastHero && !promptDismissed && (
         <aside className="home-scroll-prompt" data-visible={footerVisible ? "false" : "true"} aria-hidden={footerVisible} inert={footerVisible} aria-label="BaseCamp member access">
           <button className="home-scroll-prompt-close" type="button" aria-label="Dismiss access prompt" onClick={() => setPromptDismissed(true)}>&times;</button>
           <p>Ready for BaseCamp?</p>

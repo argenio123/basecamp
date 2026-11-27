@@ -12,6 +12,8 @@ import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import { SECTION_FEATURES } from "@/data/features";
 import { TrainAndRecover } from "@/components/home/HomeSections";
 import { getSiteContent } from "@/content/get";
+import { formatDateLabel } from "@/content/format";
+import type { SiteContent } from "@/content/types";
 import { POSITIONING_LINE } from "@/data/brand";
 import { WORKOUT_TYPES } from "@/data/workout-types";
 
@@ -51,7 +53,17 @@ const destinationPillars = [
   },
 ];
 
-const showHomeHeroActions = false;
+/**
+ * First-screen status line: where the project stands and what a visitor can do now. Built only from content settings
+ * (launch phase, opening date, founding offer), so the admin's launch switch updates the hero with everything else.
+ */
+function heroStatus(settings: SiteContent["settings"]): string {
+  if (settings.launchPhase === "live") return "Now open";
+  if (settings.launchPhase === "soft-opening") return "Soft opening · Early memberships open";
+  const opening = /^\d{4}-\d{2}-\d{2}$/.test(settings.openingDate) ? formatDateLabel(settings.openingDate) : "";
+  const offer = settings.founding.enabled ? "Founding memberships open" : "Early access open";
+  return `${opening ? `Opening ${opening}` : "Now being built"} · ${offer}`;
+}
 
 // Static: only awaits the cached getSiteContent() (spec §0.17; docs 01-directives/use-cache.md).
 export default async function Home() {
@@ -69,24 +81,29 @@ export default async function Home() {
         <section className="home-hero">
           <HomeHeroMedia />
           <div className="home-hero-shade" />
-          {showHomeHeroActions && (
-            <div className="home-hero-content">
-              <div className="button-row home-hero-actions">
-                <EarlyAccessLink className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access</EarlyAccessLink>
-                <Link href="/membership" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>Explore memberships</Link>
-              </div>
+          {/* First screen: what BaseCamp is, where, its status, and the one main action (membership plans). */}
+          <div className="home-hero-content hm-hero-copy">
+            <div className="hm-hero-text">
+              <p className="hm-hero-status">{heroStatus(c.settings)}</p>
+              <h1 className={`hm-hero-title ${gretaros.className}`}><span className="hm-hero-line">Train &amp; recover</span> <span className="hm-hero-line">in Pili, CamSur</span></h1>
+              <p className="hm-hero-lede">A gym, coached classes and recovery (cold plunge, sauna, therapy) in one place, in Camarines Sur, Philippines.</p>
             </div>
-          )}
+            <div className="button-row home-hero-actions hm-hero-actions">
+              <EarlyAccessLink className={`button home-hero-cta home-hero-cta--primary ${gretaros.className}`}>Join early access <span aria-hidden="true">&rarr;</span></EarlyAccessLink>
+              <Link href="/facilities" className={`button home-hero-cta home-hero-cta--secondary ${gretaros.className}`}>See the facilities</Link>
+            </div>
+          </div>
           <div className={`hero-index shell ${gretaros.className}`}><span>TRAIN</span><span>TRANSFORM</span><span>THRIVE</span></div>
         </section>
 
         <section className="destination-intro section">
           <div className="shell">
-            <h1 className={gretaros.className} data-home-reveal>
+            {/* h2: the page's h1 is the hero headline above. hm-intro-title keeps this heading's display size (home.css). */}
+            <h2 className={`hm-intro-title ${gretaros.className}`} data-home-reveal>
               The Philippines&apos; first<br />
               integrated sports, fitness<br />
               &amp; wellness destination
-            </h1>
+            </h2>
             <p className="destination-summary" data-home-reveal data-home-reveal-delay="short">Basecamp CamSur represents a bold new category in sports tourism: an integrated destination where elite performance training, evidence-based recovery, and authentic lifestyle converge to create transformative experiences.</p>
             <DestinationPillars destinations={destinationPillars} titleClassName={gretaros.className} />
           </div>

@@ -187,3 +187,21 @@
 
 /* Facilities previous/next: dark band holding the shared Classes pager (.pr-style-pager--dark, programs.css). */
 .nv-pn-band { padding-block: clamp(28px, 3vw, 44px); background: var(--ink); }
+
+/* ---------- Header: primary "Join" (membership plans) ----------
+   Lime on the dark/transparent bar, square like LOGIN. Desktop: top-right corner after LOGIN. At 1220px and below
+   (desktop nav and LOGIN hidden) the actions move to the left of the bar, so JOIN sits opposite the menu toggle and
+   clear of the centred logo. `.site-header .header-actions` outranks the globals.css header rules loaded after this. */
+.site-header .header-actions .header-join { flex: 0 0 auto; min-height: 48px; padding-inline: 24px; border: 1px solid var(--signal); border-radius: 0; color: var(--ink); background: var(--signal); font-weight: 600; white-space: nowrap; transition: color .2s ease, background-color .2s ease, border-color .2s ease; }
+.site-header .header-actions .header-join:hover { border-color: var(--white); color: var(--ink); background: var(--white); }
+.site-header .header-actions .header-join:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; box-shadow: 0 0 0 3px var(--ink); }
+@media (max-width: 1220px) {
+  .header-shell > .header-actions { order: -1; margin-left: 0; margin-right: auto; }
+  .site-header .header-actions .header-join { min-height: 44px; padding-inline: 16px; }
+}
+@media (max-width: 480px) {
+  .site-header .header-actions .header-join { padding-inline: 14px; font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header .header-actions .header-join { transition: none; }
+}
