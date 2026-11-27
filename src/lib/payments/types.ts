@@ -1,6 +1,7 @@
 // Online payments (PayMongo checkout). Shared types; no server imports, safe for client components.
 
-export type PaymentStatus = "pending" | "paid" | "cancelled" | "expired" | "failed";
+/** "refunded": paid, then refunded by staff (no longer counts as paid, e.g. towards the founding counter). */
+export type PaymentStatus = "pending" | "paid" | "cancelled" | "expired" | "failed" | "refunded";
 export type PaymentKind = "membership" | "pass" | "camp" | "recovery";
 export type PaymentProvider = "paymongo" | "paypal";
 
@@ -49,6 +50,7 @@ export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   cancelled: "Cancelled",
   expired: "Expired",
   failed: "Failed",
+  refunded: "Refunded",
 };
 
 export const PAYMENT_METHOD_LABEL: Record<string, string> = {

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { MEMBERSHIP_PLANS_PATH } from "@/content/constants";
+import { getFoundingAvailability } from "@/lib/payments/founding";
 import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
 import FoundingCounter from "@/components/ui/FoundingCounter";
@@ -7,8 +9,9 @@ import type { FoundingOffer } from "@/content/types";
 
 /** /membership#founding (spec §C.6.2). Renders nothing while the offer is disabled. */
 /** `showBenefits={false}` when the page shows the benefits as cards (<BenefitCards>) instead. */
-export default function FoundingBand({ founding, showBenefits = true }: { founding: FoundingOffer; showBenefits?: boolean }) {
+export default async function FoundingBand({ founding, showBenefits = true }: { founding: FoundingOffer; showBenefits?: boolean }) {
   if (!founding.enabled) return null;
+  const full = (await getFoundingAvailability(founding)).state === "full";
   const expires = founding.expiresOn ? formatDateLabel(founding.expiresOn) : "";
   return (
     <section id="founding" className="section section-dark mb-founding">
@@ -23,7 +26,9 @@ export default function FoundingBand({ founding, showBenefits = true }: { foundi
           {showBenefits && founding.benefits.length > 0 && <ul className="mb-founding-benefits">{founding.benefits.map((b) => <li key={b}>{b}</li>)}</ul>}
           <FoundingCounter founding={founding} showBar className="mb-founding-counter" />
           {expires && expires !== "To be announced" && <p className="mb-founding-expiry">Offer ends {expires}</p>}
-          <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>
+          {full
+            ? <Link href={MEMBERSHIP_PLANS_PATH} className="button button-light mb-founding-cta">See membership plans</Link>
+            : <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : MEMBERSHIP_PLANS_PATH} className="button button-light mb-founding-cta">{founding.ctaLabel}</Link>}
         </div>
       </div>
     </section>
