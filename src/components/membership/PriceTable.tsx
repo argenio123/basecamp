@@ -5,19 +5,25 @@ import { formatPhp, formatUsd } from "@/content/format";
 import type { PriceItem } from "@/content/types";
 import { PAYABLE_GROUP_IDS } from "@/lib/payments/catalog";
 import { payHref } from "@/lib/payments/types";
+import type { Locale } from "@/i18n/config";
+import { MEMBERSHIP_UI } from "@/i18n/ui-sections/membership";
+import { fmt } from "@/i18n/ui";
 import "@/components/payments/payments.css";
 import { isMedicalBlock, type PriceBlockData } from "./pricing";
 import Money from "./Money";
 
 // Shared price renderers (no hooks, no directive): used by the client AudienceTabs and by the server pages.
 // Prices are shown verbatim from content (spec §B.7); the USD string uses the item's own figure when set (§B.6).
+// Labels come from src/i18n/ui-sections/membership.ts in `locale` (default English): server pages pass getLocale(),
+// the client AudienceTabs passes useLocale(). Pay links stay English (/pay is not localized).
 
 /** Monthly memberships as tier cards. The featured card carries the --olive-dark border and its badge. */
 /**
  * `cta={false}` leaves out the "Join …" buttons. `ctaLabel` replaces "Join <name>" and `ctaHref` wraps the plan's
  * join link, which opens the plan's online checkout (log-in / sign-up pages: "Sign up to join" → sign-up, then checkout).
  */
-export function TierCards({ items, cta = true, ctaLabel, ctaHref }: { items: PriceItem[]; exchangeRate?: number; cta?: boolean; ctaLabel?: string; ctaHref?: (joinPath: string) => string }) {
+export function TierCards({ items, cta = true, ctaLabel, ctaHref, locale = "en" }: { items: PriceItem[]; exchangeRate?: number; cta?: boolean; ctaLabel?: string; ctaHref?: (joinPath: string) => string; locale?: Locale }) {
+  const ui = MEMBERSHIP_UI[locale];
   return (
     <ul className="mb-tiers" data-reveal="stagger">
       {items.map((item) => {
@@ -25,7 +31,7 @@ export function TierCards({ items, cta = true, ctaLabel, ctaHref }: { items: Pri
           <li key={item.id} className="mb-tier" data-featured={item.featured ? "" : undefined}>
             <div className="mb-tier-tags">
               {item.badge && <span className={`mb-label${item.featured ? " mb-label-signal" : ""}`}>{item.badge}</span>}
-              <span className="mb-label mb-label-ghost">Proposed rate</span>
+              <span className="mb-label mb-label-ghost">{ui.proposedRate}</span>
               {item.availability !== "at-launch" && <StatusBadge availability={item.availability} />}
             </div>
             <h3 className="mb-tier-name">{item.name}</h3>
@@ -35,7 +41,7 @@ export function TierCards({ items, cta = true, ctaLabel, ctaHref }: { items: Pri
             {item.features.length > 0 && <ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul>}
             {cta && (() => {
               const join = membershipJoinHref(TIER_OPTIONS.some((t) => t.value === item.id) ? item.id : undefined);
-              return <Link href={ctaHref ? ctaHref(join) : join} className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>{ctaLabel ?? `Join ${item.name}`}</Link>;
+              return <Link href={ctaHref ? ctaHref(join) : join} className={`button ${item.featured ? "mb-button-signal" : "mb-button-outline"} mb-tier-cta`}>{ctaLabel ?? fmt(ui.join, { name: item.name })}</Link>;
             })()}
           </li>
         );
@@ -46,7 +52,8 @@ export function TierCards({ items, cta = true, ctaLabel, ctaHref }: { items: Pri
 
 /** Every other group: responsive definition-list rows (stacked cards on mobile). */
 /** `buy` adds a "Buy online" link to rows with a price (groups that can be paid online). */
-export function PriceList({ items, exchangeRate, buy = false }: { items: PriceItem[]; exchangeRate: number; buy?: boolean }) {
+export function PriceList({ items, exchangeRate, buy = false, locale = "en" }: { items: PriceItem[]; exchangeRate: number; buy?: boolean; locale?: Locale }) {
+  const ui = MEMBERSHIP_UI[locale];
   return (
     <dl className="mb-list" data-reveal="stagger">
       {items.map((item) => {
@@ -72,7 +79,7 @@ export function PriceList({ items, exchangeRate, buy = false }: { items: PriceIt
             )}
             {item.description && <dd className="mb-row-desc">{item.description}</dd>}
             {item.features.length > 0 && <dd className="mb-row-features"><ul className="mb-checks">{item.features.map((f) => <li key={f}>{f}</li>)}</ul></dd>}
-            {buy && item.price && item.availability !== "planned" && <dd className="mb-row-buy"><Link href={payHref(item.id)} className="py-buy">{item.price.max != null ? "Pay deposit online" : "Buy online"}</Link></dd>}
+            {buy && item.price && item.availability !== "planned" && <dd className="mb-row-buy"><Link href={payHref(item.id)} className="py-buy">{item.price.max != null ? ui.payDeposit : ui.buyOnline}</Link></dd>}
           </div>
         );
       })}
@@ -88,10 +95,11 @@ type PriceBlockProps = {
   hidden?: boolean;
   /** Group ids hidden by an audience filter. */
   hiddenGroups?: readonly string[];
+  locale?: Locale;
 };
 
 /** One anchored price block (`<section id={anchor}>`); groups that share the anchor render inside it with sub-headings. */
-export function PriceBlock({ block, exchangeRate, disclaimer, hidden, hiddenGroups = [] }: PriceBlockProps) {
+export function PriceBlock({ block, exchangeRate, disclaimer, hidden, hiddenGroups = [], locale = "en" }: PriceBlockProps) {
   return (
     <section id={block.anchor || undefined} className="mb-block" hidden={hidden}>
       {block.groups.map((group) => (
@@ -101,8 +109,8 @@ export function PriceBlock({ block, exchangeRate, disclaimer, hidden, hiddenGrou
             {group.intro && <p>{group.intro}</p>}
           </div>
           {group.id === "memberships"
-            ? <TierCards items={group.items} exchangeRate={exchangeRate} />
-            : <PriceList items={group.items} exchangeRate={exchangeRate} buy={PAYABLE_GROUP_IDS.includes(group.id)} />}
+            ? <TierCards items={group.items} exchangeRate={exchangeRate} locale={locale} />
+            : <PriceList items={group.items} exchangeRate={exchangeRate} buy={PAYABLE_GROUP_IDS.includes(group.id)} locale={locale} />}
         </div>
       ))}
       {isMedicalBlock(block) && disclaimer && <p className="mb-disclaimer" data-reveal>{disclaimer}</p>}
@@ -111,7 +119,7 @@ export function PriceBlock({ block, exchangeRate, disclaimer, hidden, hiddenGrou
 }
 
 /** pricing.notes in small text (spec §C.6.5). */
-export function PricingNotes({ notes }: { notes: readonly string[] }) {
+export function PricingNotes({ notes, locale = "en" }: { notes: readonly string[]; locale?: Locale }) {
   if (!notes.length) return null;
-  return <ul className="mb-notes" aria-label="Pricing notes" data-reveal>{notes.map((n) => <li key={n}>{n}</li>)}</ul>;
+  return <ul className="mb-notes" aria-label={MEMBERSHIP_UI[locale].pricingNotes} data-reveal>{notes.map((n) => <li key={n}>{n}</li>)}</ul>;
 }
