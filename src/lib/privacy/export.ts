@@ -1,5 +1,7 @@
 // "Download my data" (RA 10173 Sec. 16(c) right of access, Sec. 18 data portability). Server-only.
 import { SITE_NAME, PRIVACY_EMAIL } from "@/data/brand";
+import { listMemberBookings } from "@/lib/bookings/store";
+import type { Booking } from "@/lib/bookings/types";
 import { listLeads } from "@/lib/leads/store";
 import type { Lead } from "@/lib/leads/types";
 import { getMemberProfile } from "@/lib/members/profile";
@@ -25,9 +27,20 @@ function exportLead(lead: Lead, memberId: string) {
   };
 }
 
+/** A class booking in the export: the member's own record, without the staff-only note and capacity flag. */
+function exportBooking(b: Booking) {
+  return {
+    id: b.id, session: b.title, time: b.time, date: b.date, startAt: b.startAt, status: b.status, via: b.via,
+    ...(b.membership ? { membership: b.membership } : {}), amountCentavos: b.amount, ...(b.paymentId ? { paymentId: b.paymentId } : {}),
+    name: b.name, email: b.email, createdAt: b.createdAt,
+    ...(b.holdExpiresAt ? { holdExpiresAt: b.holdExpiresAt } : {}), ...(b.confirmedAt ? { confirmedAt: b.confirmedAt } : {}),
+    ...(b.cancelledAt ? { cancelledAt: b.cancelledAt, cancelledBy: b.cancelledBy } : {}),
+  };
+}
+
 export async function collectMemberData(member: Member) {
   const account = toPublic(member);
-  const [profile, leads, payments] = await Promise.all([getMemberProfile(account), listLeads(), listMemberPayments(member.id)]);
+  const [profile, leads, payments, bookings] = await Promise.all([getMemberProfile(account), listLeads(), listMemberPayments(member.id), listMemberBookings(member.id)]);
   const mine = leadBelongsTo(member);
   return {
     exportedAt: new Date().toISOString(),
@@ -37,5 +50,7 @@ export async function collectMemberData(member: Member) {
     profile,
     requests: leads.filter(mine).map((lead) => exportLead(lead, member.id)),
     payments,
+    // Status as it stands now: an unpaid hold that ran out reads "expired".
+    classBookings: bookings.map(exportBooking),
   };
 }

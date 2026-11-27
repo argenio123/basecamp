@@ -1,5 +1,6 @@
 // Pure anonymisation rules shared by account deletion and the retention clean-up. No storage, no Next imports.
 // What is kept is only what the business needs for counts, dates and (for payments) tax and accounting records.
+import type { Booking } from "@/lib/bookings/types";
 import type { Lead } from "@/lib/leads/types";
 import type { Payment } from "@/lib/payments/types";
 
@@ -41,4 +42,15 @@ export function stripPaymentContact(payment: Payment, memberRef: string): Paymen
   const copy: Payment = { ...payment, memberId: memberRef, email: DELETED, name: DELETED };
   delete copy.checkoutUrl;
   return copy;
+}
+
+export const isAnonymisedBooking = (booking: Booking) => booking.email === DELETED;
+
+/**
+ * Removes the member from a class booking: name and email are replaced and `memberRef` replaces the member id (the
+ * same random value as their payment records on account deletion, "[deleted]" in the retention clean-up). The
+ * session, date, times, status, amount and payment link stay, so attendance and capacity statistics still add up.
+ */
+export function anonymiseBooking(booking: Booking, memberRef: string): Booking {
+  return { ...booking, memberId: memberRef, name: DELETED, email: DELETED };
 }

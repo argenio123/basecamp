@@ -17,7 +17,8 @@ export default function AccountDeletedPage() {
           <p className="pc-eyebrow">Account deleted</p>
           <h1>Your account is gone.</h1>
           <p>
-            We deleted your member account, profile and preferences, and anonymised the requests you sent us. Payment
+            We deleted your member account, profile and preferences, anonymised the requests you sent us, cancelled your
+            upcoming class bookings and anonymised the rest. Payment
             records are kept only as tax and accounting rules require, with your name and email removed. You have
             been logged out.
           </p>

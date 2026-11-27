@@ -29,7 +29,7 @@ export default function PrivacyControls({ email }: { email: string }) {
         <div className="ma-setting-controls">
           <p className="pc-text">
             A copy of your account details, profile and preferences, the requests you&apos;ve sent us (bookings,
-            enquiries, sign-ups) and your payment records, in a file you can keep or reuse.
+            enquiries, sign-ups), your class bookings and your payment records, in a file you can keep or reuse.
           </p>
           {/* A plain link: the route handler checks the session and sends the file as a download. */}
           <a className="ma-save pc-download" href="/account/data" download>Download my data</a>
@@ -44,6 +44,7 @@ export default function PrivacyControls({ email }: { email: string }) {
             <ul>
               <li><strong>deletes</strong> your member account, profile and preferences;</li>
               <li><strong>anonymises</strong> the requests you sent us: your name, email, phone and messages are replaced with &quot;[deleted]&quot;, and only the date and type stay for our visitor statistics;</li>
+              <li><strong>cancels</strong> your upcoming class bookings, freeing the spots, and <strong>anonymises</strong> your past ones (the session, date and status stay for attendance statistics). Paid online for an upcoming class? Email us about the refund first;</li>
               <li><strong>keeps your payment records</strong> only because tax and accounting rules require it, with your name and email removed: the item, amount, payment reference and date stay;</li>
               <li>logs you out on this device. Download your data first if you want a copy.</li>
             </ul>

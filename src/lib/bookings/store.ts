@@ -8,6 +8,8 @@
 // Spots used = ZCOUNT occ (now, +inf]: expired holds drop out by themselves, no sweeper needed. Taking a spot is one
 // Lua script (check duplicate, count, add), so two members can't both take the last spot.
 // File (local dev): .data/bookings.json (Booking[]), the same check-and-add done inside withFileLock.
+// Privacy tools (account deletion, retention clean-up) go through rewriteBookings: a compare-and-set script per
+// booking, which never touches a booking that still holds a spot in a future session.
 import { driver, readJsonFile, StorageUnavailableError, upstash, withFileLock, writeJsonFile } from "@/lib/storage/driver";
 import { effectiveStatus, isActive, type Booking } from "./types";
 
@@ -68,6 +70,24 @@ const COUNT_SCRIPT = `
 local out = {}
 for i, k in ipairs(KEYS) do out[i] = redis.call('ZCOUNT', k, '(' .. ARGV[1], '+inf') end
 return out`;
+
+// Compare-and-set rewrite. KEYS: hash, member index. ARGV: bookingId, expected json, new json, old member field, new
+// member field. Returns 0 (nothing written) when the stored copy changed since it was read.
+const REWRITE_SCRIPT = `
+if redis.call('HGET', KEYS[1], ARGV[1]) ~= ARGV[2] then return 0 end
+redis.call('HSET', KEYS[1], ARGV[1], ARGV[3])
+if ARGV[4] ~= ARGV[5] and redis.call('HGET', KEYS[2], ARGV[4]) == ARGV[1] then redis.call('HDEL', KEYS[2], ARGV[4]) end
+return 1`;
+
+// Compare-and-delete. KEYS: hash, member index, payment index, occ. ARGV: bookingId, expected json, member field,
+// paymentId ('' when none). Returns 0 when the stored copy changed since it was read.
+const DELETE_SCRIPT = `
+if redis.call('HGET', KEYS[1], ARGV[1]) ~= ARGV[2] then return 0 end
+redis.call('HDEL', KEYS[1], ARGV[1])
+redis.call('ZREM', KEYS[4], ARGV[1])
+if redis.call('HGET', KEYS[2], ARGV[3]) == ARGV[1] then redis.call('HDEL', KEYS[2], ARGV[3]) end
+if ARGV[4] ~= '' and redis.call('HGET', KEYS[3], ARGV[4]) == ARGV[1] then redis.call('HDEL', KEYS[3], ARGV[4]) end
+return 1`;
 
 export type HoldResult = { ok: true; booking: Booking } | { ok: false; reason: "full" } | { ok: false; reason: "duplicate"; existing: Booking };
 
@@ -214,4 +234,57 @@ export async function countUsed(occurrences: { slotId: string; date: string }[],
   const all = await readFile();
   for (const o of occurrences) out[`${o.slotId}:${o.date}`] = all.filter((b) => sameOcc(b, o) && isActive(b, now)).length;
   return out;
+}
+
+/** What a privacy rewrite does with one booking: replace it, delete it, or leave it (null). */
+export type BookingRewrite = Booking | "delete" | null;
+
+/**
+ * Privacy tools (account deletion, retention clean-up): `decide` sees each stored booking (stored status: a run-out
+ * hold still reads "held"; use effectiveStatus) and returns a replacement, "delete" or null. Bookings that still hold
+ * a spot in a session that hasn't started are never passed to `decide`: cancel those with releaseBooking first, so
+ * capacity stays right. Upstash: each change is one compare-and-set EVAL (re-read and re-decided, up to 3 times, when
+ * a payment or staff change landed meanwhile); a replaced or deleted booking also leaves the member and payment
+ * indexes. Returns how many bookings were rewritten and deleted.
+ */
+export async function rewriteBookings(decide: (b: Booking) => BookingRewrite, now = Date.now()): Promise<{ rewritten: number; deleted: number }> {
+  const mode = driver();
+  if (mode === "readonly") throw new StorageUnavailableError();
+  const holdsFutureSpot = (b: Booking) => isActive(b, now) && !(Date.parse(b.startAt) <= now);
+  const pick = (b: Booking | null) => (b && !holdsFutureSpot(b) ? decide(b) : null);
+  let rewritten = 0;
+  let deleted = 0;
+  if (mode === "upstash") {
+    const flat = (await upstash<string[] | null>(["HGETALL", HASH])) ?? [];
+    for (let i = 0; i + 1 < flat.length; i += 2) {
+      const id = flat[i];
+      let raw: string | null = flat[i + 1];
+      for (let attempt = 0; raw && attempt < 3; attempt++) {
+        const current = parse(raw);
+        const next = pick(current);
+        if (!current || !next) break;
+        const done = next === "delete"
+          ? await upstash<number>(["EVAL", DELETE_SCRIPT, 4, HASH, MEMBER_INDEX, PAYMENT_INDEX, occKey(current.slotId, current.date), id, raw, memberField(current), current.paymentId ?? ""])
+          : await upstash<number>(["EVAL", REWRITE_SCRIPT, 2, HASH, MEMBER_INDEX, id, raw, JSON.stringify(next), memberField(current), memberField(next)]);
+        if (Number(done) === 1) {
+          if (next === "delete") deleted++;
+          else rewritten++;
+          break;
+        }
+        raw = await upstash<string | null>(["HGET", HASH, id]);
+      }
+    }
+    return { rewritten, deleted };
+  }
+  return withFileLock(async () => {
+    const kept: Booking[] = [];
+    for (const b of await readFile()) {
+      const next = pick(b);
+      if (next === "delete") deleted++;
+      else if (next) { rewritten++; kept.push(next); }
+      else kept.push(b);
+    }
+    if (rewritten || deleted) await writeJsonFile(FILE, kept);
+    return { rewritten, deleted };
+  });
 }

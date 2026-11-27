@@ -13,9 +13,9 @@ export async function runRetentionAction(_prev: RetentionState, formData: FormDa
   if (formData.get("confirm") !== "on") return { status: "error", message: "Tick the box to confirm before running the clean-up." };
   try {
     const report = await runRetention({ dryRun: false });
-    audit(session, "privacy.retention", { leadsAnonymised: report.leadsAnonymised, paymentsStripped: report.paymentsStripped });
+    audit(session, "privacy.retention", { leadsAnonymised: report.leadsAnonymised, paymentsStripped: report.paymentsStripped, bookingsAnonymised: report.bookingsAnonymised, expiredHoldsDeleted: report.expiredHoldsDeleted });
     revalidatePath("/admin/privacy");
-    return { status: "done", message: `Done: ${report.leadsAnonymised} lead(s) anonymised, ${report.paymentsStripped} unpaid payment record(s) stripped.`, report };
+    return { status: "done", message: `Done: ${report.leadsAnonymised} lead(s) anonymised, ${report.paymentsStripped} unpaid payment record(s) stripped, ${report.bookingsAnonymised} class booking(s) anonymised, ${report.expiredHoldsDeleted} expired hold(s) deleted.`, report };
   } catch (error) {
     return { status: "error", message: error instanceof StorageUnavailableError ? error.message : "The clean-up didn't finish. It is safe to run it again." };
   }
