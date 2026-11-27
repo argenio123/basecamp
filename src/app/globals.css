@@ -366,14 +366,15 @@ html main .home-offer-head h2 { max-width: 700px; margin: 20px 0 0; color: var(-
 .page-hero.page-hero--full { min-height: 100vh; min-height: 100svh; }
 .page-hero--video { background: var(--ink); }
 .page-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
-/* PageHero fitVideo: the hero takes the video's 16:9 shape, so the whole frame shows uncropped. On phones a 16:9 hero
-   is too short for the copy, so the video sits on top at 16:9 (below the header) and the text follows on the dark background. */
+/* PageHero fitVideo: the hero takes the video's 16:9 shape, so the whole frame shows uncropped. Navigation pages
+   override this to a full-screen cover hero ("Page heroes fill the browser window" below). On phones a 16:9 hero is
+   too short for the copy, so it is a full-bleed cover hero like the photo heroes: video behind the shade, headline at
+   the bottom-left (this replaces an older layout that put the video in page flow above the text). */
 .page-hero.page-hero--ratio { min-height: 0; aspect-ratio: 16 / 9; padding-top: var(--header-height); }
 @media (max-width: 760px) {
-  .page-hero.page-hero--ratio { display: block; aspect-ratio: auto; min-height: 0; padding-top: var(--header-height); }
-  .page-hero.page-hero--ratio .page-hero-video { position: relative; inset: auto; display: block; height: auto; aspect-ratio: 16 / 9; }
-  .page-hero.page-hero--ratio .hero-shade { display: none; }
-  .page-hero.page-hero--ratio .page-hero-content { padding-top: 28px; }
+  .page-hero.page-hero--ratio { aspect-ratio: auto; min-height: 100vh; min-height: 100svh; padding-top: calc(var(--header-height) + 60px); }
+  .page-hero.page-hero--ratio .page-hero-content { padding-top: 0; padding-inline: 0; }
+  .page-hero.page-hero--ratio .page-hero-content > p:last-child { color: var(--white); }
 }
 /* PageHero animate={false} (Facilities): no entrance animation. */
 .page-hero.page-hero--static .page-hero-content > *, .page-hero.page-hero--static > .cover-image { animation: none; }
@@ -729,14 +730,21 @@ html[data-route="page"] main .pr-editorial-hero--full-image .pr-editorial-image 
 :where(picture, figure, [class$="-media"]) { min-inline-size: 0; }
 :where(.home-hero-video, .page-hero-video) { inline-size: 100%; block-size: 100%; object-fit: cover; }
 
-html[data-device="mobile"] :is(.home-hero-video, .page-hero-video),
-html[data-device="tablet"] :is(.home-hero-video, .page-hero-video) {
+/* Phones and tablets: page hero videos (and their posters) fill the hero edge to edge like the photo heroes, never
+   letterboxed; their subjects sit in the middle of the frame, so crop around the centre. */
+html[data-device="mobile"] .page-hero-video,
+html[data-device="tablet"] .page-hero-video {
+  object-fit: cover;
+  object-position: center;
+}
+/* The home video has its words burned into the picture ("TRAIN", "TRANSFORM", "THRIVE" span most of the frame width),
+   so any portrait crop cuts them ("RAI"). Show the whole 16:9 frame on phones/tablets until a vertical edit exists. */
+html[data-device="mobile"] .home-hero-video,
+html[data-device="tablet"] .home-hero-video {
   object-fit: contain;
   object-position: center;
   background: var(--ink);
 }
-html[data-device="mobile"][data-route="page"] main .page-hero.page-hero--ratio .page-hero-video,
-html[data-device="tablet"][data-route="page"] main .page-hero.page-hero--ratio .page-hero-video { object-fit: contain; object-position: center; }
 html[data-device="desktop"] .home-hero-video { object-position: center 60%; }
 
 html[data-device="mobile"] .home-scroll-prompt {
