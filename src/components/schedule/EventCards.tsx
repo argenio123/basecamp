@@ -2,9 +2,8 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDateLabel } from "@/content/format";
-import { AVAILABILITY_LABEL } from "@/content/labels";
 import type { CalendarEvent, RecurringEvent } from "@/content/types";
-import { getLocale, localHref, t } from "@/i18n/server";
+import { getLocale, getUi, localHref, t } from "@/i18n/server";
 
 const delay = (i: number) => ({ "--i": i }) as CSSProperties;
 
@@ -31,7 +30,7 @@ export function RecurringRow({ event, index = 0 }: { event: RecurringEvent; inde
         <span className="sd-ev-body">
           <span className="sd-ev-title">{event.title}</span>
           <span className="sd-ev-desc">{event.description}</span>
-          <StatusBadge availability={event.availability} label={t(AVAILABILITY_LABEL[event.availability])} />
+          <StatusBadge availability={event.availability} label={getUi().labels.availability[event.availability]} />
         </span>
         <span className="sd-ev-go" aria-hidden="true">{t("Request")}</span>
       </Link>
@@ -49,7 +48,7 @@ export function EventRow({ event, index = 0 }: { event: CalendarEvent; index?: n
         <span className="sd-ev-body">
           <span className="sd-ev-title">{event.title}</span>
           <span className="sd-ev-desc">{event.description}</span>
-          <StatusBadge availability={event.availability} label={t(AVAILABILITY_LABEL[event.availability])} />
+          <StatusBadge availability={event.availability} label={getUi().labels.availability[event.availability]} />
         </span>
         <span className="sd-ev-actions">
           {event.ctaHref && <Link className="sd-ev-go sd-ev-go-fill" href={localHref(event.ctaHref)}>{t("Register interest")}</Link>}

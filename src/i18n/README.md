@@ -145,8 +145,8 @@ lines, links to `/` and `/fil`) rather than guessing the locale.
 ## Not localized (by design)
 
 - `/admin`, `/login` and the member account and checkout (`/account`, `/pay`) stay English.
-- Server-side validation messages from Server Actions (`lib/leads/validate.ts`) are English. `MERGE-PLAN.md` explains
-  how to pass the locale through a hidden form field.
+- Server Actions cannot read the request locale. Lead forms send a hidden `locale` field (`useLocale()`), and
+  `lib/leads/validate.ts` picks its messages (`ui.ts` `leads`) by it; a form without the field gets English.
 
 ## Risks and limits
 

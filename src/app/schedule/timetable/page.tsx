@@ -4,10 +4,9 @@ import Timetable, { type TimetableEntry } from "@/components/schedule/Timetable"
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import { getData } from "@/i18n/data";
 import { alternatesFor } from "@/i18n/paths";
-import { localHref, t } from "@/i18n/server";
+import { getUi, localHref, t } from "@/i18n/server";
 
 const PATH = "/schedule/timetable";
 
@@ -23,7 +22,7 @@ export default async function TimetablePage() {
   const c = await getSiteContent();
   const s = c.schedule;
   const phase = c.settings.launchPhase;
-  const notice = s.notice || t(PHASE_COPY[phase].scheduleNotice);
+  const notice = s.notice || getUi().labels.phase[phase].scheduleNotice;
   // Weekday names, session categories and the caption for the client timetable, in the page's language.
   const { SLOT_CATEGORY_LABEL, TIMETABLE_CAPTION, WEEKDAY_LABEL } = getData("programs-static");
 
@@ -38,7 +37,7 @@ export default async function TimetablePage() {
       path={PATH}
       hero={<PageHero variant="compact" title={t("Find your rhythm.")} intro={t("Browse the week, filter your session, and request a place in two taps.")} image="/images/schedule/generated/timetable-class-briefing.webp" imageAlt={t("Coach briefing gym members beside a weekly session board and wall clock")} imagePosition="72% center" />}
       glance={{ summary: t("Pick your day.\nFilter your session.\nRequest your place."), statement: true }}
-      cta={<CtaBand eyebrow={t("Early members")} label={t(PHASE_COPY[phase].ctaLabel)} />}
+      cta={<CtaBand eyebrow={t("Early members")} label={getUi().labels.phase[phase].ctaLabel} />}
     >
       <section className="section sd-band sd-tt" id="timetable">
         <div className="shell">
@@ -53,7 +52,7 @@ export default async function TimetablePage() {
             slots={entries}
             status={notice}
             statusHref={localHref("/schedule/book")}
-            statusLabel={t(PHASE_COPY[phase].bookingSubmit)}
+            statusLabel={getUi().labels.phase[phase].bookingSubmit}
             labels={{ weekday: WEEKDAY_LABEL, category: SLOT_CATEGORY_LABEL, caption: TIMETABLE_CAPTION }}
           />
         </div>

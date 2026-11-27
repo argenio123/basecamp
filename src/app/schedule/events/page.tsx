@@ -4,9 +4,9 @@ import { RecurringRow } from "@/components/schedule/EventCards";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
 import { getSiteContent } from "@/content/get";
-import { CADENCE_ORDER, PHASE_COPY } from "@/content/labels";
+import { CADENCE_ORDER } from "@/content/labels";
 import { alternatesFor } from "@/i18n/paths";
-import { t } from "@/i18n/server";
+import { getUi, t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Competitions & events",
@@ -27,7 +27,7 @@ export default async function ScheduleEventsPage() {
       path="/schedule/events"
       hero={<PageHero variant="compact" title={t("Race the floor. Compete every week.")} intro={t("Weekly competition and leaderboards.")} image="/images/schedule/generated/gym-competition-night.webp" imageAlt={t("Athletes racing weighted sleds during a gym competition")} />}
       glance={{ summary: t("Race the floor.\nChase your best.\nCompete every week."), statement: true }}
-      cta={<CtaBand eyebrow={t("Early members")} label={t(PHASE_COPY[phase].ctaLabel)} />}
+      cta={<CtaBand eyebrow={t("Early members")} label={getUi().labels.phase[phase].ctaLabel} />}
     >
       <section className="section sd-ev" id="competition">
         <div className="shell">

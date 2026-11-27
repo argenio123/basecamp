@@ -3,6 +3,7 @@
 import Image from "next/image";
 import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/i18n/client";
 
 export type GalleryPhoto = { src: string; alt: string; label: string; title: string; description: string };
 
@@ -11,6 +12,7 @@ export type GalleryPhoto = { src: string; alt: string; label: string; title: str
  * a label, title and short description; ← / → (or the arrows) move between photos, Esc / × / backdrop closes.
  */
 export default function ClassGallery({ photos }: { photos: GalleryPhoto[] }) {
+  const locale = useLocale();
   const [open, setOpen] = useState<number | null>(null);
   const dialog = useRef<HTMLDivElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
@@ -39,7 +41,7 @@ export default function ClassGallery({ photos }: { photos: GalleryPhoto[] }) {
         {photos.map((p, i) => (
           <figure key={p.src} className={i === 0 ? "pr-dev-gallery-main" : undefined}>
             <button type="button" className="pr-dev-gallery-open" aria-label={`Open photo: ${p.title}`} onClick={(e) => { opener.current = e.currentTarget; setOpen(i); }}>
-              <Image src={p.src} alt={isAiGeneratedImage(p.src) ? aiImageAlt(p.alt) : p.alt} fill sizes={i === 0 ? "(max-width: 900px) 100vw, 62vw" : "(max-width: 900px) 50vw, 36vw"} className="cover-image" />
+              <Image src={p.src} alt={isAiGeneratedImage(p.src) ? aiImageAlt(p.alt, locale) : p.alt} fill sizes={i === 0 ? "(max-width: 900px) 100vw, 62vw" : "(max-width: 900px) 50vw, 36vw"} className="cover-image" />
               {isAiGeneratedImage(p.src) && <AiImageLabel className="ai-label--corner" hidden={!!p.alt.trim()} />}
               <span className="pr-dev-gallery-hint" aria-hidden="true">{p.label} · View</span>
             </button>
@@ -51,7 +53,7 @@ export default function ClassGallery({ photos }: { photos: GalleryPhoto[] }) {
         <div className="pr-viewer" role="dialog" aria-modal="true" aria-label={photo.title} ref={dialog} tabIndex={-1} onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
           <div className="pr-viewer-panel">
             <div className="pr-viewer-media">
-              <Image key={photo.src} src={photo.src} alt={isAiGeneratedImage(photo.src) ? aiImageAlt(photo.alt) : photo.alt} fill sizes="(max-width: 900px) 100vw, 66vw" className="pr-viewer-img" />
+              <Image key={photo.src} src={photo.src} alt={isAiGeneratedImage(photo.src) ? aiImageAlt(photo.alt, locale) : photo.alt} fill sizes="(max-width: 900px) 100vw, 66vw" className="pr-viewer-img" />
               {isAiGeneratedImage(photo.src) && <AiImageLabel className="ai-label--corner ai-label--start" hidden={!!photo.alt.trim()} />}
             </div>
             <div className="pr-viewer-copy">

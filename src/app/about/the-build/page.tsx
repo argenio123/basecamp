@@ -8,10 +8,9 @@ import PageHero from "@/components/sections/PageHero";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDateLabel } from "@/content/format";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import { getData } from "@/i18n/data";
 import { alternatesFor } from "@/i18n/paths";
-import { localHref, t } from "@/i18n/server";
+import { getUi, localHref, t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "The Build",
@@ -65,7 +64,7 @@ export default async function AboutBuildPage() {
             <div className="bd-head-side">
               <p>{headIntro ? `${headIntro} ` : ""}{BUILD.line}</p>
               {b.enabled && (live
-                ? <Link href={localHref("/schedule/book")} className="vt-who-cta">{t(PHASE_COPY.live.ctaLabel)}</Link>
+                ? <Link href={localHref("/schedule/book")} className="vt-who-cta">{getUi().labels.phase.live.ctaLabel}</Link>
                 : <div className="bd-countdown"><BuildCountdown openingDate={c.settings.openingDate} /></div>)}
             </div>
           </div>

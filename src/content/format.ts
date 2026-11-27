@@ -1,5 +1,7 @@
 // Formatting helpers (spec §B.6). Pure and client-safe.
-import { AVAILABILITY_LABEL } from "./labels";
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config";
+// ui.ts imports formatDateLabel from this module: the cycle is safe because neither calls the other at load time.
+import { UI } from "@/i18n/ui";
 import type { Availability, Price, PriceGroup, PriceItem } from "./types";
 
 const num = (n: number) => n.toLocaleString("en-US");
@@ -38,8 +40,9 @@ export function manilaNow(now: Date = new Date()): Date {
   return new Date(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
 }
 
-export function availabilityLabel(a: Availability): string {
-  return AVAILABILITY_LABEL[a] ?? "";
+/** Availability pill text in `locale` (English: content/labels.ts AVAILABILITY_LABEL, via the ui.ts labels block). */
+export function availabilityLabel(a: Availability, locale: Locale = DEFAULT_LOCALE): string {
+  return UI[locale].labels.availability[a] ?? "";
 }
 
 /** Every pricing item across groups, keyed by item id. */

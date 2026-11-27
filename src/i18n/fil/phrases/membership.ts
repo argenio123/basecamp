@@ -11,7 +11,7 @@ export const PHRASES_MEMBERSHIP: Readonly<Record<string, string>> = {
   "Standard Php {amount}": "Standard: Php {amount}",
   "Save Php {amount}/month": "Tipid na Php {amount}/buwan",
   "about {percent}": "humigit-kumulang {percent}",
-  "What you gain": "Ano ang makukuha mo",
+  "What you gain": "Ang makukuha mo",
   "Early membership": "Early membership",
   "Early membership · Limited": "Early membership · Limitado",
   "See membership plans": "Tingnan ang mga membership plan",

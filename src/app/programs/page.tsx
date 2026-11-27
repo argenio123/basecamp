@@ -4,11 +4,10 @@ import ClassesEditorialHero from "@/components/programs/ClassesEditorialHero";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
 import { getSiteContent } from "@/content/get";
-import { PHASE_COPY } from "@/content/labels";
 import type { WorkoutType } from "@/data/workout-types";
 import { getData } from "@/i18n/data";
 import { alternatesFor } from "@/i18n/paths";
-import { localHref, t } from "@/i18n/server";
+import { getUi, localHref, t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Classes",
@@ -37,7 +36,7 @@ export default async function ProgramsPage() {
       cards={false}
       quote={false}
       marquee={false}
-      cta={<CtaBand eyebrow={t("Early members")} label={t(PHASE_COPY[c.settings.launchPhase].ctaLabel)} className="pr-cta-expanded" />}
+      cta={<CtaBand eyebrow={t("Early members")} label={getUi().labels.phase[c.settings.launchPhase].ctaLabel} className="pr-cta-expanded" />}
     >
       <div id="workout-types">
         <ScheduleExplore eyebrow={t("Classes")} title={group.title} intro={group.description} items={stations} />

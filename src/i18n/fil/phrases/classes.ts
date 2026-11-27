@@ -13,11 +13,6 @@ export const PHRASES_CLASSES: Readonly<Record<string, string>> = {
     "Atletang nagda-dumbbell lunges habang inaayos ng coach ang barbell sa gym na brick at konkreto",
   "Eight HYROX-style stations.\nA weekly coached class each,\nscaled to your level.":
     "Walong HYROX-style na station.\nMay lingguhang coached class bawat isa,\nini-scale sa level mo.",
-  "Early members": "Early members",
-  // PHASE_COPY ctaLabel (src/content/labels.ts), one per launch phase
-  "Get early access": "Kumuha ng early access",
-  "Become an early member": "Maging early member",
-  "Book a session": "Mag-book ng session",
 
   // ---------- /classes/styles/[slug] ----------
   "Training style not found": "Hindi nahanap ang training style",
@@ -26,7 +21,6 @@ export const PHRASES_CLASSES: Readonly<Record<string, string>> = {
   "The session · 4 blocks": "Ang session · 4 na bahagi",
   "How a session runs": "Paano tumatakbo ang session",
   "Illustrative session view · {name}": "Halimbawang kuha ng session · {name}",
-  "What you gain": "Ang makukuha mo",
   "Ready for station {station}?": "Handa ka na sa station {station}?",
   "Ask about {title}": "Magtanong tungkol sa {title}",
   "Tell us your level and when you want to train. The coaching team confirms times and places before opening, and early members get first access to every station class.":

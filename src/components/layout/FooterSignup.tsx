@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useActionState, useEffect, useState, type FormEvent } from "react";
 import { submitWithoutReset } from "@/components/forms/FormStatus";
 import PrivacyNote from "@/components/ui/PrivacyNote";
-import { useUi } from "@/i18n/client";
+import { useLocale, useUi } from "@/i18n/client";
 import { trackLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/leads/actions";
 import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
@@ -12,6 +12,7 @@ import { INITIAL_LEAD_RESULT } from "@/lib/leads/types";
 /** Footer newsletter sign-up (kind=newsletter). Keeps the existing .footer-newsletter classes. */
 export default function FooterSignup() {
   const pathname = usePathname();
+  const locale = useLocale();
   const ui = useUi();
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_RESULT);
   // The 18+ / consent box is checked in the browser first; submitLead checks it again on the server.
@@ -21,7 +22,7 @@ export default function FooterSignup() {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     if (new FormData(event.currentTarget).get("consent") !== "on") {
       event.preventDefault();
-      setAgeError("Please confirm you're 18 or older and agree to continue.");
+      setAgeError(ui.signup.consentRequired);
       return;
     }
     setAgeError("");
@@ -43,6 +44,8 @@ export default function FooterSignup() {
       ) : (
         <>
           <input type="hidden" name="kind" value="newsletter" />
+          {/* Server Action messages in this language (src/lib/leads/validate.ts leadLocale). */}
+          <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="source" value={pathname} />
           <div className="ui-hp" aria-hidden="true">
             <label htmlFor="footer-website">Website</label>

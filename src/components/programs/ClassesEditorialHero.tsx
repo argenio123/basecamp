@@ -1,6 +1,6 @@
 import Image from "next/image";
 import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
-import { t } from "@/i18n/server";
+import { getLocale, t } from "@/i18n/server";
 
 type ClassesEditorialHeroProps = {
   chapter: string;
@@ -32,7 +32,7 @@ export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, i
   return (
     <section className={`pr-editorial-hero pr-editorial-hero-${variant}${fullImage ? " pr-editorial-hero--full-image" : ""}`} aria-labelledby="pr-editorial-title">
       <div className={`pr-editorial-media${flipImage ? " is-flipped" : ""}`}>
-        <Image src={image} alt={ai ? aiImageAlt(imageAlt) : imageAlt} fill preload sizes="100vw" className="pr-editorial-image" />
+        <Image src={image} alt={ai ? aiImageAlt(imageAlt, getLocale()) : imageAlt} fill preload sizes="100vw" className="pr-editorial-image" />
       </div>
       <span className="pr-editorial-shade" aria-hidden="true" />
       {ai && <AiImageLabel className="ai-label--hero" hidden={!!imageAlt.trim()} />}
