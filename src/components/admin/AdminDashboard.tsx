@@ -1,6 +1,6 @@
 import { readContentFresh } from "@/content/get";
 import type { ContentMeta, SiteContent } from "@/content/types";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireAdmin, staffEmail } from "@/lib/auth/session";
 import { listLeads } from "@/lib/leads/store";
 import type { Lead } from "@/lib/leads/types";
 import { driver } from "@/lib/storage/driver";
@@ -9,7 +9,7 @@ import AdminApp from "./AdminApp";
 // Request-time admin data (spec §D.3). Rendered inside <Suspense> by app/admin/page.tsx.
 // requireAdmin() runs first and redirects (outside any try/catch) when the session is missing or invalid.
 export default async function AdminDashboard() {
-  await requireAdmin();
+  const session = await requireAdmin();
   let data: { content: SiteContent; meta: ContentMeta; leads: Lead[] } | null = null;
   try {
     const [{ content, meta }, leads] = await Promise.all([readContentFresh(), listLeads()]);
@@ -26,5 +26,5 @@ export default async function AdminDashboard() {
       </div>
     );
   }
-  return <AdminApp content={data.content} meta={data.meta} leads={data.leads} storage={driver()} />;
+  return <AdminApp content={data.content} meta={data.meta} leads={data.leads} storage={driver()} signedInAs={staffEmail(session)} />;
 }

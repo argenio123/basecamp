@@ -1,7 +1,7 @@
 // Optimistic admin gate (spec §D.2). Docs: node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md
 // Proxy runs on the Node.js runtime by default, so the node:crypto HMAC check in @/lib/auth/token works here.
 // This is not the security boundary: every admin Server Action re-checks with requireAdmin(),
-// and the CSV route handler re-checks with isAdminRequest().
+// and the CSV route handler re-checks the session itself (adminRequestSession).
 import { NextResponse, type NextRequest } from "next/server";
 import { verifySession } from "@/lib/auth/token";
 import { MEMBER_COOKIE, verifyMemberSession } from "@/lib/members/token";

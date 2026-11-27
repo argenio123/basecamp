@@ -13,7 +13,8 @@ import LeadsInbox from "./LeadsInbox";
 import SectionEditor from "./SectionEditor";
 
 type Tab = SectionKey | "inbox";
-type Props = { content: SiteContent; meta: ContentMeta; leads: Lead[]; storage: StorageDriver };
+// signedInAs: the staff email from the session, or null when signed in with the legacy shared password.
+type Props = { content: SiteContent; meta: ContentMeta; leads: Lead[]; storage: StorageDriver; signedInAs: string | null };
 
 const STORAGE_LABEL: Record<StorageDriver, string> = {
   upstash: "Upstash Redis",
@@ -28,7 +29,7 @@ const when = (iso: string) => {
 };
 
 // Admin client shell (spec §D.3, §D.7). Rendered inside <Suspense>, so useSearchParams is allowed.
-export default function AdminApp({ content, meta, leads, storage }: Props) {
+export default function AdminApp({ content, meta, leads, storage, signedInAs }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requested = searchParams.get("tab");
@@ -72,6 +73,9 @@ export default function AdminApp({ content, meta, leads, storage }: Props) {
       <header className="adm-topbar">
         <p className="adm-topbar-title">BaseCamp CamSur · Content admin</p>
         <span className="adm-storage" data-storage={storage}>{STORAGE_LABEL[storage]}</span>
+        <span className="adm-topbar-user" style={{ fontSize: 13, overflowWrap: "anywhere" }}>
+          {signedInAs ? <>Signed in as <strong>{signedInAs}</strong></> : "Signed in with the shared staff password"}
+        </span>
         <div className="adm-topbar-actions">
           <a className="adm-topbar-link" href="/admin/payments">Payments</a>
           <a className="adm-topbar-link" href="/" target="_blank" rel="noopener noreferrer">View site ↗</a>

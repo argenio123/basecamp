@@ -1,8 +1,9 @@
 // CSV export of leads (spec §D.5). Docs: 03-api-reference/03-file-conventions/route.md,
 // 01-getting-started/15-route-handlers.md (reading request.cookies makes this GET handler request-time).
-// Re-verifies the session itself: proxy.ts is only an optimistic gate.
+// Re-verifies the session itself: proxy.ts is only an optimistic gate. Each download is audited (who, which kind).
 import type { NextRequest } from "next/server";
-import { isAdminRequest } from "@/lib/auth/session";
+import { audit } from "@/lib/auth/audit";
+import { adminRequestSession } from "@/lib/auth/session";
 import { listLeads } from "@/lib/leads/store";
 import { LEAD_KINDS, type Lead } from "@/lib/leads/types";
 
@@ -39,7 +40,8 @@ function csvCell(value: Cell | null | undefined): string {
 }
 
 export async function GET(request: NextRequest) {
-  if (!isAdminRequest(request)) {
+  const session = adminRequestSession(request);
+  if (!session) {
     return new Response("Unauthorized", { status: 401, headers: { "Cache-Control": "no-store" } });
   }
   const kindParam = request.nextUrl.searchParams.get("kind") ?? "all";
@@ -52,6 +54,7 @@ export async function GET(request: NextRequest) {
     return new Response("Couldn't reach storage. Please try again.", { status: 503, headers: { "Cache-Control": "no-store" } });
   }
   const rows = kind === "all" ? leads : leads.filter((l) => l.kind === kind);
+  audit(session, "leads.export", { kind, rows: rows.length });
   const lines = [COLUMNS.map(([name]) => csvCell(name)).join(","), ...rows.map((lead) => COLUMNS.map(([, get]) => csvCell(get(lead))).join(","))];
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 

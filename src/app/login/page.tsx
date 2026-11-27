@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import LoginForm from "@/components/admin/LoginForm";
+import { authMode } from "@/lib/auth/staff";
 import { adminConfigured } from "@/lib/auth/token";
 // Admin-only styles (adm- prefix); /login sits outside app/admin, so it imports them itself.
 import "@/styles/admin.css";
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div className="adm-shell">
-      <LoginForm configured={adminConfigured()} />
+      <LoginForm configured={adminConfigured()} personal={authMode() === "personal"} />
     </div>
   );
 }

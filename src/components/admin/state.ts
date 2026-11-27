@@ -2,7 +2,8 @@
 // Kept out of the 'use server' file, which may only export async functions.
 import type { ValidationError } from "@/content/validate";
 
-export type LoginState = { error: string };
+// email: echoed back after a failed personal sign-in so the field isn't cleared (never the password).
+export type LoginState = { error: string; email?: string };
 export const INITIAL_LOGIN_STATE: LoginState = { error: "" };
 
 export type SaveState = {

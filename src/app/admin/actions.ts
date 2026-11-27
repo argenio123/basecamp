@@ -4,6 +4,7 @@
 //       04-functions/updateTag.md, 04-functions/revalidatePath.md, 04-functions/refresh.md,
 //       04-functions/headers.md, 04-functions/redirect.md.
 // Every action except login calls requireAdmin() first; redirect() is never called inside try/catch.
+// requireAdmin() returns who is signed in; every change is recorded with audit() (see src/lib/auth/audit.ts).
 // CSRF protection relies on Next's built-in Origin/Host check for Server Actions (no allowedOrigins set).
 import { refresh, revalidatePath, updateTag } from "next/cache";
 import { headers } from "next/headers";
@@ -14,8 +15,10 @@ import { readContentFresh } from "@/content/get";
 import { deleteSection, writeSection } from "@/content/store";
 import type { SectionKey } from "@/content/types";
 import { refSetsFor, validateSection } from "@/content/validate";
-import { adminConfigured, passwordMatches } from "@/lib/auth/token";
-import { clearSessionCookies, requireAdmin, setSessionCookies } from "@/lib/auth/session";
+import { audit } from "@/lib/auth/audit";
+import { clearSessionCookies, currentAdminSession, requireAdmin, setSessionCookies } from "@/lib/auth/session";
+import { authMode, checkCredentials } from "@/lib/auth/staff";
+import { adminConfigured } from "@/lib/auth/token";
 import { deleteLead, updateLead } from "@/lib/leads/store";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/leads/types";
 import { clientIp } from "@/lib/rateLimit";
@@ -48,26 +51,37 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
   const now = Date.now();
   if (await loginFailures.blocked(ip, now)) return { error: "Too many attempts. Try again later." };
 
+  // Personal accounts (ADMIN_USERS) need email + password; the legacy shared ADMIN_PASSWORD needs only the password.
+  const personal = authMode() === "personal";
+  const email = formData.get("email");
   const password = formData.get("password");
-  if (typeof password !== "string" || !password || password.length > 512 || !passwordMatches(password)) {
+  const staff =
+    typeof password === "string" && password && password.length <= 512 && (!personal || (typeof email === "string" && email.length <= 254))
+      ? await checkCredentials(typeof email === "string" ? email : "", password)
+      : null;
+  if (!staff) {
     // Counting and the blocked check are one Redis call; the delay runs alongside it.
     const [nowBlocked] = await Promise.all([loginFailures.hit(ip, now), new Promise((resolve) => setTimeout(resolve, 600))]);
-    return { error: nowBlocked ? "Too many attempts. Try again later." : "Incorrect password." };
+    const error = nowBlocked ? "Too many attempts. Try again later." : personal ? "Incorrect email or password." : "Incorrect password.";
+    return personal && typeof email === "string" ? { error, email: email.slice(0, 254) } : { error };
   }
 
   await loginFailures.clear(ip, now);
-  await setSessionCookies();
+  await setSessionCookies(staff);
+  audit({ staff }, "auth.login");
   redirect("/admin");
 }
 
 export async function logoutAction(): Promise<void> {
+  const session = await currentAdminSession();
+  if (session) audit(session, "auth.logout");
   await clearSessionCookies();
   redirect("/login");
 }
 
 // ---------- content ----------
 export async function saveSectionAction(_prev: SaveState, formData: FormData): Promise<SaveState> {
-  await requireAdmin();
+  const session = await requireAdmin();
   const section = formData.get("section");
   if (!isSection(section)) return { ok: false, error: "Unknown section." };
   const payload = formData.get("payload");
@@ -103,21 +117,25 @@ export async function saveSectionAction(_prev: SaveState, formData: FormData): P
   try {
     savedAt = await writeSection(section, result.value);
   } catch (error) {
+    audit(session, "content.save", { section, ok: false });
     return { ok: false, error: storageMessage(error, SAVE_FAILED) };
   }
+  audit(session, "content.save", { section, ok: true, savedAt });
   invalidateContent();
   return { ok: true, savedAt };
 }
 
 export async function resetSectionAction(_prev: SaveState, formData: FormData): Promise<SaveState> {
-  await requireAdmin();
+  const session = await requireAdmin();
   const section = formData.get("section");
   if (!isSection(section)) return { ok: false, error: "Unknown section." };
   try {
     await deleteSection(section);
   } catch (error) {
+    audit(session, "content.reset", { section, ok: false });
     return { ok: false, error: storageMessage(error, "Couldn't reset just now. Please try again.") };
   }
+  audit(session, "content.reset", { section, ok: true });
   invalidateContent();
   return { ok: true, reset: true };
 }
@@ -129,7 +147,7 @@ const leadId = (formData: FormData) => {
 };
 
 export async function updateLeadAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const session = await requireAdmin();
   const id = leadId(formData);
   if (!id) return;
   const rawStatus = formData.get("status");
@@ -137,22 +155,27 @@ export async function updateLeadAction(formData: FormData): Promise<void> {
   const rawNotes = formData.get("notes");
   const notes = typeof rawNotes === "string" ? rawNotes.replace(/\u0000/g, "").trim().slice(0, 1000) : undefined;
   if (status === undefined && notes === undefined) return;
+  // The audit line names the lead by id only: notes and contact details are personal data and stay out of logs.
   try {
     await updateLead(id, { status, notes });
+    audit(session, "lead.update", { lead: id, status, notesSaved: notes !== undefined, ok: true });
   } catch {
     // Read-only storage or an outage: the refreshed inbox shows the unchanged lead.
+    audit(session, "lead.update", { lead: id, status, notesSaved: notes !== undefined, ok: false });
   }
   refresh();
 }
 
 export async function deleteLeadAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const session = await requireAdmin();
   const id = leadId(formData);
   if (!id) return;
   try {
     await deleteLead(id);
+    audit(session, "lead.delete", { lead: id, ok: true });
   } catch {
     // See updateLeadAction.
+    audit(session, "lead.delete", { lead: id, ok: false });
   }
   refresh();
 }
