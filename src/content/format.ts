@@ -27,6 +27,17 @@ export function formatDateLabel(date: string): string {
   return Number.isNaN(parsed.getTime()) ? "To be announced" : dateFormatter.format(parsed);
 }
 
+const manilaClock = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Manila", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric", hourCycle: "h23" });
+
+/**
+ * The Asia/Manila wall-clock time as a local Date: its getFullYear / getDate / getDay / getHours read Manila's
+ * calendar and clock whatever the visitor's own time zone, so "today" and "ended" match the gym's day.
+ */
+export function manilaNow(now: Date = new Date()): Date {
+  const p = Object.fromEntries(manilaClock.formatToParts(now).map((x) => [x.type, Number(x.value)]));
+  return new Date(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
+}
+
 export function availabilityLabel(a: Availability): string {
   return AVAILABILITY_LABEL[a] ?? "";
 }

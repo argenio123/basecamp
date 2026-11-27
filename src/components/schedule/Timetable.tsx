@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type RefObject, useEffect, useReducer, useRef, useState } from "react";
+import { manilaNow } from "@/content/format";
 import type { TimetableSlot } from "@/content/types";
 import { SLOT_CATEGORY_LABEL, TIMETABLE_CAPTION, WEEKDAY_LABEL, WEEKDAYS } from "@/data/programs-static";
 
@@ -176,7 +177,19 @@ function hasEnded(slot: TimetableSlot, date: Date, now: Date) {
  */
 function useDragScroll(ref: RefObject<HTMLDivElement | null>, onSettle: (el: HTMLDivElement, unit: number) => void) {
   const [grabbing, setGrabbing] = useState(false);
-  const s = useRef<{ drag: { x: number; left: number; id: number; moved: boolean; lastX: number; lastT: number; v: number } | null; raf: number; target: number | null; suppress: boolean }>({ drag: null, raf: 0, target: null, suppress: false });
+  const s = useRef<{ drag: { x: number; left: number; id: number; moved: boolean; lastX: number; lastT: number; v: number } | null; raf: number; target: number | null; suppress: boolean; input: number }>({ drag: null, raf: 0, target: null, suppress: false, input: -Infinity });
+  const touch = () => { s.current.input = performance.now(); };
+  /**
+   * True while the visitor (or a glide) is moving the row. Each call during that time extends it, so momentum
+   * scrolling keeps counting. Any other scroll comes from layout (a resize clamping or shifting scrollLeft) and must
+   * not change the date shown.
+   */
+  const live = () => {
+    const t = performance.now();
+    const on = !!s.current.drag || s.current.target != null || t - s.current.input < 800;
+    if (on) s.current.input = t;
+    return on;
+  };
   const settleRef = useRef(onSettle);
   useEffect(() => { settleRef.current = onSettle; });
   useEffect(() => () => cancelAnimationFrame(s.current.raf), []);
@@ -195,6 +208,7 @@ function useDragScroll(ref: RefObject<HTMLDivElement | null>, onSettle: (el: HTM
     const el = ref.current;
     if (!el) return;
     cancelAnimationFrame(s.current.raf);
+    touch();
     const target = Math.max(0, Math.min(el.scrollWidth - el.clientWidth, to));
     s.current.target = target;
     const done = () => { el.scrollLeft = target; s.current.target = null; settleRef.current(el, unit()); };
@@ -217,6 +231,7 @@ function useDragScroll(ref: RefObject<HTMLDivElement | null>, onSettle: (el: HTM
   const handlers = {
     onPointerDown: (e: ReactPointerEvent<HTMLDivElement>) => {
       const el = ref.current;
+      touch();
       if (e.pointerType !== "mouse" || e.button !== 0 || !el) return;
       stop();
       s.current.drag = { x: e.clientX, left: el.scrollLeft, id: e.pointerId, moved: false, lastX: e.clientX, lastT: e.timeStamp, v: 0 };
@@ -253,9 +268,13 @@ function useDragScroll(ref: RefObject<HTMLDivElement | null>, onSettle: (el: HTM
     },
     onClickCapture: (e: ReactMouseEvent) => { if (s.current.suppress) { s.current.suppress = false; e.stopPropagation(); e.preventDefault(); } },
     onDragStart: (e: ReactMouseEvent) => e.preventDefault(),
+    // Native swipes, wheel / trackpad and keyboard scrolling count as the visitor moving the row.
+    onTouchStart: touch,
+    onWheel: touch,
+    onKeyDown: touch,
   };
 
-  return { grabbing, unit, jump, glideTo, page, handlers };
+  return { grabbing, unit, jump, glideTo, page, live, handlers };
 }
 
 const firstOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
@@ -266,8 +285,8 @@ const RANGE_MONTHS = 24;
  * Timetable calendar styled like the BaseCamp app "Find your rhythm" screen (brand book 2026, Screens · Book).
  * The weekly timetable repeats every week, so any date shows that weekday's sessions. Week view is a long strip of
  * days and month view a row of months; both drag left / right with the mouse (or swipe), and the arrows glide by a
- * week or a month. Past sessions are marked "Ended". Dates and "today" are set after mount so the server HTML never
- * depends on the visitor's clock.
+ * week or a month. Past sessions are marked "Ended". Dates and "today" (Asia/Manila) are set after mount so the
+ * prerendered HTML never freezes a build-time date or depends on the visitor's clock.
  */
 export default function Timetable({ slots, status, statusHref, statusLabel }: { slots: TimetableEntry[]; status?: string; statusHref?: string; statusLabel?: string }) {
   const [now, setNow] = useState<Date | null>(null);
@@ -339,18 +358,57 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
     else bump();
   };
 
-  const onWeekScroll = () => {
+  // The heading follows the dates in state (firstVisible / visibleMonth), never raw pixels. Only the visitor moving a
+  // row (or a glide) changes them; a scroll caused by layout instead puts the row back on the dates shown.
+  // Refs as well as state: a scroll event can arrive before React re-renders with the dates just read.
+  const shownWeek = useRef<Date | null>(null);
+  const shownMonth = useRef<Date | null>(null);
+  const readWeek = () => {
     const el = weekRef.current, u = weekScroll.unit();
     if (!el || !u || !rangeStart) return;
     const first = addDays(rangeStart, Math.round(el.scrollLeft / u));
+    shownWeek.current = first;
     setFirstVisible((v) => (v && sameDay(v, first) ? v : first));
   };
-  const onMonthScroll = () => {
+  const readMonth = () => {
     const el = monthRef.current, u = monthScroll.unit();
     if (!el || !u || !monthAnchor) return;
     const month = addMonths(monthAnchor, Math.round(el.scrollLeft / u) - RANGE_MONTHS);
+    shownMonth.current = month;
     setVisibleMonth((v) => (v && sameDay(v, month) ? v : month));
   };
+  const restoreWeek = () => {
+    const el = weekRef.current, u = weekScroll.unit();
+    if (!el || !u || !shownWeek.current || !rangeStart) return void readWeek();
+    const i = dayIndex(shownWeek.current);
+    if (i < 0 || !days || i >= days.length) return void readWeek();
+    if (Math.abs(el.scrollLeft - i * u) > 1) weekScroll.jump(i * u);
+  };
+  const restoreMonth = () => {
+    const el = monthRef.current, u = monthScroll.unit();
+    if (!el || !u || !shownMonth.current || !monthAnchor) return void readMonth();
+    const i = monthIndex(shownMonth.current);
+    if (i < 0 || !months || i >= months.length) return void readMonth();
+    if (Math.abs(el.scrollLeft - i * u) > 1) monthScroll.jump(i * u);
+  };
+  const onWeekScroll = () => (weekScroll.live() ? readWeek() : restoreWeek());
+  const onMonthScroll = () => (monthScroll.live() ? readMonth() : restoreMonth());
+  const restoreRef = useRef(restoreWeek);
+  useEffect(() => { restoreRef.current = view === "week" ? restoreWeek : restoreMonth; });
+  // Desktop tiles are a share of the row's width, so a width change (window resize, scrollbar appearing, a full-page
+  // capture) would otherwise slide a different week under the heading. Re-place the row on the dates shown.
+  useEffect(() => {
+    const el = view === "week" ? weekRef.current : monthRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    let width = el.clientWidth;
+    const ro = new ResizeObserver(() => {
+      if (el.clientWidth === width) return;
+      width = el.clientWidth;
+      restoreRef.current();
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [view]);
 
   // Arrows glide by one week / one month. Holding an arrow keeps going.
   const step = (n: number) => (view === "week" ? weekScroll.page(n, 7) : monthScroll.page(n, 1));
@@ -383,7 +441,8 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
 
   useEffect(() => stopHold, []);
   useEffect(() => {
-    const current = new Date();
+    // The gym's day and clock (Asia/Manila), not the visitor's time zone.
+    const current = manilaNow();
     // Reading the clock is only possible in the browser; set once after mount.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setNow(current);
@@ -399,13 +458,13 @@ export default function Timetable({ slots, status, statusHref, statusLabel }: { 
       const i = dayIndex(pendingWeek.current);
       pendingWeek.current = null;
       weekScroll.jump(i * weekScroll.unit());
-      onWeekScroll();
+      readWeek();
     }
     if (view === "month" && pendingMonth.current && months && monthRef.current) {
       const i = monthIndex(pendingMonth.current);
       pendingMonth.current = null;
       monthScroll.jump(i * monthScroll.unit());
-      onMonthScroll();
+      readMonth();
     }
   });
 
