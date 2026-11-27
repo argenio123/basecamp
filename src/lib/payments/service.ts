@@ -18,7 +18,8 @@ export async function markPaid(payment: Payment, info: { method?: string; refere
     const start = lastEnd && lastEnd > now ? lastEnd : now;
     period = { periodStart: start.toISOString(), periodEnd: addMonth(start).toISOString() };
   }
-  return updatePayment(payment.id, (p) => (p.status === "paid" ? p : {
+  // A refunded payment stays refunded if the provider re-sends its "paid" event.
+  return updatePayment(payment.id, (p) => (p.status === "paid" || p.status === "refunded" ? p : {
     ...p, ...period, status: "paid", paidAt: now.toISOString(),
     method: info.method ?? p.method, reference: info.reference ?? p.reference,
   }));
