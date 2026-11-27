@@ -1,26 +1,30 @@
 import type { SiteSettings } from "@/content/types";
 import { directionsUrl } from "@/data/brand";
+import { getUi } from "@/i18n/server";
 import CopyAddress from "./CopyAddress";
 import FindUsMap from "./FindUsMap";
 
-/** Shown under the address so visitors know which building to look for inside the Capitol Complex. */
-const LANDMARK = "Beside the Provincial Capitol, near the Magic Park";
+/* The landmark line (shown under the address so visitors know which building to look for inside the Capitol
+   Complex) is ui.findUs.landmarkText in src/i18n/ui.ts, in each language. */
 
 /**
  * Location block as a split panel (no overlap): Ink info panel on the left, satellite map on the right, in one
  * rounded frame. Same language as the site's Ink boards: mono label, display title, labelled rows, pill buttons.
  * Stacks on phones (info first, then the map).
  */
-export default function FindUs({ contact, title = "Find BaseCamp.", id = "find-us", landmark = LANDMARK }: { contact: SiteSettings["contact"]; title?: string; id?: string; landmark?: string }) {
+export default function FindUs({ contact, title, id = "find-us", landmark }: { contact: SiteSettings["contact"]; title?: string; id?: string; landmark?: string }) {
+  const ui = getUi();
+  title ??= ui.findUs.title;
+  landmark ??= ui.findUs.landmarkText;
   const hasAny = contact.addressLines.length > 0 || contact.mapsQuery || contact.phoneDisplay || contact.email;
   if (!hasAny) return null;
   const address = contact.addressLines.join(", ");
   const rows = [
-    contact.addressLines.length > 0 && { label: "Address", value: <>{contact.addressLines.map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}</> },
-    landmark && { label: "Landmark", value: landmark },
-    contact.email && { label: "Email", value: <a href={`mailto:${contact.email}`}>{contact.email}</a> },
-    contact.phoneDisplay && { label: "Phone", value: <a href={`tel:${contact.phoneE164 || contact.phoneDisplay}`}>{contact.phoneDisplay}</a> },
-    contact.hours && { label: "Hours", value: contact.hours },
+    contact.addressLines.length > 0 && { label: ui.findUs.address, value: <>{contact.addressLines.map((line, i) => <span key={i}>{i > 0 && <br />}{line}</span>)}</> },
+    landmark && { label: ui.findUs.landmark, value: landmark },
+    contact.email && { label: ui.findUs.email, value: <a href={`mailto:${contact.email}`}>{contact.email}</a> },
+    contact.phoneDisplay && { label: ui.findUs.phone, value: <a href={`tel:${contact.phoneE164 || contact.phoneDisplay}`}>{contact.phoneDisplay}</a> },
+    contact.hours && { label: ui.findUs.hours, value: contact.hours },
   ].filter(Boolean) as { label: string; value: React.ReactNode }[];
 
   return (
@@ -36,8 +40,8 @@ export default function FindUs({ contact, title = "Find BaseCamp.", id = "find-u
               ))}
             </dl>
             <p className="fu-actions">
-              {contact.mapsQuery && <a className="fu-primary" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">Get directions<span className="sr-only"> (opens in a new tab)</span></a>}
-              {address && <CopyAddress text={`BaseCamp CamSur, ${address}`} className="fu-secondary" />}
+              {contact.mapsQuery && <a className="fu-primary" href={directionsUrl(contact.mapsQuery)} target="_blank" rel="noreferrer">{ui.common.getDirections}<span className="sr-only"> {ui.common.opensNewTab}</span></a>}
+              {address && <CopyAddress text={`BaseCamp CamSur, ${address}`} className="fu-secondary" label={ui.common.copyAddress} copiedLabel={ui.common.addressCopied} />}
             </p>
           </address>
           {contact.mapsQuery && <FindUsMap query={contact.mapsQuery} />}

@@ -6,10 +6,15 @@ import PageHero from "@/components/sections/PageHero";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
-import { GETTING_THERE, VISIT_CTA, VISIT_GLANCE, VISIT_HERO, VISIT_META } from "@/data/visit";
+import { getData } from "@/i18n/data";
+import { alternatesFor } from "@/i18n/paths";
+import { getLocale, t } from "@/i18n/server";
+import { localizeLink } from "@/i18n/sitemap";
 
-// Static metadata object (01-app/03-api-reference/04-functions/generate-metadata.md#the-metadata-object).
-export const metadata: Metadata = VISIT_META;
+// Metadata from the static visit copy in the page's language (getData; /fil/visit reuses this page, src/i18n/README.md).
+export async function generateMetadata(): Promise<Metadata> {
+  return { ...getData("visit").VISIT_META, alternates: alternatesFor("/visit") };
+}
 
 /** Summary + image for each Visit menu highlight, so this list mirrors the navbar / footer highlights. */
 const HIGHLIGHT_DETAILS: Record<string, { summary: string; image: string; imageAlt: string }> = {
@@ -24,6 +29,7 @@ const HIGHLIGHT_DETAILS: Record<string, { summary: string; image: string; imageA
 export default async function VisitPage() {
   const c = await getSiteContent();
   const { contact } = c.settings;
+  const { GETTING_THERE, VISIT_CTA, VISIT_GLANCE, VISIT_HERO } = getData("visit");
 
   return (
     <OverviewTemplate
@@ -36,12 +42,12 @@ export default async function VisitPage() {
     >
       <ScheduleExplore
         fitImages
-        eyebrow="Plan your visit"
-        title="Train & Travel."
-        intro="Training camps and group trips, plus why Camarines Sur is built for training."
+        eyebrow={t("Plan your visit")}
+        title={t("Train & Travel.")}
+        intro={t("Training camps and group trips, plus why Camarines Sur is built for training.")}
         items={(findPage("/visit", [])?.section.menu?.highlights ?? []).flatMap((h) => {
           const d = HIGHLIGHT_DETAILS[h.href];
-          return d ? [{ href: h.href, label: h.label, ...d }] : [];
+          return d ? [{ ...localizeLink(h, getLocale()), summary: t(d.summary), image: d.image, imageAlt: t(d.imageAlt) }] : [];
         })}
       />
       <FindUs contact={contact} title={GETTING_THERE.title} id="find-us" />

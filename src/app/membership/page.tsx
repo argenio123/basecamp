@@ -8,6 +8,9 @@ import { formatPhp } from "@/content/format";
 import { getSiteContent } from "@/content/get";
 import { findPage } from "@/content/sitemap";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
+import { alternatesFor } from "@/i18n/paths";
+import { getLocale, t } from "@/i18n/server";
+import { localizePage } from "@/i18n/sitemap";
 import "./membership.css";
 
 
@@ -20,8 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const tiers = (pricing.groups.find((g) => g.id === "memberships")?.items ?? []).filter((i) => i.visible && i.price);
   const tierLine = tiers.map((i) => `${i.name} ${formatPhp(i.price)}${i.unit}`).join(", ");
   return {
-    title: "Membership & Pricing",
-    description: `BaseCamp CamSur membership and pricing${tierLine ? `: ${tierLine}` : ""}. Early-member rates, plus class packs, day passes, recovery, and corporate pricing.`,
+    title: t("Membership & Pricing"),
+    description: t("BaseCamp CamSur membership and pricing{tiers}. Early-member rates, plus class packs, day passes, recovery, and corporate pricing.", { tiers: tierLine ? `: ${tierLine}` : "" }),
+    alternates: alternatesFor("/membership"),
   };
 }
 
@@ -37,20 +41,20 @@ export default async function MembershipPage() {
       path="/membership"
       quote={false}
       cards={false}
-      hero={<PageHero title="Choose access that fits how you train." intro={pricing.intro} image="/images/programs/generated/functional-training.webp" imageAlt="Athlete driving a weighted sled in the BaseCamp CamSur open-air gym" />}
+      hero={<PageHero title={t("Choose access that fits how you train.")} intro={pricing.intro} image="/images/programs/generated/functional-training.webp" imageAlt={t("Athlete driving a weighted sled in the BaseCamp CamSur open-air gym")} />}
       glance={{
-        summary: "Monthly memberships.\nFlexible passes.\nRecovery on demand.",
+        summary: t("Monthly memberships.\nFlexible passes.\nRecovery on demand."),
         statement: true,
       }}
       cta={<>
-        <CtaBand eyebrow="Membership guidance" title="Need help choosing?" body="Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option." label="Talk to us" href="/membership#tiers" className="mb-cta-expanded" />
+        <CtaBand eyebrow={t("Membership guidance")} title={t("Need help choosing?")} body={t("Tell us how often you plan to train and what you want to work on. We will point you to the most suitable option.")} label={t("Talk to us")} href="/membership#tiers" className="mb-cta-expanded" />
       </>}
     >
       {tiers.length > 0 && (
         <section id="tiers" className="section mb-tiers-section">
           <div className="shell">
             <div className="section-heading split-heading light-split" data-reveal>
-              <div><p className="eyebrow">Membership tiers</p><h2>Choose your tier.</h2></div>
+              <div><p className="eyebrow">{t("Membership tiers")}</p><h2>{t("Choose your tier.")}</h2></div>
               {tierGroup?.intro && <p>{tierGroup.intro}</p>}
             </div>
             <TierCards items={tiers} exchangeRate={settings.exchangeRate} />
@@ -58,10 +62,10 @@ export default async function MembershipPage() {
         </section>
       )}
       <ScheduleExplore
-        eyebrow="Membership categories"
-        title="More membership."
-        intro="Founding rates, promotions, passes, recovery, yoga, camps, and team pricing. Pick a category to see every price."
-        items={(findPage("/membership", [])?.section.pages ?? []).map((pg) => ({ href: pg.href, label: pg.label, summary: pg.summary, image: pg.image, imageAlt: pg.imageAlt }))}
+        eyebrow={t("Membership categories")}
+        title={t("More membership.")}
+        intro={t("Founding rates, promotions, passes, recovery, yoga, camps, and team pricing. Pick a category to see every price.")}
+        items={(findPage("/membership", [])?.section.pages ?? []).map((pg) => localizePage(pg, getLocale())).map((pg) => ({ href: pg.href, label: pg.label, summary: pg.summary, image: pg.image, imageAlt: pg.imageAlt }))}
       />
     </OverviewTemplate>
   );
