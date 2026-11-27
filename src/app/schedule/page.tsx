@@ -8,10 +8,13 @@ import PageHero from "@/components/sections/PageHero";
 import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
+import { alternatesFor } from "@/i18n/paths";
+import { localHref, t } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Schedule & timetable",
   description: "The weekly rhythm at BaseCamp CamSur: morning classes, open gym, private sessions, and evening programming. Preview the timetable and hours by zone, then see events, or request a session.",
+  alternates: alternatesFor("/schedule"),
 };
 
 /** Timetable and events stay in the image-switching explorer; booking actions have their own section below. */
@@ -31,6 +34,7 @@ const BOOKING_OPTIONS = [
 // Overview: four blocks between hero and footer: At a glance · [hours by zone] · Explore (Timetable, Events, Book) · CTA.
 // Static under cacheComponents: reads only the cached getSiteContent(). Legacy #competition/#events/#book/
 // #platform links are forwarded to the sub-pages by the root-layout HashForwarder (LEGACY_HASH_REDIRECTS).
+// /fil/schedule reuses this page (src/i18n/README.md): copy goes through t(), links through localHref().
 export default async function SchedulePage() {
   const c = await getSiteContent();
   const phase = c.settings.launchPhase;
@@ -38,9 +42,9 @@ export default async function SchedulePage() {
 
   // Hours by zone (CorePower / YMCA pattern): one schedule per kind of access, each with where it continues.
   const zones = [
-    { id: "classes", label: "Coached classes", title: "Class timetable", hours: phase === "live" ? "See the timetable" : "Times confirmed before opening", items: ["Sunrise and evening classes", "Friday Night Lights"], link: { href: "/schedule/timetable", label: "View the timetable" } },
-    { id: "open-gym", label: "Open gym", title: "Athlete hours", hours, items: ["Train solo, staff on hand", "In every membership"], link: { href: "/membership/price-guide#open-gym", label: "Open-gym passes" } },
-    { id: "recovery", label: "Recovery & appointments", title: "By appointment", hours, items: ["Sauna, ice bath, massage", "1:1 coaching"], link: { href: "/schedule/book?service=appointment", label: "Request an appointment" } },
+    { id: "classes", label: t("Coached classes"), title: t("Class timetable"), hours: phase === "live" ? t("See the timetable") : t("Times confirmed before opening"), items: [t("Sunrise and evening classes"), "Friday Night Lights"], link: { href: localHref("/schedule/timetable"), label: t("View the timetable") } },
+    { id: "open-gym", label: t("Open gym"), title: t("Athlete hours"), hours, items: [t("Train solo, staff on hand"), t("In every membership")], link: { href: localHref("/membership/price-guide#open-gym"), label: t("Open-gym passes") } },
+    { id: "recovery", label: t("Recovery & appointments"), title: t("By appointment"), hours, items: [t("Sauna, ice bath, massage"), t("1:1 coaching")], link: { href: localHref("/schedule/book?service=appointment"), label: t("Request an appointment") } },
   ];
 
   return (
@@ -48,18 +52,18 @@ export default async function SchedulePage() {
       path="/schedule"
       quote={false}
       cards={false}
-      hero={<PageHero variant="compact" title="Train from sunrise to night." intro="Classes, open gym, and recovery from sunrise to night." image="/images/programs/generated/personal-coaching.webp" imageAlt="Coach supporting an athlete during a training session" imagePosition="35% 30%" />}
+      hero={<PageHero variant="compact" title={t("Train from sunrise to night.")} intro={t("Classes, open gym, and recovery from sunrise to night.")} image="/images/programs/generated/personal-coaching.webp" imageAlt={t("Coach supporting an athlete during a training session")} imagePosition="35% 30%" />}
       glance={{
-        summary: "Sunrise classes.\nOpen gym hours.\nTraining under lights.",
+        summary: t("Sunrise classes.\nOpen gym hours.\nTraining under lights."),
         statement: true,
       }}
-      cta={<CtaBand eyebrow="Early members" label={PHASE_COPY[phase].ctaLabel} />}
+      cta={<CtaBand eyebrow={t("Early members")} label={t(PHASE_COPY[phase].ctaLabel)} />}
     >
       <section className="section" id="hours">
         <div className="shell">
           <div className="section-heading split-heading light-split" data-reveal>
-            <div><p className="eyebrow">Hours by zone</p><h2>When each space is open.</h2></div>
-            <p>Each zone keeps its own hours.</p>
+            <div><p className="eyebrow">{t("Hours by zone")}</p><h2>{t("When each space is open.")}</h2></div>
+            <p>{t("Each zone keeps its own hours.")}</p>
           </div>
           <ul className="sd-hours" data-reveal="stagger">
             {zones.map((z) => (
@@ -75,17 +79,20 @@ export default async function SchedulePage() {
         </div>
       </section>
       <ScheduleExplore
-        eyebrow="More schedule"
-        title="Timetable & events."
-        intro="Plan the week and see what is coming up."
-        items={MORE_SCHEDULE.map((href) => ({ href, ...MORE_SCHEDULE_CARDS[href] }))}
+        eyebrow={t("More schedule")}
+        title={t("Timetable & events.")}
+        intro={t("Plan the week and see what is coming up.")}
+        items={MORE_SCHEDULE.map((href) => {
+          const card = MORE_SCHEDULE_CARDS[href];
+          return { ...card, href: localHref(href), label: t(card.label), summary: t(card.summary), imageAlt: t(card.imageAlt) };
+        })}
       />
       <section className="section sd-booking-choices" aria-labelledby="sd-booking-title">
         <div className="shell sd-booking-frame">
           <div className="sd-booking-media" data-reveal>
             <Image
               src={BOOKING_COVER}
-              alt={labelledImageAlt("An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur", imageKind(BOOKING_COVER))}
+              alt={labelledImageAlt(t("An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"), imageKind(BOOKING_COVER))}
               fill
               sizes="(max-width: 900px) 100vw, 55vw"
               className="cover-image"
@@ -94,17 +101,17 @@ export default async function SchedulePage() {
           </div>
           <div className="sd-booking-copy" data-reveal data-reveal-delay="short">
             <div>
-              <p className="sd-booking-eyebrow">Book at BaseCamp</p>
-              <h2 id="sd-booking-title">Choose your next move.</h2>
-              <p className="sd-booking-intro">Classes, camps, and recovery use one quick request. Pick where you want to begin.</p>
+              <p className="sd-booking-eyebrow">{t("Book at BaseCamp")}</p>
+              <h2 id="sd-booking-title">{t("Choose your next move.")}</h2>
+              <p className="sd-booking-intro">{t("Classes, camps, and recovery use one quick request. Pick where you want to begin.")}</p>
             </div>
             <div className="sd-booking-actions">
               {BOOKING_OPTIONS.map((option) => (
-                <Link href={option.href} className="sd-booking-action" key={option.href}>
+                <Link href={localHref(option.href)} className="sd-booking-action" key={option.href}>
                   <span className="sd-booking-action-copy">
-                    <small>{option.eyebrow}</small>
-                    <strong>{option.label}</strong>
-                    <span>{option.summary}</span>
+                    <small>{t(option.eyebrow)}</small>
+                    <strong>{t(option.label)}</strong>
+                    <span>{t(option.summary)}</span>
                   </span>
                 </Link>
               ))}
