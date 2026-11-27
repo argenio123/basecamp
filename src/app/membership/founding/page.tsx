@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { MEMBERSHIP_PLANS_PATH } from "@/content/constants";
 import { getFoundingAvailability } from "@/lib/payments/founding";
-import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
 import FoundingPass from "@/components/membership/FoundingPass";
 import { foundingSaving } from "@/components/membership/pricing";
@@ -20,7 +19,7 @@ const PATH = "/membership/founding";
 // so the description never overstates it. Only the cached getSiteContent() is awaited, so it stays prerenderable.
 export async function generateMetadata(): Promise<Metadata> {
   const { settings, pricing } = await getSiteContent();
-  const saving = foundingSaving(settings.founding.example, pricing.groups);
+  const saving = foundingSaving(settings.founding, pricing.groups);
   const offer = saving?.percent ? t("{percent} off for your first six months", { percent: percentText(saving.percent) }) : t("a founding rate for your first six months");
   return {
     title: t("Founding Members"),
@@ -30,11 +29,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FoundingPage() {
-  const { settings } = await getSiteContent();
+  const { settings, pricing } = await getSiteContent();
   const { founding } = settings;
+  const rate = foundingSaving(founding, pricing.groups);
   // Cap reached: the closing band points to the standard plans instead of the founding checkout.
   const full = founding.enabled && (await getFoundingAvailability(founding)).state === "full";
-  const foundingHref = foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : MEMBERSHIP_PLANS_PATH;
+  const foundingHref = rate ? payHref(rate.tierId, "founding") : MEMBERSHIP_PLANS_PATH;
 
   return (
     <DetailTemplate

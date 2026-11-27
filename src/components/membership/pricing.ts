@@ -4,8 +4,8 @@
 //   /membership/price-guide       [packs] [day-passes] [open-gym] (+ any admin-added group with an unknown anchor)
 //   /membership/price-guide       [recovery-pricing] [advanced-recovery] [yoga] [corporate] [camps-pricing]
 import { formatPhp } from "@/content/format";
-import type { Availability, Price, PriceGroup, PriceItem } from "@/content/types";
-import { foundingItemId, parseFoundingExample } from "@/lib/payments/founding-link";
+import { activeFoundingTerms } from "@/content/founding";
+import type { Availability, FoundingOffer, Price, PriceGroup, PriceItem } from "@/content/types";
 
 export type PricingPage = "overview" | "passes" | "recovery" | "yoga" | "corporate" | "camps";
 
@@ -116,19 +116,19 @@ export function savingLabel(standard: number, price: number): string {
   return Math.abs(exact - rounded) < 1e-9 ? `${rounded}%` : `about ${rounded}%`;
 }
 
-export type FoundingSaving = { tier: string; founding: number; standard: number; saving: number; percent: string };
+export type FoundingSaving = { tierId: string; tier: string; founding: number; standard: number; saving: number; percent: string };
 
 /**
- * The founding offer's numbers: the founding price from the offer's example line, the standard price from the
- * pricing content (as checkout charges it), and the saving.
+ * The founding offer's numbers: the founding price from settings.founding.price, the standard price of the
+ * settings.founding.tierId membership from the pricing content (as checkout charges it), and the saving.
+ * Null while the offer is off, the tier is hidden or unpriced, or the price fails the sanity rule
+ * (src/content/founding.ts): checkout (foundingRate) gives no founding rate then, so no saving may be promised.
  */
-export function foundingSaving(example: string, groups: readonly PriceGroup[]): FoundingSaving | null {
-  const parsed = parseFoundingExample(example);
-  if (!parsed) return null;
-  // Null when the tier is hidden or unpriced: checkout (foundingRate) gives no founding rate then, so no saving may be promised.
-  const standard = itemPrice(groups, foundingItemId(example));
-  if (standard == null || !(parsed.founding > 0) || parsed.founding >= standard) return null;
-  return { tier: parsed.tier, founding: parsed.founding, standard, saving: standard - parsed.founding, percent: savingLabel(standard, parsed.founding) };
+export function foundingSaving(offer: Pick<FoundingOffer, "enabled" | "tierId" | "price">, groups: readonly PriceGroup[]): FoundingSaving | null {
+  const terms = activeFoundingTerms(offer, groups);
+  if (!terms) return null;
+  const { founding, standard } = terms;
+  return { ...terms, saving: standard - founding, percent: savingLabel(standard, founding) };
 }
 
 /** Shared availability of a block's items, or null when they differ. */

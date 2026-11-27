@@ -14,7 +14,12 @@ export type SocialPlatform = "Instagram" | "Facebook" | "TikTok" | "YouTube" | "
 export type Audience = "beginner" | "local" | "traveller" | "competitor" | "corporate" | "recovery";
 export type InterestValue = (typeof INTEREST_OPTIONS)[number]["value"];
 
-export type FoundingOffer = { enabled: boolean; title: string; summary: string; example: string; benefits: string[]; cap: number; claimed: number; showCounter: boolean; expiresOn: string; ctaLabel: string };
+/**
+ * The founding-member offer. The price is explicit: `tierId` is the membership item it discounts (Pricing → Memberships)
+ * and `price` the founding rate in whole pesos a month. Display lines ("Athlete Php 3,150 vs Php 4,500") are generated
+ * from these numbers (src/content/founding.ts); no price is ever read from text.
+ */
+export type FoundingOffer = { enabled: boolean; title: string; summary: string; tierId: string; price: number; benefits: string[]; cap: number; claimed: number; showCounter: boolean; expiresOn: string; ctaLabel: string };
 export type SocialLink = { platform: SocialPlatform; url: string; handle: string };
 
 export type SiteSettings = {

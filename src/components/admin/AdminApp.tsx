@@ -5,16 +5,19 @@ import { startTransition, useCallback, useEffect, useMemo, useOptimistic, useRef
 import { logoutAction } from "@/app/admin/actions";
 import { SECTION_KEYS } from "@/content/constants";
 import { EDITOR_SCHEMA, type Option, type RefSource } from "@/content/editor-schema";
+import type { ReviewItem } from "@/content/review";
 import type { ContentMeta, SectionKey, SiteContent } from "@/content/types";
 import type { Lead } from "@/lib/leads/types";
 import type { StorageDriver } from "@/lib/storage/driver";
+import { ContentReviewNotice } from "./ContentReview";
 import { RefOptionsContext } from "./fields/RefsInput";
 import LeadsInbox from "./LeadsInbox";
 import SectionEditor from "./SectionEditor";
 
 type Tab = SectionKey | "inbox";
 // signedInAs: the staff email from the session, or null when signed in with the legacy shared password.
-type Props = { content: SiteContent; meta: ContentMeta; leads: Lead[]; storage: StorageDriver; signedInAs: string | null };
+// review: stored values that differ from the current defaults for prices and offers (src/content/review.ts).
+type Props = { content: SiteContent; meta: ContentMeta; review: ReviewItem[]; leads: Lead[]; storage: StorageDriver; signedInAs: string | null };
 
 const STORAGE_LABEL: Record<StorageDriver, string> = {
   upstash: "Upstash Redis",
@@ -29,7 +32,7 @@ const when = (iso: string) => {
 };
 
 // Admin client shell (spec §D.3, §D.7). Rendered inside <Suspense>, so useSearchParams is allowed.
-export default function AdminApp({ content, meta, leads, storage, signedInAs }: Props) {
+export default function AdminApp({ content, meta, review, leads, storage, signedInAs }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requested = searchParams.get("tab");
@@ -64,6 +67,9 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
   const section = tab === "inbox" ? null : tab;
   const schema = section ? EDITOR_SCHEMA[section] : null;
   const savedAt = section ? meta[section] : undefined;
+  const sectionReview = section ? review.filter((r) => r.section === section) : [];
+  // Sections with review items, for the banner on every other tab.
+  const reviewSections = SECTION_KEYS.filter((key) => key !== section && review.some((r) => r.section === key));
   const onSaved = (kind: "saved" | "reset") => {
     setToast({ message: kind === "reset" ? "Reset to defaults. Live pages updated." : "Saved. Live pages updated.", href: schema?.previewPath ?? "/" });
   };
@@ -101,6 +107,20 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
         </nav>
 
         <section className="adm-panel" aria-labelledby="adm-panel-title">
+          {reviewSections.length > 0 && (
+            <div className="adm-alert" role="note">
+              <p>
+                <strong>Content review</strong>: saved content differs from the site&apos;s current defaults in{" "}
+                {reviewSections.map((key, i) => (
+                  <span key={key}>
+                    {i > 0 && ", "}
+                    <button type="button" className="adm-review-link" onClick={() => selectTab(key)}>{EDITOR_SCHEMA[key].label} ({review.filter((r) => r.section === key).length})</button>
+                  </span>
+                ))}
+                . Check those sections after this update.
+              </p>
+            </div>
+          )}
           {section && schema ? (
             <>
               <div className="adm-panel-head">
@@ -113,6 +133,7 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
                   <a href={schema.previewPath} target="_blank" rel="noopener noreferrer">Preview ↗</a>
                 </p>
               </div>
+              <ContentReviewNotice items={sectionReview} />
               <RefOptionsContext value={refOptions}>
                 <SectionEditor
                   key={`${section}:${savedAt ?? "default"}`}
@@ -123,6 +144,7 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
                   onSaved={onSaved}
                   onDirtyChange={onDirtyChange}
                   focusItem={section === "programmes" ? requestedItem : null}
+                  pricingGroups={content.pricing.groups}
                 />
               </RefOptionsContext>
             </>

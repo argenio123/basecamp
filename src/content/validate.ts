@@ -2,9 +2,10 @@
 // Pure (no Next imports). Strips unknown keys, trims strings, removes \u0000, and enforces required fields,
 // lengths, list maximums, enums, href/url/image/video rules and number bounds. Error paths are dotted.
 import { EDITOR_SCHEMA, sectionFields, type Field, type ListField, type RefSource } from "./editor-schema";
+import { foundingTerms } from "./founding";
 import { isLibraryImage } from "./images";
 import { RESERVED_PROGRAMME_SLUGS } from "./sitemap";
-import type { SectionKey, SiteContent } from "./types";
+import type { FoundingOffer, PriceGroup, SectionKey, SiteContent } from "./types";
 
 // ---------- compile-time coverage check: each section's groups cover every key of its type ----------
 type GroupKeys<G> = G extends { fields: infer F } ? keyof F : never;
@@ -18,8 +19,11 @@ const COVERAGE: CoverageCheck = {
 void COVERAGE;
 
 export type ValidationError = { path: string; message: string };
-/** Ids that `refs` fields may point at (from the current stored content). Omit to skip existence checks. */
-export type RefSets = Partial<Record<RefSource, ReadonlySet<string>>>;
+/**
+ * Ids that `refs` fields may point at (from the current stored content), plus the current pricing groups for the
+ * founding-offer price rule. Omit any of them to skip that check.
+ */
+export type RefSets = Partial<Record<RefSource, ReadonlySet<string>>> & { pricingGroups?: readonly PriceGroup[] };
 export type SectionValidation<K extends SectionKey> = { ok: true; value: SiteContent[K] } | { ok: false; errors: ValidationError[] };
 
 export const ID_RE = /^[a-z0-9-]{1,60}$/;
@@ -238,10 +242,16 @@ class Walker {
 }
 
 /** Cross-field rules that the per-field schema can't express. */
-function refine(section: SectionKey, value: Record<string, unknown>, w: Walker) {
+function refine(section: SectionKey, value: Record<string, unknown>, w: Walker, refs: RefSets) {
   if (section === "settings") {
-    const f = value.founding as { cap: number; claimed: number } | undefined;
+    const f = value.founding as FoundingOffer | undefined;
     if (f && Number.isFinite(f.cap) && f.claimed > f.cap) w.fail("founding.claimed", "Claimed spots can't exceed the cap.");
+    // Founding price sanity rule (src/content/founding.ts): an existing, priced membership tier, and a price of at least
+    // half its standard price and below it. A switched-off offer may be saved with any numbers.
+    if (f?.enabled && refs.pricingGroups) {
+      const terms = foundingTerms(f, refs.pricingGroups);
+      if (!terms.ok) w.fail(`founding.${terms.field}`, terms.reason);
+    }
     const socials = (value.socials as { platform: string }[] | undefined) ?? [];
     const seen = new Set<string>();
     socials.forEach((s, i) => {
@@ -273,7 +283,7 @@ function refine(section: SectionKey, value: Record<string, unknown>, w: Walker) 
 export function validateSection<K extends SectionKey>(section: K, input: unknown, refs: RefSets = {}): SectionValidation<K> {
   const w = new Walker(refs);
   const value = w.object(sectionFields(section), input, "");
-  if (w.errors.length === 0) refine(section, value, w);
+  if (w.errors.length === 0) refine(section, value, w, refs);
   if (w.errors.length > 0) return { ok: false, errors: w.errors.slice(0, 100) };
   return { ok: true, value: value as SiteContent[K] };
 }
@@ -283,5 +293,6 @@ export function refSetsFor(content: SiteContent): RefSets {
   return {
     pricingItems: new Set(content.pricing.groups.flatMap((g) => g.items.map((i) => i.id))),
     recoveryModalities: new Set(content.recovery.modalities.map((m) => m.id)),
+    pricingGroups: content.pricing.groups,
   };
 }

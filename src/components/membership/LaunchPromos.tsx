@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getSiteContent } from "@/content/get";
 import { formatPhp } from "@/content/format";
 import type { FoundingOffer, PriceGroup, PriceItem } from "@/content/types";
-import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
 import { localHref, t } from "@/i18n/server";
 import Money from "./Money";
@@ -29,7 +28,7 @@ export function launchPromoPrices(groups: readonly PriceGroup[]) {
  * founding page shows and checkout charges (src/lib/payments/founding.ts). Null while the offer is off.
  */
 export function launchFoundingRate(founding: FoundingOffer, groups: readonly PriceGroup[]) {
-  return founding.enabled ? foundingSaving(founding.example, groups) : null;
+  return foundingSaving(founding, groups);
 }
 
 type Promo = {
@@ -51,7 +50,6 @@ export default async function LaunchPromos() {
   const prices = launchPromoPrices(pricing.groups);
   const weekend = findItem(pricing.groups, "day-pass-weekend");
   const founding = launchFoundingRate(settings.founding, pricing.groups);
-  const foundingId = foundingItemId(settings.founding.example);
   const cap = Math.max(0, Math.floor(settings.founding.cap));
 
   const promos: Promo[] = [];
@@ -61,8 +59,8 @@ export default async function LaunchPromos() {
       percent: percentText(founding.percent),
       cap: cap > 0 ? t(", for the first {cap} founding members", { cap }) : "",
     }),
-    perks: findItem(pricing.groups, foundingId)?.features ?? [],
-    buy: { label: t("Purchase"), href: payHref(foundingId, "founding") },
+    perks: findItem(pricing.groups, founding.tierId)?.features ?? [],
+    buy: { label: t("Purchase"), href: payHref(founding.tierId, "founding") },
   });
   if (prices.dayStandard != null && prices.dayWeekend != null) promos.push({
     tag: t("Visitors"), title: t("Day pass"), a: [t("Standard"), php(prices.dayStandard)], b: [t("Weekend"), php(prices.dayWeekend)],

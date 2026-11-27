@@ -169,7 +169,7 @@ export const EDITOR_SCHEMA = {
       {
         title: "Early member offer",
         anchor: "/membership#founding",
-        help: "Approved offer: Athlete at Php 3,150/month vs Php 4,500 standard (30% off), capped at 100 members. The first Php amount in the example line is what checkout charges.",
+        help: "Approved offer: Athlete at Php 3,150/month vs Php 4,500 standard (30% off), capped at 100 members. Checkout charges the founding price below; the standard price is the tier's price in Pricing → Memberships. The founding price must be at least half of the standard price and lower than it, otherwise the offer can't be saved (and is switched off on the site).",
         fields: {
           founding: {
             kind: "object", label: "",
@@ -177,7 +177,8 @@ export const EDITOR_SCHEMA = {
               enabled: bool("Show the early offer"),
               title: title(),
               summary: area("Summary", { max: 400 }),
-              example: text("Example", { max: 200 }),
+              tierId: text("Founding tier (membership item ID)", { required: true, max: 60, format: "slug", help: "The ID of the monthly membership the founding rate applies to, as listed in Pricing → Memberships (e.g. athlete)." }),
+              price: int("Founding price (Php per month, whole pesos)", 1, 1_000_000, "What checkout charges founding members each month, e.g. 3150 for Php 3,150. Type digits only: no Php sign, commas or decimals."),
               benefits: lines("Benefits", 8, 200),
               cap: int("Member cap", 1, 100000, "Founding spots on sale. Once they're all taken the counter reads \"Founding spots are full\" and checkout stops offering the founding rate."),
               claimed: int("Spots taken (minimum)", 0, 100000, "Founding members who joined offline (cash, bank transfer). The public counter shows this number or the paid online founding memberships, whichever is larger, so leave it at 0 to count online payments only. It must reflect real sign-ups."),
