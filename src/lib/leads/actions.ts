@@ -8,15 +8,9 @@ import { clientIp } from "@/lib/rateLimit";
 import { createSharedLimiter } from "@/lib/sharedLimiter";
 import { addLead } from "./store";
 import type { LeadKind, LeadResult } from "./types";
-import { validateLead } from "./validate";
+import { leadMessages, validateLead } from "./validate";
 
-const SUCCESS: Record<LeadKind, string> = {
-  "early-access": "You're on the early access list. We'll be in touch with early-member rates and opening updates.",
-  booking: "Request received. We'll confirm availability by email or phone.",
-  enquiry: "Thanks, your inquiry is in. We'll reply by email.",
-  newsletter: "You're on the list.",
-};
-const STORE_ERROR = "We couldn't save your details just now. Please email basecampcamsur@gmail.com.";
+// Messages: src/i18n/ui.ts `leads`, in the language of the form's hidden `locale` field (validate.ts leadMessages).
 
 // Rate limit shared across instances via Redis (per-instance when Redis is absent or down): 8 submissions per
 // 10 minutes per client IP (spoofable when self-hosted without a proxy), plus a global cap that does not depend on the IP.
@@ -26,15 +20,16 @@ const limiter = createSharedLimiter({ name: "leads", windowMs: WINDOW_MS, perKey
 export async function submitLead(_prev: LeadResult, formData: FormData): Promise<LeadResult> {
   // Public: requests, inquiries, bookings and sign-ups need no account (only checkout does). Spam is held back by
   // the honeypot field and the rate limit below.
+  const m = leadMessages(formData);
   const result = validateLead(formData);
-  if (result.ok && result.honeypot) return { status: "success", message: SUCCESS[kindOf(formData)] };
+  if (result.ok && result.honeypot) return { status: "success", message: m.success[kindOf(formData)] };
 
   const ip = clientIp(await headers());
-  if (await limiter.take(ip)) return { status: "error", message: "Too many submissions. Please try again in a few minutes." };
+  if (await limiter.take(ip)) return { status: "error", message: m.tooMany };
 
   if (!result.ok) {
     const { form, ...fieldErrors } = result.fieldErrors;
-    return { status: "error", message: form ?? "Please check the highlighted fields.", fieldErrors };
+    return { status: "error", message: form ?? m.checkFields, fieldErrors };
   }
 
   try {
@@ -42,9 +37,9 @@ export async function submitLead(_prev: LeadResult, formData: FormData): Promise
     const memberId = await currentMemberId();
     await addLead({ ...result.lead, ...(memberId ? { memberId } : {}), id: randomUUID(), createdAt: new Date().toISOString(), status: "new", notes: "" });
   } catch {
-    return { status: "error", message: STORE_ERROR };
+    return { status: "error", message: m.storeError };
   }
-  return { status: "success", message: SUCCESS[result.lead.kind] };
+  return { status: "success", message: m.success[result.lead.kind] };
 }
 
 function kindOf(formData: FormData): LeadKind {

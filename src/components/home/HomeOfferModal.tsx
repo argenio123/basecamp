@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 import type { FoundingOffer } from "@/content/types";
+import { useLocale } from "@/i18n/client";
+import { UI } from "@/i18n/ui";
 import { trapFocus } from "@/lib/focusTrap";
 import { markOfferSeen, takeOfferVisit } from "@/lib/home-offer-visit";
 import { LOGGED_OUT_KEY } from "@/lib/members/types";
@@ -25,12 +27,12 @@ const EXIT_INTENT_AFTER_MS = 3_000; // desktop only: pointer leaves through the 
 // Retry delay when a trigger fires while the visitor is busy (menu open, typing, another overlay).
 const RETRY_MS = 2_000;
 
-/** Icon strip along the bottom of the ad. */
-const STRIP = [
-  { label: "Build endurance", icon: "M13 4a2 2 0 1 1 0 .1M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3M6 21l3-6" },
-  { label: "Increase strength", icon: "M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12" },
-  { label: "Recover better", icon: "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" },
-  { label: "Join the community", icon: "M12 4a3 3 0 1 1 0 6a3 3 0 1 1 0-6M5 9a2 2 0 1 1 0 4a2 2 0 1 1 0-4M19 9a2 2 0 1 1 0 4a2 2 0 1 1 0-4M7 20v-2a5 5 0 0 1 10 0v2M2 19v-1a3 3 0 0 1 3.5-3M22 19v-1a3 3 0 0 0-3.5-3" },
+/** Icon strip along the bottom of the ad (labels: src/i18n/ui.ts offer.strip, same order). */
+const STRIP_ICONS = [
+  { icon: "M13 4a2 2 0 1 1 0 .1M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3M6 21l3-6" },
+  { icon: "M3 10v4M6 8v8M18 8v8M21 10v4M6 12h12" },
+  { icon: "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" },
+  { icon: "M12 4a3 3 0 1 1 0 6a3 3 0 1 1 0-6M5 9a2 2 0 1 1 0 4a2 2 0 1 1 0-4M19 9a2 2 0 1 1 0 4a2 2 0 1 1 0-4M7 20v-2a5 5 0 0 1 10 0v2M2 19v-1a3 3 0 0 1 3.5-3M22 19v-1a3 3 0 0 0-3.5-3" },
 ];
 
 const NON_TEXT_INPUTS = new Set(["button", "submit", "reset", "checkbox", "radio", "range", "color", "file", "image"]);
@@ -49,6 +51,8 @@ function visitorIsBusy() {
 }
 
 export default function HomeOfferModal({ offer, fromPrice = null }: { offer: FoundingOffer; fromPrice?: number | null }) {
+  const locale = useLocale();
+  const ui = UI[locale].offer;
   const [open, setOpen] = useState(false);
   // The photo only mounts once the offer is due and the page has loaded: the closed modal sits in the viewport
   // (fixed, just invisible), so even a lazy image would otherwise download alongside the hero.
@@ -193,16 +197,16 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
 
   return (
     <div className="home-offer-modal" data-open={open ? "true" : "false"} aria-hidden={!open} inert={!open}>
-      <button className="home-offer-backdrop" type="button" aria-label="Close founding offer" onClick={closeModal} />
-      <section ref={dialogRef} className="home-offer-dialog home-offer-dialog--flyer" role="dialog" aria-modal="true" aria-labelledby={lowest ? "home-offer-title" : undefined} aria-label={lowest ? undefined : "BaseCamp CamSur memberships"}>
-        <button ref={closeRef} className="home-offer-close" type="button" aria-label="Close founding offer" onClick={closeModal}>&times;</button>
+      <button className="home-offer-backdrop" type="button" aria-label={ui.close} onClick={closeModal} />
+      <section ref={dialogRef} className="home-offer-dialog home-offer-dialog--flyer" role="dialog" aria-modal="true" aria-labelledby={lowest ? "home-offer-title" : undefined} aria-label={lowest ? undefined : ui.dialog}>
+        <button ref={closeRef} className="home-offer-close" type="button" aria-label={ui.close} onClick={closeModal}>&times;</button>
 
         {/* Flyer-style ad: the photo fills the whole card; slanted headline, perk blocks, and an icon strip on top. */}
         <figure className="home-offer-bg">
           {primed && (
             <Image
               src={OFFER_PHOTO}
-              alt={aiImageAlt("An athlete pulling SkiErg-style cable handles in the glass-walled BaseCamp CamSur training hall")}
+              alt={aiImageAlt(ui.photoAlt, locale)}
               fill
               sizes="(max-width: 860px) 100vw, 1120px"
               className="home-offer-bg-image"
@@ -215,20 +219,18 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
           <Image src="/images/brand/basecamp-camsur-logo-white.png" alt="BaseCamp CamSur" width={150} height={150} className="home-offer-logo" />
           {lowest && (
             <>
-              <p className="home-offer-kicker">Monthly memberships</p>
-              <h2 id="home-offer-title">As low as<span className="home-offer-amount">{lowest} <small>PHP</small></span></h2>
+              <p className="home-offer-kicker">{ui.kicker}</p>
+              <h2 id="home-offer-title">{ui.asLowAs}<span className="home-offer-amount">{lowest} <small>PHP</small></span></h2>
             </>
           )}
-          <p className="home-offer-ribbon">Unlimited open gym. Then step up:</p>
+          <p className="home-offer-ribbon">{ui.ribbon}</p>
           <ul className="home-offer-perks">
-            <li>Coached classes</li>
-            <li>Recovery credits</li>
-            <li>Priority booking</li>
+            {ui.perks.map((perk) => <li key={perk}>{perk}</li>)}
           </ul>
           <div className="home-offer-actions home-offer-cta">
           <div className="home-offer-buttons" onClick={completeOffer}>
             <EarlyAccessLink className="home-offer-primary">
-              <span className="home-offer-primary-text"><b>Get it now</b></span>
+              <span className="home-offer-primary-text"><b>{ui.cta}</b></span>
               <span className="home-offer-primary-arrow" aria-hidden="true">→</span>
             </EarlyAccessLink>
           </div>
@@ -236,7 +238,7 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
         </div>
 
         <ul className="home-offer-strip">
-          {STRIP.map((item) => <li key={item.label}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} /></svg>{item.label}</li>)}
+          {STRIP_ICONS.map((item, i) => <li key={item.icon}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} /></svg>{ui.strip[i]}</li>)}
         </ul>
       </section>
     </div>

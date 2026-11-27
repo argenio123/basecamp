@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { ImageLabel } from "@/components/ui/AiImageLabel";
 import FoundingCounter from "@/components/ui/FoundingCounter";
-import { formatDateLabel } from "@/content/format";
+import { getLocale, t } from "@/i18n/server";
+import { formatDateIn } from "@/i18n/ui";
 import type { SiteContent } from "@/content/types";
 
 type Props = { c: SiteContent; titleClassName?: string };
@@ -23,7 +24,7 @@ export function TrainAndRecover({ c, titleClassName }: Props) {
       <div className="hm-stats-shade" aria-hidden="true" />
       <div className="shell hm-stats-inner">
         <div className="hm-stats-copy" data-home-reveal>
-          <p className="eyebrow eyebrow-light">Train &amp; recover</p>
+          <p className="eyebrow eyebrow-light">{t("Train & recover")}</p>
           <h2 className={titleClassName}>{s.title}</h2>
           {s.intro && <p className="lead">{s.intro}</p>}
         </div>
@@ -46,8 +47,8 @@ export function TrainAndRecover({ c, titleClassName }: Props) {
 export function EarlyAccess({ c, titleClassName }: Props) {
   const s = c.home.earlyAccess;
   const founding = c.settings.founding;
-  const t = c.home.testimonials;
-  const testimonials = t.enabled ? c.people.testimonials : [];
+  const tm = c.home.testimonials;
+  const testimonials = tm.enabled ? c.people.testimonials : [];
   const reviews = c.settings.contact.googleReviewsUrl;
   return (
     <section id="early-access" className="section hm-section hm-early" data-home-reveal>
@@ -64,14 +65,14 @@ export function EarlyAccess({ c, titleClassName }: Props) {
                 ? <ul className="hm-check-list hm-early-founding-list">{founding.benefits.map((b, i) => <li key={`${i}-${b}`}>{b}</li>)}</ul>
                 : founding.summary && <p>{founding.summary}</p>}
               <FoundingCounter founding={founding} />
-              {founding.expiresOn && <p className="hm-early-expires">Early rates end {formatDateLabel(founding.expiresOn)}</p>}
+              {founding.expiresOn && <p className="hm-early-expires">{t("Early rates end {date}", { date: formatDateIn(founding.expiresOn, getLocale()) })}</p>}
             </div>
           )}
         </div>
       </div>
       {testimonials.length > 0 && (
         <div id="testimonials" className="shell hm-early-quotes">
-          {t.title && <h3 data-home-reveal>{t.title}</h3>}
+          {tm.title && <h3 data-home-reveal>{tm.title}</h3>}
           <ul className="hm-quote-grid">
             {testimonials.map((item, index) => (
               <li key={item.id} data-home-reveal data-home-reveal-delay={COLUMN_DELAYS[index % 3]}>
@@ -82,7 +83,7 @@ export function EarlyAccess({ c, titleClassName }: Props) {
               </li>
             ))}
           </ul>
-          {reviews && <div className="section-link" data-home-reveal><a href={reviews} className="text-link light" target="_blank" rel="noreferrer">Read our Google reviews</a></div>}
+          {reviews && <div className="section-link" data-home-reveal><a href={reviews} className="text-link light" target="_blank" rel="noreferrer">{t("Read our Google reviews")}</a></div>}
         </div>
       )}
     </section>

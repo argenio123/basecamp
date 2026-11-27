@@ -8,14 +8,33 @@
 // Filipino style: everyday Philippine Filipino / Taglish as used in local gym marketing. Keep English for the words
 // Filipinos use in English anyway (membership, class, coach, recovery, booking, email), Filipino for the actions
 // (Sumali, Mag-book, Mag-login). `{name}` placeholders are filled by fmt().
-import type { LaunchPhase } from "@/content/types";
+import { formatDateLabel } from "@/content/format";
+import { AUDIENCE_LABEL, AVAILABILITY_LABEL, PHASE_COPY } from "@/content/labels";
+import type { Audience, Availability, GalleryPost, LaunchPhase } from "@/content/types";
 import { PRIVACY_EMAIL, PRIVACY_NOTE } from "@/data/brand";
+import type { LeadKind } from "@/lib/leads/types";
 import type { Locale } from "./config";
 
 /** Fills {placeholders}: fmt("Explore {label}", { label: "Visit" }). Unknown placeholders are left as-is. */
 export function fmt(template: string, vars: Record<string, string | number> = {}): string {
   return template.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
 }
+
+const filDate = new Intl.DateTimeFormat("fil-PH", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Manila" });
+
+/** "YYYY-MM-DD" → "12 March 2027" (en, content/format.ts formatDateLabel) / "Marso 12, 2027" (fil); invalid → "To be
+ *  announced" / "Iaanunsyo pa". Call it on the server (Intl month names can differ between browsers). */
+export function formatDateIn(date: string, locale: Locale): string {
+  const en = formatDateLabel(date);
+  if (locale === "en") return en;
+  if (en === "To be announced") return UI[locale].common.toBeAnnounced;
+  return filDate.format(new Date(`${date}T00:00:00+08:00`));
+}
+
+/** Contact-form inquiry types (components/forms/InterestForm.tsx). */
+export type InquiryIntent = "membership" | "camp-group" | "corporate" | "partnership" | "media";
+type IntentStrings = { label: string; short: string; description: string; submitLabel: string; successTitle: string; successBody: string; nextLabel: string };
+type PhaseStrings = { scheduleNotice: string; bookingSubmit: string; ctaLabel: string };
 
 /** Site-map overlay per English href (page label, section-tab label, one-line summary). */
 export type PageStrings = { label?: string; tabLabel?: string; summary?: string };
@@ -42,6 +61,215 @@ const en = {
     skipToContent: "Skip to content",
     copyAddress: "Copy address",
     addressCopied: "Address copied",
+    toBeAnnounced: "To be announced",
+  },
+  /** Breadcrumbs, related cards, previous / next pager, sub-page cards (components/nav). */
+  nav: {
+    breadcrumb: "Breadcrumb",
+    /** Heading of the sub-page cards on section overviews. */
+    exploreTitle: "Explore",
+    related: "Related",
+    previous: "Previous",
+    next: "Next",
+    backTo: "Back to",
+    allOf: "All of {label}",
+    sectionPages: "{label} pages",
+  },
+  /** components/ui/AiImageLabel: the pill text and the alt-text prefixes ({alt} = the original alt text). */
+  imageLabel: {
+    ai: "AI-generated image",
+    render: "Concept render",
+    aiAlt: "AI illustration: {alt}",
+    renderAlt: "Architectural render: {alt}",
+  },
+  /** src/content/labels.ts in each language, keyed the same way (English = those exports). */
+  labels: {
+    availability: AVAILABILITY_LABEL as Record<Availability, string>,
+    phase: PHASE_COPY as Record<LaunchPhase, PhaseStrings>,
+    audience: AUDIENCE_LABEL as Record<Audience, string>,
+  },
+  /** components/features/FindUsMap. */
+  map: {
+    open: "Open in Google Maps",
+    title: "Map: BaseCamp CamSur",
+    view: "Map view",
+    satellite: "Satellite",
+    map: "Map",
+    explore: "Click to explore the map",
+  },
+  /** components/privacy/AnalyticsConsent (banner + footer "Cookie settings"). */
+  consent: {
+    title: "Analytics cookies",
+    text: "May we use Google Analytics cookies to count visits and see which pages help people? They stay off unless you accept. You can change this any time with \"Cookie settings\" in the footer.",
+    details: "Cookie details",
+    current: "Current choice:",
+    accepted: "accepted",
+    declined: "declined",
+    decline: "Decline",
+    accept: "Accept",
+    settings: "Cookie settings",
+  },
+  /** components/SocialGallery. */
+  gallery: {
+    profile: "BaseCamp CamSur on {platform}",
+    openPost: "Open {platform} {type} post: {caption}",
+    viewOn: "View on {platform}",
+    postAlt: "{type} at BaseCamp CamSur",
+    previous: "Previous social post",
+    next: "Next social post",
+    close: "Close social post",
+    share: "Share",
+    linkCopied: "Link copied",
+    pillars: {
+      training: "Training",
+      nature: "Nature",
+      community: "Community",
+      build: "Build",
+      coaches: "Coaches",
+      recovery: "Recovery",
+    } as Record<GalleryPost["pillar"], string>,
+  },
+  /** components/home/HomeOfferModal (homepage membership flyer). */
+  offer: {
+    close: "Close founding offer",
+    dialog: "BaseCamp CamSur memberships",
+    photoAlt: "An athlete pulling SkiErg-style cable handles in the glass-walled BaseCamp CamSur training hall",
+    kicker: "Monthly memberships",
+    asLowAs: "As low as",
+    ribbon: "Unlimited open gym. Then step up:",
+    perks: ["Coached classes", "Recovery credits", "Priority booking"],
+    cta: "Get it now",
+    /** Icon strip, in order: endurance, strength, recovery, community. */
+    strip: ["Build endurance", "Increase strength", "Recover better", "Join the community"],
+  },
+  /** components/forms/StepFlow (one-question-per-screen forms). */
+  flow: {
+    start: "Start",
+    preferCall: "Prefer to call or write?",
+    question: "Question {index} of {total}",
+    pickOne: "Pick one to continue",
+    back: "Back",
+    continue: "Continue",
+  },
+  /** components/forms/InterestForm (/contact) and EarlyAccessForm. Values sent to staff stay English. */
+  inquiry: {
+    steps: ["Purpose", "Details", "Sent"],
+    progress: "Contact form: step {step} of 3",
+    chooseEyebrow: "Choose your inquiry",
+    chooseTitle: "What can we help with?",
+    chooseBody: "Select one so we only ask for relevant details.",
+    intents: {
+      membership: {
+        label: "Membership",
+        short: "Train with us",
+        description: "Memberships, passes, classes, and recovery access.",
+        submitLabel: "Request membership guidance",
+        successTitle: "Your membership request is in.",
+        successBody: "We’ll recommend the best starting option and send early-access details by email.",
+        nextLabel: "Compare membership options",
+      },
+      "camp-group": {
+        label: "Camps & groups",
+        short: "Bring your crew",
+        description: "Training camps, group trips, coach-led groups, and longer stays.",
+        submitLabel: "Send camp inquiry",
+        successTitle: "Your camp brief is with us.",
+        successBody: "We’ll review your dates and group needs before replying with the most relevant format.",
+        nextLabel: "Explore camps and trips",
+      },
+      corporate: {
+        label: "Corporate",
+        short: "Move as a team",
+        description: "Off-sites, team sessions, and company wellness programs.",
+        submitLabel: "Send corporate inquiry",
+        successTitle: "Your team brief is in.",
+        successBody: "We’ll review your group size, goals, and timing before suggesting a format.",
+        nextLabel: "See corporate options",
+      },
+      partnership: {
+        label: "Partnerships",
+        short: "Build with us",
+        description: "Brand, wellness, ambassador, and community collaborations.",
+        submitLabel: "Send partnership inquiry",
+        successTitle: "The partnership team has your note.",
+        successBody: "We’ll review the fit and contact you if there is a strong next step to explore together.",
+        nextLabel: "Learn more about BaseCamp",
+      },
+      media: {
+        label: "Media",
+        short: "Tell the story",
+        description: "Interviews, press information, filming, and editorial requests.",
+        submitLabel: "Send media request",
+        successTitle: "Your media request is queued.",
+        successBody: "We’ll check the deadline and connect you with the right person or materials.",
+        nextLabel: "View the build story",
+      },
+    } as Record<InquiryIntent, IntentStrings>,
+    received: "Request received",
+    expected: "Expected response: within one business day.",
+    another: "Start another inquiry",
+    change: "← Change inquiry type",
+    replyAim: "We aim to reply within one business day.",
+    firstName: "First name",
+    surname: "Surname",
+    phone: "Phone",
+    phoneWhatsapp: "Phone / WhatsApp",
+    consent: "I'm 18+ and agree to be contacted by BaseCamp CamSur about this request.",
+    anythingElse: "Anything else?",
+    messagePlaceholder: "Share any priorities, questions, or useful context.",
+    chooseOne: "Choose one",
+    notSure: "Not sure yet",
+    iAm: "I am a…",
+    joinList: "Join the early access list",
+    submitAnother: "Submit another response",
+    fields: {
+      tier: "Membership option",
+      frequency: "Training frequency",
+      goal: "Main training goal",
+      goalPlaceholder: "Strength, conditioning, race preparation…",
+      dates: "Preferred dates",
+      datesPlaceholder: "Month, date range or flexible",
+      groupSize: "Estimated group size",
+      origin: "Traveling from",
+      originPlaceholder: "City / country",
+      focus: "Camp focus",
+      organisation: "Company / organization",
+      teamSize: "Estimated team size",
+      targetDate: "Target date",
+      objective: "Main objective",
+      brand: "Brand / organization",
+      partnershipType: "Partnership type",
+      website: "Website or profile",
+      publication: "Publication / channel",
+      requestType: "Request type",
+      deadline: "Deadline",
+    },
+    /** Display text for English option values (select options, personas); the English value is what gets sent. */
+    options: {} as Partial<Record<string, string>>,
+  },
+  /** Server Action messages (src/lib/leads/validate.ts + actions.ts), chosen by the form's hidden `locale` field. */
+  leads: {
+    success: {
+      "early-access": "You're on the early access list. We'll be in touch with early-member rates and opening updates.",
+      booking: "Request received. We'll confirm availability by email or phone.",
+      enquiry: "Thanks, your inquiry is in. We'll reply by email.",
+      newsletter: "You're on the list.",
+    } as Record<LeadKind, string>,
+    storeError: "We couldn't save your details just now. Please email basecampcamsur@gmail.com.",
+    tooMany: "Too many submissions. Please try again in a few minutes.",
+    checkFields: "Please check the highlighted fields.",
+    formInvalid: "This form could not be submitted. Please refresh and try again.",
+    emailRequired: "Enter your email address.",
+    emailInvalid: "Enter a valid email address.",
+    firstNameRequired: "Enter your first name.",
+    /** {max} is a formatted number ("80", "2,000"). */
+    maxChars: "Use {max} characters or fewer.",
+    phoneInvalid: "Enter a valid phone number.",
+    consent: "Please tick the box to continue.",
+    enquiryType: "Choose an inquiry type.",
+    messageRequired: "Enter your message.",
+    service: "Choose what you'd like to book.",
+    partySize: "Enter a group size from 1 to 60.",
   },
   header: {
     homeLabel: "BaseCamp CamSur home",
@@ -67,6 +295,7 @@ const en = {
     systemSettings: "System settings",
     logOut: "Log out",
     loggingOut: "Logging out…",
+    openMenu: "Open member menu",
   },
   /** Header prompt button per launch phase (content/labels.ts PHASE_COPY.ctaLabel). */
   phaseCta: {
@@ -169,6 +398,244 @@ const fil: UiDict = {
     skipToContent: "Lumaktaw sa nilalaman",
     copyAddress: "Kopyahin ang address",
     addressCopied: "Nakopya na ang address",
+    toBeAnnounced: "Iaanunsyo pa",
+  },
+  nav: {
+    breadcrumb: "Breadcrumb",
+    exploreTitle: "Tuklasin",
+    related: "Kaugnay",
+    previous: "Nakaraan",
+    next: "Susunod",
+    backTo: "Bumalik sa",
+    allOf: "Lahat ng {label}",
+    sectionPages: "Mga pahina ng {label}",
+  },
+  // aiAlt must start with "AI" and renderAlt must contain "render": aiImageAlt / renderImageAlt use that to avoid
+  // prefixing twice.
+  imageLabel: {
+    ai: "AI-generated na larawan",
+    // Same wording as the facilities showcase tag (components/facilities/FacilityShowcase).
+    render: "Render ng disenyo",
+    aiAlt: "AI na ilustrasyon: {alt}",
+    renderAlt: "Architectural render: {alt}",
+  },
+  labels: {
+    availability: {
+      available: "Available na",
+      "at-launch": "Sa pagbubukas",
+      "phase-2": "Phase 2",
+      planned: "Nakaplano",
+    },
+    phase: {
+      "pre-launch": {
+        scheduleNotice: "Preview ng timetable: magbubukas ang mga session sa launch at kinukumpirma pa ang eksaktong oras.",
+        bookingSubmit: "Mag-request ng early access",
+        ctaLabel: "Kunin ang early access",
+      },
+      "soft-opening": {
+        scheduleNotice: "Soft opening: invitation-only na mga session para sa early members.",
+        bookingSubmit: "Mag-request ng session",
+        ctaLabel: "Maging early member",
+      },
+      live: {
+        scheduleNotice: "Bukas na ang BaseCamp. Mag-request ng session sa ibaba.",
+        bookingSubmit: "Mag-request ng booking",
+        ctaLabel: "Mag-book ng session",
+      },
+    },
+    audience: {
+      beginner: "Bago pa lang ako",
+      local: "Lokal na atleta",
+      traveller: "Bumibisita",
+      competitor: "Nagko-compete",
+      corporate: "Corporate",
+      recovery: "Recovery",
+    },
+  },
+  map: {
+    open: "Buksan sa Google Maps",
+    title: "Mapa: BaseCamp CamSur",
+    view: "View ng mapa",
+    satellite: "Satellite",
+    map: "Mapa",
+    explore: "I-click para i-explore ang mapa",
+  },
+  consent: {
+    title: "Analytics cookies",
+    text: "Puwede ba naming gamitin ang Google Analytics cookies para mabilang ang mga bisita at makita kung aling mga pahina ang nakakatulong? Naka-off ang mga ito hangga't hindi ka pumapayag. Puwede mo itong baguhin kahit kailan sa \"Cookie settings\" sa footer.",
+    details: "Detalye ng cookies",
+    current: "Kasalukuyang pinili:",
+    accepted: "tinanggap",
+    declined: "tinanggihan",
+    decline: "Tanggihan",
+    accept: "Tanggapin",
+    settings: "Cookie settings",
+  },
+  gallery: {
+    profile: "BaseCamp CamSur sa {platform}",
+    openPost: "Buksan ang {type} post sa {platform}: {caption}",
+    viewOn: "Tingnan sa {platform}",
+    postAlt: "{type} sa BaseCamp CamSur",
+    previous: "Nakaraang social post",
+    next: "Susunod na social post",
+    close: "Isara ang social post",
+    share: "I-share",
+    linkCopied: "Nakopya ang link",
+    pillars: {
+      training: "Training",
+      nature: "Kalikasan",
+      community: "Komunidad",
+      build: "Pagpapatayo",
+      coaches: "Mga coach",
+      recovery: "Recovery",
+    },
+  },
+  offer: {
+    close: "Isara ang founding offer",
+    dialog: "Mga membership sa BaseCamp CamSur",
+    photoAlt: "Atletang humihila ng SkiErg-style na cable handles sa glass-walled na training hall ng BaseCamp CamSur",
+    kicker: "Buwanang membership",
+    asLowAs: "Kasing-baba ng",
+    ribbon: "Unlimited open gym. Tapos mag-level up:",
+    perks: ["Mga coached class", "Recovery credits", "Priority booking"],
+    cta: "Kunin na",
+    strip: ["Palakasin ang endurance", "Dagdagan ang lakas", "Mas mabilis na recovery", "Sumali sa komunidad"],
+  },
+  flow: {
+    start: "Simulan",
+    preferCall: "Mas gusto mong tumawag o mag-email?",
+    question: "Tanong {index} sa {total}",
+    pickOne: "Pumili ng isa para magpatuloy",
+    back: "Bumalik",
+    continue: "Magpatuloy",
+  },
+  inquiry: {
+    steps: ["Layunin", "Detalye", "Naipadala"],
+    progress: "Contact form: hakbang {step} sa 3",
+    chooseEyebrow: "Piliin ang iyong inquiry",
+    chooseTitle: "Paano ka namin matutulungan?",
+    chooseBody: "Pumili ng isa para ang mga kailangang detalye lang ang itatanong namin.",
+    intents: {
+      membership: {
+        label: "Membership",
+        short: "Mag-train kasama namin",
+        description: "Memberships, passes, classes, at recovery access.",
+        submitLabel: "Humingi ng tulong sa membership",
+        successTitle: "Natanggap na namin ang iyong membership request.",
+        successBody: "Irerekomenda namin ang pinakaangkop na panimulang option at ipapadala ang early-access details sa email.",
+        nextLabel: "Ikumpara ang membership options",
+      },
+      "camp-group": {
+        label: "Camps at grupo",
+        short: "Isama ang iyong crew",
+        description: "Training camps, group trips, coach-led na grupo, at mas mahabang stay.",
+        submitLabel: "Ipadala ang camp inquiry",
+        successTitle: "Natanggap na namin ang iyong camp brief.",
+        successBody: "Titingnan namin ang iyong mga petsa at pangangailangan ng grupo bago kami sumagot ng pinakaangkop na format.",
+        nextLabel: "Tingnan ang camps at trips",
+      },
+      corporate: {
+        label: "Corporate",
+        short: "Kumilos bilang team",
+        description: "Off-sites, team sessions, at company wellness programs.",
+        submitLabel: "Ipadala ang corporate inquiry",
+        successTitle: "Natanggap na namin ang iyong team brief.",
+        successBody: "Titingnan namin ang laki ng grupo, mga layunin, at timing bago kami magmungkahi ng format.",
+        nextLabel: "Tingnan ang corporate options",
+      },
+      partnership: {
+        label: "Partnerships",
+        short: "Bumuo kasama namin",
+        description: "Brand, wellness, ambassador, at community collaborations.",
+        submitLabel: "Ipadala ang partnership inquiry",
+        successTitle: "Nasa partnership team na ang iyong mensahe.",
+        successBody: "Titingnan namin kung swak, at kokontakin ka namin kung may magandang susunod na hakbang na puwede nating gawin nang magkasama.",
+        nextLabel: "Alamin pa ang tungkol sa BaseCamp",
+      },
+      media: {
+        label: "Media",
+        short: "Ikuwento ang istorya",
+        description: "Interviews, press information, filming, at editorial requests.",
+        submitLabel: "Ipadala ang media request",
+        successTitle: "Nakapila na ang iyong media request.",
+        successBody: "Titingnan namin ang deadline at ikokonekta ka namin sa tamang tao o materyales.",
+        nextLabel: "Tingnan ang kuwento ng pagpapatayo",
+      },
+    },
+    received: "Natanggap ang request",
+    expected: "Inaasahang sagot: sa loob ng isang business day.",
+    another: "Magsimula ng bagong inquiry",
+    change: "← Palitan ang uri ng inquiry",
+    replyAim: "Sinisikap naming sumagot sa loob ng isang business day.",
+    firstName: "Pangalan",
+    surname: "Apelyido",
+    phone: "Telepono",
+    phoneWhatsapp: "Telepono / WhatsApp",
+    consent: "18 taong gulang pataas ako at pumapayag akong makontak ng BaseCamp CamSur tungkol sa request na ito.",
+    anythingElse: "May iba pa ba?",
+    messagePlaceholder: "Ibahagi ang mga priority, tanong, o anumang detalyeng makakatulong.",
+    chooseOne: "Pumili ng isa",
+    notSure: "Hindi pa sigurado",
+    iAm: "Ako ay…",
+    joinList: "Sumali sa early access list",
+    submitAnother: "Magpadala ng isa pang sagot",
+    fields: {
+      tier: "Membership option",
+      frequency: "Dalas ng training",
+      goal: "Pangunahing training goal",
+      goalPlaceholder: "Lakas, conditioning, paghahanda sa race…",
+      dates: "Gustong petsa",
+      datesPlaceholder: "Buwan, range ng petsa o flexible",
+      groupSize: "Tantiyang laki ng grupo",
+      origin: "Manggagaling sa",
+      originPlaceholder: "Lungsod / bansa",
+      focus: "Focus ng camp",
+      organisation: "Kumpanya / organisasyon",
+      teamSize: "Tantiyang laki ng team",
+      targetDate: "Target na petsa",
+      objective: "Pangunahing layunin",
+      brand: "Brand / organisasyon",
+      partnershipType: "Uri ng partnership",
+      website: "Website o profile",
+      publication: "Publication / channel",
+      requestType: "Uri ng request",
+      deadline: "Deadline",
+    },
+    options: {
+      "1–2 times a week": "1–2 beses kada linggo",
+      "3–4 times a week": "3–4 beses kada linggo",
+      "5+ times a week": "5+ beses kada linggo",
+      "Visiting / occasional": "Bumibisita / paminsan-minsan",
+      "Competition preparation": "Paghahanda sa competition",
+      "Recovery and wellness": "Recovery at wellness",
+      "Mixed group experience": "Halo-halong group experience",
+      "Private event": "Pribadong event",
+      "Local athlete (CamSur / Bicol)": "Lokal na atleta (CamSur / Bicol)",
+      "Manila / domestic traveler": "Taga-Manila / domestic na biyahero",
+      "International visitor": "Bisita mula sa ibang bansa",
+    },
+  },
+  leads: {
+    success: {
+      "early-access": "Nasa early access list ka na. Makikipag-ugnayan kami tungkol sa early-member rates at updates sa pagbubukas.",
+      booking: "Natanggap ang request. Kukumpirmahin namin ang availability sa email o telepono.",
+      enquiry: "Salamat, natanggap na namin ang iyong inquiry. Sasagot kami sa email.",
+      newsletter: "Nasa listahan ka na.",
+    },
+    storeError: "Hindi namin ma-save ang iyong detalye ngayon. Pakisuyong mag-email sa basecampcamsur@gmail.com.",
+    tooMany: "Masyadong maraming submission. Pakisubukan ulit pagkalipas ng ilang minuto.",
+    checkFields: "Pakitingnan ang mga naka-highlight na field.",
+    formInvalid: "Hindi ma-submit ang form na ito. Paki-refresh at subukan ulit.",
+    emailRequired: "Ilagay ang iyong email address.",
+    emailInvalid: "Maglagay ng tamang email address.",
+    firstNameRequired: "Ilagay ang iyong pangalan.",
+    maxChars: "Hanggang {max} character lang.",
+    phoneInvalid: "Maglagay ng tamang phone number.",
+    consent: "I-check ang kahon para makapagpatuloy.",
+    enquiryType: "Pumili ng uri ng inquiry.",
+    messageRequired: "Ilagay ang iyong mensahe.",
+    service: "Piliin kung ano ang gusto mong i-book.",
+    partySize: "Maglagay ng laki ng grupo mula 1 hanggang 60.",
   },
   header: {
     homeLabel: "BaseCamp CamSur home",
@@ -194,6 +661,7 @@ const fil: UiDict = {
     systemSettings: "System settings",
     logOut: "Mag-log out",
     loggingOut: "Nagla-log out…",
+    openMenu: "Buksan ang member menu",
   },
   phaseCta: {
     "pre-launch": "Kunin ang early access",
@@ -282,7 +750,7 @@ const fil: UiDict = {
     "/facilities/recovery": { label: "Recovery", summary: "Plunge pools, hyperbaric at mga therapy room." },
     "/facilities/lifestyle": { label: "Lounge, café at lockers", tabLabel: "Lifestyle", summary: "Lobby, café, work area at lockers." },
     "/membership": { label: "Membership", summary: "Early rates, membership tiers, at kung ano ang kasama sa bawat isa." },
-    "/membership/founding": { label: "Founding members", tabLabel: "Founding", summary: "Proposed na tipid na mga 29% sa unang anim na buwan o naka-lock na lifetime rate, plus founding perks." },
+    "/membership/founding": { label: "Founding members", tabLabel: "Founding", summary: "30% off sa unang anim na buwan o naka-lock na lifetime rate, plus founding perks." },
     "/membership/launch-promotions": { label: "Launch promos", tabLabel: "Promos", summary: "Mga launch rate na sinusubukan: introductory membership, weekend day pass, at early-booking camps." },
     "/membership/price-guide": { label: "Passes, recovery at iba pa", tabLabel: "Price guide", summary: "Panimulang presyo ng packs, passes, yoga, recovery, camps, at corporate bookings." },
     "/schedule": { label: "Iskedyul", summary: "Ang lingguhang ritmo at ang timetable." },

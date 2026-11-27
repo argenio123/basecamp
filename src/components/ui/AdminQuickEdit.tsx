@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import { adminTabForPath, LOGIN_PATH } from "@/content/sitemap";
+import { basePath } from "@/i18n/paths";
 
 // Shows "Edit this page ↗" when the non-httpOnly bc_admin_hint cookie is present (spec §A.4).
 // The hint grants nothing: /admin re-verifies the real session.
@@ -22,7 +23,8 @@ const getSnapshot = () => HINT_RE.test(document.cookie);
 const getServerSnapshot = () => false;
 
 export default function AdminQuickEdit() {
-  const pathname = usePathname();
+  // /fil pages edit the same content as their English page (admin stays English).
+  const pathname = basePath(usePathname() || "/");
   const hasHint = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   if (!hasHint || pathname.startsWith("/admin") || pathname === LOGIN_PATH) return null;
   const tab = adminTabForPath(pathname);

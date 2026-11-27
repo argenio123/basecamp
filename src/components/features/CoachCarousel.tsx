@@ -1,11 +1,13 @@
 import Image from "next/image";
 import type { Coach } from "@/content/types";
+import { t } from "@/i18n/server";
 
 /**
  * Coach / team carousel (reload-fitness.com "THE TEAM"): portrait cards with the name over the photo, a faded
  * ghost title behind, swipeable on every screen size. Renders nothing until coaches are added in /admin.
  */
-export default function CoachCarousel({ coaches, title = "The team" }: { coaches: readonly Coach[]; title?: string }) {
+export default function CoachCarousel({ coaches, title: titleProp }: { coaches: readonly Coach[]; title?: string }) {
+  const title = titleProp ?? t("The team");
   const list = coaches.filter((coach) => coach.name && coach.image);
   if (list.length === 0) return null;
   return (

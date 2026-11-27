@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { t } from "@/i18n/server";
 
 export type StripPhoto = { image: string; alt: string; caption?: string };
 
@@ -6,7 +7,7 @@ export type StripPhoto = { image: string; alt: string; caption?: string };
 export default function PhotoStrip({ photos }: { photos: readonly StripPhoto[] }) {
   if (photos.length === 0) return null;
   return (
-    <section className="ft-strip" aria-label="Photos">
+    <section className="ft-strip" aria-label={t("Photos")}>
       <ul className="ft-strip-row" data-reveal="stagger">
         {photos.slice(0, 4).map((photo) => (
           <li key={photo.image} className="ft-strip-item">

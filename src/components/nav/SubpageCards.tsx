@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ImageLabel } from "@/components/ui/AiImageLabel";
 import { findAnyPage, findPage, type SitePage } from "@/content/sitemap";
+import { getLocale, getUi } from "@/i18n/server";
+import { localizePage } from "@/i18n/sitemap";
 import { getProgrammeRefs } from "./programmes";
 
 export type SubpageCardsProps = {
@@ -27,7 +29,11 @@ export type SubpageCardsProps = {
   variant?: "default" | "feature";
 };
 
-/** Sub-page cards (stage-3 §6/§7): image + title + one line + "Read more →", data from the site map. */
+/**
+ * Sub-page cards (stage-3 §6/§7): image + title + one line + "Read more →", data from the site map, in the page's
+ * language (labels, summaries and links via localizePage). `hrefs`, `exclude`, `summaries` and `overrides` are keyed
+ * by English href; text passed in `summaries` / `overrides` is shown as given.
+ */
 export default async function SubpageCards({ section, hrefs, exclude, eyebrow, title, intro, images = true, summaries, overrides, id, dark = false, variant = "default" }: SubpageCardsProps) {
   const programmes = await getProgrammeRefs();
   let pages: SitePage[] = hrefs?.length
@@ -37,7 +43,14 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
     })
     : findPage(section, programmes)?.section.pages ?? [];
   if (exclude?.length) pages = pages.filter((pg) => !exclude.includes(pg.href));
-  if (overrides) pages = pages.map((pg) => ({ ...pg, ...overrides[pg.href] }));
+  const locale = getLocale();
+  const ui = getUi(locale);
+  // Localize first, then apply the caller's own text (keyed by the English href) on top.
+  pages = pages.map((pg) => {
+    const local = { ...localizePage(pg, locale), ...overrides?.[pg.href] };
+    const summary = summaries?.[pg.href];
+    return summary === undefined ? local : { ...local, summary };
+  });
   if (pages.length === 0) return null;
 
   if (variant === "feature") {
@@ -62,8 +75,8 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
                   <span className="nv-fcard-shade" aria-hidden="true" />
                   <span className="nv-fcard-body">
                     <span className="nv-fcard-title">{pg.label}</span>
-                    <span className="nv-fcard-summary">{summaries?.[pg.href] ?? pg.summary}</span>
-                    <span className="nv-fcard-cta">Explore</span>
+                    <span className="nv-fcard-summary">{pg.summary}</span>
+                    <span className="nv-fcard-cta">{ui.common.explore}</span>
                   </span>
                 </Link>
               </li>
@@ -96,8 +109,8 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
                 )}
                 <span className="nv-card-body">
                   <span className="nv-card-title">{pg.label}</span>
-                  <span className="nv-card-summary">{summaries?.[pg.href] ?? pg.summary}</span>
-                  <span className="nv-card-more">Read more</span>
+                  <span className="nv-card-summary">{pg.summary}</span>
+                  <span className="nv-card-more">{ui.common.readMore}</span>
                 </span>
               </Link>
             </li>

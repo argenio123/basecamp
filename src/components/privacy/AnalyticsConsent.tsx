@@ -8,6 +8,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { PRIVACY_PATH } from "@/data/legal";
+import { useLocale, useUi } from "@/i18n/client";
+import { localizedHref } from "@/i18n/paths";
 import { clearAnalyticsCookies, CONSENT_EVENT, OPEN_COOKIE_SETTINGS_EVENT, readAnalyticsConsent, writeAnalyticsConsent, type AnalyticsChoice } from "@/lib/consent";
 import "@/styles/consent.css";
 
@@ -23,6 +25,8 @@ const serverSnapshot = (): Snapshot => "server";
 
 export default function AnalyticsConsent({ gaId }: { gaId: string }) {
   const choice = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
+  const locale = useLocale();
+  const ui = useUi().consent;
   const [reopened, setReopened] = useState(false);
   const titleRef = useRef<HTMLParagraphElement>(null);
 
@@ -64,18 +68,17 @@ export default function AnalyticsConsent({ gaId }: { gaId: string }) {
       )}
       {showBanner && (
         <div className="cc-banner" role="region" aria-labelledby="cc-title" aria-describedby="cc-text">
-          <p className="cc-title" id="cc-title" ref={titleRef} tabIndex={-1}>Analytics cookies</p>
+          <p className="cc-title" id="cc-title" ref={titleRef} tabIndex={-1}>{ui.title}</p>
           <p className="cc-text" id="cc-text">
-            May we use Google Analytics cookies to count visits and see which pages help people? They stay off unless
-            you accept. You can change this any time with &quot;Cookie settings&quot; in the footer.{" "}
-            <Link href={`${PRIVACY_PATH}#cookies`}>Cookie details</Link>
+            {ui.text}{" "}
+            <Link href={localizedHref(`${PRIVACY_PATH}#cookies`, locale)}>{ui.details}</Link>
           </p>
           {reopened && choice !== "unset" && (
-            <p className="cc-current">Current choice: <strong>{choice === "granted" ? "accepted" : "declined"}</strong></p>
+            <p className="cc-current">{ui.current} <strong>{choice === "granted" ? ui.accepted : ui.declined}</strong></p>
           )}
           <div className="cc-actions">
-            <button type="button" className="cc-button" onClick={() => decide("denied")}>Decline</button>
-            <button type="button" className="cc-button" onClick={() => decide("granted")}>Accept</button>
+            <button type="button" className="cc-button" onClick={() => decide("denied")}>{ui.decline}</button>
+            <button type="button" className="cc-button" onClick={() => decide("granted")}>{ui.accept}</button>
           </div>
         </div>
       )}
@@ -85,10 +88,11 @@ export default function AnalyticsConsent({ gaId }: { gaId: string }) {
 
 /** Footer link that reopens the banner. Renders nothing when analytics isn't configured. */
 export function CookieSettingsButton({ className }: { className?: string }) {
+  const label = useUi().consent.settings;
   if (!process.env.NEXT_PUBLIC_GA_ID) return null;
   return (
     <button type="button" className={className ?? "cc-settings-link"} onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT))}>
-      Cookie settings
+      {label}
     </button>
   );
 }

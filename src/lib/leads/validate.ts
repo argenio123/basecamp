@@ -1,5 +1,10 @@
 // Hand-written lead validation (spec §B.17). Pure; no Next imports.
+// Messages are in the form's language: forms send a hidden `locale` field (<input type="hidden" name="locale"
+// value={useLocale()} />), because Server Actions cannot read the request locale. Missing / unknown → English.
+// Text: src/i18n/ui.ts `leads`.
 import { BOOKING_ADDONS, BOOKING_SERVICES, ENQUIRY_TYPES, INTEREST_OPTIONS, PERSONA_OPTIONS, PREFERRED_TIMES, TIER_OPTIONS } from "@/content/constants";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/i18n/config";
+import { fmt, UI } from "@/i18n/ui";
 import { LEAD_KINDS, type Lead, type LeadKind } from "./types";
 
 export type LeadInput = Omit<Lead, "id" | "createdAt" | "status" | "notes">;
@@ -16,8 +21,19 @@ function pick<T extends string>(value: string, allowed: readonly T[]): T | "" {
 }
 const values = <T extends { value: string }>(list: readonly T[]) => list.map((o) => o.value as T["value"]);
 
+/** The language of the submitting form (its hidden `locale` field), English when missing or unknown. */
+export function leadLocale(formData: FormData): Locale {
+  const value = clean(formData.get("locale"));
+  return (LOCALES as readonly string[]).includes(value) ? (value as Locale) : DEFAULT_LOCALE;
+}
+
+/** Server Action messages (src/i18n/ui.ts `leads`) in the submitting form's language. */
+export const leadMessages = (formData: FormData) => UI[leadLocale(formData)].leads;
+
 export function validateLead(formData: FormData): LeadValidation {
   const get = (name: string) => clean(formData.get(name));
+  const m = leadMessages(formData);
+  const max = (n: number) => fmt(m.maxChars, { max: n.toLocaleString("en-US") });
   const getAll = (name: string) => formData.getAll(name).map(clean).filter(Boolean);
   const errors: Record<string, string> = {};
 
@@ -25,7 +41,7 @@ export function validateLead(formData: FormData): LeadValidation {
   if (get("website")) return { ok: true, honeypot: true, lead: emptyLead("newsletter") };
 
   const kind = pick(get("kind"), LEAD_KINDS) as LeadKind | "";
-  if (!kind) return { ok: false, fieldErrors: { form: "This form could not be submitted. Please refresh and try again." } };
+  if (!kind) return { ok: false, fieldErrors: { form: m.formInvalid } };
 
   const firstName = get("firstName");
   const lastName = get("lastName");
@@ -33,31 +49,31 @@ export function validateLead(formData: FormData): LeadValidation {
   const phone = get("phone");
   const message = get("message");
 
-  if (!email) errors.email = "Enter your email address.";
-  else if (email.length > 254 || !EMAIL_RE.test(email)) errors.email = "Enter a valid email address.";
-  if (kind !== "newsletter" && !firstName) errors.firstName = "Enter your first name.";
-  if (firstName.length > 80) errors.firstName = "Use 80 characters or fewer.";
-  if (lastName.length > 80) errors.lastName = "Use 80 characters or fewer.";
-  if (phone.length > 30 || !PHONE_RE.test(phone)) errors.phone = "Enter a valid phone number.";
-  if (message.length > 2000) errors.message = "Use 2,000 characters or fewer.";
-  if (get("consent") !== "on") errors.consent = "Please tick the box to continue.";
+  if (!email) errors.email = m.emailRequired;
+  else if (email.length > 254 || !EMAIL_RE.test(email)) errors.email = m.emailInvalid;
+  if (kind !== "newsletter" && !firstName) errors.firstName = m.firstNameRequired;
+  if (firstName.length > 80) errors.firstName = max(80);
+  if (lastName.length > 80) errors.lastName = max(80);
+  if (phone.length > 30 || !PHONE_RE.test(phone)) errors.phone = m.phoneInvalid;
+  if (message.length > 2000) errors.message = max(2000);
+  if (get("consent") !== "on") errors.consent = m.consent;
 
   const enquiryType = pick(get("enquiryType"), values(ENQUIRY_TYPES));
   if (kind === "enquiry") {
-    if (!enquiryType) errors.enquiryType = "Choose an inquiry type.";
-    if (!message) errors.message = "Enter your message.";
+    if (!enquiryType) errors.enquiryType = m.enquiryType;
+    if (!message) errors.message = m.messageRequired;
   }
 
   let booking: LeadInput["booking"] = null;
   if (kind === "booking") {
     const service = pick(get("service"), values(BOOKING_SERVICES));
-    if (!service) errors.service = "Choose what you'd like to book.";
+    if (!service) errors.service = m.service;
     const item = get("item");
-    if (item.length > 120) errors.item = "Use 120 characters or fewer.";
+    if (item.length > 120) errors.item = max(120);
     const preferredDate = /^\d{4}-\d{2}-\d{2}$/.test(get("preferredDate")) ? get("preferredDate") : "";
     const partyRaw = get("partySize");
     const partySize = partyRaw ? Number(partyRaw) : 1;
-    if (!Number.isInteger(partySize) || partySize < 1 || partySize > 60) errors.partySize = "Enter a group size from 1 to 60.";
+    if (!Number.isInteger(partySize) || partySize < 1 || partySize > 60) errors.partySize = m.partySize;
     booking = {
       service: (service || "class") as NonNullable<LeadInput["booking"]>["service"],
       item, preferredDate,

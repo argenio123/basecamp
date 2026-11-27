@@ -7,6 +7,8 @@ import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImage
 import SocialIcon from "@/components/ui/SocialIcon";
 import { isLibraryImage } from "@/content/images";
 import type { GalleryPost, SocialLink, SocialPlatform } from "@/content/types";
+import { useLocale } from "@/i18n/client";
+import { fmt, UI } from "@/i18n/ui";
 import { trapFocus } from "@/lib/focusTrap";
 import { lockPageScroll } from "@/lib/scrollLock";
 import "@/styles/social.css";
@@ -55,16 +57,11 @@ const DRAG_THRESHOLD = 6;
 /** px/s cap on the release fling. */
 const MAX_FLING = 3000;
 
-const PILLAR_LABEL: Record<GalleryPost["pillar"], string> = {
-  training: "Training",
-  nature: "Nature",
-  community: "Community",
-  build: "Build",
-  coaches: "Coaches",
-  recovery: "Recovery",
-};
+// Interface text (pillar chips, buttons, labels) is in src/i18n/ui.ts `gallery`; post text comes from content.
 
 export default function SocialGallery({ title, posts, handle = "@basecampcamsur", socials = [], titleClassName }: SocialGalleryProps) {
+  const locale = useLocale();
+  const ui = UI[locale].gallery;
   const profiles = PROFILE_ORDER.flatMap((platform) => socials.filter((s) => s.platform === platform && s.url));
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -207,7 +204,8 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeIndex, closeModal, moveModal]);
 
-  const [shareLabel, setShareLabel] = useState("Share");
+  const [copied, setCopied] = useState(false);
+  const shareLabel = copied ? ui.linkCopied : ui.share;
 
   const sharePost = async (post: GalleryPost) => {
     try {
@@ -216,8 +214,8 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
         return;
       }
       await navigator.clipboard.writeText(post.href);
-      setShareLabel("Link copied");
-      setTimeout(() => setShareLabel("Share"), 1800);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
     } catch {
       // Share sheet dismissed or clipboard unavailable
     }
@@ -235,7 +233,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
           <ul className="social-rail-profiles" data-home-reveal data-home-reveal-delay="short">
             {profiles.map(({ platform, url, handle: profileHandle }) => (
               <li key={platform}>
-                <a href={url} target="_blank" rel="noreferrer" className="social-rail-profile" aria-label={`BaseCamp CamSur on ${platform === "X" ? "X (Twitter)" : platform}${profileHandle ? ` (${profileHandle})` : ""}`}>
+                <a href={url} target="_blank" rel="noreferrer" className="social-rail-profile" aria-label={`${fmt(ui.profile, { platform: platform === "X" ? "X (Twitter)" : platform })}${profileHandle ? ` (${profileHandle})` : ""}`}>
                   <SocialIcon platform={platform} />
                 </a>
               </li>
@@ -279,7 +277,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
                       className="social-rail-card"
                       onClick={() => openModal(index)}
                       ref={isPrimary ? (node) => { cardRefs.current[index] = node; } : undefined}
-                      aria-label={isPrimary ? `Open ${platform} ${type} post: ${caption}` : undefined}
+                      aria-label={isPrimary ? fmt(ui.openPost, { platform, type, caption }) : undefined}
                       aria-hidden={isPrimary ? undefined : true}
                       tabIndex={isPrimary ? undefined : -1}
                       key={`${copy}-${loopIndex}-${id}`}
@@ -287,14 +285,14 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
                       {/* Sits under the photo: covered once it loads, shows if the image is missing or blocked. */}
                       <span className="social-rail-fallback" aria-hidden="true">
                         <span className="social-rail-fallback-icon"><SocialIcon platform={platform} /></span>
-                        <span className="social-rail-fallback-cta">View on {platform === "X" ? "X" : platform}</span>
+                        <span className="social-rail-fallback-cta">{fmt(ui.viewOn, { platform })}</span>
                       </span>
                       <Image src={resolvePostImage(image)} alt="" fill sizes="(max-width: 760px) 80vw, 340px" className="social-rail-image" draggable={false} style={{ objectPosition: imagePosition }} ref={hideBrokenImage} onError={onImageError} onLoad={onImageLoad} />
                       <ImageLabel src={image} className="ai-label--corner ai-label--small" hidden />
                       <span className="social-rail-overlay" aria-hidden="true">
                         <span className="social-rail-icon"><SocialIcon platform={platform} /></span>
                         <span className="social-rail-copy">
-                          <span className="social-rail-pillar">{PILLAR_LABEL[pillar] ?? pillar}</span>
+                          <span className="social-rail-pillar">{ui.pillars[pillar] ?? pillar}</span>
                           <strong>{postTitle}</strong>
                         </span>
                       </span>
@@ -314,7 +312,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
             if (event.target === event.currentTarget) closeModal();
           }}
         >
-          <button type="button" className="social-modal-arrow social-modal-arrow--previous" onClick={() => moveModal(-1)} aria-label="Previous social post">←</button>
+          <button type="button" className="social-modal-arrow social-modal-arrow--previous" onClick={() => moveModal(-1)} aria-label={ui.previous}>←</button>
           <div
             className={`social-modal-card ${transitionId === 0 ? "is-opening" : `is-${direction}`}`}
             key={`${activeIndex}-${transitionId}`}
@@ -347,7 +345,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
               </span>
               <Image
                 src={resolvePostImage(activePost.image)}
-                alt={labelledImageAlt(`${activePost.type} at BaseCamp CamSur`, imageKind(activePost.image))}
+                alt={labelledImageAlt(fmt(ui.postAlt, { type: activePost.type }), imageKind(activePost.image), locale)}
                 fill
                 sizes="(max-width: 760px) 100vw, 70vw"
                 style={{ objectPosition: activePost.imagePosition }}
@@ -357,7 +355,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
               <ImageLabel src={activePost.image} className="ai-label--corner ai-label--start" hidden />
             </div>
             <div className="social-modal-info">
-              <button type="button" className="social-modal-close" onClick={closeModal} aria-label="Close social post">✕</button>
+              <button type="button" className="social-modal-close" onClick={closeModal} aria-label={ui.close}>✕</button>
               <div className="social-modal-header">
                 <span className="social-modal-profile" aria-hidden="true"><SocialIcon platform={activePost.platform} /></span>
                 <a href={activePost.href} target="_blank" rel="noreferrer">{handle}</a>
@@ -378,7 +376,7 @@ export default function SocialGallery({ title, posts, handle = "@basecampcamsur"
               </div>
             </div>
           </div>
-          <button type="button" className="social-modal-arrow social-modal-arrow--next" onClick={() => moveModal(1)} aria-label="Next social post">→</button>
+          <button type="button" className="social-modal-arrow social-modal-arrow--next" onClick={() => moveModal(1)} aria-label={ui.next}>→</button>
         </div>,
         document.body,
       )}

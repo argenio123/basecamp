@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ImageLabel } from "@/components/ui/AiImageLabel";
+import { t } from "@/i18n/server";
 
 type Destination = {
   title: string;
@@ -23,7 +24,7 @@ export default function DestinationPillars({ destinations, titleClassName }: {
           <Link
             href={href}
             className="destination-pillar"
-            aria-label={`Learn more about ${title.toLowerCase()}`}
+            aria-label={t("Learn more about {title}", { title: title.toLowerCase() })}
             aria-describedby={descriptionId}
             data-home-reveal
             data-home-reveal-delay={index === 0 ? "medium" : index === 1 ? "long" : "longer"}
