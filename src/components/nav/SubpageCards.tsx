@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import { findAnyPage, findPage, type SitePage } from "@/content/sitemap";
 import { getProgrammeRefs } from "./programmes";
 
@@ -57,6 +58,7 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
               <li key={pg.href}>
                 <Link href={pg.href} className="nv-fcard">
                   {pg.image && <Image src={pg.image} alt="" fill sizes="(max-width: 680px) 100vw, 50vw" className="cover-image nv-fcard-image" />}
+                  <ImageLabel src={pg.image} className="ai-label--corner" hidden />
                   <span className="nv-fcard-shade" aria-hidden="true" />
                   <span className="nv-fcard-body">
                     <span className="nv-fcard-title">{pg.label}</span>
@@ -89,6 +91,7 @@ export default async function SubpageCards({ section, hrefs, exclude, eyebrow, t
                 {images && pg.image && (
                   <span className="nv-card-image">
                     <Image src={pg.image} alt="" fill sizes="(max-width: 760px) 100vw, (max-width: 1040px) 50vw, 33vw" className="cover-image" />
+                    <ImageLabel src={pg.image} className="ai-label--corner ai-label--small" hidden />
                   </span>
                 )}
                 <span className="nv-card-body">

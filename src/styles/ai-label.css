@@ -1,0 +1,59 @@
+/* "AI-generated image" / "Concept render" pill (src/components/ui/AiImageLabel.tsx). Same visual language as the
+   facilities showcase tag (.fc-show-tag), with a slightly darker backing so it stays readable on any photo.
+   Placed with a modifier: top-right of the picture, below the fixed header on full-bleed heroes. */
+.ai-label {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 7px 11px;
+  border: 1px solid rgba(255,255,255,.32);
+  border-radius: 999px;
+  background: rgba(15,17,15,.62);
+  color: rgba(255,255,255,.92);
+  font: 600 11px/1 var(--font-geist-mono), monospace;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Full-bleed heroes (PageHero, ClassesEditorialHero) and the member log-in slideshow: top-right, under the header. */
+.ai-label--hero { top: calc(var(--header-height, 106px) + 16px); right: clamp(16px, 2vw, 28px); }
+.ai-label--auth { top: calc(var(--header-height, 106px) + 10px); right: clamp(16px, 2vw, 28px); }
+
+/* Cards, galleries and sticky step photos: top-right corner of the picture. */
+.ai-label--corner { top: 14px; right: 14px; }
+/* Top-left instead, where a close button owns the top-right (photo viewer). */
+.ai-label--corner.ai-label--start { right: auto; left: 14px; }
+
+/* Home offer flyer: top-right, beside the round close button. */
+.ai-label--offer { top: 26px; right: 74px; }
+
+/* Log-in slideshow: only shown while an AI photo is on screen; fades with the slide. */
+.ai-label--auth { opacity: 0; transition: opacity 1.2s cubic-bezier(.4, 0, .2, 1); }
+.ai-label--auth.is-visible { opacity: 1; }
+
+@media (max-width: 680px) {
+  .ai-label { padding: 6px 9px; font-size: 10px; letter-spacing: .12em; }
+  /* The header crest hangs below the header bar on phones: drop the pill clear of it. */
+  .ai-label--hero, .ai-label--auth { top: calc(var(--header-height, 106px) + 58px); }
+  .ai-label--corner { top: 10px; right: 10px; }
+  .ai-label--corner.ai-label--start { right: auto; left: 10px; }
+  .ai-label--offer { top: 25px; right: 70px; }
+}
+
+/* Small cards (mega-menu card, sub-page cards, social rail): a smaller pill closer to the corner, so it never
+   crowds the picture. After the phone block so it wins there too. */
+.ai-label--small { padding: 5px 8px; font-size: 9.5px; letter-spacing: .1em; }
+.ai-label--corner.ai-label--small { top: 10px; right: 10px; }
+.ai-label--corner.ai-label--small.ai-label--start { right: auto; left: 10px; }
+/* Large, strongly rounded cards (programme coverflow): further in, clear of the corner radius. */
+.ai-label--corner.ai-label--inset { top: clamp(18px, 2.4vw, 30px); right: clamp(18px, 2.4vw, 30px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-label--auth { transition: none; }
+}

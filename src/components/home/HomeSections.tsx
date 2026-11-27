@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import FoundingCounter from "@/components/ui/FoundingCounter";
 import { formatDateLabel } from "@/content/format";
 import type { SiteContent } from "@/content/types";
@@ -18,6 +19,7 @@ export function TrainAndRecover({ c, titleClassName }: Props) {
     <section id="training-ground" className="section hm-section hm-stats hm-train" data-home-reveal>
       {/* Full width at the image's own aspect ratio (no cropping); fades into the section background below. */}
       {image && <Image src={image} alt="" width={1896} height={853} sizes="100vw" className="hm-train-background" />}
+      {image && <ImageLabel src={image} className="ai-label--corner ai-label--inset" />}
       <div className="hm-stats-shade" aria-hidden="true" />
       <div className="shell hm-stats-inner">
         <div className="hm-stats-copy" data-home-reveal>

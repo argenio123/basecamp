@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
+import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 
 // Short page sections in five different looks (styles: the "lx-" block at the end of src/styles/features.css), so a
 // page can use 3-4 sections without repeating the same list rows: photo + text (Split), big-word strip (Stats),
@@ -126,7 +127,8 @@ export function Plan({ id, look = "band", eyebrow, title, intro, image, imageAlt
         <Head eyebrow={eyebrow} title={title} intro={intro} dark={look === "dark"} />
         <div className="lx-plan">
           <figure className="lx-plan-map" data-reveal style={{ aspectRatio: `${width} / ${height}` }}>
-            <Image src={image} alt={imageAlt} fill sizes="(max-width: 1000px) 100vw, 70vw" className="cover-image" />
+            <Image src={image} alt={labelledImageAlt(imageAlt, imageKind(image))} fill sizes="(max-width: 1000px) 100vw, 70vw" className="cover-image" />
+            <ImageLabel src={image} className="ai-label--corner" hidden={!!imageAlt.trim()} />
             <ol className="lx-plan-labels" aria-label="Floor plan zones">
               {zones.map((z, n) => (
                 <li

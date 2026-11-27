@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 
 type ClassesEditorialHeroProps = {
   chapter: string;
@@ -26,12 +27,14 @@ const VARIANT_LABEL: Record<ClassesEditorialHeroProps["variant"], string> = {
 };
 
 export default function ClassesEditorialHero({ chapter, eyebrow, title, intro, image, imageAlt, variant, stat, statLabel, minimalMeta = false, fullImage = false, flipImage = false }: ClassesEditorialHeroProps) {
+  const ai = isAiGeneratedImage(image);
   return (
     <section className={`pr-editorial-hero pr-editorial-hero-${variant}${fullImage ? " pr-editorial-hero--full-image" : ""}`} aria-labelledby="pr-editorial-title">
       <div className={`pr-editorial-media${flipImage ? " is-flipped" : ""}`}>
-        <Image src={image} alt={imageAlt} fill preload sizes="100vw" className="pr-editorial-image" />
+        <Image src={image} alt={ai ? aiImageAlt(imageAlt) : imageAlt} fill preload sizes="100vw" className="pr-editorial-image" />
       </div>
       <span className="pr-editorial-shade" aria-hidden="true" />
+      {ai && <AiImageLabel className="ai-label--hero" hidden={!!imageAlt.trim()} />}
       <div className="shell pr-editorial-inner">
         {!minimalMeta && <div className="pr-editorial-kicker"><span>{chapter}</span><p>{eyebrow}</p><strong>{VARIANT_LABEL[variant]}</strong></div>}
         <h1 id="pr-editorial-title">{title}</h1>

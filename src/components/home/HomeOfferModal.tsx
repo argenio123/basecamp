@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
+import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 import type { FoundingOffer } from "@/content/types";
 import { trapFocus } from "@/lib/focusTrap";
 import { markOfferSeen, takeOfferVisit } from "@/lib/home-offer-visit";
@@ -47,11 +48,6 @@ function visitorIsBusy() {
   return active instanceof HTMLElement && active.isContentEditable;
 }
 
-function offerPrices(example: string) {
-  const prices = [...example.matchAll(/Php\s*([\d,]+)/gi)].map((match) => match[1]);
-  return { founding: prices[0] || "3,200", standard: prices[1] || "4,500" };
-}
-
 export default function HomeOfferModal({ offer, fromPrice = null }: { offer: FoundingOffer; fromPrice?: number | null }) {
   const [open, setOpen] = useState(false);
   // The photo only mounts once the offer is due and the page has loaded: the closed modal sits in the viewport
@@ -60,9 +56,9 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
-  const prices = offerPrices(offer.example);
-  // Headline: the cheapest membership (amount first, then the currency); falls back to the founding price.
-  const lowest = fromPrice ? fromPrice.toLocaleString("en-PH") : prices.founding;
+  // Headline: the cheapest membership (amount first, then the currency). No price published yet: no headline (the
+  // founding rate is a promotion, not a membership price, so it must not stand in under "Monthly memberships").
+  const lowest = fromPrice ? fromPrice.toLocaleString("en-PH") : "";
   const closeModal = useCallback(() => {
     setOpen(false);
     window.dispatchEvent(new Event("basecamp:offer-modal-closed"));
@@ -198,7 +194,7 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
   return (
     <div className="home-offer-modal" data-open={open ? "true" : "false"} aria-hidden={!open} inert={!open}>
       <button className="home-offer-backdrop" type="button" aria-label="Close founding offer" onClick={closeModal} />
-      <section ref={dialogRef} className="home-offer-dialog home-offer-dialog--flyer" role="dialog" aria-modal="true" aria-labelledby="home-offer-title">
+      <section ref={dialogRef} className="home-offer-dialog home-offer-dialog--flyer" role="dialog" aria-modal="true" aria-labelledby={lowest ? "home-offer-title" : undefined} aria-label={lowest ? undefined : "BaseCamp CamSur memberships"}>
         <button ref={closeRef} className="home-offer-close" type="button" aria-label="Close founding offer" onClick={closeModal}>&times;</button>
 
         {/* Flyer-style ad: the photo fills the whole card; slanted headline, perk blocks, and an icon strip on top. */}
@@ -206,18 +202,23 @@ export default function HomeOfferModal({ offer, fromPrice = null }: { offer: Fou
           {primed && (
             <Image
               src={OFFER_PHOTO}
-              alt="An athlete pulling SkiErg-style cable handles in the glass-walled BaseCamp CamSur training hall"
+              alt={aiImageAlt("An athlete pulling SkiErg-style cable handles in the glass-walled BaseCamp CamSur training hall")}
               fill
               sizes="(max-width: 860px) 100vw, 1120px"
               className="home-offer-bg-image"
             />
           )}
         </figure>
+        {isAiGeneratedImage(OFFER_PHOTO) && <AiImageLabel className="ai-label--offer" hidden />}
 
         <div className="home-offer-flyer">
           <Image src="/images/brand/basecamp-camsur-logo-white.png" alt="BaseCamp CamSur" width={150} height={150} className="home-offer-logo" />
-          <p className="home-offer-kicker">Monthly memberships</p>
-          <h2 id="home-offer-title">As low as<span className="home-offer-amount">{lowest} <small>PHP</small></span></h2>
+          {lowest && (
+            <>
+              <p className="home-offer-kicker">Monthly memberships</p>
+              <h2 id="home-offer-title">As low as<span className="home-offer-amount">{lowest} <small>PHP</small></span></h2>
+            </>
+          )}
           <p className="home-offer-ribbon">Unlimited open gym. Then step up:</p>
           <ul className="home-offer-perks">
             <li>Coached classes</li>

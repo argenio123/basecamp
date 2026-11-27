@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 
 export type ExploreItem = { href: string; label: string; summary: string; image: string; imageAlt: string; flipImage?: boolean };
 
@@ -49,6 +50,7 @@ export default function ScheduleExplore({ eyebrow, title, intro, items, fitImage
                 <Link href={item.href} onMouseEnter={() => pick(i)} onFocus={() => pick(i)}>
                   <span className={`sd-explore-inline${item.flipImage ? " is-flipped" : ""}`} aria-hidden="true">
                     <Image src={item.image} alt="" fill sizes="100vw" className="cover-image" />
+                    <ImageLabel src={item.image} className="ai-label--corner" hidden />
                   </span>
                   {stage && <span className="sd-explore-num" aria-hidden="true">{pad(i + 1)}</span>}
                   <span className="sd-explore-label">{item.label}</span>
@@ -70,6 +72,8 @@ export default function ScheduleExplore({ eyebrow, title, intro, items, fitImage
               <Image src={item.image} alt="" fill sizes={stage ? "100vw" : "(max-width: 900px) 100vw, 50vw"} className="cover-image" />
             </figure>
           ))}
+          {/* One pill for the photo on screen ("AI-generated image" / "Concept render"), above the cross-fading stack. */}
+          <ImageLabel src={items[active]?.image} className="ai-label--corner" hidden />
         </Link>
       </div>
     </section>

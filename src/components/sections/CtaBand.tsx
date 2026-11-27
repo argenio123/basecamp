@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import { MEMBERSHIP_PLANS_PATH } from "@/content/constants";
 
 /**
@@ -20,6 +21,7 @@ export default function CtaBand({
     <section className={`cta-band ft-cta${className ? ` ${className}` : ""}`}>
       <Image src={image} alt="" fill sizes="100vw" className="cover-image ft-cta-image" />
       <div className="ft-cta-shade" aria-hidden="true" />
+      <ImageLabel src={image} className="ai-label--corner ai-label--inset" />
       <div className="shell ft-cta-inner" data-reveal>
         {eyebrow && <p className="eyebrow eyebrow-light">{eyebrow}</p>}
         <h2>{title}</h2>

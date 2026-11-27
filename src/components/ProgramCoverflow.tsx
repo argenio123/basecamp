@@ -10,6 +10,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from "react";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import StatusBadge from "@/components/ui/StatusBadge";
 import type { Availability } from "@/content/types";
 
@@ -229,6 +230,7 @@ export default function ProgramCoverflow({ programs, titleClassName = "" }: Prog
                   draggable={false}
                 />
                 <span className="program-coverflow-scrim" />
+                <ImageLabel src={program.image} className="ai-label--corner ai-label--inset" hidden />
               </span>
               <span className="program-coverflow-copy">
                 <span className="program-coverflow-kicker">

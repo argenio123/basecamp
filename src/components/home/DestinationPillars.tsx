@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 
 type Destination = {
   title: string;
@@ -38,6 +39,8 @@ export default function DestinationPillars({ destinations, titleClassName }: {
                 style={{ objectPosition: imagePosition }}
               />
             </span>
+            {/* Above the card's shade; the link's aria-label names it, so the pill is visual only. */}
+            <ImageLabel src={image} className="ai-label--corner ai-label--inset" hidden />
             <span className="destination-pillar-content">
               <span id={descriptionId} className="destination-pillar-copy">{description}</span>
               <span className={`${titleClassName} destination-pillar-title`}>{title}</span>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import AiImageLabel, { isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 
 /**
  * Background slideshow for the member log-in / sign-up hero. Every photo keeps its athlete on the left half,
@@ -37,12 +38,17 @@ export default function AuthSlides() {
   }, []);
 
   return (
-    <div className="mb-auth-slides" aria-hidden="true">
-      {SLIDES.map((slide, i) => (
-        <div key={slide.src} className={`mb-auth-slide${i === active ? " is-active" : ""}${i === leaving ? " is-leaving" : ""}${slide.flip ? " is-flipped" : ""}`}>
-          <Image src={slide.src} alt="" fill preload={i === 0} sizes="100vw" className="mb-auth-bg" />
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="mb-auth-slides" aria-hidden="true">
+        {SLIDES.map((slide, i) => (
+          <div key={slide.src} className={`mb-auth-slide${i === active ? " is-active" : ""}${i === leaving ? " is-leaving" : ""}${slide.flip ? " is-flipped" : ""}`}>
+            <Image src={slide.src} alt="" fill preload={i === 0} sizes="100vw" className="mb-auth-bg" />
+          </div>
+        ))}
+      </div>
+      {/* Outside the slides (above the dark overlay, never mirrored); shown while an AI photo is on screen.
+          The photos are decorative (alt=""), so the label is visual only. */}
+      <AiImageLabel className={`ai-label--auth${isAiGeneratedImage(SLIDES[active].src) ? " is-visible" : ""}`} hidden />
+    </>
   );
 }

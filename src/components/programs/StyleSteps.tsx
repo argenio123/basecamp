@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import { useEffect, useRef, useState } from "react";
 
 export type StyleStep = { title: string; body: string; image: string };
@@ -48,6 +49,7 @@ export default function StyleSteps({ steps, className, caption }: { steps: Style
         {steps.map((step, i) => (
           <figure key={step.title} className={i === active ? "is-active" : undefined}>
             <Image src={step.image} alt="" fill sizes="(max-width: 900px) 100vw, 55vw" className="cover-image" />
+            <ImageLabel src={step.image} className="ai-label--corner" />
             <figcaption>{captionPrefix} · {step.title}</figcaption>
           </figure>
         ))}
@@ -57,6 +59,8 @@ export default function StyleSteps({ steps, className, caption }: { steps: Style
           <li key={step.title} ref={(el) => { items.current[i] = el; }} className={i === active ? "is-active" : undefined} onMouseEnter={() => setActive(i)}>
             <div className="pr-steps-inline">
               <Image src={step.image} alt="" fill sizes="100vw" className="cover-image" />
+              {/* Decorative photo (alt=""), so the label is visual only here too. */}
+              <ImageLabel src={step.image} className="ai-label--corner" hidden />
             </div>
             <span className="pr-steps-mark" aria-hidden="true" />
             <div>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode, Ref } from "react";
+import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import "@/styles/join-flow.css";
 
 // Building blocks for the one-question-per-screen forms (/schedule/book):
@@ -34,7 +35,10 @@ export function FlowCover({ title, lead, facts, contact, image, imageAlt, captio
         </ul>
       </div>
       <figure className="jf-intro-media">
-        <div><Image src={image} alt={imageAlt} fill sizes="(max-width: 900px) 100vw, 60vw" className="cover-image" /></div>
+        <div>
+          <Image src={image} alt={labelledImageAlt(imageAlt, imageKind(image))} fill sizes="(max-width: 900px) 100vw, 60vw" className="cover-image" />
+          <ImageLabel src={image} className="ai-label--corner" hidden={!!imageAlt.trim()} />
+        </div>
         <figcaption>{caption}</figcaption>
       </figure>
     </div>

@@ -5,6 +5,7 @@ import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
+import { ImageLabel, imageKind, labelledImageAlt } from "@/components/ui/AiImageLabel";
 import { getSiteContent } from "@/content/get";
 import { PHASE_COPY } from "@/content/labels";
 
@@ -19,6 +20,8 @@ const MORE_SCHEDULE_CARDS = {
   "/schedule/timetable": { label: "Weekly timetable", summary: "Pick a day and request a place.", image: "/images/schedule/generated/timetable-class-briefing.webp", imageAlt: "Coach briefing gym members beside a weekly session board and wall clock" },
   "/schedule/events": { label: "Competitions & events", summary: "Weekly comps and leaderboards.", image: "/images/schedule/generated/gym-competition-night.webp", imageAlt: "Athletes racing weighted sleds during a gym competition" },
 };
+
+const BOOKING_COVER = "/images/schedule/generated/booking-cover-1263x1090-v2.webp";
 
 const BOOKING_OPTIONS = [
   { href: "/schedule/book", eyebrow: "Classes & camps", label: "Book a session", summary: "Request a coached class, camp place, or private session." },
@@ -81,12 +84,13 @@ export default async function SchedulePage() {
         <div className="shell sd-booking-frame">
           <div className="sd-booking-media" data-reveal>
             <Image
-              src="/images/schedule/generated/booking-cover-1263x1090-v2.webp"
-              alt="An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur"
+              src={BOOKING_COVER}
+              alt={labelledImageAlt("An athlete pushing a weighted sled while her coach watches at BaseCamp CamSur", imageKind(BOOKING_COVER))}
               fill
               sizes="(max-width: 900px) 100vw, 55vw"
               className="cover-image"
             />
+            <ImageLabel src={BOOKING_COVER} className="ai-label--corner" hidden />
           </div>
           <div className="sd-booking-copy" data-reveal data-reveal-delay="short">
             <div>

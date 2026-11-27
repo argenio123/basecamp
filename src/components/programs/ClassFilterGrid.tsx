@@ -5,6 +5,7 @@
 // programs.css, replayed in reverse when scrolling up); re-keying a group's grid remounts its cards so
 // SiteReveal's MutationObserver replays the entrance after a filter change.
 import Image from "next/image";
+import AiImageLabel, { aiImageAlt, isAiGeneratedImage } from "@/components/ui/AiImageLabel";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -63,7 +64,8 @@ export default function ClassFilterGrid({ groups }: { groups: ClassGroup[] }) {
                   <Link href={`/classes/styles/${item.slug}`}>
                     {/* Full-photo card: focus label + title laid over the photo. */}
                     <div className="pr-workout-card-image">
-                      <Image src={item.image} alt={item.imageAlt} fill sizes="(max-width: 760px) 100vw, 50vw" className="cover-image" />
+                      <Image src={item.image} alt={isAiGeneratedImage(item.image) ? aiImageAlt(item.imageAlt) : item.imageAlt} fill sizes="(max-width: 760px) 100vw, 50vw" className="cover-image" />
+                      {isAiGeneratedImage(item.image) && <AiImageLabel className="ai-label--corner" hidden={!!item.imageAlt.trim()} />}
                     </div>
                     <div className="pr-workout-card-copy">
                       <ol className="pr-workout-card-flow" aria-label="Session flow">

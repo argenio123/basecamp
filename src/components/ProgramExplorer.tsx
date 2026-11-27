@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ImageLabel } from "@/components/ui/AiImageLabel";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { programmeHref } from "@/content/sitemap";
 import type { FeaturedProgramme, LaunchPhase } from "@/content/types";
@@ -29,6 +30,8 @@ export default function ProgramExplorer({ programmes, launchPhase }: { programme
             <li key={programme.slug} className="pr-program-card">
               <Link href={programmeHref(programme.slug)} className="pr-program-media" aria-label={`View ${programme.title} classes`}>
                 <Image src={programme.image} alt="" fill sizes="(max-width: 760px) 100vw, (max-width: 1040px) 50vw, 33vw" className="cover-image" />
+                {/* The link's aria-label names it, so the pill is visual only. */}
+                <ImageLabel src={programme.image} className="ai-label--corner" hidden />
               </Link>
               <div className="pr-program-body">
                 <div className="pr-program-head"><StatusBadge availability={status.availability} label={status.label} /></div>
