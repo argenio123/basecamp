@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { MEMBERSHIP_PLANS_PATH } from "@/content/constants";
+import { getFoundingAvailability } from "@/lib/payments/founding";
 import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
 import { benefitFromText } from "@/components/features/BenefitCards";
@@ -24,6 +26,8 @@ export default async function FoundingPass({ founding, exchangeRate }: { foundin
   if (!founding.enabled) return null;
   const { pricing } = await getSiteContent();
   const rate = foundingSaving(founding.example, pricing.groups);
+  // Cap reached: the button stops selling the founding rate (checkout refuses it too, src/lib/payments/founding.ts).
+  const full = (await getFoundingAvailability(founding)).state === "full";
   const expires = founding.expiresOn ? formatDateLabel(founding.expiresOn) : "";
   // "What you gain" rows for this page, falling back to the founding benefits from content.
   const gains: Gain[] = MEMBERSHIP_GAINS["/membership/founding"]?.length
@@ -62,7 +66,9 @@ export default async function FoundingPass({ founding, exchangeRate }: { foundin
               </div>
             )}
             <div className="mb-fp-actions">
-              <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>
+              {full
+                ? <Link href={MEMBERSHIP_PLANS_PATH} className="button mb-button-signal mb-fp-cta">See membership plans</Link>
+                : <Link href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : MEMBERSHIP_PLANS_PATH} className="button mb-button-signal mb-fp-cta">{founding.ctaLabel || "Become an early member"}</Link>}
               <FoundingCounter founding={founding} showBar className="mb-fp-counter" />
               {expires && expires !== "To be announced" && <p className="mb-fp-expiry">Offer ends {expires}</p>}
             </div>

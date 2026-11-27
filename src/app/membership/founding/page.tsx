@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { MEMBERSHIP_PLANS_PATH } from "@/content/constants";
+import { getFoundingAvailability } from "@/lib/payments/founding";
 import { foundingItemId } from "@/lib/payments/founding-link";
 import { payHref } from "@/lib/payments/types";
 import FoundingPass from "@/components/membership/FoundingPass";
@@ -26,6 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FoundingPage() {
   const { settings } = await getSiteContent();
   const { founding } = settings;
+  // Cap reached: the closing band points to the standard plans instead of the founding checkout.
+  const full = founding.enabled && (await getFoundingAvailability(founding)).state === "full";
+  const foundingHref = foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : MEMBERSHIP_PLANS_PATH;
 
   return (
     <DetailTemplate
@@ -34,7 +39,9 @@ export default async function FoundingPage() {
       glance={{ summary: "Founding rates.\nPriority access.\nA seat at launch.", statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions", "/about/faq"]}
       cta={<>
-        <CtaBand className="ft-cta--display" eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href={foundingItemId(founding.example) ? payHref(foundingItemId(founding.example), "founding") : "/membership#tiers"} />
+        {full
+          ? <CtaBand className="ft-cta--display" eyebrow="Founding members" title="Founding spots are full." body="All founding spots have been taken. Our standard memberships are open." label="See membership plans" href={MEMBERSHIP_PLANS_PATH} />
+          : <CtaBand className="ft-cta--display" eyebrow="Founding members" title="Claim your founding spot." label={founding.ctaLabel || "Become an early member"} href={foundingHref} />}
       </>}
     >
       <FoundingPass founding={founding} exchangeRate={settings.exchangeRate} />

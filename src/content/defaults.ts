@@ -292,7 +292,7 @@ export const DEFAULT_CONTENT: SiteContent = {
         "Founding-community recognition",
         "An exclusive launch event",
       ],
-      cap: 100, claimed: 0, showCounter: false, expiresOn: "", ctaLabel: "Become an early member",
+      cap: 100, claimed: 0, showCounter: true, expiresOn: "", ctaLabel: "Become an early member",
     },
     exchangeRate: 58,
     bookingWidgetUrl: "",

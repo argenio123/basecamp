@@ -11,6 +11,7 @@ import Marquee from "@/components/features/Marquee";
 import EarlyAccessLink from "@/components/members/EarlyAccessLink";
 import { SECTION_FEATURES } from "@/data/features";
 import { TrainAndRecover } from "@/components/home/HomeSections";
+import HomeFoundingSpots from "@/components/home/HomeFoundingSpots";
 import { getSiteContent } from "@/content/get";
 import { formatDateLabel } from "@/content/format";
 import type { SiteContent } from "@/content/types";
@@ -121,6 +122,8 @@ export default async function Home() {
           destinations remain available through the navigation, programme pages and Schedule. */}
       <TrainAndRecover c={c} titleClassName={gretaros.className} />
       {c.home.social.enabled && <SocialGallery socials={c.settings.socials} titleClassName={gretaros.className} eyebrow={c.gallery.eyebrow} title={c.gallery.title} intro={c.gallery.intro} posts={c.gallery.posts} followHref={instagram?.url ?? ""} handle={instagram?.handle || undefined} />}
+      {/* Founding offer with the live "X of 100 founding spots taken" counter (cached, so the page stays static). */}
+      <HomeFoundingSpots founding={c.settings.founding} titleClassName={gretaros.className} />
     </>
   );
 }
