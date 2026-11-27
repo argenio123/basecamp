@@ -82,3 +82,35 @@ export async function deleteLead(id: string): Promise<void> {
     await writeJsonFile(FILE, leads.filter((l) => l.id !== id));
   });
 }
+
+/**
+ * Privacy tools (account deletion, retention clean-up): replaces each lead for which `transform` returns a new
+ * value (null leaves it as is) and returns how many changed. Upstash: the rewritten lead's notes override is
+ * dropped, so the notes stored on the lead itself apply.
+ */
+export async function rewriteLeads(transform: (lead: Lead) => Lead | null): Promise<number> {
+  const mode = driver();
+  if (mode === "readonly") throw new StorageUnavailableError();
+  if (mode === "upstash") {
+    let changed = 0;
+    for (const lead of await listLeads()) {
+      const next = transform(lead);
+      if (!next) continue;
+      await upstash(["HSET", HASH, lead.id, JSON.stringify(next)]);
+      await upstash(["HDEL", META, `${lead.id}:notes`]);
+      changed++;
+    }
+    return changed;
+  }
+  return withFileLock(async () => {
+    let changed = 0;
+    const leads = (await readFileLeads()).map((lead) => {
+      const next = transform(lead);
+      if (!next) return lead;
+      changed++;
+      return next;
+    });
+    if (changed) await writeJsonFile(FILE, leads);
+    return changed;
+  });
+}

@@ -1,6 +1,8 @@
 // Client-safe member types.
 export type AuthResult = { status: "idle" | "error"; message: string; fieldErrors?: Record<string, string> };
 export const INITIAL_AUTH_RESULT: AuthResult = { status: "idle", message: "" };
+/** Sign-up: the 18+ and data-storage confirmation (checked in the browser and again in signUp). */
+export const AGE_TERMS_ERROR = "Please confirm you're 18 or older and accept to create your account.";
 
 /** Member login / sign-up pages. */
 export const MEMBER_LOGIN_PATH = "/account/login";

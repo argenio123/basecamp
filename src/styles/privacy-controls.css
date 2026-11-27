@@ -1,0 +1,29 @@
+/* "Your data" panel on /account/settings (src/components/members/PrivacyControls.tsx). Builds on the .ma-settings
+   styles in features.css; own selectors are prefixed pc-. */
+.pc-panel { margin-top: 28px; }
+.pc-panel .ma-settings-head a { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
+.pc-text { margin: 0; color: var(--ink); font-size: 14px; line-height: 1.55; }
+.pc-text p { margin: 0 0 8px; }
+.pc-text ul { display: grid; gap: 6px; margin: 0; padding-left: 18px; }
+.pc-download { display: inline-flex; align-items: center; justify-content: center; width: fit-content; text-decoration: none; }
+.pc-danger { border-left: 4px solid #a33b32; }
+.pc-danger .ma-setting-label span { color: #a33b32; }
+.pc-delete-form { display: grid; gap: 18px; max-width: 520px; }
+.pc-delete { justify-self: start; min-height: 52px; padding: 0 28px; border: 1px solid #a33b32; border-radius: 999px; background: #a33b32; color: var(--white); font: 800 11px/1 var(--font-poppins), sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.pc-delete:hover:not(:disabled), .pc-delete:focus-visible { background: #7f2c25; border-color: #7f2c25; }
+.pc-delete:focus-visible { outline: 3px solid rgba(163,59,50,.35); outline-offset: 3px; }
+.pc-delete:disabled { cursor: not-allowed; opacity: .5; }
+@media (max-width: 900px) { .pc-delete, .pc-download { width: 100%; } }
+
+/* /account/deleted */
+.pc-deleted { padding: clamp(64px, 10vw, 140px) 0; }
+.pc-deleted-card { display: grid; gap: 18px; max-width: 640px; padding: clamp(28px, 4vw, 48px); border: 1px solid var(--line); border-radius: 22px; background: var(--white); }
+.pc-deleted-card p { margin: 0; font-size: 15px; line-height: 1.6; }
+.pc-deleted-card .pc-eyebrow { color: var(--olive); font: 700 10px/1.2 var(--font-geist-mono), monospace; letter-spacing: .18em; text-transform: uppercase; }
+
+/* Admin → Privacy clean-up (src/app/admin/privacy) */
+.pv-form { display: grid; gap: 14px; justify-items: start; margin: 18px 0; }
+.pv-check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+.pv-message { margin: 0; padding: 10px 14px; border-left: 3px solid var(--olive); background: var(--paper); font-size: 14px; }
+.pv-message[data-status="error"] { border-color: #a33b32; }
+.pv-run:disabled { opacity: .5; cursor: not-allowed; }

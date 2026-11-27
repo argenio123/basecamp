@@ -4,18 +4,18 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useActionState, useId, useState } from "react";
 import { logIn, signUp } from "@/lib/members/actions";
-import { INITIAL_AUTH_RESULT, loginHref, signupHref, type AuthResult } from "@/lib/members/types";
+import { AGE_TERMS_ERROR, INITIAL_AUTH_RESULT, loginHref, signupHref, type AuthResult } from "@/lib/members/types";
 
 const RESET_EMAIL = "basecampcamsur@gmail.com";
 
 /** Labelled field: a small caps label above an outlined box. Password fields get an eye icon to show / hide it. */
-function Field({ id, label, error, type = "text", allowClipboard = false, ...input }: { id: string; label: string; error?: string; allowClipboard?: boolean } & React.InputHTMLAttributes<HTMLInputElement>) {
+function Field({ id, label, error, type = "text", ...input }: { id: string; label: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   const [show, setShow] = useState(false);
   const isPassword = type === "password";
   return (
     <div className={`mb-auth-field${error ? " has-error" : ""}`}>
       <label htmlFor={id}>{label}</label>
-      <input id={id} type={isPassword && show ? "text" : type} placeholder=" " aria-invalid={error ? true : undefined} aria-describedby={error ? `${id}-err` : undefined} data-login-clipboard={allowClipboard ? "true" : undefined} {...input} />
+      <input id={id} type={isPassword && show ? "text" : type} placeholder=" " aria-invalid={error ? true : undefined} aria-describedby={error ? `${id}-err` : undefined} {...input} />
       {isPassword && (
         <button type="button" className="mb-auth-eye" onClick={() => setShow((s) => !s)} aria-pressed={show} aria-controls={id} aria-label={show ? "Hide password" : "Show password"} title={show ? "Hide password" : "Show password"}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -41,6 +41,10 @@ export default function MemberAuthForm({ mode }: { mode: "login" | "signup" }) {
     const keep: Record<string, string> = {};
     for (const k of ["email", "firstName", "lastName", "phone"]) keep[k] = String(fd.get(k) ?? "");
     setKept(keep);
+    // Checked here first so the visitor gets the message without a round trip; signUp checks it again.
+    if (mode === "signup" && fd.get("terms") !== "on") {
+      return { status: "error", message: "Please check the highlighted fields.", fieldErrors: { terms: AGE_TERMS_ERROR }, n: (prev.n ?? 0) + 1 };
+    }
     const result = await (mode === "login" ? logIn : signUp)(prev, fd);
     return { ...result, n: (prev.n ?? 0) + 1 };
   }, INITIAL_AUTH_RESULT);
@@ -58,15 +62,15 @@ export default function MemberAuthForm({ mode }: { mode: "login" | "signup" }) {
           <Field id={`${id}-last`} label="Last name" name="lastName" defaultValue={kept.lastName} autoComplete="family-name" maxLength={80} error={err("lastName")} />
         </div>
       )}
-      <Field id={`${id}-email`} label="Email address" name="email" type="email" defaultValue={kept.email} autoComplete="email" required maxLength={254} error={err("email")} allowClipboard={login} />
+      <Field id={`${id}-email`} label="Email address" name="email" type="email" defaultValue={kept.email} autoComplete="email" required maxLength={254} error={err("email")} />
       {!login && <Field id={`${id}-phone`} label="Mobile number (optional)" name="phone" type="tel" defaultValue={kept.phone} autoComplete="tel" maxLength={40} error={err("phone")} />}
-      <Field id={`${id}-password`} label={login ? "Password" : "New password (8+ characters)"} name="password" type="password" autoComplete={login ? "current-password" : "new-password"} required minLength={login ? undefined : 8} maxLength={200} error={err("password")} allowClipboard={login} />
+      <Field id={`${id}-password`} label={login ? "Password" : "New password (8+ characters)"} name="password" type="password" autoComplete={login ? "current-password" : "new-password"} required minLength={login ? undefined : 8} maxLength={200} error={err("password")} />
       {!login && <Field id={`${id}-confirm`} label="Confirm password" name="confirm" type="password" autoComplete="new-password" required maxLength={200} error={err("confirm")} />}
       {!login && (
         <label className="mb-auth-check" htmlFor={`${id}-terms`}>
-          <input id={`${id}-terms`} name="terms" type="checkbox" aria-invalid={err("terms") ? true : undefined} />
-          <span>I agree that BaseCamp CamSur stores my account details to handle my requests, bookings, and purchases.</span>
-          {err("terms") && <small className="mb-auth-error">{err("terms")}</small>}
+          <input id={`${id}-terms`} name="terms" type="checkbox" required aria-invalid={err("terms") ? true : undefined} aria-describedby={err("terms") ? `${id}-terms-err` : undefined} />
+          <span>I&apos;m 18+ and agree that BaseCamp CamSur stores my account details to handle my requests, bookings, and purchases.</span>
+          {err("terms") && <small id={`${id}-terms-err`} className="mb-auth-error">{err("terms")}</small>}
         </label>
       )}
       <button type="submit" className="mb-auth-submit" disabled={pending} aria-disabled={pending}>

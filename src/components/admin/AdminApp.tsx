@@ -78,6 +78,7 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
         </span>
         <div className="adm-topbar-actions">
           <a className="adm-topbar-link" href="/admin/payments">Payments</a>
+          <a className="adm-topbar-link" href="/admin/privacy">Privacy</a>
           <a className="adm-topbar-link" href="/" target="_blank" rel="noopener noreferrer">View site ↗</a>
           <form action={logoutAction}>
             <button type="submit" className="adm-topbar-link">Log out</button>

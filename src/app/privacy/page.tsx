@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { POSTAL_ADDRESS, PRIVACY_EMAIL, SITE_NAME } from "@/data/brand";
 import { DPO_NAME, TERMS_PATH } from "@/data/legal";
+import { CONSENT_MAX_AGE_DAYS } from "@/lib/consent";
+import { LEAD_RETENTION_MONTHS, UNPAID_PAYMENT_RETENTION_DAYS } from "@/lib/privacy/retention";
 import LegalShell, { LegalSectionBlock, Tbc, type LegalSection } from "./_legal/LegalShell";
 
 export const metadata: Metadata = {
@@ -47,49 +49,49 @@ const ROWS: Row[] = [
     detail: "First and last name, email, phone, what you want to book (class, appointment, camp or corporate session), preferred date and time, add-ons, group size, whether you'll join a waitlist, your message, and the page you sent it from.",
     purpose: "To check availability, reply to you and confirm or decline the booking.",
     basis: <>Your consent (Sec. 12(a)) and steps you ask us to take before a contract (Sec. 12(b)). Health details you choose to put in your message, such as an injury, are sensitive personal information: we use them only with your consent (Sec. 13(a)) and only to plan your session safely.</>,
-    retention: <>Until the request is closed, then <Tbc>12 months, to be confirmed</Tbc>, or longer if you become a member.</>,
+    retention: <>{LEAD_RETENTION_MONTHS} months after you send it, then anonymised (see <a href="#retention">section 7</a>) <Tbc>period to be confirmed</Tbc>.</>,
   },
   {
     data: "Early access and membership interest",
     detail: "Name, email, phone, whether you're local, domestic or international, the membership tier and programmes you're interested in.",
     purpose: "To send you early-member news, rates and opening updates, and to understand demand before opening.",
     basis: "Your consent (Sec. 12(a)), given with the tick box on the form.",
-    retention: <>Until you withdraw consent, or <Tbc>12 months after opening, to be confirmed</Tbc>.</>,
+    retention: <>Until you withdraw consent, and at most {LEAD_RETENTION_MONTHS} months after you sign up, then anonymised <Tbc>period to be confirmed</Tbc>.</>,
   },
   {
     data: "Enquiries (contact form)",
     detail: "Name, email, phone, the type of enquiry (general, corporate, partnership, camp group or media) and your message.",
     purpose: "To answer your question.",
     basis: "Your consent (Sec. 12(a)) and our legitimate interest in responding to people who contact us (Sec. 12(f)).",
-    retention: <>Until the enquiry is closed, then <Tbc>12 months, to be confirmed</Tbc>.</>,
+    retention: <>{LEAD_RETENTION_MONTHS} months after you send it, then anonymised <Tbc>period to be confirmed</Tbc>.</>,
   },
   {
     data: "Newsletter sign-up (footer)",
     detail: "Email address and the page you signed up from.",
     purpose: "To send BaseCamp news and opening updates.",
     basis: "Your consent (Sec. 12(a)).",
-    retention: "Until you unsubscribe or ask us to remove you.",
+    retention: <>Until you unsubscribe or ask us to remove you, and at most {LEAD_RETENTION_MONTHS} months, then anonymised.</>,
   },
   {
     data: "Member account",
     detail: "First and last name, email, phone (optional), your password (stored only as a one-way hash, never as readable text) and the date you joined.",
     purpose: "To let you log in, and to show your requests and payments in your account.",
     basis: "Our contract with you (Sec. 12(b)).",
-    retention: <>While your account is open, then <Tbc>period after closure, to be confirmed</Tbc>.</>,
+    retention: "While your account is open. When you delete it in your account settings, the account record is deleted straight away.",
   },
   {
     data: "Member profile (optional)",
     detail: "Training goal, experience level, preferred training time, how you like to be contacted, notes you add, and your reminder, update and motion preferences.",
     purpose: "To tailor coaching and reminders to you.",
     basis: <>Our contract with you (Sec. 12(b)); for any health details in your notes, your consent (Sec. 13(a)).</>,
-    retention: "As for your member account. You can change these fields yourself in your account settings.",
+    retention: "As for your member account, and deleted with it. You can change these fields yourself in your account settings.",
   },
   {
     data: "Online payments",
     detail: "Name, email and phone (passed to the payment provider), what you bought, the amount, any promo code and discount, the payment method type (for example GCash, Maya or card), the provider's payment reference, the status and dates, and the period a monthly membership covers.",
     purpose: "To take payment, issue receipts, give you access to what you paid for and keep business records.",
     basis: "Our contract with you (Sec. 12(b)) and our legal obligations to keep tax and accounting records (Sec. 12(c)).",
-    retention: <>For the period required by Philippine tax and accounting rules <Tbc>period to be confirmed by the business&apos;s accountant</Tbc>.</>,
+    retention: <>Paid records: for the period required by Philippine tax and accounting rules <Tbc>period to be confirmed by the business&apos;s accountant</Tbc>, without your name and email once you delete your account. Unpaid checkouts: name and email removed after {UNPAID_PAYMENT_RETENTION_DAYS} days.</>,
   },
   {
     data: "Security data",
@@ -100,9 +102,9 @@ const ROWS: Row[] = [
   },
   {
     data: "Website analytics (only if switched on)",
-    detail: "Pages viewed, browser and device type, approximate location based on IP, and the type of form sent (for example \"booking\"). Your name, email and message are never sent to analytics.",
+    detail: "Only if you accept analytics cookies: pages viewed, browser and device type, approximate location based on IP, and the type of form sent (for example \"booking\"). Your name, email and message are never sent to analytics.",
     purpose: "To understand how the site is used and improve it.",
-    basis: <><Tbc>consent or legitimate interest, to be decided in legal review</Tbc></>,
+    basis: "Your consent (Sec. 12(a)), given with the cookie banner. Google Analytics doesn't load until you press Accept.",
     retention: <>Set in Google Analytics <Tbc>retention setting to be confirmed</Tbc>.</>,
   },
 ];
@@ -163,8 +165,8 @@ export default function PrivacyPage() {
         </div>
         <p>
           Our staff may add a status (new, contacted or closed) and internal notes to your request so the team knows
-          where it stands. Every form asks for your agreement before you send it, and the booking, enquiry and early-access
-          forms also ask you to confirm you are 18 or older. Forms contain a hidden anti-spam field; if it is filled in, nothing is stored.
+          where it stands. Every form asks for your agreement before you send it, and the booking, enquiry, early-access and
+          newsletter forms and the account sign-up also ask you to confirm you are 18 or older. Forms contain a hidden anti-spam field; if it is filled in, nothing is stored.
         </p>
         <p>
           <strong>Card and e-wallet details never reach this website.</strong> You enter them on the secure checkout
@@ -206,7 +208,18 @@ export default function PrivacyPage() {
       </LegalSectionBlock>
 
       <LegalSectionBlock {...section("cookies")}>
-        <p>We use a few cookies that the site needs to work. We do not use advertising cookies.</p>
+        <p>
+          We use a few cookies that the site needs to work and, only if you agree, Google Analytics cookies. We do not
+          use advertising cookies.
+        </p>
+        <p>
+          <strong>Analytics only with your consent.</strong> When analytics is switched on, a banner asks whether we may
+          use analytics cookies. Google Analytics is not loaded at all, and nothing is sent to Google for analytics,
+          until you press &quot;Accept&quot;. If you press &quot;Decline&quot;, it stays off. We remember your choice for
+          {" "}{Math.round(CONSENT_MAX_AGE_DAYS / 30)} months, then ask again. You can change your mind at any time with
+          {" "}&quot;Cookie settings&quot; at the bottom of every page; declining after accepting stops analytics and
+          deletes the Google Analytics cookies on this site.
+        </p>
         <div className="lg-table-wrap">
           <table className="lg-table lg-table-compact">
             <caption className="sr-only">Cookies and browser storage used by this site</caption>
@@ -215,7 +228,8 @@ export default function PrivacyPage() {
               <tr><th scope="row" data-label="Name"><code>bc_member_session</code></th><td data-label="What it does">Keeps you logged in to your member account. Signed so it can&apos;t be forged, and hidden from page scripts (httpOnly).</td><td data-label="Lasts">30 days, or until you log out</td></tr>
               <tr><th scope="row" data-label="Name"><code>bc_member</code></th><td data-label="What it does">A simple &quot;1&quot; that lets the page show &quot;Log in&quot; or &quot;Log out&quot;. It contains no personal data and grants no access.</td><td data-label="Lasts">30 days, or until you log out</td></tr>
               <tr><th scope="row" data-label="Name"><code>bc_admin_session</code>, <code>bc_admin_hint</code></th><td data-label="What it does">Staff only: keeps an authorised staff member logged in to the admin area.</td><td data-label="Lasts">8 hours</td></tr>
-              <tr><th scope="row" data-label="Name"><code>_ga</code>, <code>_ga_*</code></th><td data-label="What it does">Google Analytics, only when switched on: tells visits apart so we can count them.</td><td data-label="Lasts">Up to 2 years (Google&apos;s default)</td></tr>
+              <tr><th scope="row" data-label="Name"><code>bc_analytics_consent</code></th><td data-label="What it does">Remembers whether you accepted or declined analytics cookies. Read only by your browser; it contains no personal data.</td><td data-label="Lasts">{Math.round(CONSENT_MAX_AGE_DAYS / 30)} months</td></tr>
+              <tr><th scope="row" data-label="Name"><code>_ga</code>, <code>_ga_*</code></th><td data-label="What it does">Google Analytics, only after you accept analytics cookies: tells visits apart so we can count them.</td><td data-label="Lasts">Up to 2 years (Google&apos;s default)</td></tr>
               <tr><th scope="row" data-label="Name">Browser storage</th><td data-label="What it does">Remembers small display choices on your device: whether you&apos;ve seen the founding-offer pop-up, that you just logged out, and your motion preference. Nothing here is sent to us.</td><td data-label="Lasts">Until you close the tab; the motion preference until you clear it</td></tr>
             </tbody>
           </table>
@@ -223,7 +237,6 @@ export default function PrivacyPage() {
         <p>
           The embedded Google Map may set Google&apos;s own cookies when it loads. You can block or delete cookies in your
           browser settings; if you block <code>bc_member_session</code> you won&apos;t be able to log in.
-          {" "}<Tbc>whether a cookie consent banner is needed for analytics, to be decided in legal review</Tbc>
         </p>
       </LegalSectionBlock>
 
@@ -249,9 +262,25 @@ export default function PrivacyPage() {
         <p>
           We keep personal data only as long as we need it for the purposes above or as the law requires. The periods in
           the table in <a href="#what-we-collect">section 2</a> are proposals <Tbc>retention schedule to be confirmed</Tbc>.
-          The site does not yet delete old records automatically, so the team will review and delete them on a regular
-          schedule <Tbc>review frequency to be confirmed</Tbc>. When data is no longer needed, we delete it or make it
-          anonymous.
+        </p>
+        <ul className="lg-list">
+          <li>
+            <strong>Requests and sign-ups</strong> (bookings, enquiries, early access, newsletter) older than
+            {" "}{LEAD_RETENTION_MONTHS} months are anonymised: your name, email, phone and message are replaced with
+            {" "}&quot;[deleted]&quot;, and only the date, type and status stay so we can count requests.
+          </li>
+          <li>
+            <strong>Unpaid checkouts</strong> (expired, cancelled, failed or abandoned) lose their name and email after
+            {" "}{UNPAID_PAYMENT_RETENTION_DAYS} days. Paid payment records are kept for tax and accounting.
+          </li>
+          <li>
+            <strong>When you delete your account</strong>, this happens straight away for your data (see
+            {" "}<a href="#exercise-rights">section 9</a>).
+          </li>
+        </ul>
+        <p>
+          Our team runs this clean-up from the admin area; it does not yet run on a fixed schedule <Tbc>how often it
+          is run, to be confirmed</Tbc>. When data is no longer needed, we delete it or make it anonymous.
         </p>
       </LegalSectionBlock>
 
@@ -271,15 +300,33 @@ export default function PrivacyPage() {
       </LegalSectionBlock>
 
       <LegalSectionBlock {...section("exercise-rights")}>
+        <p>
+          <strong>In your account.</strong> Members can do two things themselves under{" "}
+          <Link href="/account/settings#your-data">System settings → Your data</Link>:
+        </p>
+        <ul className="lg-list">
+          <li>
+            <strong>Download my data</strong> (access and portability): a JSON file with your account details, profile
+            and preferences, the requests you sent us and your payment records. Staff notes on your requests are not in
+            the file; email us if you want them.
+          </li>
+          <li>
+            <strong>Delete my account</strong> (erasure): you confirm by typing your email address or &quot;DELETE&quot;
+            and your current password. We then delete your account, profile and preferences straight away, anonymise the
+            requests you sent us (name, email, phone and message replaced with &quot;[deleted]&quot;; the date and type
+            stay for our statistics) and log you out. Payment records are kept only because tax and accounting rules
+            require it, with your name and email removed: the item, amount, payment reference and date stay.
+          </li>
+        </ul>
+        <p><strong>By email</strong>, for any right, including if you don&apos;t have an account:</p>
         <ol className="lg-steps">
           <li>Email <Mail /> with the subject &quot;Privacy request&quot; and tell us which right you want to use.</li>
           <li>We may ask you to confirm your identity, for example by replying from the email address we hold for you, so we don&apos;t give your data to someone else.</li>
           <li>We will respond within <Tbc>30 days, to be confirmed</Tbc>. Requests are free of charge <Tbc>to be confirmed</Tbc>.</li>
         </ol>
         <p>
-          To stop receiving updates, email us and we&apos;ll remove you. There is no self-service account deletion yet:
-          email us and we&apos;ll close your account and delete its data, except records we must keep by law (such as
-          payment records).
+          To stop receiving updates, email us and we&apos;ll remove you. If you can&apos;t log in, email us and
+          we&apos;ll delete your account in the same way.
         </p>
       </LegalSectionBlock>
 
@@ -293,9 +340,8 @@ export default function PrivacyPage() {
 
       <LegalSectionBlock {...section("children")}>
         <p>
-          This website and our online services are for people aged 18 and over, and our booking, enquiry and
-          early-access forms ask you to confirm you are 18 or older <Tbc>adding the same confirmation to the newsletter
-          and account sign-up forms, to be confirmed</Tbc>. If you are under 18, please ask a parent or guardian to contact us for you. If we learn that
+          This website and our online services are for people aged 18 and over, and our booking, enquiry,
+          early-access and newsletter forms and the account sign-up ask you to confirm you are 18 or older. If you are under 18, please ask a parent or guardian to contact us for you. If we learn that
           we have collected a minor&apos;s data without a parent&apos;s or guardian&apos;s consent, we will delete it.
           {" "}<Tbc>rules for minors joining classes or camps with a guardian, to be confirmed</Tbc>
         </p>

@@ -79,3 +79,30 @@ export async function updatePayment(id: string, update: (p: Payment) => Payment)
     return all[i];
   });
 }
+
+/** Privacy tools: replaces each payment for which `transform` returns a new value (null leaves it). Returns the count. */
+export async function rewritePayments(transform: (p: Payment) => Payment | null): Promise<number> {
+  const mode = driver();
+  if (mode === "readonly") throw new StorageUnavailableError();
+  if (mode === "upstash") {
+    let changed = 0;
+    for (const payment of await listPayments()) {
+      const next = transform(payment);
+      if (!next) continue;
+      await upstash(["HSET", HASH, payment.id, JSON.stringify(next)]);
+      changed++;
+    }
+    return changed;
+  }
+  return withFileLock(async () => {
+    let changed = 0;
+    const all = (await readFile()).map((p) => {
+      const next = transform(p);
+      if (!next) return p;
+      changed++;
+      return next;
+    });
+    if (changed) await writeJsonFile(FILE, all);
+    return changed;
+  });
+}

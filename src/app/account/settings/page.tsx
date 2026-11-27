@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import AccountSettingsNav from "@/components/members/AccountSettingsNav";
+import PrivacyControls from "@/components/members/PrivacyControls";
 import SystemSettingsForm from "@/components/members/SystemSettingsForm";
 import { getMemberProfile } from "@/lib/members/profile";
 import { currentMember } from "@/lib/members/session";
@@ -29,6 +30,7 @@ export default async function SystemSettingsPage() {
               <h1>Preferences.</h1>
             </header>
             <SystemSettingsForm profile={profile} />
+            <PrivacyControls email={member.email} />
           </div>
         </div>
       </div>
