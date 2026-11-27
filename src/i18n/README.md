@@ -95,8 +95,19 @@ Overlay rules:
   by index.
 - An English item with no translation stays English. A translated item with no English match is dropped.
 
-So admin changes to prices, images, links and on/off switches show in both languages at once. If an admin rewrites
-English text that has a translation, the old Filipino text keeps showing until a translator updates it (see Risks).
+- **Edited English wins.** Content passes its English source (`DEFAULT_CONTENT`) as `localizeValue(content,
+  filContent, { source })`. A translated string is used only while the current English at the same path/id (defaults
+  plus admin edits, whitespace-insensitive) still equals the default it was translated from. If the admin changed it,
+  or there is no default at that path, `/fil` shows the admin's English. Strings in content arrays are matched to their
+  translation by their English source text, so inserting or deleting an item does not shift translations.
+- This also keeps machine-read text right: a timetable slot's `time` stays Filipino ("Madaling-araw (oras: TBA)",
+  which `Timetable.tsx` reads) only while it is the default; an edited "6:00 AM" shows as written and drives the ended
+  state, day part and calendar links.
+
+So admin changes to prices, images, links and on/off switches show in both languages at once, and edited English text
+shows in English on `/fil` until a translator updates `fil/content.ts`. `stale.ts` `staleTranslations(content)` lists
+those paths ("needs re-translation"); the admin dashboard shows the count under the top bar. `getData()` overlays
+without a source: `src/data/*` and its translation are both code, so they cannot drift at runtime.
 
 ### `getData(name)` for `src/data/*`
 
@@ -150,8 +161,11 @@ lines, links to `/` and `/fil`) rather than guessing the locale.
 
 ## Risks and limits
 
-- **Stale translations.** When an admin edits English content that has a translation, Filipino keeps the old wording.
-  A later step can store a hash of the English source next to each translation and fall back on mismatch.
+- **Stale translations.** When an admin edits English content that has a translation, `/fil` falls back to the
+  admin's English for that string (see the overlay rules) and the admin dashboard lists it. Code edits are not
+  detected: a developer changing a default in `content/defaults.ts` or a string in `src/data/*` must update
+  `fil/content.ts` / `fil/data/*` in the same change (the timetable is the exception: it is translated by English
+  title/time, so an unknown default stays English).
 - **Request locale ordering.** Only code rendered below a `/fil` page, or inside `generateMetadata`, sees `"fil"`. Code
   in the layout, `'use cache'` functions or module scope must take the locale as an argument.
 - **Content agent contract.** `fil/content.ts` must export `filContent` and `DeepPartial`. Each `fil/data/<name>.ts`

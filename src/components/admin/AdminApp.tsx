@@ -14,7 +14,8 @@ import SectionEditor from "./SectionEditor";
 
 type Tab = SectionKey | "inbox";
 // signedInAs: the staff email from the session, or null when signed in with the legacy shared password.
-type Props = { content: SiteContent; meta: ContentMeta; leads: Lead[]; storage: StorageDriver; signedInAs: string | null };
+// staleFil: content paths edited in English since their Filipino translation was written (src/i18n/stale.ts).
+type Props = { content: SiteContent; meta: ContentMeta; leads: Lead[]; storage: StorageDriver; signedInAs: string | null; staleFil?: string[] };
 
 const STORAGE_LABEL: Record<StorageDriver, string> = {
   upstash: "Upstash Redis",
@@ -29,7 +30,7 @@ const when = (iso: string) => {
 };
 
 // Admin client shell (spec §D.3, §D.7). Rendered inside <Suspense>, so useSearchParams is allowed.
-export default function AdminApp({ content, meta, leads, storage, signedInAs }: Props) {
+export default function AdminApp({ content, meta, leads, storage, signedInAs, staleFil = [] }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requested = searchParams.get("tab");
@@ -86,6 +87,16 @@ export default function AdminApp({ content, meta, leads, storage, signedInAs }: 
           </form>
         </div>
       </header>
+
+      {staleFil.length > 0 && (
+        <details className="adm-muted" style={{ margin: "8px 16px", fontSize: 13 }}>
+          <summary>
+            Filipino pages: {staleFil.length} edited {staleFil.length === 1 ? "text shows" : "texts show"} in English until re-translated
+          </summary>
+          <p>Update these in src/i18n/fil/content.ts:</p>
+          <ul>{staleFil.map((path) => <li key={path}><code>{path}</code></li>)}</ul>
+        </details>
+      )}
 
       <div className="adm-layout">
         <nav className="adm-tabs" aria-label="Content sections">
