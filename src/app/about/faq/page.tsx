@@ -38,7 +38,7 @@ export default async function MembershipFaqPage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero title="Before you join." intro="How packs, passes, and memberships work, and what the member platform will add." image="/images/programs/stations/row.jpg" imageAlt="Athlete on a rowing machine at BaseCamp CamSur" />}
+      hero={<PageHero variant="editorial" caption="FAQ · Packs, passes and memberships" title="Before you join." intro="How packs, passes, and memberships work, and what the member platform will add." image="/images/programs/stations/row.jpg" imageAlt="Athlete on a rowing machine at BaseCamp CamSur" />}
       glance={{ summary: "Packs and passes.\nThe founding offer.\nThe member platform.", statement: true }}
       cta={<CtaBand eyebrow="Still unsure?" title="Ask us anything." body="Send a question and the BaseCamp CamSur team will reply." label="Contact us" href="/contact" />}
     >

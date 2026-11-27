@@ -20,7 +20,7 @@ export default async function AboutDesignPage() {
   return (
     <DetailTemplate
       path="/about/design"
-      hero={<PageHero title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} />}
+      hero={<PageHero variant="editorial" caption="Design · Shaped by training and the landscape" title={DESIGN_HERO.title} intro={DESIGN_HERO.intro} image={DESIGN_HERO.image} imageAlt={DESIGN_HERO.imageAlt} />}
       glance={{ summary: ABOUT_GLANCE.design, statement: true }}
       cta={<CtaBand title={ABOUT_CTA.title} body={ABOUT_CTA.body} label={c.settings.founding.enabled ? c.settings.founding.ctaLabel || undefined : undefined} href="/contact" />}
     >

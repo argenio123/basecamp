@@ -22,7 +22,7 @@ export default async function PriceGuidePage() {
   return (
     <DetailTemplate
       path={PATH}
-      hero={<PageHero title="Passes, recovery, and more." intro="Starting prices for everything beyond the monthly tiers, in one place." image="/images/membership/generated/price-guide-gym-reception-v2.webp" imageAlt="Gym reception staff helping a visitor beside accreditation displays" />}
+      hero={<PageHero variant="split" title="Passes, recovery, and more." intro="Starting prices for everything beyond the monthly tiers, in one place." image="/images/membership/generated/price-guide-gym-reception-v2.webp" imageAlt="Gym reception staff helping a visitor beside accreditation displays" />}
       glance={{ summary: "Packs and day passes.\nYoga and recovery.\nCamps and teams.", statement: true }}
       related={["/membership#tiers", "/membership/launch-promotions"]}
       cta={<>

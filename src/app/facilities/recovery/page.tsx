@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import FacilityShowcase, { type ShowcaseSlide } from "@/components/facilities/FacilityShowcase";
+import { statFact } from "@/components/facilities/facts";
 import { DetailTemplate } from "@/components/nav/PageTemplates";
 import CtaBand from "@/components/sections/CtaBand";
 import PageHero from "@/components/sections/PageHero";
+import { getSiteContent } from "@/content/get";
 import { FACILITIES_CTA, RECOVERY_HERO, ROOMS } from "@/data/facilities";
 
 export const metadata: Metadata = {
@@ -19,11 +21,13 @@ const SLIDES: ShowcaseSlide[] = [
   { ...ROOMS.recoveryShowers, eyebrow: "Amenities" },
 ];
 
-export default function FacilitiesRecoveryPage() {
+// Hero stats come from content (home.stats); getSiteContent() is cached, so the page still prerenders.
+export default async function FacilitiesRecoveryPage() {
+  const stats = (await getSiteContent()).home.stats.items;
   return (
     <DetailTemplate
       path="/facilities/recovery"
-      hero={<PageHero {...RECOVERY_HERO} />}
+      hero={<PageHero {...RECOVERY_HERO} variant="stat" facts={["floor", "modalities"].map((id) => statFact(stats, id))} />}
       glance={{
         summary: "Cold. Heat. Contrast.\nA full recovery level.\nBuilt for camp volume.",
         statement: true,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { statFact } from "@/components/facilities/facts";
 import { OverviewTemplate } from "@/components/nav/PageTemplates";
 import ScheduleExplore from "@/components/schedule/ScheduleExplore";
 import CtaBand from "@/components/sections/CtaBand";
@@ -39,13 +40,16 @@ const FACILITY_PREVIEWS: Record<string, { description: string; image: string; im
 // node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-cache.md), so the page prerenders.
 // Legacy #anchors (e.g. /facilities#recovery) are forwarded by the root layout's <HashForwarder />.
 // Compressed H.264 copies of the 86 MB, 1920×1080 source (see facilitiesVideo): ~5.6 MB desktop, ~3.3 MB mobile.
-// The hero box (fitVideo) is 16:9 like the video, so nothing is cropped.
+// The "stat" hero covers the screen with the video (cropped around the centre) above a strip of facility stats.
 const FACILITIES_HERO_VIDEO = {
   src: facilitiesVideo(1920, 1080),
   mobileSrc: facilitiesVideo(960, 540),
   tabletSrc: facilitiesVideo(1280, 720),
   poster: facilitiesVideoFrame(1280, 720),
 };
+
+/** Content stats (home.stats, "The first three stats also appear on the Facilities page") shown in the hero strip. */
+const HERO_STATS = ["sqm", "zones", "floor"];
 
 export default async function FacilitiesPage() {
   const c = await getSiteContent();
@@ -54,7 +58,7 @@ export default async function FacilitiesPage() {
   return (
     <OverviewTemplate
       path="/facilities"
-      hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} fitVideo />}
+      hero={<PageHero {...FACILITIES_HERO} video={FACILITIES_HERO_VIDEO} variant="stat" facts={HERO_STATS.map((id) => statFact(c.home.stats.items, id))} />}
       glance={{
         summary: "Training zones.\nA recovery level.\nSpaces to stay longer.",
         statement: true,

@@ -48,7 +48,7 @@ export default async function SchedulePage() {
       path="/schedule"
       quote={false}
       cards={false}
-      hero={<PageHero title="Train from sunrise to night." intro="Classes, open gym, and recovery from sunrise to night." image="/images/programs/generated/personal-coaching.webp" imageAlt="Coach supporting an athlete during a training session" imagePosition="35% center" />}
+      hero={<PageHero variant="compact" title="Train from sunrise to night." intro="Classes, open gym, and recovery from sunrise to night." image="/images/programs/generated/personal-coaching.webp" imageAlt="Coach supporting an athlete during a training session" imagePosition="35% 30%" />}
       glance={{
         summary: "Sunrise classes.\nOpen gym hours.\nTraining under lights.",
         statement: true,

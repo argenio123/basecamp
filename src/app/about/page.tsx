@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageHero eyebrow="BaseCamp CamSur" title="Built for more." intro="Train. Recover. Thrive. In CamSur." image="/images/facilities/facility-aerial-render.jpg" imageAlt="Aerial view of the BaseCamp CamSur building, lawns, and parking" imagePosition="center 45%" />
+      <PageHero variant="editorial" caption="The building · Pili, Camarines Sur" eyebrow="BaseCamp CamSur" title="Built for more." intro="Train. Recover. Thrive. In CamSur." image="/images/facilities/facility-aerial-render.jpg" imageAlt="Aerial view of the BaseCamp CamSur building, lawns, and parking" imagePosition="center 45%" />
 
       <section id="founders" className="section sd-ev lx-split-section">
         <div className="shell">

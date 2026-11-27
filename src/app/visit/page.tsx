@@ -28,7 +28,7 @@ export default async function VisitPage() {
   return (
     <OverviewTemplate
       path="/visit"
-      hero={<PageHero {...VISIT_HERO} />}
+      hero={<PageHero {...VISIT_HERO} variant="editorial" frame="band" />}
       glance={{ summary: VISIT_GLANCE.summary, statement: true }}
       cards={false}
       quote={false}

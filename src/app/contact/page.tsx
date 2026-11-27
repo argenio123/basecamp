@@ -61,7 +61,7 @@ export default async function ContactPage() {
     contact.hours && { label: "Hours", value: contact.hours, icon: "hours", href: "/schedule", action: "Schedule" },
   ].filter(Boolean) as Line[];
   return <>
-    <PageHero title="Let's connect." intro="Email, call, or message us. We reply within one business day." image="/images/facilities/facility-landscape.jpg" imageAlt="BaseCamp CamSur set within the CamSur landscape" imagePosition="center 80%" />
+    <PageHero variant="compact" title="Let's connect." intro="Email, call, or message us. We reply within one business day." image="/images/facilities/facility-landscape.jpg" imageAlt="BaseCamp CamSur set within the CamSur landscape" imagePosition="center 80%" />
 
     <AtAGlance summary={"Ask anything.\nWe answer fast.\nThen come train."} statement />
 
