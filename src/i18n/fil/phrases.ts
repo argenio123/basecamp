@@ -6,6 +6,13 @@
 // harmless (find them with the check in MERGE-PLAN.md). Editable content and src/data/* copy are NOT here: see
 // fil/content.ts and fil/data/*. Grouped by page; keep each group next to its page's path comment.
 
+import { PHRASES_CLASSES } from "./phrases/classes";
+import { PHRASES_FACILITIES } from "./phrases/facilities";
+import { PHRASES_MEMBERSHIP } from "./phrases/membership";
+import { PHRASES_SCHEDULE } from "./phrases/schedule";
+import { PHRASES_VISIT_ABOUT } from "./phrases/visit-about";
+import { PHRASES_SHARED } from "./phrases/shared";
+
 export const FIL_PHRASES: Readonly<Record<string, string>> = {
   // ---------- / (home) ----------
   "Now open": "Bukas na",
@@ -109,4 +116,11 @@ export const FIL_PHRASES: Readonly<Record<string, string>> = {
   "Build updates, training clips, and community news before we open.": "Build updates, training clips, at balita mula sa komunidad bago kami magbukas.",
   "Follow": "I-follow",
   " BaseCamp on {platform} (opens in a new tab)": " ang BaseCamp sa {platform} (magbubukas sa bagong tab)",
+  // ---------- section files (src/i18n/fil/phrases/*) ----------
+  ...PHRASES_CLASSES,
+  ...PHRASES_FACILITIES,
+  ...PHRASES_MEMBERSHIP,
+  ...PHRASES_SCHEDULE,
+  ...PHRASES_VISIT_ABOUT,
+  ...PHRASES_SHARED,
 };

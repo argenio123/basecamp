@@ -7,7 +7,15 @@ import { DEFAULT_LOCALE, LOCALE_PREFIX, LOCALE_TAG, LOCALES, type Locale } from 
  * Add a path here in the same commit that adds its route file (MERGE-PLAN.md). A trailing "/*" matches one dynamic
  * segment, e.g. "/classes/styles/*".
  */
-export const LOCALIZED_PATHS: readonly string[] = ["/", "/membership", "/visit", "/contact"];
+import { PATHS_CLASSES } from "./localized/classes";
+import { PATHS_FACILITIES } from "./localized/facilities";
+import { PATHS_MEMBERSHIP } from "./localized/membership";
+import { PATHS_SCHEDULE } from "./localized/schedule";
+import { PATHS_VISIT_ABOUT } from "./localized/visit-about";
+import { PATHS_SHARED } from "./localized/shared";
+
+// Section lists live in src/i18n/localized/* so sections can be localised in parallel without merge conflicts.
+export const LOCALIZED_PATHS: readonly string[] = ["/", "/membership", "/visit", "/contact", ...PATHS_CLASSES, ...PATHS_FACILITIES, ...PATHS_MEMBERSHIP, ...PATHS_SCHEDULE, ...PATHS_VISIT_ABOUT, ...PATHS_SHARED];
 
 const PREFIX_RE = /^\/fil(?=\/|$)/;
 
