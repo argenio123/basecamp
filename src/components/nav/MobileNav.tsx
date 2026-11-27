@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import ScrollTopLink from "@/components/ui/ScrollTopLink";
 import MemberNavLink from "@/components/members/MemberNavLink";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import { FOUNDING_HREF, type SiteSection } from "@/content/sitemap";
+import { useLocale } from "@/i18n/client";
+import { localizedHref } from "@/i18n/paths";
+import { fmt, UI } from "@/i18n/ui";
 
 // Hash links use plain Link so the browser lands on the anchor (ScrollTopLink forces top).
 function NavLink({ href, children }: { href: string; children: ReactNode }) {
@@ -16,7 +20,10 @@ function NavLink({ href, children }: { href: string; children: ReactNode }) {
  * with its overview and highlights, no images; account actions stay at the bottom.
  * Keeps the existing <details class="mobile-menu"> shell; closes itself when a link is followed.
  */
+/** `sections` arrive localized (Header). */
 export default function MobileNav({ sections }: { sections: SiteSection[] }) {
+  const locale = useLocale();
+  const ui = UI[locale];
   const menuRef = useRef<HTMLDetailsElement>(null);
   const summaryRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
@@ -39,7 +46,7 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
 
   return (
     <details className="mobile-menu" ref={menuRef} open={open} onToggle={(event) => setOpen(event.currentTarget.open)}>
-      <summary ref={summaryRef} aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open}><span /><span /></summary>
+      <summary ref={summaryRef} aria-label={open ? ui.header.closeNav : ui.header.openNav} aria-expanded={open}><span /><span /></summary>
       <div className="mobile-panel nv-mobile-panel" onClick={closeOnLink}>
         {sections.map((section) => (
           <details className="nv-mobile-row" key={section.id}>
@@ -48,14 +55,15 @@ export default function MobileNav({ sections }: { sections: SiteSection[] }) {
               <span className="nv-mobile-sign" aria-hidden="true" />
             </summary>
             <ul className="nv-mobile-links">
-              <li><NavLink href={section.href}>{section.label} overview</NavLink></li>
+              <li><NavLink href={section.href}>{fmt(ui.header.sectionOverview, { label: section.label })}</NavLink></li>
               {section.menu.highlights.map((h) => <li key={h.label}><NavLink href={h.href}>{h.label}</NavLink></li>)}
             </ul>
           </details>
         ))}
         <div className="nv-mobile-extras">
           <MemberNavLink className="nv-mobile-login" />
-          <Link href={FOUNDING_HREF}>Become an early member</Link>
+          <Link href={localizedHref(FOUNDING_HREF, locale)}>{ui.header.becomeEarlyMember}</Link>
+          <LanguageSwitcher className="nv-mobile-lang" tone="dark" />
         </div>
       </div>
     </details>

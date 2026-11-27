@@ -7,10 +7,14 @@ import PageHero from "@/components/sections/PageHero";
 import AtAGlance from "@/components/ui/AtAGlance";
 import { getSiteContent } from "@/content/get";
 import { directionsUrl } from "@/data/brand";
+import { alternatesFor } from "@/i18n/paths";
+import { localHref, t } from "@/i18n/server";
 
+// i18n (src/i18n/README.md): /fil/contact reuses this page; static title/description are translated by phrase lookup.
 export const metadata: Metadata = {
   title: "Contact",
   description: "Email, call, or message BaseCamp CamSur, find the address and hours, get quick answers, and follow us on social media.",
+  alternates: alternatesFor("/contact"),
 };
 
 const pad = (n: number) => String(n + 1).padStart(2, "0");
@@ -48,30 +52,30 @@ export default async function ContactPage() {
   const c = await getSiteContent();
   const { contact, socials } = c.settings;
   const phoneDigits = contact.phoneE164.replace(/\D/g, "");
-  const whatsappUrl = phoneDigits ? `https://wa.me/${phoneDigits}?text=${encodeURIComponent("Hi BaseCamp CamSur, I have a quick question.")}` : "";
+  const whatsappUrl = phoneDigits ? `https://wa.me/${phoneDigits}?text=${encodeURIComponent(t("Hi BaseCamp CamSur, I have a quick question."))}` : "";
   const address = contact.addressLines.join(", ");
   const follow = socials.filter((s) => s.url);
 
   const lines = [
-    { label: "Early access", value: "Priority updates", icon: "access", action: "Join now", earlyAccess: true },
-    contact.email && { label: "Email", value: contact.email, icon: "email", href: `mailto:${contact.email}`, action: "Send email" },
-    contact.phoneDisplay && { label: "Phone", value: contact.phoneDisplay, icon: "phone", href: `tel:${contact.phoneE164 || contact.phoneDisplay}`, action: "Call now" },
-    whatsappUrl && { label: "WhatsApp", value: contact.phoneDisplay, icon: "chat", href: whatsappUrl, action: "Open chat", external: true },
-    address && { label: "Address", value: address, icon: "location", href: contact.mapsQuery ? directionsUrl(contact.mapsQuery) : undefined, action: contact.mapsQuery ? "Directions" : undefined, external: true },
-    contact.hours && { label: "Hours", value: contact.hours, icon: "hours", href: "/schedule", action: "Schedule" },
+    { label: t("Early access"), value: t("Priority updates"), icon: "access", action: t("Join now"), earlyAccess: true },
+    contact.email && { label: t("Email"), value: contact.email, icon: "email", href: `mailto:${contact.email}`, action: t("Send email") },
+    contact.phoneDisplay && { label: t("Phone"), value: contact.phoneDisplay, icon: "phone", href: `tel:${contact.phoneE164 || contact.phoneDisplay}`, action: t("Call now") },
+    whatsappUrl && { label: t("WhatsApp"), value: contact.phoneDisplay, icon: "chat", href: whatsappUrl, action: t("Open chat"), external: true },
+    address && { label: t("Address"), value: address, icon: "location", href: contact.mapsQuery ? directionsUrl(contact.mapsQuery) : undefined, action: contact.mapsQuery ? t("Directions") : undefined, external: true },
+    contact.hours && { label: t("Hours"), value: contact.hours, icon: "hours", href: localHref("/schedule"), action: t("Schedule") },
   ].filter(Boolean) as Line[];
   return <>
-    <PageHero title="Let's connect." intro="Email, call, or message us. We reply within one business day." image="/images/facilities/facility-landscape.jpg" imageAlt="BaseCamp CamSur set within the CamSur landscape" imagePosition="center 80%" />
+    <PageHero title={t("Let's connect.")} intro={t("Email, call, or message us. We reply within one business day.")} image="/images/facilities/facility-landscape.jpg" imageAlt={t("BaseCamp CamSur set within the CamSur landscape")} imagePosition="center 80%" />
 
-    <AtAGlance summary={"Ask anything.\nWe answer fast.\nThen come train."} statement />
+    <AtAGlance summary={t("Ask anything.\nWe answer fast.\nThen come train.")} statement />
 
     {/* 1 · Direct lines: editorial 3×2 quick-connect grid, with early access featured first. */}
     <section id="enquire" className="ct11" aria-labelledby="ct11-title">
       <div className="ct11-panel">
         <div className="ct11-head" data-reveal>
-          <p className="sd-tt-eyebrow">Talk to us</p>
-          <h2 id="ct11-title">Direct lines.</h2>
-          <p>Choose the quickest way to reach our team, ask a question, or plan your first visit.</p>
+          <p className="sd-tt-eyebrow">{t("Talk to us")}</p>
+          <h2 id="ct11-title">{t("Direct lines.")}</h2>
+          <p>{t("Choose the quickest way to reach our team, ask a question, or plan your first visit.")}</p>
         </div>
         <ul className="ct11-cards" data-reveal="stagger">
           {lines.map((l, n) => {
@@ -101,15 +105,15 @@ export default async function ContactPage() {
     </section>
 
     {/* 2 · Quick answers */}
-    <ScheduleExplore eyebrow="Before you write" title="Quick answers." intro="Most questions about prices, passes, class times, and visiting are answered here." items={QUICK_ANSWERS} />
+    <ScheduleExplore eyebrow={t("Before you write")} title={t("Quick answers.")} intro={t("Most questions about prices, passes, class times, and visiting are answered here.")} items={QUICK_ANSWERS.map((q) => ({ ...q, href: localHref(q.href), label: t(q.label), summary: t(q.summary), imageAlt: t(q.imageAlt) }))} />
 
     {/* 3 · Social */}
     {follow.length > 0 && (
       <section className="section sd-ev sd-ev-dark" id="follow">
         <div className="shell">
           <div className="sd-tt-head" data-reveal>
-            <div><p className="sd-tt-eyebrow">Follow us</p><h2>Train with us online.</h2></div>
-            <p>Build updates, training clips, and community news before we open.</p>
+            <div><p className="sd-tt-eyebrow">{t("Follow us")}</p><h2>{t("Train with us online.")}</h2></div>
+            <p>{t("Build updates, training clips, and community news before we open.")}</p>
           </div>
           <div className="sd-ev-board">
             <ol className="sd-ev-tiles ct8-social" data-reveal="stagger">
@@ -119,7 +123,7 @@ export default async function ContactPage() {
                     <span className="sd-ev-num">{pad(n)}</span>
                     <h3>{s.platform}</h3>
                     <p>{s.handle || s.platform}</p>
-                    <span className="ct8-social-go">Follow<span className="sr-only"> BaseCamp on {s.platform} (opens in a new tab)</span></span>
+                    <span className="ct8-social-go">{t("Follow")}<span className="sr-only">{t(" BaseCamp on {platform} (opens in a new tab)", { platform: s.platform })}</span></span>
                   </a>
                 </li>
               ))}

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { ImageLabel } from "@/components/ui/AiImageLabel";
+import { useUi } from "@/i18n/client";
 
 export type ExploreItem = { href: string; label: string; summary: string; image: string; imageAlt: string; flipImage?: boolean };
 
@@ -17,6 +18,7 @@ const CYCLE_MS = 4500;
  */
 export default function ScheduleExplore({ eyebrow, title, intro, items, fitImages = false, variant = "split" }: { eyebrow: string; title: string; intro: string; items: ExploreItem[]; fitImages?: boolean; /** "stage": the photo fills the whole section edge to edge, with the copy and a numbered tile grid laid over it. */ variant?: "split" | "stage" }) {
   const stage = variant === "stage";
+  const ui = useUi();
   const pad = (n: number) => String(n).padStart(2, "0");
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -55,7 +57,7 @@ export default function ScheduleExplore({ eyebrow, title, intro, items, fitImage
                   {stage && <span className="sd-explore-num" aria-hidden="true">{pad(i + 1)}</span>}
                   <span className="sd-explore-label">{item.label}</span>
                   <span className="sd-explore-summary">{item.summary}</span>
-                  {!stage && <span className="sd-explore-cta">Explore</span>}
+                  {!stage && <span className="sd-explore-cta">{ui.common.explore}</span>}
                 </Link>
                 <span className="sd-explore-bar" aria-hidden="true">
                   <span key={i === active ? `${cycleKey}-${active}` : "idle"} data-run={i === active && !paused ? "" : undefined} />

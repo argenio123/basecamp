@@ -2,7 +2,8 @@ import type { ComponentProps, ReactNode } from "react";
 import Marquee from "@/components/features/Marquee";
 import QuoteBand from "@/components/features/QuoteBand";
 import AtAGlance from "@/components/ui/AtAGlance";
-import { SECTION_FEATURES, sectionKeyFor } from "@/data/features";
+import { sectionKeyFor } from "@/data/features";
+import { getData } from "@/i18n/data";
 import Breadcrumbs from "./Breadcrumbs";
 import PrevNext from "./PrevNext";
 import RelatedLinks from "./RelatedLinks";
@@ -50,7 +51,7 @@ type OverviewTemplateProps = {
  */
 export function OverviewTemplate({ path, hero, glance, cards = {}, quote = true, marquee = true, cta, children, cardsAfter = false }: OverviewTemplateProps) {
   // Reference features on every overview: ghost word behind "At a glance", scrolling marquee, closing quote.
-  const feature = SECTION_FEATURES[sectionKeyFor(path)];
+  const feature = getData("features").SECTION_FEATURES[sectionKeyFor(path)];
   return (
     <>
       {hero}
@@ -87,6 +88,7 @@ type DetailTemplateProps = {
 
 /** Detail page order: hero → breadcrumbs → at a glance → content → related → CTA → previous/next (right above the footer). */
 export function DetailTemplate({ path, hero, glance, crumbLabel, related, relatedTitle, marquee = true, afterRelated, cta, children }: DetailTemplateProps) {
+  const { SECTION_FEATURES } = getData("features");
   return (
     <>
       {hero}

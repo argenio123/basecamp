@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { basePath } from "@/i18n/paths";
 import { clearIdleMark, recordActivity } from "@/lib/home-offer-visit";
 
 const EVENTS = ["pointerdown", "pointermove", "keydown", "wheel", "scroll", "touchstart"] as const;
@@ -17,7 +18,7 @@ export default function OfferActivityTracker() {
   useEffect(() => {
     // Mounted once per full page load. Away from the homepage, a pending idle mark is spent and the load counts as
     // activity; on the homepage the offer modal reads and updates the record itself.
-    if (window.location.pathname !== "/") { clearIdleMark(); recordActivity(Date.now(), false); }
+    if (basePath(window.location.pathname) !== "/") { clearIdleMark(); recordActivity(Date.now(), false); }
     let lastWrite = 0;
     const onActivity = () => {
       const now = Date.now();

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { logOut } from "@/lib/members/actions";
 import { getMemberMenuSummary } from "@/lib/members/profile-actions";
 import { LOGGED_OUT_KEY, loginHref, MEMBER_LOGIN_PATH, MEMBER_SIGNUP_PATH } from "@/lib/members/types";
+import { useUi } from "@/i18n/client";
 import { useMemberHint } from "./useMemberHint";
 
 type MemberNavLinkProps = {
@@ -15,7 +16,9 @@ type MemberNavLinkProps = {
 };
 
 /** Header / mobile-menu account control: "Login" for visitors, "My account" for signed-in members. */
-export default function MemberNavLink({ className, signedInHref = "/account", signedInLabel = "My account" }: MemberNavLinkProps) {
+export default function MemberNavLink({ className, signedInHref = "/account", signedInLabel: signedInLabelProp }: MemberNavLinkProps) {
+  const ui = useUi();
+  const signedInLabel = signedInLabelProp ?? ui.account.myAccount;
   const member = useMemberHint();
   const pathname = usePathname() || "/";
   const [accountOpen, setAccountOpen] = useState(false);
@@ -105,18 +108,18 @@ export default function MemberNavLink({ className, signedInHref = "/account", si
           </button>
           <div id="member-account-menu" className="mb-account-popover" data-open={accountOpen ? "true" : undefined} aria-hidden={!accountOpen}>
             <header className="mb-account-popover-head">
-              <p className="mb-account-popover-title" aria-live="polite">{accountSummary?.name ?? "Loading account…"}</p>
+              <p className="mb-account-popover-title" aria-live="polite">{accountSummary?.name ?? ui.account.loading}</p>
               <p className="mb-account-popover-email">{accountSummary?.email ?? ""}</p>
             </header>
-            <nav aria-label="Member shortcuts">
+            <nav aria-label={ui.account.shortcuts}>
               <ul className="mb-account-popover-links">
-                <li><Link className="mb-account-popover-link" href="/account" onClick={() => setAccountOpen(false)}><span>Account settings</span></Link></li>
-                <li><Link className="mb-account-popover-link" href="/account/settings" onClick={() => setAccountOpen(false)}><span>System settings</span></Link></li>
+                <li><Link className="mb-account-popover-link" href="/account" onClick={() => setAccountOpen(false)}><span>{ui.account.accountSettings}</span></Link></li>
+                <li><Link className="mb-account-popover-link" href="/account/settings" onClick={() => setAccountOpen(false)}><span>{ui.account.systemSettings}</span></Link></li>
               </ul>
             </nav>
             <form action={logOut} onSubmit={handleLogOut}>
               <input type="hidden" name="next" value="/" />
-              <button className="mb-account-popover-logout" type="submit" disabled={loggingOut}>{loggingOut ? "Logging out…" : "Log out"}</button>
+              <button className="mb-account-popover-logout" type="submit" disabled={loggingOut}>{loggingOut ? ui.account.loggingOut : ui.account.logOut}</button>
             </form>
           </div>
         </div>
@@ -131,8 +134,8 @@ export default function MemberNavLink({ className, signedInHref = "/account", si
   // The log-in and sign-up pages have their own Log in / Sign up tabs on the card, so no header button there.
   if (pathname === MEMBER_LOGIN_PATH || pathname === MEMBER_SIGNUP_PATH) return null;
   return (
-    <Link href={loginHref(pathname)} className={className} data-member-state="signed-out" aria-label="Member login">
-      Login
+    <Link href={loginHref(pathname)} className={className} data-member-state="signed-out" aria-label={ui.account.memberLogin}>
+      {ui.common.login}
     </Link>
   );
 }

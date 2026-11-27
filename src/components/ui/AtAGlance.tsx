@@ -1,3 +1,5 @@
+import { getUi } from "@/i18n/server";
+
 export type GlanceFact = { label?: string; value: string };
 
 type AtAGlanceProps = {
@@ -14,7 +16,7 @@ type AtAGlanceProps = {
 };
 
 /** "At a glance" band under the hero on section pages: a one-line summary plus optional fact chips. */
-export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance", id, ghost, statement = false }: AtAGlanceProps) {
+export default function AtAGlance({ summary, facts = [], eyebrow = getUi().glance.eyebrow, id, ghost, statement = false }: AtAGlanceProps) {
   const chips = facts
     .flatMap((f): GlanceFact[] => (!f ? [] : typeof f === "string" ? [{ value: f }] : [f]))
     .filter((f) => f.value.trim() !== "")
@@ -28,7 +30,7 @@ export default function AtAGlance({ summary, facts = [], eyebrow = "At a glance"
           <p className="eyebrow" id={id ? `${id}-title` : undefined}>{eyebrow}</p>
           <p className={`nv-glance-summary${statement ? " nv-glance-summary--statement" : ""}`}>{summary}</p>
           {chips.length > 0 && (
-            <ul className="nv-glance-facts" aria-label="Key facts">
+            <ul className="nv-glance-facts" aria-label={getUi().glance.keyFacts}>
               {chips.map((f) => (
                 <li key={`${f.label ?? ""}${f.value}`} className="nv-chip">
                   {f.label && <span className="nv-chip-label">{f.label}</span>}

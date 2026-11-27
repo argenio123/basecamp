@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { basePath } from "@/i18n/paths";
 
 const HERO = ".page-hero, .pr-editorial-hero, .ab-editorial-hero, .ab-simple-hero";
 
@@ -22,7 +23,7 @@ export default function HeroReplay() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (basePath(pathname) === "/" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const hero = [...document.querySelectorAll<HTMLElement>(`main :is(${HERO})`)].find((el) => el.offsetParent !== null);
     if (!hero) return;
 
