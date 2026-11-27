@@ -5,7 +5,8 @@ import { useActionState, useEffect, useMemo, useState, type MouseEvent } from "r
 import { resetSectionAction, saveSectionAction } from "@/app/admin/actions";
 import { EDITOR_SCHEMA, sectionFields, type Field } from "@/content/editor-schema";
 import { currentHrefFor } from "@/content/sitemap";
-import type { SectionKey } from "@/content/types";
+import type { PriceGroup, SectionKey } from "@/content/types";
+import { FoundingPreview } from "./ContentReview";
 import { ObjectFields } from "./fields/FieldControl";
 import { fieldId } from "./fields/inputs";
 import { INITIAL_SAVE_STATE, type SaveState } from "./state";
@@ -21,6 +22,8 @@ type Props = {
   onSaved: (kind: "saved" | "reset") => void;
   onDirtyChange: (dirty: boolean) => void;
   focusItem?: string | null;
+  /** Current pricing groups, for the founding-offer preview in Site settings. */
+  pricingGroups?: readonly PriceGroup[];
 };
 
 /** "Founders › Paragraphs › 2" for an error path such as founders.paragraphs.1 */
@@ -56,7 +59,7 @@ const previewWhere = (href: string) => (href.startsWith("/#") ? "homepage" : "si
 
 // Edits one content section (spec §D.7). Local draft starts as a structured clone of the stored content;
 // the editor is remounted (via its key) after a save or reset so it picks up the new stored version.
-export default function SectionEditor({ section, initial, baseUpdatedAt, readOnly, onSaved, onDirtyChange, focusItem }: Props) {
+export default function SectionEditor({ section, initial, baseUpdatedAt, readOnly, onSaved, onDirtyChange, focusItem, pricingGroups = [] }: Props) {
   const router = useRouter();
   const schema = EDITOR_SCHEMA[section];
   const groups = schema.groups as readonly Group[];
@@ -158,6 +161,7 @@ export default function SectionEditor({ section, initial, baseUpdatedAt, readOnl
                 </p>
               )}
               <ObjectFields fields={group.fields} value={draft} onChange={setDraft} path="" errors={errors} />
+              {section === "settings" && "founding" in group.fields && <FoundingPreview draft={draft} groups={pricingGroups} />}
             </div>
           </details>
         );

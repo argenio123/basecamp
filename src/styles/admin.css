@@ -45,6 +45,10 @@
 .adm-error-list { margin: 8px 0 0; padding-left: 18px; }
 .adm-error-list li { margin-bottom: 4px; }
 .adm-error-list a { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.adm-review q { overflow-wrap: anywhere; }
+.adm-review-note { display: block; color: var(--olive); }
+.adm-review-link { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.adm-founding-preview { margin: 16px 0 0; }
 
 /* ---------- buttons ---------- */
 .adm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background-color .2s ease, color .2s ease; }

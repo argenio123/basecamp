@@ -285,7 +285,8 @@ export const DEFAULT_CONTENT: SiteContent = {
     founding: {
       enabled: true, title: "Founding members",
       summary: "Limited availability for the first founding members: 30% off for your first six months, or a lifetime alumni rate that stays locked in.",
-      example: "Example: Athlete founding rate Php 3,150/month (standard Php 4,500).",
+      // Approved: Athlete at Php 3,150/month against the Php 4,500 standard (30% off), capped at 100 members.
+      tierId: "athlete", price: 3150,
       benefits: [
         "Founding rate: 30% off for your first six months, or a locked lifetime alumni rate",
         "Priority access to camps, workshops, and special events",

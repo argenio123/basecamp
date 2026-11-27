@@ -1,25 +1,27 @@
-// Founding-member rate at checkout (server-only). The offer comes from the editable settings (settings.founding):
-// its example line names the tier and both prices, e.g. "Athlete founding rate Php 3,150/month (standard Php 4,500)".
-// The standard price is taken from the pricing content; only the founding price comes from the offer text.
+// Founding-member rate at checkout (server-only). The offer comes from the editable settings: settings.founding.tierId
+// (the membership it discounts) and settings.founding.price (whole pesos a month), checked by the same rule the admin
+// save enforces (src/content/founding.ts: at least half the standard price and below it). No price is read from text.
+// The standard price is the tier's price in the pricing content.
 import { cacheLife, cacheTag } from "next/cache";
+import { activeFoundingTerms } from "@/content/founding";
 import type { FoundingOffer, SiteContent } from "@/content/types";
 import { findPayable } from "./catalog";
 import { FOUNDING_COUNT_TAG } from "./founding-cache";
-import { foundingItemId, parseFoundingExample } from "./founding-link";
 import { countFoundingMembers, foundingAvailability, type FoundingAvailability } from "./founding-status";
 import { listMemberPayments, listPayments } from "./store";
 
 export type FoundingRate = { itemId: string; itemName: string; amount: number; standard: number };
 
-/** The founding rate while the offer is on and cheaper than the tier's listed price; otherwise null. */
+/**
+ * The founding rate (amounts in centavos) while the offer is on and its price passes the sanity rule against the
+ * tier's listed price; otherwise null, so checkout charges the standard price.
+ */
 export function foundingRate(content: SiteContent): FoundingRate | null {
-  const offer = content.settings.founding;
-  if (!offer.enabled) return null;
-  const parsed = parseFoundingExample(offer.example);
-  if (!parsed) return null;
-  const payable = findPayable(content, foundingItemId(offer.example));
+  const terms = activeFoundingTerms(content.settings.founding, content.pricing.groups);
+  if (!terms) return null;
+  const payable = findPayable(content, terms.tierId);
   if (!payable || payable.kind !== "membership") return null;
-  const amount = Math.round(parsed.founding * 100);
+  const amount = Math.round(terms.founding * 100);
   if (amount <= 0 || amount >= payable.amount) return null;
   return { itemId: payable.item.id, itemName: payable.item.name, amount, standard: payable.amount };
 }

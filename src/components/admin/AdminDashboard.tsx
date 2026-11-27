@@ -1,4 +1,5 @@
 import { readContentFresh } from "@/content/get";
+import type { ReviewItem } from "@/content/review";
 import type { ContentMeta, SiteContent } from "@/content/types";
 import { staleTranslations } from "@/i18n/stale";
 import { requireAdmin, staffEmail } from "@/lib/auth/session";
@@ -11,10 +12,10 @@ import AdminApp from "./AdminApp";
 // requireAdmin() runs first and redirects (outside any try/catch) when the session is missing or invalid.
 export default async function AdminDashboard() {
   const session = await requireAdmin();
-  let data: { content: SiteContent; meta: ContentMeta; leads: Lead[] } | null = null;
+  let data: { content: SiteContent; meta: ContentMeta; review: ReviewItem[]; leads: Lead[] } | null = null;
   try {
-    const [{ content, meta }, leads] = await Promise.all([readContentFresh(), listLeads()]);
-    data = { content, meta, leads };
+    const [{ content, meta, review }, leads] = await Promise.all([readContentFresh(), listLeads()]);
+    data = { content, meta, review, leads };
   } catch {
     data = null;
   }
@@ -27,5 +28,5 @@ export default async function AdminDashboard() {
       </div>
     );
   }
-  return <AdminApp content={data.content} meta={data.meta} leads={data.leads} storage={driver()} signedInAs={staffEmail(session)} staleFil={staleTranslations(data.content)} />;
+  return <AdminApp content={data.content} meta={data.meta} review={data.review} leads={data.leads} storage={driver()} signedInAs={staffEmail(session)} staleFil={staleTranslations(data.content)} />;
 }

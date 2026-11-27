@@ -11,7 +11,9 @@ import { localizedHref } from "@/i18n/paths";
 import { getLocale } from "@/i18n/server";
 import { CONTENT_TAG } from "./constants";
 import { DEFAULT_CONTENT } from "./defaults";
+import { withCheckedFounding } from "./founding";
 import { mergeContent } from "./merge";
+import { contentReview, type ReviewItem } from "./review";
 import { readStoredContent, type StoredContent } from "./store";
 import type { ContentMeta, SiteContent } from "./types";
 
@@ -39,14 +41,19 @@ async function getLocalizedContent(locale: Locale): Promise<SiteContent> {
     // Storage outage → defaults, retried soon; 'minutes' expires in 1h so it stays prerenderable.
     cacheLife("minutes");
   }
-  const content = mergeContent(DEFAULT_CONTENT, stored?.sections ?? {});
+  const content = withCheckedFounding(mergeContent(DEFAULT_CONTENT, stored?.sections ?? {}));
   if (locale === DEFAULT_LOCALE) return content;
   // Translations apply only where the English still equals the default they were made from (admin edits win).
   return mapHrefs(localizeValue(content, filContent, { source: DEFAULT_CONTENT }), (href) => localizedHref(href, locale));
 }
 
-/** Uncached read for the admin (call only inside a Suspense boundary after requireAdmin()). */
-export async function readContentFresh(): Promise<{ content: SiteContent; meta: ContentMeta }> {
+/**
+ * Uncached read for the admin (call only inside a Suspense boundary after requireAdmin()). The content is the stored
+ * values merged over the defaults, without the public founding check (the editor shows what is stored); `review` lists
+ * stored values that differ from the current defaults for prices and offers (src/content/review.ts).
+ */
+export async function readContentFresh(): Promise<{ content: SiteContent; meta: ContentMeta; review: ReviewItem[] }> {
   const stored = await readStoredContent();
-  return { content: mergeContent(DEFAULT_CONTENT, stored.sections), meta: stored.meta };
+  const content = mergeContent(DEFAULT_CONTENT, stored.sections);
+  return { content, meta: stored.meta, review: contentReview(stored.sections, content) };
 }
